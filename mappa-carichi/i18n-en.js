@@ -202,16 +202,29 @@
     try { if (z === 1) localStorage.removeItem("obo-zoom"); else localStorage.setItem("obo-zoom", String(z)); } catch (e) {}
     applicaZoom();
   }
+  // un solo pulsante "Aspetto" (come in OBO Hub) con la dimensione del testo: A− 100% A+
   function creaZoom() {
-    var bar = document.getElementById("topbar"); if (!bar || document.getElementById("oboZoomMeno")) return;
+    var bar = document.getElementById("topbar"); if (!bar || document.getElementById("oboAspetto")) return;
     var rif = bar.querySelector(".menuwrap");
-    [["oboZoomMeno", "A−", -1, "Testo più piccolo"], ["oboZoomPiu", "A+", 1, "Testo più grande"]].forEach(function (d) {
-      var b = document.createElement("button"); b.type = "button"; b.id = d[0]; b.className = "ibtn"; b.title = d[3]; b.setAttribute("aria-label", d[3]);
-      b.style.cssText = "font:700 14px var(--font-body);width:auto;min-width:36px;padding:0 6px";
-      b.textContent = d[1];
-      b.addEventListener("click", function () { cambiaZoom(d[2]); });
-      bar.insertBefore(b, rif);
-    });
+    var box = document.createElement("div"); box.id = "oboAspetto"; box.style.cssText = "position:relative;display:inline-flex";
+    var b = document.createElement("button"); b.type = "button"; b.className = "ibtn"; b.setAttribute("aria-haspopup", "true");
+    b.style.cssText = "font:700 15px var(--font-body);width:auto;min-width:36px;padding:0 6px";
+    b.textContent = "Aa";
+    var p = document.createElement("div"); p.hidden = true; p.setAttribute("role", "dialog");
+    p.style.cssText = "position:absolute;right:0;top:calc(100% + 8px);z-index:60;display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line,#dee2e6);border-radius:14px;background:var(--surface,#fff);color:inherit;box-shadow:0 10px 30px rgba(0,0,0,.18);white-space:nowrap;font:600 14px var(--font-body)";
+    function disegna() {
+      var en = lingua === "en", z = Math.round(zoomAtt() * 100);
+      b.title = en ? "Display" : "Aspetto"; b.setAttribute("aria-label", b.title);
+      p.innerHTML = '<span>' + (en ? "Text" : "Testo") + '</span>' +
+        '<button type="button" data-z="-1" aria-label="' + (en ? "Smaller text" : "Testo più piccolo") + '" style="border:1px solid var(--line,#dee2e6);background:none;color:inherit;border-radius:999px;padding:4px 12px;font:inherit;cursor:pointer">A−</button>' +
+        '<span style="min-width:44px;text-align:center">' + z + '%</span>' +
+        '<button type="button" data-z="1" aria-label="' + (en ? "Larger text" : "Testo più grande") + '" style="border:1px solid var(--line,#dee2e6);background:none;color:inherit;border-radius:999px;padding:4px 12px;font:inherit;cursor:pointer">A+</button>';
+    }
+    b.addEventListener("click", function (e) { e.stopPropagation(); disegna(); p.hidden = !p.hidden; });
+    p.addEventListener("click", function (e) { e.stopPropagation(); var x = e.target.closest("button"); if (x) { cambiaZoom(Number(x.dataset.z)); disegna(); } });
+    document.addEventListener("click", function () { p.hidden = true; });
+    box.appendChild(b); box.appendChild(p);
+    bar.insertBefore(box, rif);
   }
   applicaZoom();
   window.addEventListener("storage", function (e) { if (e.key === "obo-zoom") applicaZoom(); });

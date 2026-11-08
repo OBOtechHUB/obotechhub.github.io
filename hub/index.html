@@ -552,7 +552,7 @@
     const azioni = $("azioni"); azioni.innerHTML = "";
     const eroe = $("pulsanti-eroe"); eroe.innerHTML = "";
     avviso(""); pannello(""); disegnaApp(null);
-    azioni.append(iconaBarra(null, "A−", "meno", () => { cambiaZoom(-1); void aggiorna(); }), iconaBarra(null, "A+", "piu", () => { cambiaZoom(1); void aggiorna(); }), bottoneImpostazioni());
+    azioni.append(bottoneImpostazioni());
     $("titolo").textContent = "Gli strumenti dell'ufficio tecnico, in un solo posto";
     $("intro").textContent = "Un unico accesso sicuro, con password e codice di Microsoft Authenticator, per gli strumenti di lavoro abilitati per te.";
 

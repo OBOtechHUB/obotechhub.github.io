@@ -15,10 +15,10 @@ Schermata iniziale con tutte le app dell'ufficio tecnico. Indirizzo: `https://ob
 
 | App | Dove | Accesso |
 |---|---|---|
-| Progettazione LPS | repository `lps` → `/lps/` | login unico (password + Microsoft Authenticator) |
+| Progettazione LPS | repository `appOBOtechHUB` → `/appOBOtechHUB/` (i vecchi link `/lps/` rimandano qui) | login unico (password + Microsoft Authenticator) |
 | Mappa carichi ufficio tecnico | cartella `mappa-carichi/` di questo repository → `/mappa-carichi/` | solo con l'accesso di OBO Hub; ruolo (Admin/Guest/Visitatore) e persona li sceglie l'amministratore |
 | Configuratore torrette | cartella `torrette/` → `/torrette/` | in preparazione: solo amministratori |
-| Amministrazione | `/lps/admin` | solo amministratori |
+| Amministrazione | `/appOBOtechHUB/admin` | solo amministratori |
 
 ## Come funziona l'accesso
 - OBO Hub usa lo stesso database Supabase di Progettazione LPS e sta sullo stesso sito (`github.io`): chi entra in una app è già dentro anche nell'altra.

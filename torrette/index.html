@@ -104,6 +104,13 @@
   .righe .r { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .ko { color:#c0392b; font-size:calc(13px * var(--zoom,1)); }
   .motivo { color:#c0392b; font-size:calc(12px * var(--zoom,1)); }
+  .impost { position:relative; }
+  .pannello-impost { position:absolute; right:0; top:calc(100% + 8px); z-index:30; min-width:290px; padding:14px; border:1px solid var(--bordo); border-radius:16px; background:var(--carta); box-shadow:0 12px 32px rgba(0,0,0,.18); display:flex; flex-direction:column; gap:10px; }
+  .pannello-impost .riga { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0; font-weight:600; }
+  .seg { display:inline-flex; align-items:center; border:1px solid var(--bordo); border-radius:999px; overflow:hidden; }
+  .seg button { border:0; background:none; padding:6px 12px; cursor:pointer; font-weight:600; }
+  .seg button[aria-pressed="true"] { background:var(--arancio); color:#fff; }
+  .seg .zv { min-width:48px; text-align:center; }
   @media print { header.barra, .eroe, .schede, .noprint { display:none !important; } body { background:#fff; color:#000; } }
 </style>
 </head>
@@ -114,10 +121,7 @@
   <header class="barra"><div class="contenitore">
     <a class="marchio" href="../" title="OBO Hub"><img src="../icona-192.png" alt=""><span><b data-t="Configuratore torrette|Service outlets"></b><small data-t="← OBO Hub|← OBO Hub"></small></span></a>
     <div class="azioni">
-      <button class="ib" id="zMeno" title="Testo più piccolo" aria-label="Testo più piccolo">A−</button>
-      <button class="ib" id="zPiu" title="Testo più grande" aria-label="Testo più grande">A+</button>
-      <button class="ib" id="tema" title="Tema"></button>
-      <button class="ib" id="lingua" title="Lingua / Language"></button>
+      <div class="impost"><button class="ib" id="aspetto" aria-haspopup="true" style="font-size:17px">Aa</button><div class="pannello-impost" id="pannelloAspetto" role="dialog" hidden></div></div>
     </div>
   </div></header>
   <section class="eroe"><div class="contenitore">

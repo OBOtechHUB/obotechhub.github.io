@@ -4,7 +4,7 @@
 export const CONFIG = {
   supabaseUrl: "https://qzfosidvjsyivaibnadf.supabase.co",
   supabaseKey: "sb_publishable_4ZA8X-l1eNBTfhLahViHdg_Ih3aO38L",
-  lps: "/lps/",
+  lps: "/appOBOtechHUB/",
 };
 
 // Le app di OBO Hub. Per aggiungerne una nuova basta un elemento in più.
@@ -17,7 +17,7 @@ export const APP = [
     descrizione_en: "Lightning protection to CEI EN IEC 62305: risk assessment, 3D air-termination, down conductors, earthing, SPD, bill of materials and OBO details.",
     descrizione: "Protezione contro i fulmini secondo CEI EN IEC 62305: analisi del rischio, captazione 3D, calate, terra, SPD, computo e particolari OBO.",
     icona: "fulmine",
-    url: "/lps/",
+    url: "/appOBOtechHUB/",
     abilitataSe: (sezioni) => sezioni.some((s) => !s.startsWith("app_")),
   },
   {
@@ -48,7 +48,7 @@ export const APP = [
     descrizione_en: "Access requests, users, enabled apps and sections, saved projects and access log.",
     descrizione: "Richieste di accesso, utenti, app e sezioni abilitate, progetti salvati e registro degli accessi.",
     icona: "admin",
-    url: "/lps/admin",
+    url: "/appOBOtechHUB/admin",
     soloAdmin: true,
   },
 ];

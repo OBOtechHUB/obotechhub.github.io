@@ -23,12 +23,8 @@ const N = (o, k = "") => (o ? (en() ? o[k + "en"] ?? o[k + "it"] : o[k + "it"]) 
 function testiFissi() {
   document.documentElement.lang = en() ? "en" : "it";
   document.querySelectorAll("[data-t]").forEach((el) => { const [i, e] = el.dataset.t.split("|"); el.textContent = en() ? e : i; });
-  $("lingua").textContent = en() ? "IT" : "EN";
-  $("zMeno").title = T("Testo più piccolo", "Smaller text"); $("zPiu").title = T("Testo più grande", "Larger text");
-  const t = leggi("obo-tema");
-  const icona = t === "dark" ? '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>' : t === "light" ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>' : '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>';
-  $("tema").innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="vertical-align:middle">${icona}</svg>`;
-  $("tema").title = T("Tema: ", "Theme: ") + (t === "dark" ? T("scuro", "dark") : t === "light" ? T("chiaro", "light") : "auto");
+  $("aspetto").title = T("Aspetto", "Display"); $("aspetto").setAttribute("aria-label", $("aspetto").title);
+  pannelloAspetto();
   $("notaDati").textContent = N(NOTA_DATI);
 }
 const PASSI_ZOOM = [0.85, 0.9, 1, 1.1, 1.2, 1.3, 1.45];
@@ -36,10 +32,24 @@ const zoom = () => { const v = Number(leggi("obo-zoom")); return PASSI_ZOOM.incl
 const applicaZoom = () => document.documentElement.style.setProperty("--zoom", String(zoom()));
 const cambiaZoom = (d) => { const i = PASSI_ZOOM.indexOf(zoom()); const z = PASSI_ZOOM[Math.min(PASSI_ZOOM.length - 1, Math.max(0, i + d))]; scrivi("obo-zoom", z === 1 ? null : String(z)); applicaZoom(); };
 const applicaTema = () => { const t = leggi("obo-tema"); document.documentElement.dataset.theme = (t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches)) ? "dark" : "light"; };
-$("zMeno").onclick = () => cambiaZoom(-1);
-$("zPiu").onclick = () => cambiaZoom(1);
-$("tema").onclick = () => { const t = leggi("obo-tema"); scrivi("obo-tema", t === "light" ? "dark" : t === "dark" ? null : "light"); applicaTema(); testiFissi(); };
-$("lingua").onclick = () => { scrivi("obo-lingua", en() ? null : "en"); testiFissi(); disegna(); };
+// un solo pulsante "Aspetto" (come in OBO Hub): lingua, tema e dimensione del testo
+function pannelloAspetto() {
+  const p = $("pannelloAspetto"), t = leggi("obo-tema") || "auto", l = en() ? "en" : "it", z = Math.round(zoom() * 100);
+  const seg = (voci, att) => `<span class="seg">${voci.map(([k, x]) => `<button type="button" data-k="${k}" aria-pressed="${k === att}">${x}</button>`).join("")}</span>`;
+  p.innerHTML = `<div class="riga"><span>${T("Lingua", "Language")}</span>${seg([["it", "IT"], ["en", "EN"]], l)}</div>
+    <div class="riga"><span>${T("Tema", "Theme")}</span>${seg([["auto", "Auto"], ["light", T("Chiaro", "Light")], ["dark", T("Scuro", "Dark")]], t)}</div>
+    <div class="riga"><span>${T("Testo", "Text")}</span><span class="seg"><button type="button" data-z="-1" aria-label="${T("Testo più piccolo", "Smaller text")}">A−</button><span class="zv">${z}%</span><button type="button" data-z="1" aria-label="${T("Testo più grande", "Larger text")}">A+</button></span></div>`;
+}
+$("aspetto").onclick = (e) => { e.stopPropagation(); $("pannelloAspetto").hidden = !$("pannelloAspetto").hidden; };
+$("pannelloAspetto").onclick = (e) => {
+  e.stopPropagation(); const x = e.target.closest("button"); if (!x) return;
+  const k = x.dataset.k;
+  if (k === "it" || k === "en") { scrivi("obo-lingua", k === "en" ? "en" : null); disegna(); }
+  else if (k) { scrivi("obo-tema", k === "auto" ? null : k); applicaTema(); }
+  else if (x.dataset.z) cambiaZoom(Number(x.dataset.z));
+  testiFissi();
+};
+document.addEventListener("click", () => { $("pannelloAspetto").hidden = true; });
 addEventListener("storage", (e) => { if (["obo-lingua", "obo-tema", "obo-zoom"].includes(e.key)) { applicaTema(); applicaZoom(); testiFissi(); disegna(); } });
 testiFissi();
 
