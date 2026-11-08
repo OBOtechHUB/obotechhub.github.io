@@ -465,7 +465,7 @@
     let profilo = null, aal = null, fattori = null;
     if (session) {
       [{ data: profilo }, { data: aal }, { data: fattori }] = await Promise.all([
-        supabase.from("accessi_profili").select("email,nome,ruolo,stato,sezioni,deve_cambiare_password").eq("utente", session.user.id).maybeSingle(),
+        supabase.from("accessi_profili").select("*").eq("utente", session.user.id).maybeSingle(),
         supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
         supabase.auth.mfa.listFactors(),
       ]);
@@ -507,7 +507,12 @@
     // dentro: solo le proprie app
     try { if (!sessionStorage.getItem("obo-hub-registrato")) { sessionStorage.setItem("obo-hub-registrato", "1"); void supabase.rpc("registra_accesso", { evento: "accesso", dettagli: { app: "obo-hub" } }); } } catch {}
     if (profilo.ruolo === "admin") azioni.insertBefore(iconaBarra(CONFIG.lps + "admin", "Admin", "admin"), azioni.lastChild);
-    const nome1 = profilo.nome && profilo.nome !== "Amministratore" ? " " + profilo.nome.split(" ")[0] : "";
+    // nome da salutare: nome del profilo, poi persona della Mappa, poi nome del profilo utente, poi dall'email (cognome.nome@…)
+    const maiuscola = (x) => x ? x.charAt(0).toUpperCase() + x.slice(1).toLowerCase() : "";
+    const validi = [profilo.nome, profilo.mappa_persona, session.user.user_metadata?.nome_visualizzato].map((x) => (x || "").trim()).filter((x) => x && !/^amministratore$/i.test(x));
+    let primo = validi.length ? validi[0].split(/\s+/)[0] : "";
+    if (!primo) { const parti = (session.user.email || "").split("@")[0].split(/[._-]/).filter(Boolean); primo = maiuscola(parti.length > 1 ? parti[parti.length - 1] : parti[0] || ""); }
+    const nome1 = primo ? " " + primo : "";
     const ora = new Date().getHours();
     const saluto = lingua === "en" ? (ora < 12 ? "Good morning" : ora < 18 ? "Good afternoon" : "Good evening") : (ora < 13 ? "Buongiorno" : ora < 18 ? "Buon pomeriggio" : "Buonasera");
     $("titolo").textContent = `${saluto}${nome1.replace(" ", ", ")}`;
