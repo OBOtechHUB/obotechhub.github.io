@@ -279,7 +279,7 @@
 "Entra": "Enter",
 "Incolla": "Paste",
 "Sei su questo telefono? Apri nell'app Authenticator": "On this phone? Open in the Authenticator app",
-"Apri Microsoft Authenticator, tocca il codice di OBO Hub per copiarlo e torna qui: premi Incolla (oppure scegli il codice suggerito sopra la tastiera). Si entra da soli appena ci sono le 6 cifre.": "Open Microsoft Authenticator, tap the OBO Hub code to copy it and come back: press Paste (or pick the code suggested above the keyboard). You sign in automatically once all 6 digits are there.",
+"Apri Microsoft Authenticator, tocca il codice di OBO Hub per copiarlo, torna qui e incollalo nel campo (oppure scegli il codice suggerito sopra la tastiera). Si entra da soli appena ci sono le 6 cifre.": "Open Microsoft Authenticator, tap the OBO Hub code to copy it, come back and paste it in the field (or pick the code suggested above the keyboard). You sign in automatically once all 6 digits are there.",
 "Codice non valido, riprova.": "Invalid code, try again.",
 "Il tuo account non è ancora stato approvato dall'amministratore.": "Your account has not been approved by the administrator yet.",
 "Il tuo accesso è sospeso. Contatta l'amministratore.": "Your access is suspended. Contact the administrator.",
@@ -423,12 +423,7 @@
     inp.name = "one-time-code";
     const invia = () => { if (inp.value.replace(/\D/g, "").length === 6 && !form.dataset.invio) { form.dataset.invio = "1"; form.requestSubmit(); setTimeout(() => { delete form.dataset.invio; }, 1500); } };
     inp.addEventListener("input", () => { inp.value = inp.value.replace(/\D/g, "").slice(0, 6); invia(); });
-    if (navigator.clipboard?.readText) {
-      const b = document.createElement("button"); b.type = "button"; b.className = "btn btn-bordo"; b.textContent = "Incolla";
-      b.style.cssText = "margin-top:10px;width:100%;justify-content:center";
-      b.addEventListener("click", async () => { try { inp.value = (await navigator.clipboard.readText()).replace(/\D/g, "").slice(0, 6); invia(); } catch {} });
-      inp.closest("label").after(b);
-    }
+    inp.addEventListener("paste", () => setTimeout(() => { inp.value = inp.value.replace(/\D/g, "").slice(0, 6); invia(); }, 0));
   }
 
   function schermataAccedi() {
@@ -525,7 +520,7 @@
   }
 
   function schermataVerifica(fattore) {
-    const p = pannello(`<h2>Codice di Authenticator</h2><p>Apri Microsoft Authenticator, tocca il codice di OBO Hub per copiarlo e torna qui: premi Incolla (oppure scegli il codice suggerito sopra la tastiera). Si entra da soli appena ci sono le 6 cifre.</p>
+    const p = pannello(`<h2>Codice di Authenticator</h2><p>Apri Microsoft Authenticator, tocca il codice di OBO Hub per copiarlo, torna qui e incollalo nel campo (oppure scegli il codice suggerito sopra la tastiera). Si entra da soli appena ci sono le 6 cifre.</p>
       <form id="f"><label>Codice a 6 cifre<input id="co" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" required></label>
       <button class="btn btn-primario">Entra</button><div class="errore" role="alert"></div></form>`);
     p.querySelector("#f").addEventListener("submit", async (e) => {
