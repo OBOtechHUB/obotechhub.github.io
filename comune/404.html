@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OBO Hub</title>
+<script>
+  // Vecchi link di Progettazione LPS (/lps/...) → nuovo indirizzo (/appOBOtechHUB/...)
+  if (/^\/lps(\/|$)/i.test(location.pathname)) location.replace("/appOBOtechHUB/" + location.pathname.replace(/^\/lps\/?/i, "") + location.search + location.hash);
+</script>
+<style>body{margin:0;font:16px "Helvetica Neue",Helvetica,Arial,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:16px}a{color:#d98a00;font-weight:600}</style>
+</head><body><div><h1>Pagina non trovata</h1><p>Page not found</p><p><a href="/">Torna a OBO Hub</a></p></div></body></html>

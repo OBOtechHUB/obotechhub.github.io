@@ -1,11 +1,23 @@
 # OBO Hub
 
+## Come è organizzato questo repository
+| Cartella | Cosa contiene |
+|---|---|
+| `hub/` | OBO Hub: pagina iniziale con l'accesso e l'elenco delle app (`config.js` = elenco app) · `hub/icone/` le icone |
+| `mappa-carichi/` | app Mappa carichi ufficio tecnico · `database/` gli script SQL · `icone/` |
+| `torrette/` | app Configuratore torrette (in preparazione) · **`dati.js` = catalogo prodotti, si modifica solo quello** |
+| `comune/` | file usati da tutte le app: barra "Aggiorna app", pagina 404, rimando dei vecchi link `/lps/` |
+| `.github/workflows/` | pubblicazione automatica del sito |
+
+Progettazione LPS sta nel suo repository (`appOBOtechHUB`, prima `lps`). Gli indirizzi pubblicati non cambiano con le cartelle.
+
 Schermata iniziale con tutte le app dell'ufficio tecnico. Indirizzo: `https://obotechhub.github.io/`
 
 | App | Dove | Accesso |
 |---|---|---|
 | Progettazione LPS | repository `lps` → `/lps/` | login unico (password + Microsoft Authenticator) |
 | Mappa carichi ufficio tecnico | cartella `mappa-carichi/` di questo repository → `/mappa-carichi/` | solo con l'accesso di OBO Hub; ruolo (Admin/Guest/Visitatore) e persona li sceglie l'amministratore |
+| Configuratore torrette | cartella `torrette/` → `/torrette/` | in preparazione: solo amministratori |
 | Amministrazione | `/lps/admin` | solo amministratori |
 
 ## Come funziona l'accesso

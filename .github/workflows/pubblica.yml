@@ -26,15 +26,19 @@ jobs:
           MAPPA_SUPABASE_URL: ${{ secrets.MAPPA_SUPABASE_URL }}
           MAPPA_SUPABASE_ANON_KEY: ${{ secrets.MAPPA_SUPABASE_ANON_KEY }}
         run: |
-          mkdir -p site/mappa-carichi
-          cp index.html config.js manifest.webmanifest sw.js install.js aggiorna.js icona-192.png icona-512.png icona-maskable-512.png apple-touch-icon.png favicon-32.png .nojekyll site/
-          cd mappa-carichi
-          cp index.html i18n-en.js manifest.webmanifest sw.js install.js icon-192.png icon-512.png apple-touch-icon.png ../site/mappa-carichi/
-          cd ..
+          # Il sito pubblicato ha sempre gli stessi indirizzi: i file del repository sono solo ordinati in cartelle.
+          mkdir -p site/mappa-carichi site/torrette site/lps
+          cp hub/* site/ 2>/dev/null || true          # OBO Hub: pagina iniziale (le sottocartelle non vengono copiate qui)
+          cp hub/icone/* site/                         # icone di OBO Hub
+          cp comune/* site/                            # file usati da tutte le app (barra "Aggiorna app", pagina 404)
+          cp .nojekyll site/
+          cp mappa-carichi/index.html mappa-carichi/i18n-en.js mappa-carichi/manifest.webmanifest mappa-carichi/sw.js mappa-carichi/install.js mappa-carichi/icone/* site/mappa-carichi/
+          cp torrette/*.html torrette/*.js site/torrette/
+          cp comune/vecchio-lps.html site/lps/index.html   # vecchi link /lps/ → nuovo nome dell'app LPS
           # Senza secrets dedicati la Mappa usa lo stesso database di OBO Hub / Progettazione LPS (config.js).
           if [ -z "$MAPPA_SUPABASE_URL" ] || [ -z "$MAPPA_SUPABASE_ANON_KEY" ]; then
-            MAPPA_SUPABASE_URL=$(grep -o 'https://[a-z0-9]*\.supabase\.co' config.js | head -1)
-            MAPPA_SUPABASE_ANON_KEY=$(grep -o 'sb_publishable_[A-Za-z0-9_-]*' config.js | head -1)
+            MAPPA_SUPABASE_URL=$(grep -o 'https://[a-z0-9]*\.supabase\.co' hub/config.js | head -1)
+            MAPPA_SUPABASE_ANON_KEY=$(grep -o 'sb_publishable_[A-Za-z0-9_-]*' hub/config.js | head -1)
             echo "Mappa carichi: uso il database di OBO Hub ($MAPPA_SUPABASE_URL)"
           fi
           sed -i "s|__SUPABASE_URL__|${MAPPA_SUPABASE_URL}|g; s|__SUPABASE_ANON_KEY__|${MAPPA_SUPABASE_ANON_KEY}|g" site/mappa-carichi/index.html

@@ -31,6 +31,17 @@ export const APP = [
     abilitataSe: (sezioni) => sezioni.includes("app_mappa"),
   },
   {
+    id: "torrette",
+    nome: "Configuratore torrette",
+    nome_en: "Service outlet configurator",
+    descrizione: "Torrette a pavimento OBO (GES R2, GESR9…): scegli famiglia, modello e configurazione e scarica la distinta con i codici.",
+    descrizione_en: "OBO floor service outlets (GES R2, GESR9…): choose family, model and configuration and download the parts list with codes.",
+    icona: "torretta",
+    url: "torrette/",
+    // In preparazione: per ora la vede solo l'amministratore. Quando sarà pronta: abilitataSe: (s) => s.includes("app_torrette")
+    soloAdmin: true,
+  },
+  {
     id: "admin",
     nome: "Amministrazione",
     nome_en: "Administration",
