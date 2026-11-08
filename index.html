@@ -575,7 +575,13 @@
     }
 
     vista = "";
-    const esci = async () => { await supabase.rpc("registra_accesso", { evento: "uscita" }).catch(() => {}); await supabase.auth.signOut(); try { sessionStorage.removeItem("obo-hub-registrato"); } catch {} void aggiorna(); };
+    const esci = async () => {
+      try { await supabase.rpc("registra_accesso", { evento: "uscita" }); } catch {}
+      try { await supabase.auth.signOut(); } catch {}
+      try { await supabase.auth.signOut({ scope: "local" }); } catch {} // esce comunque da questo dispositivo anche senza rete
+      try { sessionStorage.removeItem("obo-hub-registrato"); } catch {}
+      vista = ""; void aggiorna();
+    };
     $("sottotitolo").textContent = session.user.email ?? "";
     const verificati = (fattori?.totp ?? []).filter((x) => x.status === "verified");
 
