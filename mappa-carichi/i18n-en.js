@@ -203,11 +203,14 @@
     applicaZoom();
   }
   function creaZoom() {
-    var nav = document.getElementById("nav"); if (!nav || document.getElementById("oboZoomMeno")) return;
-    [["oboZoomMeno", "A−", -1, '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6"/>', "Testo più piccolo"], ["oboZoomPiu", "A+", 1, '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6M11 8v6"/>', "Testo più grande"]].forEach(function (d) {
-      var b = document.createElement("button"); b.type = "button"; b.id = d[0]; b.title = d[4]; b.setAttribute("aria-label", d[4]);
-      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + d[3] + '</svg><span class="lab">' + d[1] + '</span>';
-      b.addEventListener("click", function () { cambiaZoom(d[2]); }); nav.appendChild(b);
+    var bar = document.getElementById("topbar"); if (!bar || document.getElementById("oboZoomMeno")) return;
+    var rif = bar.querySelector(".menuwrap");
+    [["oboZoomMeno", "A−", -1, "Testo più piccolo"], ["oboZoomPiu", "A+", 1, "Testo più grande"]].forEach(function (d) {
+      var b = document.createElement("button"); b.type = "button"; b.id = d[0]; b.className = "ibtn"; b.title = d[3]; b.setAttribute("aria-label", d[3]);
+      b.style.cssText = "font:700 14px var(--font-body);width:auto;min-width:36px;padding:0 6px";
+      b.textContent = d[1];
+      b.addEventListener("click", function () { cambiaZoom(d[2]); });
+      bar.insertBefore(b, rif);
     });
   }
   applicaZoom();
