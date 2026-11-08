@@ -90,6 +90,7 @@
   .pannello input, .pannello textarea { width: 100%; margin-top: 6px; padding: 11px 12px; border: 1px solid var(--bordo); border-radius: 8px; font: calc(16px * var(--zoom, 1)) var(--font); background: var(--sfondo); color: var(--testo); }
   .pannello input:focus, .pannello textarea:focus { outline: 2px solid var(--arancio); outline-offset: 1px; }
   .pannello .btn { margin-top: 18px; width: 100%; justify-content: center; border: 0; }
+  .pannello .btn-bordo { border: 1px solid var(--bordo); background: var(--sfondo); color: var(--testo); }
   .pannello .link { background: none; border: 0; padding: 0; margin-top: 14px; color: var(--arancio); font: 600 calc(14px * var(--zoom, 1)) var(--font); cursor: pointer; }
   .pannello .errore { color: #d9342b; font-size: calc(14px * var(--zoom, 1)); margin-top: 12px; min-height: 1em; }
   .pannello .qr { display: block; width: 200px; height: 200px; margin: 8px auto; padding: 8px; background: #fff; border-radius: 10px; }
@@ -276,6 +277,9 @@
 "Codice di Authenticator": "Authenticator code",
 "Apri Microsoft Authenticator e scrivi il codice a 6 cifre per questo accesso.": "Open Microsoft Authenticator and enter the 6-digit code for this sign-in.",
 "Entra": "Enter",
+"Incolla": "Paste",
+"Sei su questo telefono? Apri nell'app Authenticator": "On this phone? Open in the Authenticator app",
+"Apri Microsoft Authenticator, tocca il codice di OBO Hub per copiarlo e torna qui: premi Incolla (oppure scegli il codice suggerito sopra la tastiera). Si entra da soli appena ci sono le 6 cifre.": "Open Microsoft Authenticator, tap the OBO Hub code to copy it and come back: press Paste (or pick the code suggested above the keyboard). You sign in automatically once all 6 digits are there.",
 "Codice non valido, riprova.": "Invalid code, try again.",
 "Il tuo account non è ancora stato approvato dall'amministratore.": "Your account has not been approved by the administrator yet.",
 "Il tuo accesso è sospeso. Contatta l'amministratore.": "Your access is suspended. Contact the administrator.",
@@ -412,6 +416,21 @@
   let vista = "";          // "accedi" | "richiedi" | "recupero" | "" (home)
   let recupero = false;    // arrivati dal link "password dimenticata"
 
+
+  // campo codice: suggerimento della tastiera di iPhone/iPad, pulsante Incolla, invio automatico a 6 cifre
+  function preparaCodice(form) {
+    const inp = form.querySelector("#co");
+    inp.name = "one-time-code";
+    const invia = () => { if (inp.value.replace(/\D/g, "").length === 6 && !form.dataset.invio) { form.dataset.invio = "1"; form.requestSubmit(); setTimeout(() => { delete form.dataset.invio; }, 1500); } };
+    inp.addEventListener("input", () => { inp.value = inp.value.replace(/\D/g, "").slice(0, 6); invia(); });
+    if (navigator.clipboard?.readText) {
+      const b = document.createElement("button"); b.type = "button"; b.className = "btn btn-bordo"; b.textContent = "Incolla";
+      b.style.cssText = "margin-top:10px;width:100%;justify-content:center";
+      b.addEventListener("click", async () => { try { inp.value = (await navigator.clipboard.readText()).replace(/\D/g, "").slice(0, 6); invia(); } catch {} });
+      inp.closest("label").after(b);
+    }
+  }
+
   function schermataAccedi() {
     const p = pannello(`<h2>Accedi</h2><p>Usa la tua email e la password. Poi ti chiederemo il codice di Microsoft Authenticator.</p>
       <form id="f"><label>Email<input id="em" type="email" autocomplete="username" required maxlength="254"></label>
@@ -490,7 +509,7 @@
     if (error) { pannello(`<h2>Collega Microsoft Authenticator</h2><div class="errore">${esc(error.message)}</div>`); return; }
     const p = pannello(`<h2>Collega Microsoft Authenticator</h2>
       <p><span>1. Apri Microsoft Authenticator sul telefono, premi</span> <b>+</b> <span>e scegli</span> <b>Altro account</b>.<br><span>2. Inquadra il codice QR.</span><br><span>3. Scrivi qui il codice a 6 cifre che compare.</span></p>
-      <img class="qr" alt="Codice QR per Microsoft Authenticator" src="${data.totp.qr_code}"><code><span>Codice manuale:</span> ${esc(data.totp.secret)}</code>
+      <img class="qr" alt="Codice QR per Microsoft Authenticator" src="${data.totp.qr_code}"><a class="btn btn-bordo" style="width:100%;justify-content:center;margin:6px 0" href="${esc(data.totp.uri)}">Sei su questo telefono? Apri nell'app Authenticator</a><code><span>Codice manuale:</span> ${esc(data.totp.secret)}</code>
       <form id="f"><label>Codice a 6 cifre<input id="co" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" required></label>
       <button class="btn btn-primario">Conferma</button><div class="errore" role="alert"></div></form>`);
     p.querySelector("#f").addEventListener("submit", async (e) => {
@@ -501,20 +520,22 @@
       await supabase.rpc("registra_accesso", { evento: "authenticator_attivato" });
       void aggiorna();
     });
+    preparaCodice(p.querySelector("#f"));
     $("co").focus();
   }
 
   function schermataVerifica(fattore) {
-    const p = pannello(`<h2>Codice di Authenticator</h2><p>Apri Microsoft Authenticator e scrivi il codice a 6 cifre per questo accesso.</p>
+    const p = pannello(`<h2>Codice di Authenticator</h2><p>Apri Microsoft Authenticator, tocca il codice di OBO Hub per copiarlo e torna qui: premi Incolla (oppure scegli il codice suggerito sopra la tastiera). Si entra da soli appena ci sono le 6 cifre.</p>
       <form id="f"><label>Codice a 6 cifre<input id="co" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" required></label>
       <button class="btn btn-primario">Entra</button><div class="errore" role="alert"></div></form>`);
     p.querySelector("#f").addEventListener("submit", async (e) => {
       e.preventDefault(); occupato(true); errore("");
       const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fattore, code: $("co").value.replace(/\s/g, "") });
       occupato(false);
-      if (error) { errore("Codice non valido, riprova."); return; }
+      if (error) { errore("Codice non valido, riprova."); $("co").value = ""; return; }
       void aggiorna();
     });
+    preparaCodice(p.querySelector("#f"));
     $("co").focus();
   }
 
