@@ -15,10 +15,8 @@ Schermata iniziale con tutte le app dell'ufficio tecnico. Indirizzo: `https://lo
 
 ## Configurazione (una volta)
 1. **Settings → Pages → Source: GitHub Actions.**
-2. **Settings → Secrets and variables → Actions → New repository secret**, i dati del database della **Mappa carichi** (quello usato con Lovable, *Project Settings → API*):
-   - `MAPPA_SUPABASE_URL` = Project URL
-   - `MAPPA_SUPABASE_ANON_KEY` = anon public key
-   Senza questi secrets OBO Hub funziona, ma la Mappa mostra "da configurare".
+2. La Mappa usa lo **stesso database Supabase** di Progettazione LPS: nel SQL Editor esegui `mappa-carichi/database/1-database.sql` (tabelle `app_*`, nessun conflitto) e, a parte, il file delle offerte.
+   Solo se un giorno vorrai un database separato: secrets `MAPPA_SUPABASE_URL` e `MAPPA_SUPABASE_ANON_KEY`.
 3. **Actions → Pubblica OBO Hub → Run workflow.**
 
 Il database della Mappa si aggiorna come descritto in `mappa-carichi/README-mappa.md` (script `mappa-carichi/database/1-database.sql`). Il file con le offerte reali (`2-offerte.sql`) **non va mai caricato qui**: si esegue solo nel SQL Editor di Supabase.

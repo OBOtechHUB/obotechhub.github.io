@@ -31,13 +31,14 @@ jobs:
           cd mappa-carichi
           cp index.html manifest.webmanifest sw.js install.js icon-192.png icon-512.png apple-touch-icon.png ../site/mappa-carichi/
           cd ..
+          # Senza secrets dedicati la Mappa usa lo stesso database di OBO Hub / Progettazione LPS (config.js).
           if [ -z "$MAPPA_SUPABASE_URL" ] || [ -z "$MAPPA_SUPABASE_ANON_KEY" ]; then
-            echo "::warning::Mancano i secrets MAPPA_SUPABASE_URL e MAPPA_SUPABASE_ANON_KEY: la Mappa carichi mostra una pagina 'da configurare'."
-            printf '%s' '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mappa carichi</title><body style="font:16px Helvetica,Arial,sans-serif;padding:32px;max-width:640px"><h1>Mappa carichi da configurare</h1><p>Mancano i dati del database: in GitHub, Settings &rarr; Secrets and variables &rarr; Actions, aggiungi <b>MAPPA_SUPABASE_URL</b> e <b>MAPPA_SUPABASE_ANON_KEY</b>, poi ripubblica.</p><p><a href="../">Torna a OBO Hub</a></p>' > site/mappa-carichi/index.html
-          else
-            sed -i "s|__SUPABASE_URL__|${MAPPA_SUPABASE_URL}|g; s|__SUPABASE_ANON_KEY__|${MAPPA_SUPABASE_ANON_KEY}|g" site/mappa-carichi/index.html
-            if grep -q "__SUPABASE_" site/mappa-carichi/index.html; then echo "Segnaposto non sostituiti"; exit 1; fi
+            MAPPA_SUPABASE_URL=$(grep -o 'https://[a-z0-9]*\.supabase\.co' config.js | head -1)
+            MAPPA_SUPABASE_ANON_KEY=$(grep -o 'sb_publishable_[A-Za-z0-9_-]*' config.js | head -1)
+            echo "Mappa carichi: uso il database di OBO Hub ($MAPPA_SUPABASE_URL)"
           fi
+          sed -i "s|__SUPABASE_URL__|${MAPPA_SUPABASE_URL}|g; s|__SUPABASE_ANON_KEY__|${MAPPA_SUPABASE_ANON_KEY}|g" site/mappa-carichi/index.html
+          if grep -q "__SUPABASE_" site/mappa-carichi/index.html; then echo "Segnaposto non sostituiti"; exit 1; fi
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
