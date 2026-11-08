@@ -790,6 +790,47 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
 .acc-li{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;padding:3px 0}
 .acc-li small{color:var(--muted)}
 
+
+/* ===== Stile OBO Hub: stessi colori e caratteri di OBO Hub e Progettazione LPS ===== */
+:root {
+  --bg: #f5f6f7; --surface: #ffffff; --fg: #212529; --muted: #5b6a74; --line: #dee2e6;
+  --cell: #eef1f3; --accent: #c47c00; --on-accent: #ffffff; --heat: #41525d; --on-heat: #ffffff;
+  --over: #d9342b; --on-over: #ffffff; --today: #fff4e0; --glow: #f39b00;
+  --glass: #ffffff; --shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 12px 28px -22px rgba(33,37,41,.35);
+  --rail: #41525d; --pastel: #dfe6ea; --pastel2: #eef2f4; --btn: #f39b00; --on-btn: #ffffff;
+  --side: #41525d; --side-2: #4b5e6a; --side-fg: #ffffff; --side-muted: #c9d4da; --side-line: #56707e;
+  --font-body: "Nimbus Sans L", "Nimbus Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1f23; --surface: #242a2f; --fg: #eef1f3; --muted: #a7b4bc; --line: #3a454d;
+    --cell: #2a3238; --accent: #f39b00; --on-accent: #1b1f23; --heat: #7694a4; --on-heat: #14181b;
+    --over: #ff6b5f; --on-over: #2a0709; --today: #3d3020; --glow: #f39b00;
+    --glass: #242a2f; --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 16px 34px -22px rgba(0,0,0,.8);
+    --rail: #14171a; --pastel: #41525d; --pastel2: #2a3238; --btn: #f39b00; --on-btn: #ffffff;
+    --side: #14171a; --side-2: #242a2f; --side-fg: #eef1f3; --side-muted: #a7b4bc; --side-line: #3a454d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1f23; --surface: #242a2f; --fg: #eef1f3; --muted: #a7b4bc; --line: #3a454d;
+  --cell: #2a3238; --accent: #f39b00; --on-accent: #1b1f23; --heat: #7694a4; --on-heat: #14181b;
+  --over: #ff6b5f; --on-over: #2a0709; --today: #3d3020; --glow: #f39b00;
+  --glass: #242a2f; --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 16px 34px -22px rgba(0,0,0,.8);
+  --rail: #14171a; --pastel: #41525d; --pastel2: #2a3238; --btn: #f39b00; --on-btn: #ffffff;
+  --side: #14171a; --side-2: #242a2f; --side-fg: #eef1f3; --side-muted: #a7b4bc; --side-line: #3a454d; color-scheme: dark;
+}
+.mark, .rmark .mark { background: url("../icona-192.png") center / cover no-repeat !important; border-radius: 9px; }
+.mark::after { display: none !important; }
+/* accesso solo da OBO Hub: niente schermata password e niente gestione password/admin della vecchia app */
+#gate { display: none !important; }
+section[aria-labelledby="h-pw"], section[aria-labelledby="h-gpw"], section[aria-labelledby="h-adm"] { display: none !important; }
+.hubgate { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px; background: var(--bg); color: var(--fg); font-family: var(--font-body); }
+.hubgate[hidden] { display: none; }
+.hubgate .card { width: 100%; max-width: 440px; padding: 28px; border: .8px solid var(--line); border-radius: 18px; background: var(--surface); text-align: center; box-shadow: var(--shadow); }
+.hubgate img { display: block; width: 56px; height: 56px; margin: 0 auto; border-radius: 14px; }
+.hubgate h1 { margin: 14px 0 6px; font-size: 22px; }
+.hubgate p { margin: 0 0 18px; color: var(--muted); font-size: 15px; line-height: 1.45; }
+.hubgate a { width: auto !important; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; background: #f39b00; color: #fff; font-weight: 600; text-decoration: none; }
 </style>
 <style>[hidden]{display:none!important}</style>
 <style id="ofStyle">
@@ -887,6 +928,7 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
 </head>
 <body>
 
+<div class="hubgate" id="hubGate" role="status"><div class="card"><img src="../icona-192.png" alt=""><h1>Mappa carichi</h1><p id="hubMsg">Accesso con OBO Hub in corso…</p><a href="../" id="hubBtn" hidden>Vai a OBO Hub</a></div></div>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gTitle">
   <svg class="gbg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g stroke-width="1"><polygon points="0,0 105,0 94,83" fill="#28282a" stroke="#fff" stroke-opacity=".4"/><polygon points="0,0 94,83 0,83" fill="#363638" stroke="#000" stroke-opacity=".35"/><polygon points="105,0 222,0 241,128" fill="#323234" stroke="#fff" stroke-opacity=".22"/><polygon points="105,0 241,128 94,83" fill="#38383a" stroke="#fff" stroke-opacity=".4"/><polygon points="222,0 359,0 292,150" fill="#0e0e10" stroke="#fff" stroke-opacity=".4"/><polygon points="222,0 292,150 241,128" fill="#212123" stroke="#000" stroke-opacity=".35"/><polygon points="359,0 433,0 292,150" fill="#39393b" stroke="#000" stroke-opacity=".35"/><polygon points="433,0 471,125 292,150" fill="#121214" stroke="#000" stroke-opacity=".35"/><polygon points="433,0 546,0 471,125" fill="#202022" stroke="#000" stroke-opacity=".35"/><polygon points="546,0 554,88 471,125" fill="#0e0e10" stroke="#fff" stroke-opacity=".14"/><polygon points="546,0 661,0 554,88" fill="#3c3c3e" stroke="#000" stroke-opacity=".35"/><polygon points="661,0 617,116 554,88" fill="#2e2e30" stroke="#fff" stroke-opacity=".14"/><polygon points="661,0 739,0 730,90" fill="#222224" stroke="#000" stroke-opacity=".35"/><polygon points="661,0 730,90 617,116" fill="#303032" stroke="#000" stroke-opacity=".35"/><polygon points="739,0 873,0 853,78" fill="#1a1a1c" stroke="#fff" stroke-opacity=".4"/><polygon points="739,0 853,78 730,90" fill="#38383a" stroke="#000" stroke-opacity=".35"/><polygon points="873,0 991,0 979,109" fill="#363638" stroke="#000" stroke-opacity=".35"/><polygon points="873,0 979,109 853,78" fill="#262628" stroke="#000" stroke-opacity=".35"/><polygon points="991,0 1113,0 1116,115" fill="#2b2b2d" stroke="#000" stroke-opacity=".35"/><polygon points="991,0 1116,115 979,109" fill="#0b0b0d" stroke="#000" stroke-opacity=".35"/><polygon points="1113,0 1200,0 1200,124" fill="#18181a" stroke="#fff" stroke-opacity=".4"/><polygon points="1113,0 1200,124 1116,115" fill="#111113" stroke="#000" stroke-opacity=".35"/><polygon points="0,83 94,83 121,225" fill="#29292b" stroke="#000" stroke-opacity=".35"/><polygon points="0,83 121,225 0,228" fill="#0a0a0c" stroke="#000" stroke-opacity=".35"/><polygon points="94,83 241,128 201,266" fill="#161618" stroke="#fff" stroke-opacity=".22"/><polygon points="94,83 201,266 121,225" fill="#3a3a3c" stroke="#000" stroke-opacity=".35"/><polygon points="241,128 292,150 201,266" fill="#262628" stroke="#000" stroke-opacity=".35"/><polygon points="292,150 364,254 201,266" fill="#19191b" stroke="#000" stroke-opacity=".35"/><polygon points="292,150 471,125 452,214" fill="#161618" stroke="#000" stroke-opacity=".35"/><polygon points="292,150 452,214 364,254" fill="#3d3d3f" stroke="#000" stroke-opacity=".35"/><polygon points="471,125 554,88 452,214" fill="#171719" stroke="#000" stroke-opacity=".35"/><polygon points="554,88 524,212 452,214" fill="#2f2f31" stroke="#000" stroke-opacity=".35"/><polygon points="554,88 617,116 524,212" fill="#29292b" stroke="#fff" stroke-opacity=".6"/><polygon points="617,116 621,248 524,212" fill="#404042" stroke="#000" stroke-opacity=".35"/><polygon points="617,116 730,90 756,254" fill="#3e3e40" stroke="#fff" stroke-opacity=".9"/><polygon points="617,116 756,254 621,248" fill="#28282a" stroke="#fff" stroke-opacity=".14"/><polygon points="730,90 853,78 864,263" fill="#222224" stroke="#fff" stroke-opacity=".14"/><polygon points="730,90 864,263 756,254" fill="#29292b" stroke="#000" stroke-opacity=".35"/><polygon points="853,78 979,109 864,263" fill="#3f3f41" stroke="#000" stroke-opacity=".35"/><polygon points="979,109 1008,190 864,263" fill="#262628" stroke="#000" stroke-opacity=".35"/><polygon points="979,109 1116,115 1068,259" fill="#1b1b1d" stroke="#000" stroke-opacity=".35"/><polygon points="979,109 1068,259 1008,190" fill="#0c0c0e" stroke="#000" stroke-opacity=".35"/><polygon points="1116,115 1200,124 1068,259" fill="#202022" stroke="#000" stroke-opacity=".35"/><polygon points="1200,124 1200,226 1068,259" fill="#3c3c3e" stroke="#000" stroke-opacity=".35"/><polygon points="0,228 121,225 0,379" fill="#232325" stroke="#000" stroke-opacity=".35"/><polygon points="121,225 101,310 0,379" fill="#0b0b0d" stroke="#000" stroke-opacity=".35"/><polygon points="121,225 201,266 101,310" fill="#3b3b3d" stroke="#000" stroke-opacity=".35"/><polygon points="201,266 228,364 101,310" fill="#323234" stroke="#fff" stroke-opacity=".4"/><polygon points="201,266 364,254 309,311" fill="#333335" stroke="#fff" stroke-opacity=".22"/><polygon points="201,266 309,311 228,364" fill="#212123" stroke="#000" stroke-opacity=".35"/><polygon points="364,254 452,214 309,311" fill="#161618" stroke="#000" stroke-opacity=".35"/><polygon points="452,214 423,378 309,311" fill="#1a1a1c" stroke="#000" stroke-opacity=".35"/><polygon points="452,214 524,212 565,313" fill="#2c2c2e" stroke="#fff" stroke-opacity=".14"/><polygon points="452,214 565,313 423,378" fill="#151517" stroke="#000" stroke-opacity=".35"/><polygon points="524,212 621,248 635,312" fill="#2c2c2e" stroke="#000" stroke-opacity=".35"/><polygon points="524,212 635,312 565,313" fill="#2b2b2d" stroke="#000" stroke-opacity=".35"/><polygon points="621,248 756,254 635,312" fill="#141416" stroke="#000" stroke-opacity=".35"/><polygon points="756,254 730,365 635,312" fill="#3c3c3e" stroke="#000" stroke-opacity=".35"/><polygon points="756,254 864,263 730,365" fill="#242426" stroke="#000" stroke-opacity=".35"/><polygon points="864,263 848,347 730,365" fill="#38383a" stroke="#000" stroke-opacity=".35"/><polygon points="864,263 1008,190 977,319" fill="#161618" stroke="#000" stroke-opacity=".35"/><polygon points="864,263 977,319 848,347" fill="#0a0a0c" stroke="#000" stroke-opacity=".35"/><polygon points="1008,190 1068,259 1108,314" fill="#2a2a2c" stroke="#000" stroke-opacity=".35"/><polygon points="1008,190 1108,314 977,319" fill="#1f1f21" stroke="#000" stroke-opacity=".35"/><polygon points="1068,259 1200,226 1200,353" fill="#171719" stroke="#000" stroke-opacity=".35"/><polygon points="1068,259 1200,353 1108,314" fill="#171719" stroke="#fff" stroke-opacity=".4"/><polygon points="0,379 101,310 103,435" fill="#0f0f11" stroke="#000" stroke-opacity=".35"/><polygon points="0,379 103,435 0,427" fill="#2c2c2e" stroke="#000" stroke-opacity=".35"/><polygon points="101,310 228,364 103,435" fill="#1a1a1c" stroke="#000" stroke-opacity=".35"/><polygon points="228,364 200,492 103,435" fill="#404042" stroke="#000" stroke-opacity=".35"/><polygon points="228,364 309,311 350,442" fill="#0c0c0e" stroke="#000" stroke-opacity=".35"/><polygon points="228,364 350,442 200,492" fill="#2d2d2f" stroke="#000" stroke-opacity=".35"/><polygon points="309,311 423,378 465,435" fill="#0b0b0d" stroke="#000" stroke-opacity=".35"/><polygon points="309,311 465,435 350,442" fill="#252527" stroke="#fff" stroke-opacity=".4"/><polygon points="423,378 565,313 465,435" fill="#353537" stroke="#fff" stroke-opacity=".9"/><polygon points="565,313 537,484 465,435" fill="#121214" stroke="#000" stroke-opacity=".35"/><polygon points="565,313 635,312 665,426" fill="#38383a" stroke="#000" stroke-opacity=".35"/><polygon points="565,313 665,426 537,484" fill="#353537" stroke="#000" stroke-opacity=".35"/><polygon points="635,312 730,365 665,426" fill="#29292b" stroke="#000" stroke-opacity=".35"/><polygon points="730,365 800,435 665,426" fill="#363638" stroke="#000" stroke-opacity=".35"/><polygon points="730,365 848,347 854,477" fill="#2b2b2d" stroke="#000" stroke-opacity=".35"/><polygon points="730,365 854,477 800,435" fill="#3f3f41" stroke="#000" stroke-opacity=".35"/><polygon points="848,347 977,319 854,477" fill="#2b2b2d" stroke="#000" stroke-opacity=".35"/><polygon points="977,319 968,441 854,477" fill="#2d2d2f" stroke="#000" stroke-opacity=".35"/><polygon points="977,319 1108,314 1058,425" fill="#404042" stroke="#000" stroke-opacity=".35"/><polygon points="977,319 1058,425 968,441" fill="#313133" stroke="#000" stroke-opacity=".35"/><polygon points="1108,314 1200,353 1200,463" fill="#2c2c2e" stroke="#000" stroke-opacity=".35"/><polygon points="1108,314 1200,463 1058,425" fill="#2e2e30" stroke="#000" stroke-opacity=".35"/><polygon points="0,427 103,435 116,561" fill="#111113" stroke="#000" stroke-opacity=".35"/><polygon points="0,427 116,561 0,551" fill="#303032" stroke="#000" stroke-opacity=".35"/><polygon points="103,435 200,492 214,606" fill="#0c0c0e" stroke="#000" stroke-opacity=".35"/><polygon points="103,435 214,606 116,561" fill="#232325" stroke="#000" stroke-opacity=".35"/><polygon points="200,492 350,442 214,606" fill="#111113" stroke="#000" stroke-opacity=".35"/><polygon points="350,442 326,577 214,606" fill="#363638" stroke="#000" stroke-opacity=".35"/><polygon points="350,442 465,435 464,547" fill="#272729" stroke="#000" stroke-opacity=".35"/><polygon points="350,442 464,547 326,577" fill="#3d3d3f" stroke="#000" stroke-opacity=".35"/><polygon points="465,435 537,484 464,547" fill="#28282a" stroke="#000" stroke-opacity=".35"/><polygon points="537,484 519,602 464,547" fill="#1f1f21" stroke="#000" stroke-opacity=".35"/><polygon points="537,484 665,426 678,552" fill="#28282a" stroke="#000" stroke-opacity=".35"/><polygon points="537,484 678,552 519,602" fill="#101012" stroke="#000" stroke-opacity=".35"/><polygon points="665,426 800,435 740,589" fill="#1a1a1c" stroke="#000" stroke-opacity=".35"/><polygon points="665,426 740,589 678,552" fill="#0c0c0e" stroke="#fff" stroke-opacity=".4"/><polygon points="800,435 854,477 906,548" fill="#353537" stroke="#000" stroke-opacity=".35"/><polygon points="800,435 906,548 740,589" fill="#38383a" stroke="#000" stroke-opacity=".35"/><polygon points="854,477 968,441 1016,600" fill="#101012" stroke="#000" stroke-opacity=".35"/><polygon points="854,477 1016,600 906,548" fill="#2f2f31" stroke="#000" stroke-opacity=".35"/><polygon points="968,441 1058,425 1098,565" fill="#1a1a1c" stroke="#000" stroke-opacity=".35"/><polygon points="968,441 1098,565 1016,600" fill="#363638" stroke="#000" stroke-opacity=".35"/><polygon points="1058,425 1200,463 1098,565" fill="#222224" stroke="#000" stroke-opacity=".35"/><polygon points="1200,463 1200,541 1098,565" fill="#3e3e40" stroke="#000" stroke-opacity=".35"/><polygon points="0,551 116,561 0,650" fill="#323234" stroke="#fff" stroke-opacity=".6"/><polygon points="116,561 144,665 0,650" fill="#171719" stroke="#000" stroke-opacity=".35"/><polygon points="116,561 214,606 144,665" fill="#313133" stroke="#000" stroke-opacity=".35"/><polygon points="214,606 233,667 144,665" fill="#121214" stroke="#000" stroke-opacity=".35"/><polygon points="214,606 326,577 351,693" fill="#3d3d3f" stroke="#000" stroke-opacity=".35"/><polygon points="214,606 351,693 233,667" fill="#151517" stroke="#000" stroke-opacity=".35"/><polygon points="326,577 464,547 420,661" fill="#161618" stroke="#000" stroke-opacity=".35"/><polygon points="326,577 420,661 351,693" fill="#101012" stroke="#fff" stroke-opacity=".6"/><polygon points="464,547 519,602 562,652" fill="#38383a" stroke="#000" stroke-opacity=".35"/><polygon points="464,547 562,652 420,661" fill="#101012" stroke="#fff" stroke-opacity=".14"/><polygon points="519,602 678,552 633,690" fill="#2c2c2e" stroke="#000" stroke-opacity=".35"/><polygon points="519,602 633,690 562,652" fill="#121214" stroke="#000" stroke-opacity=".35"/><polygon points="678,552 740,589 790,694" fill="#3d3d3f" stroke="#000" stroke-opacity=".35"/><polygon points="678,552 790,694 633,690" fill="#2e2e30" stroke="#fff" stroke-opacity=".6"/><polygon points="740,589 906,548 790,694" fill="#212123" stroke="#000" stroke-opacity=".35"/><polygon points="906,548 856,717 790,694" fill="#323234" stroke="#fff" stroke-opacity=".22"/><polygon points="906,548 1016,600 856,717" fill="#353537" stroke="#000" stroke-opacity=".35"/><polygon points="1016,600 959,648 856,717" fill="#3d3d3f" stroke="#000" stroke-opacity=".35"/><polygon points="1016,600 1098,565 1073,681" fill="#3a3a3c" stroke="#fff" stroke-opacity=".4"/><polygon points="1016,600 1073,681 959,648" fill="#2a2a2c" stroke="#000" stroke-opacity=".35"/><polygon points="1098,565 1200,541 1073,681" fill="#161618" stroke="#000" stroke-opacity=".35"/><polygon points="1200,541 1200,652 1073,681" fill="#151517" stroke="#fff" stroke-opacity=".6"/><polygon points="0,650 144,665 0,800" fill="#353537" stroke="#000" stroke-opacity=".35"/><polygon points="144,665 84,800 0,800" fill="#121214" stroke="#fff" stroke-opacity=".4"/><polygon points="144,665 233,667 84,800" fill="#3a3a3c" stroke="#000" stroke-opacity=".35"/><polygon points="233,667 208,800 84,800" fill="#272729" stroke="#fff" stroke-opacity=".14"/><polygon points="233,667 351,693 332,800" fill="#171719" stroke="#000" stroke-opacity=".35"/><polygon points="233,667 332,800 208,800" fill="#0a0a0c" stroke="#000" stroke-opacity=".35"/><polygon points="351,693 420,661 332,800" fill="#151517" stroke="#fff" stroke-opacity=".6"/><polygon points="420,661 408,800 332,800" fill="#212123" stroke="#000" stroke-opacity=".35"/><polygon points="420,661 562,652 408,800" fill="#161618" stroke="#000" stroke-opacity=".35"/><polygon points="562,652 534,800 408,800" fill="#101012" stroke="#000" stroke-opacity=".35"/><polygon points="562,652 633,690 534,800" fill="#3d3d3f" stroke="#fff" stroke-opacity=".4"/><polygon points="633,690 684,800 534,800" fill="#323234" stroke="#000" stroke-opacity=".35"/><polygon points="633,690 790,694 684,800" fill="#161618" stroke="#000" stroke-opacity=".35"/><polygon points="790,694 800,800 684,800" fill="#1f1f21" stroke="#000" stroke-opacity=".35"/><polygon points="790,694 856,717 800,800" fill="#111113" stroke="#000" stroke-opacity=".35"/><polygon points="856,717 884,800 800,800" fill="#3b3b3d" stroke="#000" stroke-opacity=".35"/><polygon points="856,717 959,648 996,800" fill="#121214" stroke="#000" stroke-opacity=".35"/><polygon points="856,717 996,800 884,800" fill="#2c2c2e" stroke="#000" stroke-opacity=".35"/><polygon points="959,648 1073,681 996,800" fill="#3a3a3c" stroke="#000" stroke-opacity=".35"/><polygon points="1073,681 1097,800 996,800" fill="#38383a" stroke="#fff" stroke-opacity=".6"/><polygon points="1073,681 1200,652 1200,800" fill="#1d1d1f" stroke="#000" stroke-opacity=".35"/><polygon points="1073,681 1200,800 1097,800" fill="#0a0a0c" stroke="#000" stroke-opacity=".35"/></g></svg>
   <div class="gwrap">
@@ -1348,7 +1390,7 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
   var CLOUD = /^https?:\/\//.test(SB_URL) && SB_KEY.indexOf('__') !== 0;
   var CAP = 8, WEEKS = 4, KEY = 'ut-mappa-carichi-v1';
   /* aspetto: automatico, chiaro o scuro (scelta salvata per ogni utente in questo browser) */
-  var THEME_KEY = KEY + '-theme', hostTheme = document.documentElement.getAttribute('data-theme');
+  var THEME_KEY = 'obo-tema', hostTheme = document.documentElement.getAttribute('data-theme');
   var THEME_ICON = { auto: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>', light: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', dark: '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>' };
   function getTheme() { try { var v = localStorage.getItem(THEME_KEY); return v === 'light' || v === 'dark' ? v : 'auto'; } catch (e) { return 'auto'; } }
   function applyTheme(t, persist) {
@@ -1359,6 +1401,7 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
     Array.prototype.forEach.call(document.querySelectorAll('[data-theme-set]'), function (b) { b.setAttribute('aria-checked', b.dataset.themeSet === t ? 'true' : 'false'); });
   }
   applyTheme(getTheme(), false);
+  window.addEventListener('storage', function (e) { if (e.key === THEME_KEY) applyTheme(getTheme(), false); });
   var $ = function (id) { return document.getElementById(id); };
 
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -1421,7 +1464,7 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
   function snap() { srvProj = {}; projects.forEach(function (p) { srvProj[p.id] = JSON.stringify(p); }); srvTeam = team.slice(); }
   function forceLogout(msg) {
     token = ''; try { localStorage.removeItem(KEY + '-tok'); } catch (e) {}
-    isAdmin = false; isVisitor = false; visName = ''; adminName = ''; me = ''; secrets = null; projects = []; roleSel = 'guest'; firstMode(''); renderAll(); if (msg) say2(msg);
+    isAdmin = false; isVisitor = false; visName = ''; adminName = ''; me = ''; secrets = null; projects = []; roleSel = 'guest'; firstMode(''); renderAll(); if (msg) say2(msg); if (CLOUD) hubLogin();
   }
   function pull(quiet) {
     return rpc('app_state', { token: token }).then(function (r) {
@@ -1438,6 +1481,30 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
     isAdmin = r.role === 'admin'; isVisitor = r.role === 'visitor'; visName = isVisitor ? r.name : ''; adminName = isAdmin ? r.name : ''; me = (isAdmin || isVisitor) ? '' : r.name;
     try { if (!isVisitor) localStorage.setItem(isAdmin ? KEY + '-lasta' : KEY + '-lastg', r.name); } catch (e) {}
     return pull().catch(function (e) { forceLogout(errTxt(e)); });
+  }
+
+  /* ===== Accesso unico: si entra solo con la sessione di OBO Hub (password + Authenticator) ===== */
+  function hubFail(msg) {
+    $('hubMsg').textContent = msg; $('hubBtn').hidden = false; $('hubGate').hidden = false;
+  }
+  var hubTry = 0;
+  function hubLogin() {
+    if (++hubTry > 3) { hubFail('Sessione non valida: rientra da OBO Hub.'); return Promise.resolve(); }
+    $('hubGate').hidden = false; $('hubBtn').hidden = true; $('hubMsg').textContent = 'Accesso con OBO Hub in corso…';
+    return import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm').then(function (m) {
+      var sb = m.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: false } });
+      return sb.auth.getSession().then(function (r) {
+        var s = r.data && r.data.session;
+        if (!s) { hubFail('Per usare la Mappa carichi entra da OBO Hub con la tua password e il codice di Microsoft Authenticator.'); return; }
+        return fetch(SB_URL.replace(/\/$/, '') + '/rest/v1/rpc/app_login_hub', {
+          method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Authorization: 'Bearer ' + s.access_token }, body: JSON.stringify({ p: {} })
+        }).then(function (x) { return x.json(); }).then(function (j) {
+          if (!j || !j.token) { hubFail((j && (j.error || j.message)) || 'Accesso non riuscito.'); return; }
+          $('hubGate').hidden = true;
+          return startSession(j);
+        });
+      });
+    }).catch(function () { hubFail('Non riesco a contattare il server. Riprova tra poco o rientra da OBO Hub.'); });
   }
   function cloudSave() {
     if (!token || isVisitor) return;
@@ -2652,6 +2719,7 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
     if (CLOUD) { var tk = token; rpc('app_logout', { token: tk }).catch(function () {}); token = ''; try { localStorage.removeItem(KEY + '-tok'); } catch (e) {} secrets = null; projects = []; }
     $('g-pass').value = ''; $('admin-pin').value = ''; $('me-name').value = ''; $('me-sel').value = ''; firstMode(''); say2(''); renderAll();
     showPage('home');
+    location.href = '../';
   });
 
 
@@ -2892,8 +2960,7 @@ button.wday.today .wdd { background: var(--btn); color: var(--on-btn); }
     var ds = $('dataSub'); if (ds) ds.textContent = 'I dati sono salvati sul server e condivisi tra tutti. Per aprirli in Excel copia il CSV; per ricaricarli incolla il CSV qui sotto.';
     var gs = document.querySelector('#h-gpw + p'); if (gs) gs.textContent = 'Ogni Guest, al primo accesso, sostituisce la password standard con una propria. Qui l\'Admin vede la password aggiornata. "Reimposta" cancella la password personale: la persona dovrà rientrare con quella standard e sceglierne una nuova.';
     rpc('app_public_people', {}).then(function (r) { setAdmins((r.people || []).filter(function (x) { return x.is_admin; }).map(function (x) { return x.name; })); team = (r.people || []).filter(function (x) { return !x.is_admin && !x.is_visitor; }).map(function (x) { return x.name; }); visitors = (r.people || []).filter(function (x) { return x.is_visitor; }).map(function (x) { return x.name; }); renderAll(); }).catch(function () { say2('Connessione al server non riuscita.'); });
-    var tk0 = ''; try { tk0 = localStorage.getItem(KEY + '-tok') || ''; } catch (e) {}
-    if (tk0) { token = tk0; rpc('app_state', { token: tk0 }).then(function (r) { isAdmin = r.role === 'admin'; isVisitor = r.role === 'visitor'; visName = isVisitor ? r.name : ''; adminName = isAdmin ? r.name : ''; me = (isAdmin || isVisitor) ? '' : r.name; return pull(); }).catch(function () { token = ''; try { localStorage.removeItem(KEY + '-tok'); } catch (e) {} }); }
+    hubLogin();
   }
   var h0 = ''; try { h0 = location.hash.replace('#', ''); } catch (e) {}
   showPage(PAGES.indexOf(h0) >= 0 ? h0 : 'home');

@@ -5,7 +5,7 @@ Schermata iniziale con tutte le app dell'ufficio tecnico. Indirizzo: `https://lo
 | App | Dove | Accesso |
 |---|---|---|
 | Progettazione LPS | repository `Lighting` → `/Lighting/` | login unico (password + Microsoft Authenticator) |
-| Mappa carichi ufficio tecnico | cartella `mappa-carichi/` di questo repository → `/obo-hub/mappa-carichi/` | dopo OBO Hub, con le sue password interne (admin / guest / visitatore) |
+| Mappa carichi ufficio tecnico | cartella `mappa-carichi/` di questo repository → `/obo-hub/mappa-carichi/` | solo con l'accesso di OBO Hub; ruolo (Admin/Guest/Visitatore) e persona li sceglie l'amministratore |
 | Amministrazione | `/Lighting/admin` | solo amministratori |
 
 ## Come funziona l'accesso
@@ -15,7 +15,7 @@ Schermata iniziale con tutte le app dell'ufficio tecnico. Indirizzo: `https://lo
 
 ## Configurazione (una volta)
 1. **Settings → Pages → Source: GitHub Actions.**
-2. La Mappa usa lo **stesso database Supabase** di Progettazione LPS: nel SQL Editor esegui `mappa-carichi/database/1-database.sql` (tabelle `app_*`, nessun conflitto) e, a parte, il file delle offerte.
+2. La Mappa usa lo **stesso database Supabase** di Progettazione LPS: nel SQL Editor esegui `mappa-carichi/database/1-database.sql` (tabelle `app_*`, nessun conflitto), poi `mappa-carichi/database/3-accesso-obo-hub.sql` (accesso solo da OBO Hub) e, a parte, il file delle offerte.
    Solo se un giorno vorrai un database separato: secrets `MAPPA_SUPABASE_URL` e `MAPPA_SUPABASE_ANON_KEY`.
 3. **Actions → Pubblica OBO Hub → Run workflow.**
 

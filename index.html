@@ -6,6 +6,7 @@
 <title>OBO Hub</title>
 <meta name="description" content="Tutti gli strumenti dell'ufficio tecnico in un solo posto: progettazione LPS, mappa carichi e altro.">
 <meta name="theme-color" content="#ffffff">
+<script>try{var t=localStorage.getItem("obo-tema");document.documentElement.dataset.theme=(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))?"dark":"light"}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -17,6 +18,11 @@
     --tenue: #6c757d; --bordo: #dee2e6; --sfondo: #ffffff; --grigio: #f5f6f7;
     --font: "Nimbus Sans L", "Nimbus Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
+  :root[data-theme="dark"] {
+    color-scheme: dark; --testo: #eef1f3; --tenue: #a7b4bc; --bordo: #3a454d; --sfondo: #1b1f23; --grigio: #242a2f; --ardesia: #2a3238;
+  }
+  :root[data-theme="dark"] header.barra, :root[data-theme="dark"] .app:not(.bloccata), :root[data-theme="dark"] .btn-bordo { background: #242a2f; }
+  :root[data-theme="dark"] .app .simbolo { background: #3d3020; }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--sfondo); color: var(--testo); font-family: var(--font); }
   a { color: inherit; }
@@ -137,6 +143,9 @@
     accedi: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>',
     esci: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
     richiedi: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>',
+    auto: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
+    light: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    dark: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
     profilo: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
     lucchetto: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     freccia: '<path d="M5 12h14M13 6l6 6-6 6"/>',
@@ -151,6 +160,26 @@
     if (onclick) el.addEventListener("click", onclick);
     return el;
   }
+
+  // aspetto condiviso con Mappa carichi e Progettazione LPS (stesso sito): automatico, chiaro, scuro
+  const NOMI_TEMA = { auto: "Auto", light: "Chiaro", dark: "Scuro" };
+  const leggiTema = () => { try { const v = localStorage.getItem("obo-tema"); return v === "light" || v === "dark" ? v : "auto"; } catch { return "auto"; } };
+  function applicaTema() {
+    const t = leggiTema(), scuro = t === "dark" || (t === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.dataset.theme = scuro ? "dark" : "light";
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", scuro ? "#1b1f23" : "#ffffff");
+  }
+  function bottoneTema() {
+    const t = leggiTema();
+    return iconaBarra(null, NOMI_TEMA[t], t, () => {
+      const ordine = ["auto", "light", "dark"], n = ordine[(ordine.indexOf(leggiTema()) + 1) % 3];
+      try { if (n === "auto") localStorage.removeItem("obo-tema"); else localStorage.setItem("obo-tema", n); } catch {}
+      applicaTema(); void aggiorna();
+    });
+  }
+  applicaTema();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applicaTema);
+  addEventListener("storage", (e) => { if (e.key === "obo-tema") { applicaTema(); void aggiorna(); } });
 
   function puoAprire(app, profilo) {
     if (!profilo) return false;
@@ -181,11 +210,19 @@
 
   function avviso(html) { const a = $("avviso"); a.innerHTML = html; a.classList.toggle("nascosto", !html); }
 
+  let giro = 0;
   async function aggiorna() {
+    const mio = ++giro; // se arrivano due aggiornamenti insieme vale solo l'ultimo (niente icone doppie)
     const { data: { session } } = await supabase.auth.getSession();
+    const [{ data: profilo }, { data: aal }] = session ? await Promise.all([
+      supabase.from("accessi_profili").select("email,nome,ruolo,stato,sezioni,deve_cambiare_password").eq("utente", session.user.id).maybeSingle(),
+      supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
+    ]) : [{ data: null }, { data: null }];
+    if (mio !== giro) return;
     const azioni = $("azioni"); azioni.innerHTML = "";
     const eroe = $("pulsanti-eroe"); eroe.innerHTML = "";
     avviso("");
+    azioni.append(bottoneTema());
 
     if (!session) {
       $("sottotitolo").textContent = "Strumenti dell'ufficio tecnico";
@@ -197,10 +234,6 @@
       return;
     }
 
-    const [{ data: profilo }, { data: aal }] = await Promise.all([
-      supabase.from("accessi_profili").select("email,nome,ruolo,stato,sezioni,deve_cambiare_password").eq("utente", session.user.id).maybeSingle(),
-      supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
-    ]);
     const esci = async () => { await supabase.auth.signOut(); location.reload(); };
     azioni.append(iconaBarra(`${CONFIG.lps}profilo`, "Profilo", "profilo"));
     if (profilo?.ruolo === "admin") azioni.append(iconaBarra(`${CONFIG.lps}admin`, "Admin", "admin"));

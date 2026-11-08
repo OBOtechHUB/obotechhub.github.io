@@ -24,7 +24,6 @@ export const APP = [
     descrizione: "Chi lavora su cosa, quanto è carico e dove c'è spazio per darsi una mano: progetti, giorni, ore e offerte.",
     icona: "carichi",
     url: "mappa-carichi/",
-    nota: "password propria",
     abilitataSe: (sezioni) => sezioni.includes("app_mappa"),
   },
   {
