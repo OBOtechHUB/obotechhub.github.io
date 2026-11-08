@@ -94,7 +94,7 @@
     "Suddivisione": "Breakdown", "Supporto tecnico fiera di settore": "Technical support at trade fair", "Svuota": "Clear", "Tecnico": "Technical", "Timeline attività": "Activity timeline",
     "Timeline attività · media giornaliera": "Activity timeline · daily average", "Tipo (dalle 09:00 o giornata intera)": "Type (from 09:00 or all day)", "Tipo di conversazioni": "Conversation type",
     "Tocca i giorni feriali nel calendario per sceglierli.": "Tap working days in the calendar to choose them.", "Tocca una cella per vedere i progetti di quel giorno.": "Tap a cell to see that day's projects.",
-    "Torna a OBO Hub": "Back to OBO Hub", "Totale": "Total", "Totale:": "Total:",
+    "Torna a OBO Hub": "Back to OBO Hub", "Testo più piccolo": "Smaller text", "Testo più grande": "Larger text", "Totale": "Total", "Totale:": "Total:",
     "Trascina una scheda in un'altra colonna o usa i pulsanti. Ognuno sposta solo i propri progetti.": "Drag a card to another column or use the buttons. Everyone moves only their own projects.",
     "Troppi tentativi. Riprova tra qualche minuto.": "Too many attempts. Try again in a few minutes.", "Tutte le persone": "All people", "Tutti i progetti": "All projects", "Tutto": "All",
     "Ufficio Tecnico": "Technical Office", "Ultimo mese": "Last month", "Vai a OBO Hub": "Go to OBO Hub", "Vai al mese corrente": "Go to current month", "Vai alla settimana corrente": "Go to current week",
@@ -192,7 +192,26 @@
     });
     nav.appendChild(b); aggiornaPulsante();
   }
+  // dimensione del testo − / + (condivisa con OBO Hub e Progettazione LPS)
+  var PASSI = [0.85, 0.9, 1, 1.1, 1.2, 1.3, 1.45];
+  function zoomAtt() { try { var v = Number(localStorage.getItem("obo-zoom")); return PASSI.indexOf(v) >= 0 ? v : 1; } catch (e) { return 1; } }
+  function applicaZoom() { document.documentElement.style.zoom = String(zoomAtt()); }
+  function cambiaZoom(v) {
+    var i = PASSI.indexOf(zoomAtt()), z = PASSI[Math.min(PASSI.length - 1, Math.max(0, i + v))];
+    try { if (z === 1) localStorage.removeItem("obo-zoom"); else localStorage.setItem("obo-zoom", String(z)); } catch (e) {}
+    applicaZoom();
+  }
+  function creaZoom() {
+    var nav = document.getElementById("nav"); if (!nav || document.getElementById("oboZoomMeno")) return;
+    [["oboZoomMeno", "A−", -1, '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6"/>', "Testo più piccolo"], ["oboZoomPiu", "A+", 1, '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6M11 8v6"/>', "Testo più grande"]].forEach(function (d) {
+      var b = document.createElement("button"); b.type = "button"; b.id = d[0]; b.title = d[4]; b.setAttribute("aria-label", d[4]);
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + d[3] + '</svg><span class="lab">' + d[1] + '</span>';
+      b.addEventListener("click", function () { cambiaZoom(d[2]); }); nav.appendChild(b);
+    });
+  }
+  applicaZoom();
+  window.addEventListener("storage", function (e) { if (e.key === "obo-zoom") applicaZoom(); });
   window.addEventListener("storage", function (e) { if (e.key === "obo-lingua") { lingua = e.newValue === "en" ? "en" : "it"; tutto(); } });
-  function avvio() { creaPulsante(); tutto(); }
+  function avvio() { creaPulsante(); creaZoom(); tutto(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", avvio); else avvio();
 })();
