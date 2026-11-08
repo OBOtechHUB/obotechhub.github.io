@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OBO Hub</title>
-<meta name="description" content="Tutti gli strumenti dell'ufficio tecnico in un solo posto: progettazione LPS, mappa carichi e altro.">
+<meta name="description" content="Accesso riservato agli strumenti dell'ufficio tecnico.">
 <meta name="theme-color" content="#ffffff">
 <script>try{var t=localStorage.getItem("obo-tema");document.documentElement.dataset.theme=(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))?"dark":"light"}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
@@ -80,6 +80,18 @@
   footer { border-top: 1px solid var(--bordo); padding: 20px 0; color: var(--tenue); font-size: 13px; }
   footer .contenitore { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
   .nascosto { display: none !important; }
+  .pannello { max-width: 460px; margin: 0 auto 40px; padding: 26px; border: .8px solid var(--bordo); border-radius: 16px; background: var(--sfondo); }
+  .pannello h2 { margin: 0 0 6px; }
+  .pannello p { color: var(--tenue); font-size: 15px; line-height: 1.45; margin: 0 0 14px; }
+  .pannello label { display: block; margin: 12px 0 0; font-size: 14px; font-weight: 600; }
+  .pannello input, .pannello textarea { width: 100%; margin-top: 6px; padding: 11px 12px; border: 1px solid var(--bordo); border-radius: 8px; font: 16px var(--font); background: var(--sfondo); color: var(--testo); }
+  .pannello input:focus, .pannello textarea:focus { outline: 2px solid var(--arancio); outline-offset: 1px; }
+  .pannello .btn { margin-top: 18px; width: 100%; justify-content: center; border: 0; }
+  .pannello .link { background: none; border: 0; padding: 0; margin-top: 14px; color: var(--arancio); font: 600 14px var(--font); cursor: pointer; }
+  .pannello .errore { color: #d9342b; font-size: 14px; margin-top: 12px; min-height: 1em; }
+  .pannello .qr { display: block; width: 200px; height: 200px; margin: 8px auto; padding: 8px; background: #fff; border-radius: 10px; }
+  .pannello code { display: block; word-break: break-all; font-size: 12px; color: var(--tenue); text-align: center; }
+  .trappola { position: absolute; left: -9999px; }
   .caricamento { color: var(--tenue); padding: 40px 0; text-align: center; }
   @media (max-width: 640px) {
     .marchio small { display: none; }
@@ -102,7 +114,7 @@
 <section class="eroe">
   <div class="contenitore">
     <h1 id="titolo">Tutti gli strumenti dell'ufficio tecnico, in un solo posto</h1>
-    <p id="intro">Progettazione della protezione contro i fulmini, mappa dei carichi di lavoro e i prossimi strumenti: un unico accesso sicuro con Microsoft Authenticator.</p>
+    <p id="intro">Un unico accesso sicuro, con password e codice di Microsoft Authenticator, per gli strumenti di lavoro abilitati per te.</p>
     <div class="pulsanti" id="pulsanti-eroe"></div>
   </div>
 </section>
@@ -110,19 +122,20 @@
 <main>
   <div class="contenitore">
     <div id="avviso" class="avviso nascosto" role="status"></div>
-    <h2 id="titolo-app">Le app</h2>
+    <div id="pannello" class="pannello nascosto"></div>
+    <h2 id="titolo-app" class="nascosto">Le tue app</h2>
     <div class="griglia" id="griglia"><p class="caricamento">Caricamento…</p></div>
     <div class="vantaggi" id="vantaggi">
       <div><b>Un solo accesso</b><span>Email, password e codice dell'app Authenticator: entri una volta e trovi tutte le tue app.</span></div>
       <div><b>Su ogni dispositivo</b><span>Installa OBO Hub su PC, iPhone, iPad e Android come una normale app.</span></div>
-      <div><b>Accessi su misura</b><span>L'amministratore sceglie quali app e quali sezioni può usare ogni persona.</span></div>
-      <div><b>Dati al sicuro</b><span>Nessun dato viene cancellato: progetti e storico restano sempre salvati.</span></div>
+      <div><b>Accessi su misura</b><span>Ognuno vede solo gli strumenti che gli sono stati abilitati.</span></div>
+      <div><b>Dati al sicuro</b><span>Accesso protetto in due passaggi e dati conservati senza cancellazioni.</span></div>
     </div>
   </div>
 </main>
 
 <footer>
-  <div class="contenitore"><span>OBO Hub · strumenti interni dell'ufficio tecnico</span><span><a href="/Lighting/privacy">Privacy</a> · <a href="/Lighting/termini">Termini d'uso</a></span></div>
+  <div class="contenitore"><span>OBO Hub · strumenti interni dell'ufficio tecnico</span><span>Accesso riservato</span></div>
 </footer>
 
 <script src="install.js"></script>
@@ -130,11 +143,10 @@
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
   import { CONFIG, APP } from "./config.js";
 
-  // Stesso progetto Supabase e stesso sito di Progettazione LPS: l'accesso fatto in una app vale anche nell'altra.
-  const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
-  const qui = location.pathname;
-  const urlAccesso = `${CONFIG.lps}auth?ritorno=${encodeURIComponent(qui)}`;
+  // Stesso database e stesso sito delle app: l'accesso fatto qui vale in tutte.
+  const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   const $ = (id) => document.getElementById(id);
+  const URL_QUI = location.origin + location.pathname;
 
   const ICONE = {
     fulmine: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
@@ -143,11 +155,10 @@
     accedi: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>',
     esci: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
     richiedi: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>',
+    chiave: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3M17 6l3 3M14 9l2 2"/>',
     auto: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
     light: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     dark: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
-    profilo: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-    lucchetto: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     freccia: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   };
   const svg = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONE[n] ?? ""}</svg>`;
@@ -161,7 +172,7 @@
     return el;
   }
 
-  // aspetto condiviso con Mappa carichi e Progettazione LPS (stesso sito): automatico, chiaro, scuro
+  // aspetto condiviso con tutte le app (stesso sito): automatico, chiaro, scuro
   const NOMI_TEMA = { auto: "Auto", light: "Chiaro", dark: "Scuro" };
   const leggiTema = () => { try { const v = localStorage.getItem("obo-tema"); return v === "light" || v === "dark" ? v : "auto"; } catch { return "auto"; } };
   function applicaTema() {
@@ -182,86 +193,201 @@
   addEventListener("storage", (e) => { if (e.key === "obo-tema") { applicaTema(); void aggiorna(); } });
 
   function puoAprire(app, profilo) {
-    if (!profilo) return false;
     if (app.soloAdmin) return profilo.ruolo === "admin";
     if (profilo.ruolo === "admin" || profilo.sezioni.includes("tutte")) return true;
     return app.abilitataSe(profilo.sezioni);
   }
 
-  function disegnaApp(profilo, stato) {
-    const elenco = APP.filter((a) => !a.soloAdmin || profilo?.ruolo === "admin");
+  // Solo le app abilitate: chi non è dentro non vede né nomi né riferimenti.
+  function disegnaApp(profilo) {
     const griglia = $("griglia"); griglia.innerHTML = "";
-    let visibili = 0;
-    for (const app of elenco) {
-      const ok = stato === "abilitato" && puoAprire(app, profilo);
-      if (stato === "abilitato" && !ok) continue; // l'utente vede solo le app abilitate
-      visibili++;
-      const el = document.createElement(ok ? "a" : "div");
-      el.className = `app${ok ? "" : " bloccata"}`;
-      if (ok) el.href = app.url;
-      el.innerHTML = `<span class="simbolo">${svg(app.icona)}</span>
-        <h3>${esc(app.nome)}</h3><p>${esc(app.descrizione)}</p>
-        <span class="piede">${ok ? `<span class="vai">Apri ${svg("freccia").replace("<svg", '<svg width="18" height="18"')}</span>` : `<span class="vai">${svg("lucchetto").replace("<svg", '<svg width="16" height="16"')} Accesso richiesto</span>`}
-        ${app.nota ? `<span class="etichetta">${esc(app.nota)}</span>` : ""}</span>`;
+    const mie = profilo ? APP.filter((a) => puoAprire(a, profilo)) : [];
+    $("titolo-app").classList.toggle("nascosto", !mie.length);
+    for (const app of mie) {
+      const el = document.createElement("a");
+      el.className = "app"; el.href = app.url;
+      el.innerHTML = `<span class="simbolo">${svg(app.icona)}</span><h3>${esc(app.nome)}</h3><p>${esc(app.descrizione)}</p>
+        <span class="piede"><span class="vai">Apri ${svg("freccia").replace("<svg", '<svg width="18" height="18"')}</span></span>`;
       griglia.appendChild(el);
     }
-    if (!visibili) griglia.innerHTML = '<p class="caricamento">Nessuna app abilitata per il tuo account. Chiedi all\'amministratore di abilitarle.</p>';
+    if (profilo && !mie.length) griglia.innerHTML = '<p class="caricamento">Al momento non hai strumenti abilitati. Chiedi all\'amministratore.</p>';
   }
 
   function avviso(html) { const a = $("avviso"); a.innerHTML = html; a.classList.toggle("nascosto", !html); }
+  function pannello(html) { const p = $("pannello"); p.innerHTML = html; p.classList.toggle("nascosto", !html); return p; }
+  const errore = (t) => { const e = document.querySelector("#pannello .errore"); if (e) e.textContent = t; };
+  const occupato = (si) => document.querySelectorAll("#pannello button").forEach((b) => { b.disabled = si; });
 
+  // ---------- schermate di accesso ----------
+  let vista = "";          // "accedi" | "richiedi" | "recupero" | "" (home)
+  let recupero = false;    // arrivati dal link "password dimenticata"
+
+  function schermataAccedi() {
+    const p = pannello(`<h2>Accedi</h2><p>Usa la tua email e la password. Poi ti chiederemo il codice di Microsoft Authenticator.</p>
+      <form id="f"><label>Email<input id="em" type="email" autocomplete="username" required maxlength="254"></label>
+      <label>Password<input id="pw" type="password" autocomplete="current-password" required minlength="6"></label>
+      <button class="btn btn-primario">${svg("accedi")}Accedi</button><div class="errore" role="alert"></div></form>
+      <button class="link" id="dim" type="button">Password dimenticata?</button><br><button class="link" id="ric" type="button">Non hai un accesso? Richiedilo</button>`);
+    p.querySelector("#f").addEventListener("submit", async (e) => {
+      e.preventDefault(); occupato(true); errore("");
+      const { error } = await supabase.auth.signInWithPassword({ email: $("em").value.trim(), password: $("pw").value });
+      occupato(false);
+      if (error) { errore(/invalid/i.test(error.message) ? "Email o password non corrette." : error.message); return; }
+      vista = ""; void aggiorna();
+    });
+    p.querySelector("#dim").addEventListener("click", () => { vista = "recupero"; void aggiorna(); });
+    p.querySelector("#ric").addEventListener("click", () => { vista = "richiedi"; void aggiorna(); });
+    $("em").focus();
+  }
+
+  function schermataRecupero() {
+    const p = pannello(`<h2>Password dimenticata</h2><p>Scrivi la tua email: se è abilitata riceverai il link per sceglierne una nuova.</p>
+      <form id="f"><label>Email<input id="em" type="email" autocomplete="username" required maxlength="254"></label>
+      <button class="btn btn-primario">Invia il link</button><div class="errore" role="alert"></div></form>
+      <button class="link" id="ind" type="button">Torna all'accesso</button>`);
+    p.querySelector("#f").addEventListener("submit", async (e) => {
+      e.preventDefault(); occupato(true);
+      await supabase.auth.resetPasswordForEmail($("em").value.trim(), { redirectTo: URL_QUI });
+      occupato(false); errore("Se l'indirizzo è abilitato, riceverai l'email con il link.");
+    });
+    p.querySelector("#ind").addEventListener("click", () => { vista = "accedi"; void aggiorna(); });
+  }
+
+  function schermataRichiesta() {
+    const p = pannello(`<h2>Richiedi l'accesso</h2><p>L'amministratore riceve la richiesta e, se la approva, ti comunica come entrare.</p>
+      <form id="f"><label>Nome e cognome<input id="no" required maxlength="120" autocomplete="name"></label>
+      <label>Email<input id="em" type="email" required maxlength="254" autocomplete="email"></label>
+      <label>Azienda<input id="az" maxlength="160" autocomplete="organization"></label>
+      <label>Motivo<textarea id="mo" rows="3" maxlength="1000"></textarea></label>
+      <input class="trappola" id="si" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="btn btn-primario">${svg("richiedi")}Invia la richiesta</button><div class="errore" role="alert"></div></form>
+      <button class="link" id="ind" type="button">Hai già un accesso? Accedi</button>`);
+    p.querySelector("#f").addEventListener("submit", async (e) => {
+      e.preventDefault(); occupato(true); errore("");
+      const { data, error } = await supabase.functions.invoke("richiesta-accesso", { body: { nome: $("no").value, email: $("em").value, azienda: $("az").value, motivo: $("mo").value, sito: $("si").value, app: location.origin + CONFIG.lps } });
+      occupato(false);
+      if (error || data?.errore) { errore(data?.errore ?? "Invio non riuscito, riprova più tardi."); return; }
+      pannello(`<h2>Richiesta inviata</h2><p>Grazie! Quando l'amministratore la approva ti comunica la password iniziale e i passi per entrare.</p>`);
+    });
+    p.querySelector("#ind").addEventListener("click", () => { vista = "accedi"; void aggiorna(); });
+  }
+
+  function schermataNuovaPassword(primoAccesso) {
+    const p = pannello(`<h2>${primoAccesso ? "Scegli la tua password" : "Nuova password"}</h2>
+      <p>${primoAccesso ? "Stai usando la password iniziale comune: per continuare scegline una personale." : "Scegli la nuova password."} Almeno 10 caratteri, con lettere e numeri.</p>
+      <form id="f"><label>Nuova password<input id="p1" type="password" autocomplete="new-password" required minlength="10"></label>
+      <label>Ripeti la password<input id="p2" type="password" autocomplete="new-password" required></label>
+      <button class="btn btn-primario">${svg("chiave")}Salva la password</button><div class="errore" role="alert"></div></form>`);
+    p.querySelector("#f").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const a = $("p1").value, b = $("p2").value;
+      if (a.length < 10 || !/[A-Za-z]/.test(a) || !/\d/.test(a)) { errore("Almeno 10 caratteri, con lettere e numeri."); return; }
+      if (a !== b) { errore("Le due password non coincidono."); return; }
+      occupato(true);
+      const { error } = await supabase.auth.updateUser({ password: a });
+      if (error) { occupato(false); errore(/different/i.test(error.message) ? "La nuova password deve essere diversa dalla precedente." : error.message); return; }
+      await supabase.rpc("password_cambiata");
+      await supabase.rpc("registra_accesso", { evento: "password_cambiata" });
+      recupero = false; occupato(false); void aggiorna();
+    });
+  }
+
+  async function schermataAttivaAuthenticator() {
+    pannello(`<h2>Collega Microsoft Authenticator</h2><p>Preparazione del codice QR…</p>`);
+    const { data: f } = await supabase.auth.mfa.listFactors();
+    for (const x of f?.all ?? []) if (x.status !== "verified") await supabase.auth.mfa.unenroll({ factorId: x.id });
+    const { data, error } = await supabase.auth.mfa.enroll({ factorType: "totp", friendlyName: `Authenticator ${new Date().toLocaleDateString("it-IT")}`, issuer: "OBO Hub" });
+    if (error) { pannello(`<h2>Collega Microsoft Authenticator</h2><div class="errore">${esc(error.message)}</div>`); return; }
+    const p = pannello(`<h2>Collega Microsoft Authenticator</h2>
+      <p>1. Apri Microsoft Authenticator sul telefono, premi <b>+</b> e scegli <b>Altro account</b>.<br>2. Inquadra il codice QR.<br>3. Scrivi qui il codice a 6 cifre che compare.</p>
+      <img class="qr" alt="Codice QR per Microsoft Authenticator" src="${data.totp.qr_code}"><code>Codice manuale: ${esc(data.totp.secret)}</code>
+      <form id="f"><label>Codice a 6 cifre<input id="co" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" required></label>
+      <button class="btn btn-primario">Conferma</button><div class="errore" role="alert"></div></form>`);
+    p.querySelector("#f").addEventListener("submit", async (e) => {
+      e.preventDefault(); occupato(true); errore("");
+      const { error: er } = await supabase.auth.mfa.challengeAndVerify({ factorId: data.id, code: $("co").value.replace(/\s/g, "") });
+      occupato(false);
+      if (er) { errore("Codice non valido: controlla l'ora del telefono e riprova."); return; }
+      await supabase.rpc("registra_accesso", { evento: "authenticator_attivato" });
+      void aggiorna();
+    });
+    $("co").focus();
+  }
+
+  function schermataVerifica(fattore) {
+    const p = pannello(`<h2>Codice di Authenticator</h2><p>Apri Microsoft Authenticator e scrivi il codice a 6 cifre per questo accesso.</p>
+      <form id="f"><label>Codice a 6 cifre<input id="co" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" required></label>
+      <button class="btn btn-primario">Entra</button><div class="errore" role="alert"></div></form>`);
+    p.querySelector("#f").addEventListener("submit", async (e) => {
+      e.preventDefault(); occupato(true); errore("");
+      const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fattore, code: $("co").value.replace(/\s/g, "") });
+      occupato(false);
+      if (error) { errore("Codice non valido, riprova."); return; }
+      void aggiorna();
+    });
+    $("co").focus();
+  }
+
+  // ---------- stato e disegno della pagina ----------
   let giro = 0;
   async function aggiorna() {
-    const mio = ++giro; // se arrivano due aggiornamenti insieme vale solo l'ultimo (niente icone doppie)
+    const mio = ++giro; // se arrivano due aggiornamenti insieme vale solo l'ultimo
     const { data: { session } } = await supabase.auth.getSession();
-    const [{ data: profilo }, { data: aal }] = session ? await Promise.all([
-      supabase.from("accessi_profili").select("email,nome,ruolo,stato,sezioni,deve_cambiare_password").eq("utente", session.user.id).maybeSingle(),
-      supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
-    ]) : [{ data: null }, { data: null }];
+    let profilo = null, aal = null, fattori = null;
+    if (session) {
+      [{ data: profilo }, { data: aal }, { data: fattori }] = await Promise.all([
+        supabase.from("accessi_profili").select("email,nome,ruolo,stato,sezioni,deve_cambiare_password").eq("utente", session.user.id).maybeSingle(),
+        supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
+        supabase.auth.mfa.listFactors(),
+      ]);
+    }
     if (mio !== giro) return;
     const azioni = $("azioni"); azioni.innerHTML = "";
     const eroe = $("pulsanti-eroe"); eroe.innerHTML = "";
-    avviso("");
+    avviso(""); pannello(""); disegnaApp(null);
     azioni.append(bottoneTema());
+    $("titolo").textContent = "Gli strumenti dell'ufficio tecnico, in un solo posto";
+    $("intro").textContent = "Un unico accesso sicuro, con password e codice di Microsoft Authenticator, per gli strumenti di lavoro abilitati per te.";
 
     if (!session) {
-      $("sottotitolo").textContent = "Strumenti dell'ufficio tecnico";
-      azioni.append(iconaBarra(`${CONFIG.lps}richiesta-accesso`, "Richiedi", "richiedi"), iconaBarra(urlAccesso, "Accedi", "accedi"));
-      eroe.innerHTML = `<a class="btn btn-primario" href="${urlAccesso}">${svg("accedi")}Accedi</a>
-        <a class="btn btn-chiaro" href="${CONFIG.lps}richiesta-accesso">${svg("richiedi")}Richiedi l'accesso</a>`;
-      $("titolo-app").textContent = "Le app disponibili";
-      disegnaApp(null, "anonimo");
+      $("sottotitolo").textContent = "Accesso riservato";
+      azioni.append(iconaBarra(null, "Richiedi", "richiedi", () => { vista = "richiedi"; void aggiorna(); }), iconaBarra(null, "Accedi", "accedi", () => { vista = "accedi"; void aggiorna(); }));
+      if (vista === "richiedi") schermataRichiesta();
+      else if (vista === "recupero") schermataRecupero();
+      else if (vista === "accedi") schermataAccedi();
+      else {
+        eroe.innerHTML = `<button type="button" class="btn btn-primario" id="b-acc">${svg("accedi")}Accedi</button><button type="button" class="btn btn-chiaro" id="b-ric">${svg("richiedi")}Richiedi l'accesso</button>`;
+        $("b-acc").addEventListener("click", () => { vista = "accedi"; void aggiorna(); });
+        $("b-ric").addEventListener("click", () => { vista = "richiedi"; void aggiorna(); });
+      }
       return;
     }
 
-    const esci = async () => { await supabase.auth.signOut(); location.reload(); };
-    azioni.append(iconaBarra(`${CONFIG.lps}profilo`, "Profilo", "profilo"));
-    if (profilo?.ruolo === "admin") azioni.append(iconaBarra(`${CONFIG.lps}admin`, "Admin", "admin"));
-    azioni.append(iconaBarra(null, "Esci", "esci", esci));
+    vista = "";
+    const esci = async () => { await supabase.rpc("registra_accesso", { evento: "uscita" }).catch(() => {}); await supabase.auth.signOut(); try { sessionStorage.removeItem("obo-hub-registrato"); } catch {} void aggiorna(); };
     $("sottotitolo").textContent = session.user.email ?? "";
+    const verificati = (fattori?.totp ?? []).filter((x) => x.status === "verified");
 
-    let stato = "abilitato";
-    if (!profilo) stato = "non-approvato";
-    else if (profilo.stato !== "attivo") stato = "sospeso";
-    else if (profilo.deve_cambiare_password || aal?.currentLevel !== "aal2") stato = "da-completare";
+    if (!profilo) { avviso("Il tuo account non è ancora stato approvato dall'amministratore."); azioni.append(iconaBarra(null, "Esci", "esci", esci)); return; }
+    if (profilo.stato !== "attivo") { avviso("Il tuo accesso è sospeso. Contatta l'amministratore."); azioni.append(iconaBarra(null, "Esci", "esci", esci)); return; }
+    azioni.append(iconaBarra(null, "Esci", "esci", esci));
+    if (verificati.length && aal?.currentLevel !== "aal2") { schermataVerifica(verificati[0].id); return; }
+    if (recupero || profilo.deve_cambiare_password) { schermataNuovaPassword(!recupero); return; }
+    if (!verificati.length) { void schermataAttivaAuthenticator(); return; }
 
-    if (stato === "abilitato") {
-      $("titolo").textContent = `Ciao${profilo.nome && profilo.nome !== "Amministratore" ? " " + profilo.nome.split(" ")[0] : ""}, ecco le tue app`;
-      $("intro").textContent = "Apri lo strumento che ti serve. L'accesso vale per tutte le app di OBO Hub.";
-      $("titolo-app").textContent = "Le tue app";
-    } else if (stato === "da-completare") {
-      avviso(`Per aprire le app completa l'accesso: ${profilo.deve_cambiare_password ? "scegli la tua password e " : ""}inserisci il codice di Microsoft Authenticator.
-        <div class="pulsanti"><a class="btn btn-primario" href="${urlAccesso}">${svg("accedi")}Completa l'accesso</a></div>`);
-    } else if (stato === "sospeso") {
-      avviso("Il tuo accesso è sospeso. Contatta l'amministratore.");
-    } else {
-      avviso("Il tuo account non è ancora stato approvato dall'amministratore.");
-    }
-    disegnaApp(profilo, stato);
+    // dentro: solo le proprie app
+    try { if (!sessionStorage.getItem("obo-hub-registrato")) { sessionStorage.setItem("obo-hub-registrato", "1"); void supabase.rpc("registra_accesso", { evento: "accesso", dettagli: { app: "obo-hub" } }); } } catch {}
+    if (profilo.ruolo === "admin") azioni.insertBefore(iconaBarra(CONFIG.lps + "admin", "Admin", "admin"), azioni.lastChild);
+    $("titolo").textContent = `Ciao${profilo.nome && profilo.nome !== "Amministratore" ? " " + profilo.nome.split(" ")[0] : ""}, ecco i tuoi strumenti`;
+    $("intro").textContent = "Apri quello che ti serve: l'accesso vale per tutti.";
+    disegnaApp(profilo);
   }
 
-  supabase.auth.onAuthStateChange((evento) => { if (evento !== "INITIAL_SESSION") void aggiorna(); });
-  aggiorna().catch(() => { avviso("Non riesco a contattare il server. Riprova tra poco."); disegnaApp(null, "anonimo"); });
+  supabase.auth.onAuthStateChange((evento) => {
+    if (evento === "PASSWORD_RECOVERY") recupero = true;
+    if (evento !== "INITIAL_SESSION") void aggiorna();
+  });
+  aggiorna().catch(() => avviso("Non riesco a contattare il server. Riprova tra poco."));
 </script>
 </body>
 </html>

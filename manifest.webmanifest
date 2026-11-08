@@ -2,7 +2,7 @@
   "id": "./",
   "name": "OBO Hub",
   "short_name": "OBO Hub",
-  "description": "Tutti gli strumenti dell'ufficio tecnico in un solo posto",
+  "description": "Accesso riservato agli strumenti dell'ufficio tecnico",
   "lang": "it",
   "start_url": "./",
   "scope": "./",

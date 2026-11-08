@@ -15,7 +15,7 @@ Schermata iniziale con tutte le app dell'ufficio tecnico. Indirizzo: `https://lo
 
 ## Configurazione (una volta)
 1. **Settings → Pages → Source: GitHub Actions.**
-2. La Mappa usa lo **stesso database Supabase** di Progettazione LPS: nel SQL Editor esegui `mappa-carichi/database/1-database.sql` (tabelle `app_*`, nessun conflitto), poi `mappa-carichi/database/3-accesso-obo-hub.sql` (accesso solo da OBO Hub) e, a parte, il file delle offerte.
+2. La Mappa usa lo **stesso database Supabase** di Progettazione LPS: nel SQL Editor esegui `mappa-carichi/database/1-database.sql` (tabelle `app_*`, nessun conflitto), poi `mappa-carichi/database/3-accesso-obo-hub.sql` (accesso solo da OBO Hub) e `4-visitatori.sql` (visitatori in sola lettura, link `mappa-carichi/?visitatore`) e, a parte, il file delle offerte.
    Solo se un giorno vorrai un database separato: secrets `MAPPA_SUPABASE_URL` e `MAPPA_SUPABASE_ANON_KEY`.
 3. **Actions → Pubblica OBO Hub → Run workflow.**
 
