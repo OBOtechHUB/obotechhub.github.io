@@ -983,6 +983,14 @@ body { margin: 0 !important; background: var(--bg) !important; background-image:
 .hubgate .visform button { width: 100%; margin-top: 16px; height: 46px; border: 0; border-radius: 999px; background: #41525d; color: #fff; font: 600 15px var(--font-body); cursor: pointer; }
 .hubgate .vmsg { min-height: 1em; margin-top: 10px; color: #d9342b; font-size: 14px; }
 body.visitatore .nav a.hubnav { display: none !important; }
+
+html { -webkit-tap-highlight-color: transparent; }
+@media (display-mode: standalone) {
+  html, body { overscroll-behavior-y: none; }
+  .rail { padding-top: env(safe-area-inset-top); height: calc(72px + env(safe-area-inset-top)); }
+  .nav button, .nav a.hubnav { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+}
+@media (display-mode: standalone) and (max-width: 860px) { .rail { height: calc(64px + env(safe-area-inset-top)); } }
 </style>
 </head>
 <body>

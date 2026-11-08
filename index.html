@@ -12,6 +12,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="OBO Hub">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
 <style>
   :root {
     --arancio: #f39b00; --arancio-scuro: #d98a00; --ardesia: #41525d; --testo: #212529;
@@ -97,6 +99,15 @@
     .marchio small { display: none; }
     .icona-barra { min-width: 52px; padding: 6px 4px; font-size: 11px; }
     header.barra .contenitore { height: 64px; }
+  }
+
+  /* Aspetto da app vera quando è installata */
+  html { -webkit-tap-highlight-color: transparent; }
+  @media (display-mode: standalone) {
+    html, body { overscroll-behavior-y: none; }
+    header.barra { padding-top: env(safe-area-inset-top); }
+    body { padding-bottom: env(safe-area-inset-bottom); }
+    .icona-barra, .marchio { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   }
 </style>
 </head>
