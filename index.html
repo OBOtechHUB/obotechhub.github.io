@@ -508,8 +508,10 @@
     try { if (!sessionStorage.getItem("obo-hub-registrato")) { sessionStorage.setItem("obo-hub-registrato", "1"); void supabase.rpc("registra_accesso", { evento: "accesso", dettagli: { app: "obo-hub" } }); } } catch {}
     if (profilo.ruolo === "admin") azioni.insertBefore(iconaBarra(CONFIG.lps + "admin", "Admin", "admin"), azioni.lastChild);
     const nome1 = profilo.nome && profilo.nome !== "Amministratore" ? " " + profilo.nome.split(" ")[0] : "";
-    $("titolo").textContent = lingua === "en" ? `Hi${nome1}, here are your tools` : `Ciao${nome1}, ecco i tuoi strumenti`;
-    $("intro").textContent = "Apri quello che ti serve: l'accesso vale per tutti.";
+    const ora = new Date().getHours();
+    const saluto = lingua === "en" ? (ora < 12 ? "Good morning" : ora < 18 ? "Good afternoon" : "Good evening") : (ora < 13 ? "Buongiorno" : ora < 18 ? "Buon pomeriggio" : "Buonasera");
+    $("titolo").textContent = `${saluto}${nome1.replace(" ", ", ")}`;
+    $("intro").textContent = "Le tue app di lavoro, sempre a portata di mano.";
     disegnaApp(profilo);
   }
 
