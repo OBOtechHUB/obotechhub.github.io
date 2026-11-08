@@ -94,7 +94,7 @@
     "Suddivisione": "Breakdown", "Supporto tecnico fiera di settore": "Technical support at trade fair", "Svuota": "Clear", "Tecnico": "Technical", "Timeline attività": "Activity timeline",
     "Timeline attività · media giornaliera": "Activity timeline · daily average", "Tipo (dalle 09:00 o giornata intera)": "Type (from 09:00 or all day)", "Tipo di conversazioni": "Conversation type",
     "Tocca i giorni feriali nel calendario per sceglierli.": "Tap working days in the calendar to choose them.", "Tocca una cella per vedere i progetti di quel giorno.": "Tap a cell to see that day's projects.",
-    "Torna a OBO Hub": "Back to OBO Hub", "Testo più piccolo": "Smaller text", "Testo più grande": "Larger text", "Totale": "Total", "Totale:": "Total:",
+    "Torna a OBO Hub": "Back to OBO Hub", "Attenzione:": "Warning:", "indica l'ID progetto identico a quello del CRM (stesse lettere, numeri e trattini).": "enter the project ID exactly as in the CRM (same letters, numbers and dashes).", "Testo più piccolo": "Smaller text", "Testo più grande": "Larger text", "Totale": "Total", "Totale:": "Total:",
     "Trascina una scheda in un'altra colonna o usa i pulsanti. Ognuno sposta solo i propri progetti.": "Drag a card to another column or use the buttons. Everyone moves only their own projects.",
     "Troppi tentativi. Riprova tra qualche minuto.": "Too many attempts. Try again in a few minutes.", "Tutte le persone": "All people", "Tutti i progetti": "All projects", "Tutto": "All",
     "Ufficio Tecnico": "Technical Office", "Ultimo mese": "Last month", "Vai a OBO Hub": "Go to OBO Hub", "Vai al mese corrente": "Go to current month", "Vai alla settimana corrente": "Go to current week",

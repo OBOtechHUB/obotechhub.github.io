@@ -996,6 +996,7 @@ select, select option, select optgroup { background-color: var(--surface); color
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) select { color-scheme: dark; } :root:not([data-theme="light"]) select option { background: #242a2f !important; color: #eef1f3 !important; } }
 :root[data-theme="dark"] select { color-scheme: dark; } :root[data-theme="dark"] select option { background: #242a2f !important; color: #eef1f3 !important; }
 html { touch-action: pan-x pan-y; }
+.nota-crm { display: block; margin-top: 6px; padding: 6px 10px; border-left: 3px solid #f39b00; border-radius: 6px; background: var(--today); color: var(--fg); font-size: calc(13px * var(--zoom, 1)); line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -1176,6 +1177,7 @@ html { touch-action: pan-x pan-y; }
         <div class="field">
           <label for="f-crm">ID progetto CRM</label>
           <input id="f-crm" placeholder="Es. P-2026-0142" maxlength="40" autocomplete="off">
+          <small class="nota-crm"><b>Attenzione:</b> indica l'ID progetto identico a quello del CRM (stesse lettere, numeri e trattini).</small>
         </div>
         <div class="field">
           <label for="f-prio">Priorità</label>
