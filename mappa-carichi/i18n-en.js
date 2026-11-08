@@ -195,7 +195,8 @@
   // dimensione del testo − / + (condivisa con OBO Hub e Progettazione LPS)
   var PASSI = [0.85, 0.9, 1, 1.1, 1.2, 1.3, 1.45];
   function zoomAtt() { try { var v = Number(localStorage.getItem("obo-zoom")); return PASSI.indexOf(v) >= 0 ? v : 1; } catch (e) { return 1; } }
-  function applicaZoom() { document.documentElement.style.zoom = String(zoomAtt()); }
+  function applicaZoom() { document.documentElement.style.setProperty("--zoom", String(zoomAtt())); }
+  document.addEventListener("gesturestart", function (e) { e.preventDefault(); });
   function cambiaZoom(v) {
     var i = PASSI.indexOf(zoomAtt()), z = PASSI[Math.min(PASSI.length - 1, Math.max(0, i + v))];
     try { if (z === 1) localStorage.removeItem("obo-zoom"); else localStorage.setItem("obo-zoom", String(z)); } catch (e) {}

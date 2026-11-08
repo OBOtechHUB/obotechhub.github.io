@@ -2,11 +2,11 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>OBO Hub</title>
 <meta name="description" content="Accesso riservato agli strumenti dell'ufficio tecnico.">
 <meta name="theme-color" content="#ffffff">
-<script>try{var z=Number(localStorage.getItem("obo-zoom"));if(z)document.documentElement.style.zoom=String(z)}catch(e){}</script>
+<script>try{var z=Number(localStorage.getItem("obo-zoom"));if(z)document.documentElement.style.setProperty("--zoom",String(z))}catch(e){}</script>
 <script>try{var t=localStorage.getItem("obo-tema");document.documentElement.dataset.theme=(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))?"dark":"light"}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -113,6 +113,19 @@
   }
   select, select option { background-color: var(--sfondo); color: var(--testo); }
   :root[data-theme="dark"] select { color-scheme: dark; } :root[data-theme="dark"] select option { background: #242a2f !important; color: #eef1f3 !important; }
+
+  /* testo più grande/piccolo solo sul contenuto; niente zoom con le dita (si usano A− / A+) */
+  .eroe, main, footer { zoom: var(--zoom, 1); }
+  html { touch-action: pan-x pan-y; }
+  html, body { overflow-x: hidden; }
+  .impost { position: relative; }
+  .pannello-impost { position: fixed; right: max(12px, calc(50% - 558px)); top: calc(76px + env(safe-area-inset-top)); z-index: 30; width: min(280px, calc(100vw - 24px)); padding: 14px; border: .8px solid var(--bordo); border-radius: 14px; background: var(--sfondo); color: var(--testo); box-shadow: 0 12px 32px rgba(0,0,0,.18); }
+  .pannello-impost[hidden] { display: none; }
+  .pannello-impost .riga { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; font: 600 14px var(--font); }
+  .pannello-impost .seg { display: inline-flex; border: 1px solid var(--bordo); border-radius: 999px; overflow: hidden; }
+  .pannello-impost .seg button { border: 0; background: none; color: var(--testo); font: 600 13px var(--font); padding: 7px 11px; cursor: pointer; }
+  .pannello-impost .seg button[aria-pressed="true"] { background: var(--arancio); color: #fff; }
+  .pannello-impost .zoomval { min-width: 46px; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -174,6 +187,7 @@
     auto: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
     light: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     dark: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    aa: '<path d="M4 19 9 5l5 14M5.8 14h6.4M15 19l3-8 3 8M15.9 16.5h4.2"/>',
     meno: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6"/>',
     piu: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6M11 8v6"/>',
     lingua: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
@@ -311,7 +325,7 @@
   // ---------- dimensione del testo (condivisa con le altre app: "obo-zoom") ----------
   const PASSI_ZOOM = [0.85, 0.9, 1, 1.1, 1.2, 1.3, 1.45];
   const leggiZoom = () => { try { const v = Number(localStorage.getItem("obo-zoom")); return PASSI_ZOOM.includes(v) ? v : 1; } catch { return 1; } };
-  const applicaZoom = () => { document.documentElement.style.zoom = String(leggiZoom()); };
+  const applicaZoom = () => { document.documentElement.style.setProperty("--zoom", String(leggiZoom())); document.documentElement.style.zoom = ""; };
   function cambiaZoom(verso) {
     const i = PASSI_ZOOM.indexOf(leggiZoom()), z = PASSI_ZOOM[Math.min(PASSI_ZOOM.length - 1, Math.max(0, i + verso))];
     try { if (z === 1) localStorage.removeItem("obo-zoom"); else localStorage.setItem("obo-zoom", String(z)); } catch {}
@@ -339,6 +353,34 @@
   applicaTema();
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applicaTema);
   addEventListener("storage", (e) => { if (e.key === "obo-tema") { applicaTema(); void aggiorna(); } });
+
+
+  // un solo pulsante "Aa" con lingua, aspetto e dimensione del testo (la barra resta ordinata anche sul telefono)
+  let impostAperte = false;
+  function bottoneImpostazioni() {
+    const box = document.createElement("div"); box.className = "impost";
+    const b = iconaBarra(null, lingua === "en" ? "Display" : "Aspetto", "aa", () => { impostAperte = !impostAperte; p.hidden = !impostAperte; });
+    b.setAttribute("aria-haspopup", "true");
+    const p = document.createElement("div"); p.className = "pannello-impost"; p.hidden = !impostAperte; p.setAttribute("role", "dialog");
+    const t = leggiTema(), z = Math.round(leggiZoom() * 100);
+    const seg = (voci, att) => `<span class="seg">${voci.map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="${k === att}">${l}</button>`).join("")}</span>`;
+    p.innerHTML = `<div class="riga"><span>${lingua === "en" ? "Language" : "Lingua"}</span>${seg([["it", "IT"], ["en", "EN"]], lingua)}</div>
+      <div class="riga"><span>${lingua === "en" ? "Theme" : "Tema"}</span>${seg([["auto", "Auto"], ["light", lingua === "en" ? "Light" : "Chiaro"], ["dark", lingua === "en" ? "Dark" : "Scuro"]], t)}</div>
+      <div class="riga"><span>${lingua === "en" ? "Text" : "Testo"}</span><span class="seg"><button type="button" data-z="-1" aria-label="${lingua === "en" ? "Smaller text" : "Testo più piccolo"}">A−</button><span class="zoomval">${z}%</span><button type="button" data-z="1" aria-label="${lingua === "en" ? "Larger text" : "Testo più grande"}">A+</button></span></div>`;
+    p.addEventListener("click", (e) => {
+      const x = e.target.closest("button"); if (!x) return; e.stopPropagation();
+      const k = x.dataset.k, dz = x.dataset.z;
+      if (k === "it" || k === "en") { lingua = k; try { if (k === "en") localStorage.setItem("obo-lingua", "en"); else localStorage.removeItem("obo-lingua"); } catch {} traduciTutto(); }
+      else if (k) { try { if (k === "auto") localStorage.removeItem("obo-tema"); else localStorage.setItem("obo-tema", k); } catch {} applicaTema(); }
+      else if (dz) cambiaZoom(Number(dz));
+      void aggiorna();
+    });
+    box.append(b, p);
+    return box;
+  }
+  document.addEventListener("click", (e) => { if (impostAperte && !e.target.closest(".impost")) { impostAperte = false; document.querySelectorAll(".pannello-impost").forEach((x) => { x.hidden = true; }); } });
+  // iPhone/iPad ignorano user-scalable: blocco anche il gesto di zoom
+  document.addEventListener("gesturestart", (e) => e.preventDefault());
 
   function puoAprire(app, profilo) {
     if (app.soloAdmin) return profilo.ruolo === "admin";
@@ -493,7 +535,7 @@
     const azioni = $("azioni"); azioni.innerHTML = "";
     const eroe = $("pulsanti-eroe"); eroe.innerHTML = "";
     avviso(""); pannello(""); disegnaApp(null);
-    azioni.append(bottoneLingua(), bottoneTema(), iconaBarra(null, "A−", "meno", () => cambiaZoom(-1)), iconaBarra(null, "A+", "piu", () => cambiaZoom(1)));
+    azioni.append(bottoneImpostazioni());
     $("titolo").textContent = "Gli strumenti dell'ufficio tecnico, in un solo posto";
     $("intro").textContent = "Un unico accesso sicuro, con password e codice di Microsoft Authenticator, per gli strumenti di lavoro abilitati per te.";
 
