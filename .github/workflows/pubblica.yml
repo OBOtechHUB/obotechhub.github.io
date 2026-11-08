@@ -1,0 +1,55 @@
+name: Pubblica OBO Hub (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepara il sito (OBO Hub + Mappa carichi)
+        env:
+          # Supabase della Mappa carichi (quello usato finora con Lovable)
+          MAPPA_SUPABASE_URL: ${{ secrets.MAPPA_SUPABASE_URL }}
+          MAPPA_SUPABASE_ANON_KEY: ${{ secrets.MAPPA_SUPABASE_ANON_KEY }}
+        run: |
+          mkdir -p site/mappa-carichi
+          cp index.html config.js manifest.webmanifest sw.js install.js icona-192.png icona-512.png icona-maskable-512.png apple-touch-icon.png favicon-32.png .nojekyll site/
+          cd mappa-carichi
+          cp index.html manifest.webmanifest sw.js install.js icon-192.png icon-512.png apple-touch-icon.png ../site/mappa-carichi/
+          cd ..
+          if [ -z "$MAPPA_SUPABASE_URL" ] || [ -z "$MAPPA_SUPABASE_ANON_KEY" ]; then
+            echo "::warning::Mancano i secrets MAPPA_SUPABASE_URL e MAPPA_SUPABASE_ANON_KEY: la Mappa carichi mostra una pagina 'da configurare'."
+            printf '%s' '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mappa carichi</title><body style="font:16px Helvetica,Arial,sans-serif;padding:32px;max-width:640px"><h1>Mappa carichi da configurare</h1><p>Mancano i dati del database: in GitHub, Settings &rarr; Secrets and variables &rarr; Actions, aggiungi <b>MAPPA_SUPABASE_URL</b> e <b>MAPPA_SUPABASE_ANON_KEY</b>, poi ripubblica.</p><p><a href="../">Torna a OBO Hub</a></p>' > site/mappa-carichi/index.html
+          else
+            sed -i "s|__SUPABASE_URL__|${MAPPA_SUPABASE_URL}|g; s|__SUPABASE_ANON_KEY__|${MAPPA_SUPABASE_ANON_KEY}|g" site/mappa-carichi/index.html
+            if grep -q "__SUPABASE_" site/mappa-carichi/index.html; then echo "Segnaposto non sostituiti"; exit 1; fi
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

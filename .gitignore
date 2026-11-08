@@ -1,0 +1,6 @@
+# NON caricare mai su GitHub i dati reali delle offerte né le chiavi segrete
+**/2-offerte.sql
+*.env
+.env*
+node_modules/
+.DS_Store

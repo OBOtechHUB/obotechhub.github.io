@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OBO Hub</title>
+<meta name="description" content="Tutti gli strumenti dell'ufficio tecnico in un solo posto: progettazione LPS, mappa carichi e altro.">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="OBO Hub">
+<style>
+  :root {
+    --arancio: #f39b00; --arancio-scuro: #d98a00; --ardesia: #41525d; --testo: #212529;
+    --tenue: #6c757d; --bordo: #dee2e6; --sfondo: #ffffff; --grigio: #f5f6f7;
+    --font: "Nimbus Sans L", "Nimbus Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--sfondo); color: var(--testo); font-family: var(--font); }
+  a { color: inherit; }
+  .contenitore { max-width: 1140px; margin: 0 auto; padding: 0 16px; }
+
+  header.barra { position: sticky; top: 0; z-index: 10; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+  header.barra .contenitore { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 72px; }
+  .marchio { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .marchio img { width: 40px; height: 40px; border-radius: 10px; }
+  .marchio b { font-size: 22px; letter-spacing: -.2px; }
+  .marchio b span { color: var(--arancio); }
+  .marchio small { display: block; font-size: 12px; color: var(--tenue); }
+  .azioni { display: flex; align-items: center; gap: 4px; }
+  .icona-barra { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 6px 8px;
+    border: 0; background: none; font: 600 13px var(--font); color: var(--testo); cursor: pointer; text-decoration: none; border-radius: 8px; }
+  .icona-barra:hover { color: var(--arancio); }
+  .icona-barra svg { width: 26px; height: 26px; stroke-width: 1.5; }
+
+  .eroe { background: var(--ardesia); color: #fff; }
+  .eroe .contenitore { padding-top: 44px; padding-bottom: 44px; }
+  .eroe h1 { margin: 0; font-size: clamp(28px, 4vw, 42px); line-height: 1.15; }
+  .eroe p { margin: 12px 0 0; max-width: 720px; font-size: 18px; color: rgba(255,255,255,.9); }
+  .pulsanti { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; border: 1px solid transparent;
+    font: 600 16px var(--font); text-decoration: none; cursor: pointer; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-primario { background: var(--arancio); color: #fff; }
+  .btn-primario:hover { background: var(--arancio-scuro); }
+  .btn-chiaro { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
+  .btn-chiaro:hover { background: rgba(255,255,255,.1); }
+  .btn-bordo { background: #fff; color: var(--testo); border-color: var(--bordo); }
+
+  main { padding: 32px 0 56px; }
+  .avviso { border-left: 4px solid var(--arancio); background: var(--grigio); padding: 14px 16px; border-radius: 8px; margin-bottom: 24px; font-size: 15px; }
+  .avviso .pulsanti { margin-top: 12px; }
+  .avviso .btn-chiaro { color: var(--testo); border-color: var(--bordo); }
+  h2 { font-size: 22px; margin: 0 0 16px; }
+  .griglia { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .app { position: relative; display: flex; flex-direction: column; gap: 10px; min-height: 230px; padding: 22px; border: .8px solid var(--bordo);
+    border-radius: 16px; background: #fff; text-decoration: none; transition: box-shadow .15s, border-color .15s, transform .15s; }
+  a.app:hover { border-color: var(--arancio); box-shadow: 0 10px 28px rgba(0,0,0,.08); transform: translateY(-2px); }
+  .app .simbolo { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 14px; background: #fff4e0; color: var(--arancio); }
+  .app .simbolo svg { width: 30px; height: 30px; stroke-width: 1.5; }
+  .app h3 { margin: 4px 0 0; font-size: 20px; }
+  .app p { margin: 0; color: var(--tenue); font-size: 15px; line-height: 1.45; flex: 1; }
+  .app .piede { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; color: var(--arancio); }
+  .app .vai { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .app.bloccata { background: var(--grigio); }
+  .app.bloccata .piede { color: var(--tenue); }
+  .etichetta { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--grigio); color: var(--tenue); }
+  .vantaggi { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top: 40px; }
+  .vantaggi div { padding: 16px; border-top: 3px solid var(--arancio); background: var(--grigio); border-radius: 0 0 10px 10px; }
+  .vantaggi b { display: block; margin-bottom: 4px; }
+  .vantaggi span { color: var(--tenue); font-size: 14px; }
+  footer { border-top: 1px solid var(--bordo); padding: 20px 0; color: var(--tenue); font-size: 13px; }
+  footer .contenitore { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+  .nascosto { display: none !important; }
+  .caricamento { color: var(--tenue); padding: 40px 0; text-align: center; }
+  @media (max-width: 640px) {
+    .marchio small { display: none; }
+    .icona-barra { min-width: 52px; padding: 6px 4px; font-size: 11px; }
+    header.barra .contenitore { height: 64px; }
+  }
+</style>
+</head>
+<body>
+<header class="barra">
+  <div class="contenitore">
+    <a class="marchio" href="./" aria-label="OBO Hub, home">
+      <img src="icona-192.png" alt="">
+      <span><b>OBO <span>Hub</span></b><small id="sottotitolo">Strumenti dell'ufficio tecnico</small></span>
+    </a>
+    <nav class="azioni" id="azioni" aria-label="Azioni"></nav>
+  </div>
+</header>
+
+<section class="eroe">
+  <div class="contenitore">
+    <h1 id="titolo">Tutti gli strumenti dell'ufficio tecnico, in un solo posto</h1>
+    <p id="intro">Progettazione della protezione contro i fulmini, mappa dei carichi di lavoro e i prossimi strumenti: un unico accesso sicuro con Microsoft Authenticator.</p>
+    <div class="pulsanti" id="pulsanti-eroe"></div>
+  </div>
+</section>
+
+<main>
+  <div class="contenitore">
+    <div id="avviso" class="avviso nascosto" role="status"></div>
+    <h2 id="titolo-app">Le app</h2>
+    <div class="griglia" id="griglia"><p class="caricamento">Caricamento…</p></div>
+    <div class="vantaggi" id="vantaggi">
+      <div><b>Un solo accesso</b><span>Email, password e codice dell'app Authenticator: entri una volta e trovi tutte le tue app.</span></div>
+      <div><b>Su ogni dispositivo</b><span>Installa OBO Hub su PC, iPhone, iPad e Android come una normale app.</span></div>
+      <div><b>Accessi su misura</b><span>L'amministratore sceglie quali app e quali sezioni può usare ogni persona.</span></div>
+      <div><b>Dati al sicuro</b><span>Nessun dato viene cancellato: progetti e storico restano sempre salvati.</span></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="contenitore"><span>OBO Hub · strumenti interni dell'ufficio tecnico</span><span><a href="/Lighting/privacy">Privacy</a> · <a href="/Lighting/termini">Termini d'uso</a></span></div>
+</footer>
+
+<script src="install.js"></script>
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
+  import { CONFIG, APP } from "./config.js";
+
+  // Stesso progetto Supabase e stesso sito di Progettazione LPS: l'accesso fatto in una app vale anche nell'altra.
+  const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
+  const qui = location.pathname;
+  const urlAccesso = `${CONFIG.lps}auth?ritorno=${encodeURIComponent(qui)}`;
+  const $ = (id) => document.getElementById(id);
+
+  const ICONE = {
+    fulmine: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    carichi: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h8"/>',
+    admin: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+    accedi: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>',
+    esci: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+    richiedi: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>',
+    profilo: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    lucchetto: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    freccia: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  };
+  const svg = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONE[n] ?? ""}</svg>`;
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function iconaBarra(href, etichetta, icona, onclick) {
+    const el = document.createElement(href ? "a" : "button");
+    el.className = "icona-barra"; if (href) el.href = href; else el.type = "button";
+    el.innerHTML = `${svg(icona)}<span>${etichetta}</span>`;
+    if (onclick) el.addEventListener("click", onclick);
+    return el;
+  }
+
+  function puoAprire(app, profilo) {
+    if (!profilo) return false;
+    if (app.soloAdmin) return profilo.ruolo === "admin";
+    if (profilo.ruolo === "admin" || profilo.sezioni.includes("tutte")) return true;
+    return app.abilitataSe(profilo.sezioni);
+  }
+
+  function disegnaApp(profilo, stato) {
+    const elenco = APP.filter((a) => !a.soloAdmin || profilo?.ruolo === "admin");
+    const griglia = $("griglia"); griglia.innerHTML = "";
+    let visibili = 0;
+    for (const app of elenco) {
+      const ok = stato === "abilitato" && puoAprire(app, profilo);
+      if (stato === "abilitato" && !ok) continue; // l'utente vede solo le app abilitate
+      visibili++;
+      const el = document.createElement(ok ? "a" : "div");
+      el.className = `app${ok ? "" : " bloccata"}`;
+      if (ok) el.href = app.url;
+      el.innerHTML = `<span class="simbolo">${svg(app.icona)}</span>
+        <h3>${esc(app.nome)}</h3><p>${esc(app.descrizione)}</p>
+        <span class="piede">${ok ? `<span class="vai">Apri ${svg("freccia").replace("<svg", '<svg width="18" height="18"')}</span>` : `<span class="vai">${svg("lucchetto").replace("<svg", '<svg width="16" height="16"')} Accesso richiesto</span>`}
+        ${app.nota ? `<span class="etichetta">${esc(app.nota)}</span>` : ""}</span>`;
+      griglia.appendChild(el);
+    }
+    if (!visibili) griglia.innerHTML = '<p class="caricamento">Nessuna app abilitata per il tuo account. Chiedi all\'amministratore di abilitarle.</p>';
+  }
+
+  function avviso(html) { const a = $("avviso"); a.innerHTML = html; a.classList.toggle("nascosto", !html); }
+
+  async function aggiorna() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const azioni = $("azioni"); azioni.innerHTML = "";
+    const eroe = $("pulsanti-eroe"); eroe.innerHTML = "";
+    avviso("");
+
+    if (!session) {
+      $("sottotitolo").textContent = "Strumenti dell'ufficio tecnico";
+      azioni.append(iconaBarra(`${CONFIG.lps}richiesta-accesso`, "Richiedi", "richiedi"), iconaBarra(urlAccesso, "Accedi", "accedi"));
+      eroe.innerHTML = `<a class="btn btn-primario" href="${urlAccesso}">${svg("accedi")}Accedi</a>
+        <a class="btn btn-chiaro" href="${CONFIG.lps}richiesta-accesso">${svg("richiedi")}Richiedi l'accesso</a>`;
+      $("titolo-app").textContent = "Le app disponibili";
+      disegnaApp(null, "anonimo");
+      return;
+    }
+
+    const [{ data: profilo }, { data: aal }] = await Promise.all([
+      supabase.from("accessi_profili").select("email,nome,ruolo,stato,sezioni,deve_cambiare_password").eq("utente", session.user.id).maybeSingle(),
+      supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
+    ]);
+    const esci = async () => { await supabase.auth.signOut(); location.reload(); };
+    azioni.append(iconaBarra(`${CONFIG.lps}profilo`, "Profilo", "profilo"));
+    if (profilo?.ruolo === "admin") azioni.append(iconaBarra(`${CONFIG.lps}admin`, "Admin", "admin"));
+    azioni.append(iconaBarra(null, "Esci", "esci", esci));
+    $("sottotitolo").textContent = session.user.email ?? "";
+
+    let stato = "abilitato";
+    if (!profilo) stato = "non-approvato";
+    else if (profilo.stato !== "attivo") stato = "sospeso";
+    else if (profilo.deve_cambiare_password || aal?.currentLevel !== "aal2") stato = "da-completare";
+
+    if (stato === "abilitato") {
+      $("titolo").textContent = `Ciao${profilo.nome && profilo.nome !== "Amministratore" ? " " + profilo.nome.split(" ")[0] : ""}, ecco le tue app`;
+      $("intro").textContent = "Apri lo strumento che ti serve. L'accesso vale per tutte le app di OBO Hub.";
+      $("titolo-app").textContent = "Le tue app";
+    } else if (stato === "da-completare") {
+      avviso(`Per aprire le app completa l'accesso: ${profilo.deve_cambiare_password ? "scegli la tua password e " : ""}inserisci il codice di Microsoft Authenticator.
+        <div class="pulsanti"><a class="btn btn-primario" href="${urlAccesso}">${svg("accedi")}Completa l'accesso</a></div>`);
+    } else if (stato === "sospeso") {
+      avviso("Il tuo accesso è sospeso. Contatta l'amministratore.");
+    } else {
+      avviso("Il tuo account non è ancora stato approvato dall'amministratore.");
+    }
+    disegnaApp(profilo, stato);
+  }
+
+  supabase.auth.onAuthStateChange((evento) => { if (evento !== "INITIAL_SESSION") void aggiorna(); });
+  aggiorna().catch(() => { avviso("Non riesco a contattare il server. Riprova tra poco."); disegnaApp(null, "anonimo"); });
+</script>
+</body>
+</html>
