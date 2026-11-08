@@ -991,6 +991,7 @@ html { -webkit-tap-highlight-color: transparent; }
   .nav button, .nav a.hubnav { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 }
 @media (display-mode: standalone) and (max-width: 860px) { .rail { height: calc(64px + env(safe-area-inset-top)); } }
+html[lang="en"] .rmark::after { content: "Workload map"; }
 </style>
 </head>
 <body>
@@ -1733,7 +1734,7 @@ html { -webkit-tap-highlight-color: transparent; }
     h += '<th rowspan="2" style="padding:0 8px;border-left:1px solid var(--line)">Ore</th></tr><tr>';
     days.forEach(function (d, i) {
       var cls = (i % 5 === 0 ? 'mon ' : '') + (iso(d) === iso(today) ? 'today' : '');
-      h += '<th class="' + cls + '">' + DOW[i % 5] + '<br>' + d.getDate() + '</th>';
+      h += '<th class="' + cls + '">' + ((function(){try{return localStorage.getItem('obo-lingua')==='en'}catch(e){return false}})() ? ['M','T','W','T','F'] : DOW)[i % 5] + '<br>' + d.getDate() + '</th>';
     });
     h += '</tr></thead><tbody>';
     if (!ppl.length) h += '<tr><td class="who">&nbsp;</td><td colspan="' + (days.length + 1) + '" style="padding:18px;text-align:left" class="empty">Nessun progetto. Inserisci il primo impegno nel modulo sopra.</td></tr>';
@@ -3067,5 +3068,6 @@ html { -webkit-tap-highlight-color: transparent; }
 
 <script src="install.js" defer></script>
 <a id="hubBack" href="../" title="Torna a OBO Hub" style="position:fixed;left:16px;bottom:16px;z-index:2147483646;display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;background:#fff;color:#212529;font:600 14px Helvetica,Arial,sans-serif;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.25)">&#8592; OBO Hub</a>
+<script src="i18n-en.js"></script>
 </body>
 </html>

@@ -29,7 +29,7 @@ jobs:
           mkdir -p site/mappa-carichi
           cp index.html config.js manifest.webmanifest sw.js install.js icona-192.png icona-512.png icona-maskable-512.png apple-touch-icon.png favicon-32.png .nojekyll site/
           cd mappa-carichi
-          cp index.html manifest.webmanifest sw.js install.js icon-192.png icon-512.png apple-touch-icon.png ../site/mappa-carichi/
+          cp index.html i18n-en.js manifest.webmanifest sw.js install.js icon-192.png icon-512.png apple-touch-icon.png ../site/mappa-carichi/
           cd ..
           # Senza secrets dedicati la Mappa usa lo stesso database di OBO Hub / Progettazione LPS (config.js).
           if [ -z "$MAPPA_SUPABASE_URL" ] || [ -z "$MAPPA_SUPABASE_ANON_KEY" ]; then
