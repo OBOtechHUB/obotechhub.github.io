@@ -13,6 +13,8 @@ export const APP = [
   {
     id: "lps",
     nome: "Progettazione LPS",
+    nome_en: "LPS Design",
+    descrizione_en: "Lightning protection to CEI EN IEC 62305: risk assessment, 3D air-termination, down conductors, earthing, SPD, bill of materials and OBO details.",
     descrizione: "Protezione contro i fulmini secondo CEI EN IEC 62305: analisi del rischio, captazione 3D, calate, terra, SPD, computo e particolari OBO.",
     icona: "fulmine",
     url: "/lps/",
@@ -21,6 +23,8 @@ export const APP = [
   {
     id: "mappa",
     nome: "Mappa carichi ufficio tecnico",
+    nome_en: "Technical office workload map",
+    descrizione_en: "Who is working on what, how busy everyone is and where there is room to help: projects, days, hours and quotes.",
     descrizione: "Chi lavora su cosa, quanto è carico e dove c'è spazio per darsi una mano: progetti, giorni, ore e offerte.",
     icona: "carichi",
     url: "mappa-carichi/",
@@ -29,6 +33,8 @@ export const APP = [
   {
     id: "admin",
     nome: "Amministrazione",
+    nome_en: "Administration",
+    descrizione_en: "Access requests, users, enabled apps and sections, saved projects and access log.",
     descrizione: "Richieste di accesso, utenti, app e sezioni abilitate, progetti salvati e registro degli accessi.",
     icona: "admin",
     url: "/lps/admin",

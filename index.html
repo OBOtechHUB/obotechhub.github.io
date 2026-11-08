@@ -170,6 +170,7 @@
     auto: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
     light: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     dark: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    lingua: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
     freccia: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   };
   const svg = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONE[n] ?? ""}</svg>`;
@@ -182,6 +183,123 @@
     if (onclick) el.addEventListener("click", onclick);
     return el;
   }
+
+
+  // ---------- lingua: italiano (predefinita) o inglese, condivisa da tutte le app ----------
+  const EN = {
+"Strumenti dell'ufficio tecnico": "Technical office tools",
+"Tutti gli strumenti dell'ufficio tecnico, in un solo posto": "All the technical office tools, in one place",
+"Gli strumenti dell'ufficio tecnico, in un solo posto": "The technical office tools, in one place",
+"Un unico accesso sicuro, con password e codice di Microsoft Authenticator, per gli strumenti di lavoro abilitati per te.": "One secure sign-in, with password and Microsoft Authenticator code, for the work tools enabled for you.",
+"Le tue app": "Your apps",
+"Caricamento…": "Loading…",
+"Un solo accesso": "One sign-in",
+"Email, password e codice dell'app Authenticator: entri una volta e trovi tutte le tue app.": "Email, password and Authenticator code: sign in once and find all your apps.",
+"Su ogni dispositivo": "On every device",
+"Installa OBO Hub su PC, iPhone, iPad e Android come una normale app.": "Install OBO Hub on PC, iPhone, iPad and Android like a regular app.",
+"Accessi su misura": "Tailored access",
+"Ognuno vede solo gli strumenti che gli sono stati abilitati.": "Everyone sees only the tools enabled for them.",
+"Dati al sicuro": "Data kept safe",
+"Accesso protetto in due passaggi e dati conservati senza cancellazioni.": "Two-step protected sign-in and data kept without deletions.",
+"OBO Hub · strumenti interni dell'ufficio tecnico": "OBO Hub · internal technical office tools",
+"Accesso riservato": "Restricted access",
+"Accedi": "Sign in",
+"Richiedi": "Request",
+"Esci": "Sign out",
+"Admin": "Admin",
+"Apri": "Open",
+"Auto": "Auto",
+"Chiaro": "Light",
+"Scuro": "Dark",
+"Usa la tua email e la password. Poi ti chiederemo il codice di Microsoft Authenticator.": "Use your email and password. Then we'll ask for your Microsoft Authenticator code.",
+"Email": "Email",
+"Password": "Password",
+"Password dimenticata?": "Forgot your password?",
+"Non hai un accesso? Richiedilo": "No access yet? Request it",
+"Email o password non corrette.": "Wrong email or password.",
+"Password dimenticata": "Forgot password",
+"Scrivi la tua email: se è abilitata riceverai il link per sceglierne una nuova.": "Enter your email: if it is enabled you'll receive a link to choose a new one.",
+"Invia il link": "Send the link",
+"Torna all'accesso": "Back to sign in",
+"Se l'indirizzo è abilitato, riceverai l'email con il link.": "If the address is enabled, you'll receive an email with the link.",
+"Richiedi l'accesso": "Request access",
+"L'amministratore riceve la richiesta e, se la approva, ti comunica come entrare.": "The administrator receives your request and, if approved, tells you how to sign in.",
+"Nome e cognome": "Full name",
+"Azienda": "Company",
+"Motivo": "Reason",
+"Invia la richiesta": "Send request",
+"Hai già un accesso? Accedi": "Already have access? Sign in",
+"Invio non riuscito, riprova più tardi.": "Sending failed, please try again later.",
+"Richiesta inviata": "Request sent",
+"Grazie! Quando l'amministratore la approva ti comunica la password iniziale e i passi per entrare.": "Thank you! Once the administrator approves it, you'll receive the initial password and the steps to sign in.",
+"Scegli la tua password": "Choose your password",
+"Nuova password": "New password",
+"Stai usando la password iniziale comune: per continuare scegline una personale.": "You are using the shared initial password: choose a personal one to continue.",
+"Scegli la nuova password.": "Choose the new password.",
+"Almeno 10 caratteri, con lettere e numeri.": "At least 10 characters, with letters and numbers.",
+"Ripeti la password": "Repeat the password",
+"Salva la password": "Save password",
+"Le due password non coincidono.": "The two passwords don't match.",
+"La nuova password deve essere diversa dalla precedente.": "The new password must be different from the previous one.",
+"Collega Microsoft Authenticator": "Link Microsoft Authenticator",
+"Preparazione del codice QR…": "Preparing the QR code…",
+"1. Apri Microsoft Authenticator sul telefono, premi": "1. Open Microsoft Authenticator on your phone, tap",
+"e scegli": "and choose",
+"Altro account": "Other account",
+"2. Inquadra il codice QR.": "2. Scan the QR code.",
+"3. Scrivi qui il codice a 6 cifre che compare.": "3. Enter the 6-digit code shown.",
+"Codice QR per Microsoft Authenticator": "QR code for Microsoft Authenticator",
+"Codice manuale:": "Manual code:",
+"Codice a 6 cifre": "6-digit code",
+"Conferma": "Confirm",
+"Codice non valido: controlla l'ora del telefono e riprova.": "Invalid code: check your phone's time and try again.",
+"Codice di Authenticator": "Authenticator code",
+"Apri Microsoft Authenticator e scrivi il codice a 6 cifre per questo accesso.": "Open Microsoft Authenticator and enter the 6-digit code for this sign-in.",
+"Entra": "Enter",
+"Codice non valido, riprova.": "Invalid code, try again.",
+"Il tuo account non è ancora stato approvato dall'amministratore.": "Your account has not been approved by the administrator yet.",
+"Il tuo accesso è sospeso. Contatta l'amministratore.": "Your access is suspended. Contact the administrator.",
+"Apri quello che ti serve: l'accesso vale per tutti.": "Open what you need: one sign-in works for all of them.",
+"Al momento non hai strumenti abilitati. Chiedi all'amministratore.": "You don't have any tools enabled yet. Ask the administrator.",
+"Non riesco a contattare il server. Riprova tra poco.": "Can't reach the server. Please try again shortly.",
+"Torna a OBO Hub": "Back to OBO Hub",
+"Azioni": "Actions"
+};
+  const leggiLingua = () => { try { return localStorage.getItem("obo-lingua") === "en" ? "en" : "it"; } catch { return "it"; } };
+  let lingua = leggiLingua();
+  const t = (it) => (lingua === "en" ? EN[it] ?? it : it);
+  const originali = new WeakMap();
+  function traduciNodo(n) {
+    if (n.nodeType === 3) {
+      const orig = originali.get(n) ?? n.nodeValue; const k = orig.trim();
+      if (!k) return;
+      if (!originali.has(n)) originali.set(n, orig);
+      const v = lingua === "en" && EN[k] ? orig.replace(k, EN[k]) : orig;
+      if (n.nodeValue !== v) n.nodeValue = v;
+    } else if (n.nodeType === 1 && n.tagName !== "SCRIPT" && n.tagName !== "STYLE") {
+      for (const a of ["placeholder", "alt", "aria-label", "title"]) {
+        if (!n.hasAttribute(a)) continue;
+        const key = "data-orig-" + a; if (!n.hasAttribute(key)) n.setAttribute(key, n.getAttribute(a));
+        const o = n.getAttribute(key), v = lingua === "en" && EN[o] ? EN[o] : o;
+        if (n.getAttribute(a) !== v) n.setAttribute(a, v);
+      }
+      n.childNodes.forEach(traduciNodo);
+    }
+  }
+  const traduciTutto = () => { document.documentElement.lang = lingua; traduciNodo(document.body); };
+  new MutationObserver((ms) => { for (const m of ms) { if (m.type === "characterData") { originali.delete(m.target); traduciNodo(m.target); } else m.addedNodes.forEach(traduciNodo); } })
+    .observe(document.body, { childList: true, subtree: true, characterData: true });
+  function bottoneLingua() {
+    const el = iconaBarra(null, lingua === "en" ? "Italiano" : "English", "lingua", () => {
+      lingua = lingua === "en" ? "it" : "en";
+      try { if (lingua === "en") localStorage.setItem("obo-lingua", "en"); else localStorage.removeItem("obo-lingua"); } catch {}
+      traduciTutto(); void aggiorna();
+    });
+    el.querySelector("span").textContent = lingua === "en" ? "IT" : "EN";
+    el.title = lingua === "en" ? "Passa all'italiano" : "Switch to English";
+    return el;
+  }
+  addEventListener("storage", (e) => { if (e.key === "obo-lingua") { lingua = leggiLingua(); traduciTutto(); void aggiorna(); } });
 
   // aspetto condiviso con tutte le app (stesso sito): automatico, chiaro, scuro
   const NOMI_TEMA = { auto: "Auto", light: "Chiaro", dark: "Scuro" };
@@ -217,7 +335,7 @@
     for (const app of mie) {
       const el = document.createElement("a");
       el.className = "app"; el.href = app.url;
-      el.innerHTML = `<span class="simbolo">${svg(app.icona)}</span><h3>${esc(app.nome)}</h3><p>${esc(app.descrizione)}</p>
+      el.innerHTML = `<span class="simbolo">${svg(app.icona)}</span><h3>${esc(lingua === "en" && app.nome_en || app.nome)}</h3><p>${esc(lingua === "en" && app.descrizione_en || app.descrizione)}</p>
         <span class="piede"><span class="vai">Apri ${svg("freccia").replace("<svg", '<svg width="18" height="18"')}</span></span>`;
       griglia.appendChild(el);
     }
@@ -310,8 +428,8 @@
     const { data, error } = await supabase.auth.mfa.enroll({ factorType: "totp", friendlyName: `Authenticator ${new Date().toLocaleDateString("it-IT")}`, issuer: "OBO Hub" });
     if (error) { pannello(`<h2>Collega Microsoft Authenticator</h2><div class="errore">${esc(error.message)}</div>`); return; }
     const p = pannello(`<h2>Collega Microsoft Authenticator</h2>
-      <p>1. Apri Microsoft Authenticator sul telefono, premi <b>+</b> e scegli <b>Altro account</b>.<br>2. Inquadra il codice QR.<br>3. Scrivi qui il codice a 6 cifre che compare.</p>
-      <img class="qr" alt="Codice QR per Microsoft Authenticator" src="${data.totp.qr_code}"><code>Codice manuale: ${esc(data.totp.secret)}</code>
+      <p><span>1. Apri Microsoft Authenticator sul telefono, premi</span> <b>+</b> <span>e scegli</span> <b>Altro account</b>.<br><span>2. Inquadra il codice QR.</span><br><span>3. Scrivi qui il codice a 6 cifre che compare.</span></p>
+      <img class="qr" alt="Codice QR per Microsoft Authenticator" src="${data.totp.qr_code}"><code><span>Codice manuale:</span> ${esc(data.totp.secret)}</code>
       <form id="f"><label>Codice a 6 cifre<input id="co" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" required></label>
       <button class="btn btn-primario">Conferma</button><div class="errore" role="alert"></div></form>`);
     p.querySelector("#f").addEventListener("submit", async (e) => {
@@ -356,7 +474,7 @@
     const azioni = $("azioni"); azioni.innerHTML = "";
     const eroe = $("pulsanti-eroe"); eroe.innerHTML = "";
     avviso(""); pannello(""); disegnaApp(null);
-    azioni.append(bottoneTema());
+    azioni.append(bottoneLingua(), bottoneTema());
     $("titolo").textContent = "Gli strumenti dell'ufficio tecnico, in un solo posto";
     $("intro").textContent = "Un unico accesso sicuro, con password e codice di Microsoft Authenticator, per gli strumenti di lavoro abilitati per te.";
 
@@ -389,7 +507,8 @@
     // dentro: solo le proprie app
     try { if (!sessionStorage.getItem("obo-hub-registrato")) { sessionStorage.setItem("obo-hub-registrato", "1"); void supabase.rpc("registra_accesso", { evento: "accesso", dettagli: { app: "obo-hub" } }); } } catch {}
     if (profilo.ruolo === "admin") azioni.insertBefore(iconaBarra(CONFIG.lps + "admin", "Admin", "admin"), azioni.lastChild);
-    $("titolo").textContent = `Ciao${profilo.nome && profilo.nome !== "Amministratore" ? " " + profilo.nome.split(" ")[0] : ""}, ecco i tuoi strumenti`;
+    const nome1 = profilo.nome && profilo.nome !== "Amministratore" ? " " + profilo.nome.split(" ")[0] : "";
+    $("titolo").textContent = lingua === "en" ? `Hi${nome1}, here are your tools` : `Ciao${nome1}, ecco i tuoi strumenti`;
     $("intro").textContent = "Apri quello che ti serve: l'accesso vale per tutti.";
     disegnaApp(profilo);
   }
@@ -398,6 +517,7 @@
     if (evento === "PASSWORD_RECOVERY") recupero = true;
     if (evento !== "INITIAL_SESSION") void aggiorna();
   });
+  traduciTutto();
   aggiorna().catch(() => avviso("Non riesco a contattare il server. Riprova tra poco."));
 </script>
 </body>
