@@ -4,7 +4,7 @@
 export const CONFIG = {
   supabaseUrl: "https://qzfosidvjsyivaibnadf.supabase.co",
   supabaseKey: "sb_publishable_4ZA8X-l1eNBTfhLahViHdg_Ih3aO38L",
-  lps: "/Lighting/",
+  lps: "/lps/",
 };
 
 // Le app di OBO Hub. Per aggiungerne una nuova basta un elemento in più.
@@ -15,7 +15,7 @@ export const APP = [
     nome: "Progettazione LPS",
     descrizione: "Protezione contro i fulmini secondo CEI EN IEC 62305: analisi del rischio, captazione 3D, calate, terra, SPD, computo e particolari OBO.",
     icona: "fulmine",
-    url: "/Lighting/",
+    url: "/lps/",
     abilitataSe: (sezioni) => sezioni.some((s) => !s.startsWith("app_")),
   },
   {
@@ -31,7 +31,7 @@ export const APP = [
     nome: "Amministrazione",
     descrizione: "Richieste di accesso, utenti, app e sezioni abilitate, progetti salvati e registro degli accessi.",
     icona: "admin",
-    url: "/Lighting/admin",
+    url: "/lps/admin",
     soloAdmin: true,
   },
 ];
