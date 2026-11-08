@@ -27,7 +27,7 @@ jobs:
           MAPPA_SUPABASE_ANON_KEY: ${{ secrets.MAPPA_SUPABASE_ANON_KEY }}
         run: |
           mkdir -p site/mappa-carichi
-          cp index.html config.js manifest.webmanifest sw.js install.js icona-192.png icona-512.png icona-maskable-512.png apple-touch-icon.png favicon-32.png .nojekyll site/
+          cp index.html config.js manifest.webmanifest sw.js install.js aggiorna.js icona-192.png icona-512.png icona-maskable-512.png apple-touch-icon.png favicon-32.png .nojekyll site/
           cd mappa-carichi
           cp index.html i18n-en.js manifest.webmanifest sw.js install.js icon-192.png icon-512.png apple-touch-icon.png ../site/mappa-carichi/
           cd ..
@@ -39,6 +39,11 @@ jobs:
           fi
           sed -i "s|__SUPABASE_URL__|${MAPPA_SUPABASE_URL}|g; s|__SUPABASE_ANON_KEY__|${MAPPA_SUPABASE_ANON_KEY}|g" site/mappa-carichi/index.html
           if grep -q "__SUPABASE_" site/mappa-carichi/index.html; then echo "Segnaposto non sostituiti"; exit 1; fi
+
+      - name: Versione pubblicata (per il pulsante "Aggiorna app")
+        run: |
+          echo "{\"versione\":\"${GITHUB_SHA}\"}" > site/version.json
+          sed -i "s/__VERSIONE__/${GITHUB_SHA}/" site/aggiorna.js
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
