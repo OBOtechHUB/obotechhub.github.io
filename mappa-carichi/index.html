@@ -993,6 +993,8 @@ html { -webkit-tap-highlight-color: transparent; }
 @media (display-mode: standalone) and (max-width: 860px) { .rail { height: calc(64px + env(safe-area-inset-top)); } }
 html[lang="en"] .rmark::after { content: "Workload map"; }
 select, select option, select optgroup { background-color: var(--surface); color: var(--fg); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) select { color-scheme: dark; } :root:not([data-theme="light"]) select option { background: #242a2f !important; color: #eef1f3 !important; } }
+:root[data-theme="dark"] select { color-scheme: dark; } :root[data-theme="dark"] select option { background: #242a2f !important; color: #eef1f3 !important; }
 </style>
 </head>
 <body>
