@@ -924,6 +924,55 @@ section[aria-labelledby="h-pw"], section[aria-labelledby="h-gpw"], section[aria-
 .of-note{font-size:12px;color:var(--muted);margin:0}
 #pg-offerte table.list{min-width:560px}
 @media(max-width:820px){.of-g2{grid-template-columns:minmax(0,1fr)}.of-hr{grid-template-columns:96px 1fr 36px}}
+
+/* ===== Layout OBO Hub / Progettazione LPS: barra bianca in alto con icone ed etichette, fascia ardesia col titolo, schede con bordo sottile ===== */
+:root { --band: #41525d; --scheda: #7694a4; --r: 12px; --bg: #ffffff; --surface: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band: #2a3238; --scheda: #56707e; --bg: #1b1f23; --surface: #242a2f; } }
+:root[data-theme="dark"] { --band: #2a3238; --scheda: #56707e; --bg: #1b1f23; --surface: #242a2f; }
+html, body { overflow-x: clip; }
+body { margin: 0 !important; background: var(--bg) !important; background-image: none !important; padding: 0 0 56px !important; font-family: var(--font-body); }
+.wrap { display: block; max-width: none; margin: 0; }
+.rail { position: sticky; top: 0; z-index: 60; width: 100%; height: 72px; margin: 0; padding: 0 max(16px, calc(50% - 570px)); border-radius: 0;
+  background: var(--surface); box-shadow: 0 2px 14px rgba(0,0,0,.07); flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
+.rmark { width: auto; height: auto; margin: 0; display: flex; align-items: center; gap: 12px; flex: none; }
+.rmark .mark { width: 40px; height: 40px; border-radius: 10px; }
+.rmark::after { content: "Mappa carichi"; font: 700 21px/1 var(--font-body); color: var(--fg); letter-spacing: -.2px; }
+.nav { flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: flex-end; gap: 2px; width: auto; min-width: 0; flex: 1 1 auto; overflow-x: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav button, .nav a.hubnav { position: relative; width: auto; min-width: 64px; height: 58px; padding: 6px 8px; border-radius: 8px; background: transparent; color: var(--fg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; box-shadow: none; flex: none; }
+.nav button svg, .nav a.hubnav svg { width: 25px; height: 25px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.nav button .lab, .nav a.hubnav .lab { display: block; font: 600 13px/1 var(--font-body); }
+.nav button:hover, .nav a.hubnav:hover { background: transparent; color: #f39b00; }
+.nav button[aria-current="page"] { background: transparent; color: #f39b00; }
+.nav button[aria-current="page"]::after { content: ""; display: block; position: absolute; left: 12px; right: 12px; bottom: -7px; top: auto; width: auto; height: 3px; transform: none; border-radius: 3px; background: #f39b00; }
+.nav button::before { display: none !important; }
+.nav .bdg { position: absolute; top: 2px; right: 12px; min-width: 17px; font-size: 10px; line-height: 17px; background: #f39b00; color: #fff; }
+.main { max-width: 1140px; margin: 0 auto; padding: 0 16px; gap: 24px; }
+.hd { margin: 0 calc(50% - 50vw); padding: 40px max(16px, calc(50vw - 570px)); background: var(--band); color: #fff; align-items: center; flex-wrap: wrap; }
+.hd h1 { color: #fff; font-size: clamp(28px, 3.4vw, 36px); font-weight: 700; letter-spacing: -.02em; }
+.hd .sub { color: rgba(255,255,255,.88); font-size: 17px; margin-top: 8px; }
+.tb-act { box-shadow: none; }
+.panel, .kpi, .kpi:first-child, .kpi:nth-child(3), .kpi:nth-child(n+3) { border: .8px solid var(--scheda); border-radius: var(--r); box-shadow: none; }
+.hero { border-radius: var(--r); background: #fff4e0; border: .8px solid #f39b00; color: var(--fg); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero { background: #3d3020; } }
+:root[data-theme="dark"] .hero { background: #3d3020; }
+.hero h2 { font-weight: 700; }
+#hubBack { display: none !important; }
+@media (max-width: 860px) {
+  .rmark::after { display: none; }
+  .rail { height: 64px; gap: 8px; }
+  .nav button, .nav a.hubnav { min-width: 52px; padding: 6px 4px; }
+  .nav button .lab, .nav a.hubnav .lab { font-size: 11px; }
+}
+@media (max-width: 700px) {
+  .rail { position: sticky; top: 0; left: 0; right: 0; bottom: auto; width: 100%; border-radius: 0; padding: 0 8px; }
+  .nav { width: auto; justify-content: flex-start; }
+  .rmark .mark { width: 34px; height: 34px; }
+  .nav button { flex: none; height: 56px; border-radius: 8px; }
+  .main { padding-bottom: 24px; }
+  .hd { padding-top: 28px; padding-bottom: 28px; }
+}
 </style>
 </head>
 <body>
@@ -966,6 +1015,7 @@ section[aria-labelledby="h-pw"], section[aria-labelledby="h-gpw"], section[aria-
   <aside class="rail" aria-label="Menu">
     <div class="rmark" aria-hidden="true"><span class="mark"></span></div>
     <nav class="nav" id="nav" aria-label="Sezioni">
+      <a class="hubnav" href="../" aria-label="Torna a OBO Hub"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="lab">OBO Hub</span></a>
       <button type="button" data-go="home" data-tip="Dashboard" aria-label="Dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="lab">Home</span></button>
       <button type="button" data-go="ins" data-tip="Inserisci" aria-label="Inserisci"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span class="lab">Inserisci</span></button>
       <button type="button" data-go="map" data-tip="Mappa carichi" aria-label="Mappa carichi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span class="lab">Mappa</span></button>
@@ -2968,6 +3018,6 @@ section[aria-labelledby="h-pw"], section[aria-labelledby="h-gpw"], section[aria-
 </script>
 
 <script src="install.js" defer></script>
-<a href="../" title="Torna a OBO Hub" style="position:fixed;left:16px;bottom:16px;z-index:2147483646;display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;background:#fff;color:#212529;font:600 14px Helvetica,Arial,sans-serif;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.25)">&#8592; OBO Hub</a>
+<a id="hubBack" href="../" title="Torna a OBO Hub" style="position:fixed;left:16px;bottom:16px;z-index:2147483646;display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;background:#fff;color:#212529;font:600 14px Helvetica,Arial,sans-serif;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.25)">&#8592; OBO Hub</a>
 </body>
 </html>
