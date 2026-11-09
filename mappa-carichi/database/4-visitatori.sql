@@ -1,4 +1,5 @@
--- Mappa carichi · ACCESSO VISITATORI (sola consultazione, per esterni: es. sales promoter)
+-- OBO Hub · ACCESSO VISITATORI (sola consultazione, per esterni: es. sales promoter)
+-- Il visitatore entra da OBO Hub (link .../?visitatore) e vede tutte le app tranne Admin.
 -- Eseguire nel SQL Editor di Supabase dopo 3-accesso-obo-hub.sql. Si può rieseguire.
 -- Il visitatore entra con il proprio nome + la password visitatori, senza account e senza Authenticator,
 -- e può SOLO vedere: tutto tranne Admin, anche Offerte e Download (nessun salvataggio). La password la imposta l'amministratore
@@ -58,3 +59,14 @@ do $$ begin
     grant execute on function public.app_offerte(jsonb) to anon, authenticated;
   end if;
 end $$;
+
+-- OBO Hub e Progettazione LPS controllano che la sessione visitatore sia ancora valida (senza registrare un accesso)
+create or replace function public.app_visitatore_valido(p jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare s public.app_sessions;
+begin
+  begin s := public._sess(p->>'token'); exception when others then return jsonb_build_object('ok', false); end;
+  if s.role <> 'visitor' then return jsonb_build_object('ok', false); end if;
+  return jsonb_build_object('ok', true, 'name', s.name);
+end $$;
+grant execute on function public.app_visitatore_valido(jsonb) to anon, authenticated;

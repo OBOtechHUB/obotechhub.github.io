@@ -4,7 +4,7 @@
 | Cartella | Cosa contiene |
 |---|---|
 | `hub/` | OBO Hub: pagina iniziale con l'accesso e l'elenco delle app (`config.js` = elenco app) · `hub/icone/` le icone |
-| `mappa-carichi/` | app Mappa carichi ufficio tecnico · `database/` gli script SQL · `icone/` |
+| `mappa-carichi/` | app Mappa carichi (gli script SQL in `database/`: il 4 attiva i visitatori di tutto OBO Hub, link `/?visitatore`) ufficio tecnico · `database/` gli script SQL · `icone/` |
 | `torrette/` | app Configuratore torrette (in preparazione) · **`dati.js` = catalogo prodotti, si modifica solo quello** |
 | `comune/` | file usati da tutte le app: barra "Aggiorna app", pagina 404, rimando dei vecchi link `/lps/` |
 | `.github/workflows/` | pubblicazione automatica del sito |

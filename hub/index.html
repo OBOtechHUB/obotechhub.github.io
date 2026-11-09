@@ -239,6 +239,13 @@
 "Password": "Password",
 "Password dimenticata?": "Forgot your password?",
 "Non hai un accesso? Richiedilo": "No access yet? Request it",
+"Sei un visitatore? Entra con nome e password visitatori": "Are you a visitor? Sign in with your name and the visitor password",
+"Accesso visitatori": "Visitor access",
+"Scrivi il tuo nome e la password visitatori che ti è stata comunicata. Potrai consultare gli strumenti in sola lettura.": "Enter your name and the visitor password you were given. You can browse the tools in read-only mode.",
+"Il tuo nome": "Your name", "Password visitatori": "Visitor password", "Entra": "Sign in",
+"Accedi con il tuo account": "Sign in with your account",
+"Visitatore · sola consultazione": "Visitor · read-only",
+"Puoi consultare gli strumenti dell'ufficio tecnico in sola lettura.": "You can browse the technical office tools in read-only mode.",
 "Email o password non corrette.": "Wrong email or password.",
 "Password dimenticata": "Forgot password",
 "Scrivi la tua email: se è abilitata riceverai il link per sceglierne una nuova.": "Enter your email: if it is enabled you'll receive a link to choose a new one.",
@@ -389,6 +396,7 @@
   document.addEventListener("gesturestart", (e) => e.preventDefault());
 
   function puoAprire(app, profilo) {
+    if (profilo.ruolo === "visitatore") return !app.soloAdmin && app.visitatori !== false;
     if (app.soloAdmin) return profilo.ruolo === "admin";
     if (profilo.ruolo === "admin" || profilo.sezioni.includes("tutte")) return true;
     return app.abilitataSe(profilo.sezioni);
@@ -433,7 +441,8 @@
       <form id="f"><label>Email<input id="em" type="email" autocomplete="username" required maxlength="254"></label>
       <label>Password<input id="pw" type="password" autocomplete="current-password" required minlength="6"></label>
       <button class="btn btn-primario">${svg("accedi")}Accedi</button><div class="errore" role="alert"></div></form>
-      <button class="link" id="dim" type="button">Password dimenticata?</button><br><button class="link" id="ric" type="button">Non hai un accesso? Richiedilo</button>`);
+      <button class="link" id="dim" type="button">Password dimenticata?</button><br><button class="link" id="ric" type="button">Non hai un accesso? Richiedilo</button><br><button class="link" id="vis" type="button">Sei un visitatore? Entra con nome e password visitatori</button>`);
+    p.querySelector("#vis").addEventListener("click", () => { vista = "visitatore"; void aggiorna(); });
     p.querySelector("#f").addEventListener("submit", async (e) => {
       e.preventDefault(); occupato(true); errore("");
       const { error } = await supabase.auth.signInWithPassword({ email: $("em").value.trim(), password: $("pw").value });
@@ -444,6 +453,28 @@
     p.querySelector("#dim").addEventListener("click", () => { vista = "recupero"; void aggiorna(); });
     p.querySelector("#ric").addEventListener("click", () => { vista = "richiedi"; void aggiorna(); });
     $("em").focus();
+  }
+
+  // ---------- visitatori: nome + password visitatori, senza account (stessa sessione in tutte le app: "obo-visitatore") ----------
+  const leggiVisitatore = () => { try { const v = JSON.parse(localStorage.getItem("obo-visitatore") || "null"); return v && v.token ? v : null; } catch { return null; } };
+  const togliVisitatore = () => { try { localStorage.removeItem("obo-visitatore"); } catch {} };
+  function schermataVisitatore() {
+    const p = pannello(`<h2>Accesso visitatori</h2><p>Scrivi il tuo nome e la password visitatori che ti è stata comunicata. Potrai consultare gli strumenti in sola lettura.</p>
+      <form id="f"><label>Il tuo nome<input id="vn" type="text" autocomplete="name" required minlength="2" maxlength="60"></label>
+      <label>Password visitatori<input id="vp" type="password" autocomplete="off" required></label>
+      <button class="btn btn-primario">${svg("accedi")}Entra</button><div class="errore" role="alert"></div></form>
+      <button class="link" id="acc" type="button">Accedi con il tuo account</button>`);
+    try { const n = localStorage.getItem("obo-visitatore-nome"); if (n) $("vn").value = n; } catch {}
+    p.querySelector("#acc").addEventListener("click", () => { vista = "accedi"; void aggiorna(); });
+    p.querySelector("#f").addEventListener("submit", async (e) => {
+      e.preventDefault(); occupato(true); errore("");
+      const { data, error } = await supabase.rpc("app_login_visitatore", { p: { name: $("vn").value, pw: $("vp").value } });
+      occupato(false);
+      if (error || !data?.token) { errore((data && data.error) || (error && /TROPPI/.test(error.message) ? "Troppi tentativi. Riprova tra qualche minuto." : "Accesso visitatori non riuscito.")); return; }
+      try { localStorage.setItem("obo-visitatore", JSON.stringify({ token: data.token, name: data.name })); localStorage.setItem("obo-visitatore-nome", data.name); } catch {}
+      vista = ""; void aggiorna();
+    });
+    (leggiVisitatore() ? $("vp") : $("vn")).focus();
   }
 
   function schermataRecupero() {
@@ -558,11 +589,28 @@
     $("intro").textContent = "Un unico accesso sicuro, con password e codice di Microsoft Authenticator, per gli strumenti di lavoro abilitati per te.";
 
     if (!session) {
+      const v = leggiVisitatore();
+      if (v) {
+        let ok = null; try { ({ data: ok } = await supabase.rpc("app_visitatore_valido", { p: { token: v.token } })); } catch {}
+        if (mio !== giro) return;
+        if (ok?.ok) {
+          $("sottotitolo").textContent = "Visitatore · sola consultazione";
+          azioni.append(iconaBarra(null, "Esci", "esci", () => { supabase.rpc("app_logout", { p: { token: v.token } }).then(() => {}, () => {}); togliVisitatore(); vista = "visitatore"; void aggiorna(); }));
+          const ora = new Date().getHours(), primo = String(ok.name || v.name || "").trim().split(/\s+/)[0];
+          const saluto = lingua === "en" ? (ora < 12 ? "Good morning" : ora < 18 ? "Good afternoon" : "Good evening") : (ora < 13 ? "Buongiorno" : ora < 18 ? "Buon pomeriggio" : "Buonasera");
+          $("titolo").textContent = saluto + (primo ? ", " + primo : "");
+          $("intro").textContent = "Puoi consultare gli strumenti dell'ufficio tecnico in sola lettura.";
+          disegnaApp({ ruolo: "visitatore", sezioni: [] });
+          return;
+        }
+        togliVisitatore();
+      }
       $("sottotitolo").textContent = "Accesso riservato";
       azioni.append(iconaBarra(null, "Richiedi", "richiedi", () => { vista = "richiedi"; void aggiorna(); }), iconaBarra(null, "Accedi", "accedi", () => { vista = "accedi"; void aggiorna(); }));
       if (vista === "richiedi") schermataRichiesta();
       else if (vista === "recupero") schermataRecupero();
       else if (vista === "accedi") schermataAccedi();
+      else if (vista === "visitatore") schermataVisitatore();
       else {
         eroe.innerHTML = `<button type="button" class="btn btn-primario" id="b-acc">${svg("accedi")}Accedi</button><button type="button" class="btn btn-chiaro" id="b-ric">${svg("richiedi")}Richiedi l'accesso</button>`;
         $("b-acc").addEventListener("click", () => { vista = "accedi"; void aggiorna(); });
@@ -571,7 +619,7 @@
       return;
     }
 
-    vista = "";
+    vista = ""; togliVisitatore();
     const esci = async () => {
       try { await supabase.rpc("registra_accesso", { evento: "uscita" }); } catch {}
       try { await supabase.auth.signOut(); } catch {}
@@ -609,6 +657,7 @@
     if (evento === "PASSWORD_RECOVERY") recupero = true;
     if (evento !== "INITIAL_SESSION") void aggiorna();
   });
+  if (new URLSearchParams(location.search).has("visitatore")) vista = "visitatore";
   traduciTutto();
   aggiorna().catch(() => avviso("Non riesco a contattare il server. Riprova tra poco."));
 </script>
