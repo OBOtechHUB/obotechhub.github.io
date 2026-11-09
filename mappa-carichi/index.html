@@ -1844,7 +1844,7 @@ html { touch-action: pan-x pan-y; }
     var t;
     if (isAdmin) t = '<b>' + esc(adminName) + '</b> (Admin): puoi creare, modificare ed eliminare tutti i progetti e aggiungere le persone.';
     else if (me) t = 'Guest: <b>' + esc(me) + '</b>. Puoi creare progetti e impegni e modificarli o eliminarli solo se li hai creati tu.';
-    else if (isVisitor) t = 'Visitatore: <b>' + esc(visName) + '</b>. Puoi guardare e usare i filtri, ma non inserire né modificare nulla.';
+    else if (isVisitor) t = 'Visitatore: <b>' + esc(visName) + '</b>. Puoi vedere tutto (anche Offerte e Download), ma non inserire né modificare nulla.';
     else t = 'Sola lettura. Entra come Guest con il tuo nome (aggiunto dall\'admin) oppure come Admin.';
     $('whoState').innerHTML = t;
     var logged = isAdmin || !!me || isVisitor;
@@ -1863,8 +1863,8 @@ html { touch-action: pan-x pan-y; }
     $('teamAdd').disabled = !isAdmin; $('t-name').disabled = !isAdmin;
     $('t-name').placeholder = isAdmin ? 'Es. Mario Rossi' : 'Solo l\'admin aggiunge persone';
     $('loadCsv').disabled = !isAdmin;
-    $('navAdmin').hidden = !isAdmin; $('navOfferte').hidden = !isAdmin; if (!isAdmin) ofClear();
-    document.querySelector('#nav [data-go=ins]').hidden = isVisitor; document.querySelector('#nav [data-go=data]').hidden = isVisitor; $('heroNew').hidden = isVisitor;
+    $('navAdmin').hidden = !isAdmin; $('navOfferte').hidden = !(isAdmin || isVisitor); if (!(isAdmin || isVisitor)) ofClear();
+    document.querySelector('#nav [data-go=ins]').hidden = isVisitor; $('heroNew').hidden = isVisitor;
     if (typeof renderOutlook === 'function') renderOutlook();
   }
   var MONTHS_FULL = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
@@ -2135,7 +2135,7 @@ html { touch-action: pan-x pan-y; }
     });
     $('teamList').innerHTML = h + '</tbody>';
   }
-  // ---------- Sezione Offerte (solo Admin; dati letti dal server con app_offerte) ----------
+  // ---------- Sezione Offerte (Admin e Visitatori in sola lettura; dati letti dal server con app_offerte) ----------
   var OF = { data: null, st: {}, fam: '', mese: '', q: '', sel: {}, limit: 40, loading: false, wired: false, per: 'a' };
   var OF_PER = [['s', 'Settimana'], ['m', 'Mese'], ['2', '2 mesi'], ['6', '6 mesi'], ['a', '1 anno']];
   function ofMk(back) { var t = new Date(); t.setDate(1); t.setMonth(t.getMonth() - back); return t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2); }
@@ -2163,7 +2163,7 @@ html { touch-action: pan-x pan-y; }
   function ofM(m) { return m ? OF_MM[+m.slice(5) - 1] + ' ' + m.slice(2, 4) : ''; }
   function ofClear() { if (!OF) return; OF.data = null; OF.all = null; if ($('of-app')) { $('of-app').hidden = true; ['of-kpis', 'of-people', 'of-stato', 'of-months', 'of-heat', 'of-tbl'].forEach(function (k) { $(k).innerHTML = ''; }); } }
   function ofOpen() {
-    if (!isAdmin) return;
+    if (!(isAdmin || isVisitor)) return;
     if (!CLOUD) { $('of-app').hidden = true; $('of-msg').hidden = false; $('of-msg').textContent = 'La sezione Offerte è disponibile solo con il database collegato.'; return; }
     if (OF.data) { ofRender(); return; }
     ofLoad();
@@ -2390,7 +2390,7 @@ html { touch-action: pan-x pan-y; }
     data: ['Download', 'Scarica i progetti e gli appuntamenti per Outlook.']
   };
   function showPage(id) {
-    if (PAGES.indexOf(id) < 0 || ((id === 'admin' || id === 'offerte') && !isAdmin) || (isVisitor && (id === 'ins' || id === 'data'))) id = 'home';
+    if (PAGES.indexOf(id) < 0 || (id === 'admin' && !isAdmin) || (id === 'offerte' && !(isAdmin || isVisitor)) || (isVisitor && id === 'ins')) id = 'home';
     if (id === 'offerte') ofOpen();
     if (id === 'admin') { var pw = pwds(); $('pw-admin').value = pw.admin; $('pw-guest').value = pw.guest; $('pw-vis-f').hidden = !CLOUD; $('pw-visitor').value = pw.visitor || ''; $('pw-visitor').type = 'password'; $('pw-admin').type = 'password'; $('pw-guest').type = 'password'; $('pwShow').textContent = 'Mostra'; $('pwMsg').textContent = ''; $('admMsg').textContent = ''; renderAdm(); renderGpw(); }
     PAGES.forEach(function (p) { $('pg-' + p).hidden = p !== id; });
@@ -2824,7 +2824,18 @@ html { touch-action: pan-x pan-y; }
     if (CLOUD) { var tk = token; rpc('app_logout', { token: tk }).catch(function () {}); token = ''; try { localStorage.removeItem(KEY + '-tok'); } catch (e) {} secrets = null; projects = []; }
     $('g-pass').value = ''; $('admin-pin').value = ''; $('me-name').value = ''; $('me-sel').value = ''; firstMode(''); say2(''); renderAll();
     showPage('home');
-    location.href = eraVisitatore ? './?visitatore' : '../';
+    // Esci = esci da tutto: si chiude anche la sessione di OBO Hub e si torna all'accesso iniziale
+    // (il visitatore torna alla sua entrata). Si copre la pagina subito, così non resta la dashboard da "Ospite".
+    $('hubGate').hidden = false; $('visForm').hidden = true; $('hubBtn').hidden = true; $('hubMsg').textContent = 'Uscita in corso…';
+    var dove = eraVisitatore ? './?visitatore' : '../', fatto = false;
+    function vai() { if (fatto) return; fatto = true; location.replace(dove); }
+    function togliSessioneHub() { try { Object.keys(localStorage).forEach(function (k) { if (/^sb-.*-auth-token$/.test(k)) localStorage.removeItem(k); }); } catch (e) {} }
+    setTimeout(function () { togliSessioneHub(); vai(); }, 4000);
+    if (eraVisitatore || !CLOUD) { vai(); return; }
+    import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm').then(function (m) {
+      var sb = m.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: false } });
+      return sb.auth.signOut({ scope: 'global' }).catch(function () {}).then(function () { return sb.auth.signOut({ scope: 'local' }).catch(function () {}); });
+    }).catch(function () {}).then(function () { togliSessioneHub(); vai(); });
   });
 
 
@@ -2867,7 +2878,7 @@ html { touch-action: pan-x pan-y; }
 
   /* ===== Esportazione per Outlook ===== */
   var olTouched = false, dlOff = {};
-  function dlPersons() { return isAdmin ? people().filter(function (n) { return !dlOff[n]; }) : (me ? [me] : []); }
+  function dlPersons() { return (isAdmin || isVisitor) ? people().filter(function (n) { return !dlOff[n]; }) : (me ? [me] : []); }
   function projDays(p) {
     var out = [];
     if (p.dates) { Object.keys(p.dates).sort().forEach(function (k) { out.push({ k: k, h: Number(p.dates[k]) }); }); return out; }
@@ -2968,7 +2979,7 @@ html { touch-action: pan-x pan-y; }
   }
   function renderOutlook() {
     var list = people(), who = $('dlWho');
-    if (isAdmin) {
+    if (isAdmin || isVisitor) {
       $('dlSub').textContent = 'Scegli le persone da includere: tutte oppure solo alcune. La scelta vale per i progetti e per gli appuntamenti.';
       who.innerHTML = '<div class="lab">Persone da includere</div><div class="dlchips">' + list.map(function (n) {
         return '<label class="chk"><input type="checkbox" data-p="' + encodeURIComponent(n) + '"' + (dlOff[n] ? '' : ' checked') + '>' + esc(n) + '</label>';

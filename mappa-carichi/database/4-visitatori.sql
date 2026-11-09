@@ -1,7 +1,7 @@
 -- Mappa carichi · ACCESSO VISITATORI (sola consultazione, per esterni: es. sales promoter)
 -- Eseguire nel SQL Editor di Supabase dopo 3-accesso-obo-hub.sql. Si può rieseguire.
 -- Il visitatore entra con il proprio nome + la password visitatori, senza account e senza Authenticator,
--- e può SOLO vedere (nessun salvataggio, niente Admin, niente Offerte). La password la imposta l'amministratore
+-- e può SOLO vedere: tutto tranne Admin, anche Offerte e Download (nessun salvataggio). La password la imposta l'amministratore
 -- in OBO Hub → Admin → Impostazioni.
 
 create or replace function public.app_login_visitatore(p jsonb) returns jsonb
@@ -37,3 +37,24 @@ grant execute on function public.mappa_password_visitatori(), public.mappa_impos
 
 -- la vecchia password "visitatore" non vale più: finché l'admin non ne imposta una nuova l'accesso visitatori è chiuso
 update public.app_settings set value = '' where key = 'visitor_pw' and value = 'visitatore';
+
+-- I visitatori vedono tutto tranne Admin: anche la sezione Offerte (sola lettura).
+-- Questa funzione sostituisce quella dello script delle offerte (che resta fuori da GitHub): stessi dati, in più il ruolo visitatore.
+do $$ begin
+  if to_regclass('public.app_offerte') is not null then
+    execute $f$
+      create or replace function public.app_offerte(p jsonb default '{}') returns jsonb
+      language plpgsql security definer set search_path = public as $b$
+      declare s public.app_sessions;
+      begin
+        s := public._sess(p->>'token');
+        if s.role not in ('admin', 'visitor') then raise exception 'NON_AUTORIZZATO'; end if;
+        return jsonb_build_object('items', (
+          select coalesce(jsonb_agg(jsonb_build_object('o', oggetto, 's', stato, 'f', famiglia, 'p', to_jsonb(persone), 'm', mese, 'w', giorno, 't', tipo) order by id), '[]'::jsonb)
+          from public.app_offerte));
+      end $b$;
+    $f$;
+    revoke all on function public.app_offerte(jsonb) from public;
+    grant execute on function public.app_offerte(jsonb) to anon, authenticated;
+  end if;
+end $$;
