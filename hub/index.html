@@ -638,7 +638,7 @@
     if (!verificati.length) { void schermataAttivaAuthenticator(); return; }
 
     // dentro: solo le proprie app
-    try { if (!sessionStorage.getItem("obo-hub-registrato")) { sessionStorage.setItem("obo-hub-registrato", "1"); void supabase.rpc("registra_accesso", { evento: "accesso", dettagli: { app: "obo-hub" } }); } } catch {}
+    try { if (!sessionStorage.getItem("obo-hub-registrato")) { sessionStorage.setItem("obo-hub-registrato", "1"); supabase.rpc("registra_accesso", { evento: "accesso", dettagli: { app: "obo-hub" } }).then(() => {}, () => {}); // .then: senza, la chiamata non parte } } catch {}
     if (profilo.ruolo === "admin") azioni.insertBefore(iconaBarra(CONFIG.lps + "admin", "Admin", "admin"), azioni.lastChild);
     // nome da salutare: nome del profilo, poi persona della Mappa, poi nome del profilo utente, poi dall'email (cognome.nome@…)
     const maiuscola = (x) => x ? x.charAt(0).toUpperCase() + x.slice(1).toLowerCase() : "";
