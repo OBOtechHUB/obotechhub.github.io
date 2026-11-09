@@ -52,6 +52,7 @@
 
   function mostraBarra(voci) {
     if (mostrata) return; mostrata = true;
+    var vecchio = document.getElementById("obo-novita"); if (vecchio) vecchio.remove(); // le novità sono già nella barra
     var b = document.createElement("div"); b.setAttribute("role", "status");
     b.style.cssText = "position:fixed;left:0;right:0;top:0;z-index:2147483647;max-height:70vh;overflow:auto;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top));background:#f39b00;color:#fff;font:600 14px -apple-system,system-ui,Helvetica,Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2)";
     var riga = '<div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap"><span>' + (en() ? "A new version of the app is available." : "È disponibile una nuova versione dell’app.") + '</span>' +
@@ -74,7 +75,7 @@
   }
 
   function mostraNovita(voci) {
-    if (!voci.length || document.getElementById("obo-novita")) return;
+    if (!voci.length || mostrata || document.getElementById("obo-novita")) return;
     var c = document.createElement("div"); c.id = "obo-novita"; c.setAttribute("role", "dialog"); c.setAttribute("aria-label", en() ? "What's new" : "Novità");
     c.style.cssText = "position:fixed;right:16px;bottom:16px;left:16px;margin-left:auto;max-width:420px;max-height:70vh;overflow:auto;z-index:2147483646;padding:16px;border-radius:14px;background:#fff;color:#1f2a30;border:1px solid #f39b00;box-shadow:0 12px 32px rgba(0,0,0,.25);font:14px -apple-system,system-ui,Helvetica,Arial,sans-serif";
     c.innerHTML = '<div style="font-weight:700;font-size:16px;color:#c47c00">' + (en() ? "What's new" : "Novità dell’app") + "</div>" + elenco(voci) +
