@@ -107,7 +107,7 @@
   /* Aspetto da app vera quando è installata */
   html { -webkit-tap-highlight-color: transparent; }
   @media (display-mode: standalone) {
-    html, body { overscroll-behavior-y: none; }
+    html { overscroll-behavior-y: none; }
     header.barra { padding-top: env(safe-area-inset-top); }
     body { padding-bottom: env(safe-area-inset-bottom); }
     .icona-barra, .marchio { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
@@ -117,7 +117,8 @@
 
   /* testo più grande/piccolo solo sul contenuto; niente zoom con le dita (si usano A− / A+) */
   html { touch-action: pan-x pan-y; }
-  html, body { overflow-x: hidden; }
+  /* niente scorrimento laterale: "clip" sul body, così il body non diventa un riquadro a sé che blocca la rotella del mouse */
+  html { overflow-x: hidden; } body { overflow-x: clip; }
   .impost { position: relative; }
   .pannello-impost { position: fixed; right: max(12px, calc(50% - 558px)); top: calc(76px + env(safe-area-inset-top)); z-index: 30; width: min(280px, calc(100vw - 24px)); padding: 14px; border: .8px solid var(--bordo); border-radius: 14px; background: var(--sfondo); color: var(--testo); box-shadow: 0 12px 32px rgba(0,0,0,.18); }
   .pannello-impost[hidden] { display: none; }
