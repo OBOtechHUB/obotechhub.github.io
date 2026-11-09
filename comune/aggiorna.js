@@ -13,7 +13,7 @@
   var urlNovita = ds.novita || url.replace(/version\.json$/, "novita.json");
   var APP = ds.app || "hub";
   var pagina = url.replace(/version\.json$/, "novita.html");
-  var CHIAVE = "obo-novita-" + APP;
+  var CHIAVE = "obo-novita2-" + APP;
   var mostrata = false, nuova = "";
 
   function en() { try { return localStorage.getItem("obo-lingua") === "en"; } catch (e) { return false; } }
@@ -27,11 +27,14 @@
       .then(function (j) { return (j && j.aggiornamenti || []).filter(function (a) { return a.app === APP || a.app === "tutte"; }); })
       .catch(function () { return []; });
   }
-  /** Voci più recenti dell'ultima vista. Al primo avvio non mostra nulla e segna tutto come visto. */
+  /** Voci più recenti dell'ultima vista. Al primo avvio mostra solo quelle delle ultime 2 settimane. */
   function nonViste(lista) {
     if (!lista.length) return [];
     var vista = leggi(CHIAVE);
-    if (!vista) { scrivi(CHIAVE, lista[0].id); return []; }
+    if (!vista) { // primo avvio con il registro: solo le novità delle ultime 2 settimane
+      var limite = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
+      return lista.filter(function (a) { return a.data >= limite; });
+    }
     var out = [];
     for (var i = 0; i < lista.length; i++) { if (lista[i].id === vista) return out; out.push(lista[i]); }
     return []; // voce vista non più nel registro: non ripropone tutto
@@ -92,7 +95,7 @@
         var gia = ""; try { gia = sessionStorage.getItem("obo-aggiornato") || ""; } catch (e) {}
         if (gia === j.versione) return; // appena aggiornato: la cache del browser può servire ancora per poco i file vecchi
         nuova = j.versione;
-        caricaNovita().then(function (l) { var v = leggi(CHIAVE) ? nonViste(l) : l.slice(0, 3); mostraBarra(v); });
+        caricaNovita().then(function (l) { mostraBarra(nonViste(l)); });
       }).catch(function () {});
   }
   function avvio() { controlla(); caricaNovita().then(function (l) { mostraNovita(nonViste(l)); }); }
