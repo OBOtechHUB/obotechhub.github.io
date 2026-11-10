@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+
 mkdir -p out5
 python3 - <<'PY' > out5/chiavi.txt 2>&1
 import json,urllib.request
@@ -7,6 +7,7 @@ u="https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchT
 r=json.load(urllib.request.urlopen(urllib.request.Request(u,headers={"User-Agent":"OBO-Hub/1.0"})))["results"][0]
 print(json.dumps({k:(v if not isinstance(v,(list,dict)) or len(json.dumps(v))<400 else json.dumps(v)[:400]) for k,v in r.items()},ensure_ascii=False,indent=1))
 PY
+true
 MAX_NUOVI=60 MAX_ROTAZIONE=0 MAX_PAGINE=15 python3 strumenti/prodotti/aggiorna.py > out5/log.txt 2>&1 || true
 cp prodotti/dati/stato.json prodotti/dati/novita.json out5/ 2>/dev/null || true
 head -c 3000 prodotti/dati/prodotti.json > out5/prodotti-testa.json || true
