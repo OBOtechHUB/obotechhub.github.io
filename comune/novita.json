@@ -2,26 +2,9 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
-      "id": "2026-11-10-tutte-1",
-      "data": "2026-11-10",
-      "app": "tutte",
-      "titolo": "Pagina di manutenzione",
-      "voci": [
-        "Quando un'app o una sezione è in manutenzione si apre una pagina che lo spiega, con l'orario previsto di ritorno",
-        "La pagina controlla da sola ogni minuto e riporta all'app appena la manutenzione finisce",
-        "Nella pagina iniziale di OBO Hub le app in manutenzione hanno l'etichetta \"In manutenzione\""
-      ],
-      "titolo_en": "Maintenance page",
-      "voci_en": [
-        "When an app or section is under maintenance a page explains it, with the expected time it will be back",
-        "The page checks every minute and takes you back as soon as maintenance ends",
-        "On the OBO Hub home page, apps under maintenance are labelled \"Under maintenance\""
-      ]
-    },
-    {
       "id": "2026-11-10-prodotti-2",
       "data": "2026-11-10",
-      "app": "hub",
+      "app": "prodotti",
       "titolo": "Prodotti OBO: foto, descrizioni e filtri per famiglia",
       "voci": [
         "Foto per tutti i prodotti, anche nell'elenco dei risultati",
@@ -64,29 +47,25 @@
       "titolo_en": "Update notes always visible",
       "voci": [
         "Quando esce una versione nuova la barra \"Aggiorna app\" mostra anche cosa cambia",
-        "Dopo l'aggiornamento le novità compaiono una volta in un riquadro, finché non premi \"Ho capito\"",
-        "Nuova pagina Novità in OBO Hub con tutti gli aggiornamenti delle app e il testo pronto da inviare"
+        "Dopo l'aggiornamento le novità compaiono una volta in un riquadro, finché non premi \"Ho capito\""
       ],
       "voci_en": [
         "When a new version is out the \"Update app\" bar also shows what changes",
-        "After updating, the news appears once in a box until you press \"Got it\"",
-        "New News page in OBO Hub with all app updates and a ready-to-send text"
+        "After updating, the news appears once in a box until you press \"Got it\""
       ]
     },
     {
       "id": "2026-11-09-hub-1",
       "data": "2026-11-09",
       "app": "hub",
-      "titolo": "Accesso visitatori a tutte le app",
-      "titolo_en": "Visitor access to all apps",
+      "titolo": "Uscita e aspetto",
+      "titolo_en": "Sign-out and appearance",
       "voci": [
-        "I visitatori entrano con il proprio nome e la password visitatori e vedono tutte le app tranne Amministrazione",
         "\"Esci\" chiude la sessione di tutte le app e riporta alla schermata di accesso",
         "Scorrimento con la rotellina del mouse sistemato nell'app installata su PC",
         "Dimensione del testo solo nel menu \"Aspetto\""
       ],
       "voci_en": [
-        "Visitors sign in with their own name and the visitor password and see all apps except Administration",
         "\"Sign out\" closes the session of all apps and returns to the sign-in screen",
         "Mouse wheel scrolling fixed in the installed PC app",
         "Text size only in the \"Display\" menu"
@@ -96,32 +75,15 @@
       "id": "2026-11-09-mappa-1",
       "data": "2026-11-09",
       "app": "mappa",
-      "titolo": "Visitatori e aspetto",
-      "titolo_en": "Visitors and display",
+      "titolo": "Aspetto e uscita",
+      "titolo_en": "Appearance and sign-out",
       "voci": [
-        "I visitatori vedono anche Offerte e Download, in sola lettura",
         "Dimensione del testo, tema e lingua nel menu \"Aspetto\", uguali a OBO Hub",
         "\"Esci\" riporta alla schermata di accesso di OBO Hub"
       ],
       "voci_en": [
-        "Visitors also see Offers and Download, read-only",
         "Text size, theme and language in the \"Display\" menu, same as OBO Hub",
         "\"Sign out\" returns to the OBO Hub sign-in screen"
-      ]
-    },
-    {
-      "id": "2026-11-09-torrette-1",
-      "data": "2026-11-09",
-      "app": "torrette",
-      "titolo": "Prima versione del configuratore (solo amministratori)",
-      "titolo_en": "First version of the configurator (administrators only)",
-      "voci": [
-        "Percorso in 5 passi: progetto, pavimento, torretta, apparecchi, riepilogo",
-        "Famiglie GES R2 e GESR9; codici da verificare con il listino OBO Italia"
-      ],
-      "voci_en": [
-        "5-step flow: project, floor, floor box, devices, summary",
-        "GES R2 and GESR9 families; codes to be checked against the OBO Italia price list"
       ]
     }
   ]
