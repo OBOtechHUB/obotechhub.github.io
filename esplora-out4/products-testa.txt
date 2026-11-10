@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+	<url>
+		<loc>https://www.obo.it/prodotti/elemento-terminale-per-canale-porta-apparecchi-rapid-80-tipo-ga-70110-grigio-chiaro-ral-7035-6274372.html</loc>
+		<lastmod>2026-11-09</lastmod>
+		<changefreq>yearly</changefreq>
+		<priority>1</priority>
+		<xhtml:link rel="alternate" hreflang="it-IT" href="https://www.obo.it/prodotti/elemento-terminale-per-canale-porta-apparecchi-rapid-80-tipo-ga-70110-grigio-chiaro-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="ru-KZ" href="https://kz.obo-bettermann.com/produkcija/nakonechnik-dlja-kanala-dlja-montazha-elektroustanovochnyh-izdelij-rapid-80-tip-gk-70110-svetlo-seryj-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="da-DK" href="https://www.obo.dk/produkter/endestykke-til-installationskanal-rapid-80-type-70110-lysgra-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="pl-PL" href="https://www.obo.pl/produkty/koncowka-do-kanalu-podparapetowego-rapid-80-typ-gk-70110-jasnoszary-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="lv-LV" href="https://www.obo.lv/produkti/gala-elements-iericu-montazas-kanalam-rapid-80-tips-70110-gaisi-peleks-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="fr-FR" href="https://www.obo.fr/produits/embout-pour-goulotte-d-appareillage-rapid-80-type-70110-gris-clair-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="it-CH" href="https://www.obo.ch/it-ch/prodotti/elemento-terminale-per-canale-incasso-apparecchi-rapid-80-tipo-70110-grigio-chiaro-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="hu-HU" href="https://www.obo.hu/termekek/veglezaro-elem-rapid-80-szerelvenybeepito-csatornahoz-70110-tipus-vilagosszurke-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="fr-CH" href="https://www.obo.ch/fr-ch/produits/embout-pour-goulotte-d-appareillage-rapid-80-type-70110-gris-clair-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="sk-SK" href="https://www.obo.sk/vyrobky/koncovy-dil-pro-kanal-pro-vestavbu-p-istroj-rapid-80-typu-70110-svetlosiva-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="lt-LT" href="https://www.obo.lt/produktai/galinis-dangtelis-skirtas-70110-tipo-prietaisu-instaliaciniam-kanalui-rapid-80-sviesiai-pilka-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="en-KZ" href="https://kz.obo-bettermann.com/en/products/end-piece-for-device-installation-trunking-rapid-80-type-70110-light-grey-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="en-TR" href="https://www.obo.com.tr/products/end-piece-for-device-installation-trunking-rapid-80-type-70110-light-grey-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="bg-BG" href="https://www.obo.bg/produkti/kraen-element-za-rapid-80-tip-gk-70110-svetlosi

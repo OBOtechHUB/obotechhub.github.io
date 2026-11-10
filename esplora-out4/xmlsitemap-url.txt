@@ -1,0 +1,3 @@
+https://www.obo.it/fileadmin/export/xmlsitemap/26/news_sitemap_it_0.xml
+https://www.obo.it/fileadmin/export/xmlsitemap/26/page_sitemap_it_0.xml
+https://www.obo.it/fileadmin/export/xmlsitemap/26/reference_sitemap_it_0.xml

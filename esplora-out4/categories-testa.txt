@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+	<url>
+		<loc>https://www.obo.it/prodotti/sistemi-di-distribuzione/sistemi-di-collegamento-e-posa/morsetto/</loc>
+		<lastmod>2026-11-10</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>1</priority>
+		<xhtml:link rel="alternate" hreflang="it-IT" href="https://www.obo.it/prodotti/sistemi-di-distribuzione/sistemi-di-collegamento-e-posa/morsetto/"/>
+		<xhtml:link rel="alternate" hreflang="uk-UA" href="https://www.obo.ua/produkts-ia/r-shennia-dlia-promyslovost/z-jednuvaln-ta-montazhn-systemy/klemy/"/>
+		<xhtml:link rel="alternate" hreflang="fr-FR" href="https://www.obo.fr/produits/installation-industrielle/systemes-de-raccordement-et-de-pose/bornes/"/>
+		<xhtml:link rel="alternate" hreflang="cs-CZ" href="https://www.obo.cz/vyrobky/prumyslove-instalace/spojovaci-a-ulozne-systemy/svorky/"/>
+		<xhtml:link rel="alternate" hreflang="fi-FI" href="https://www.obo.fi/tuotteet/teollisuusasennukset/liitaentae-ja-asennustarvikkeet/liittimet/"/>
+		<xhtml:link rel="alternate" hreflang="lt-LT" href="https://www.obo.lt/produktai/industrines-instaliacijos/prijungimo-ir-klojimo-sistemos/gnybtai/"/>
+		<xhtml:link rel="alternate" hreflang="hu-HU" href="https://www.obo.hu/termekek/ipari-installaciok/osszekoto-rendszerek-es-szerelesi-segedanyagok/sorkapcsok/"/>
+		<xhtml:link rel="alternate" hreflang="en-UA" href="https://www.obo.ua/en/products/industrial-installations/connection-and-routing-systems/terminals/"/>
+		<xhtml:link rel="alternate" hreflang="fr-BE" href="https://www.obo.be/fr-be/produits/installation-industrielle/systemes-de-raccordement-et-de-pose/bornes/"/>
+		<xhtml:link rel="alternate" hreflang="sk-SK" href="https://www.obo.sk/vyrobky/priemyselne-instalacie/spojovaci-a-ulozne-systemy/svorky/"/>
+		<xhtml:link rel="alternate" hreflang="en-CN" href="https://www.obo.com.cn/en/products/industrial-installations/connection-and-routing-systems/terminals/"/>
+		<xhtml:link rel="alternate" hreflang="pl-PL" href="https://www.obo.pl/produkty/instalacje-przemyslowe/systemy-polaczeniowe-i-instalacyjne/zaciski/"/>
+		<xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.obobrasil.com.br/pt-br/produtos/instalacoes-industriais/sistemas-de-conexao-e-instalacao/bornes-de-ligacao/"/>
+		<xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.obo.com.cn/chan-pin/gong-

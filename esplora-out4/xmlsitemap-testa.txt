@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.obo.it/fileadmin/export/xmlsitemap/26/news_sitemap_it_0.xml</loc>
+  </url>
+  <url>
+    <loc>https://www.obo.it/fileadmin/export/xmlsitemap/26/page_sitemap_it_0.xml</loc>
+  </url>
+  <url>
+    <loc>https://www.obo.it/fileadmin/export/xmlsitemap/26/reference_sitemap_it_0.xml</loc>
+  </url>
+</urlset>
