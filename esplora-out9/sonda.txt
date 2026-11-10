@@ -1,0 +1,31 @@
+200 b'<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n\t<sitemap>\n\t\t<loc>https://www.obo.it/sitemaps/categories_18_1.xml</loc>\n\t\t<lastmod>2026-11-10T02:56:27+01:00</lastmod>\n\t</sitemap>\n\t<sitemap>\n\t\t<loc>https://www.obo.it/sitemaps/products_18_1.xml</loc>\n\t\t<lastmod>2026-11-10T02:56:27+01:00</lastmod>\n\t</sitemap>\n\t<sitemap>\n\t\t<loc>https://www.obo.it/sitemaps/products_18_2.xml</loc>\n\t\t<lastmod>2026-11-10T02:56:27+01:00</lastmod>\n\t</sitemap>\n\t<sitemap>\n\t\t<loc>https://www.obo.it/sitemaps/products_18_3.xml</loc>\n\t\t<lastmod>2026-11-10T02:56:27+01:0'
+SITEMAP PRODOTTI 200 16757262
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+	<url>
+		<loc>https://www.obo.it/prodotti/elemento-terminale-per-canale-porta-apparecchi-rapid-80-tipo-ga-70110-grigio-chiaro-ral-7035-6274372.html</loc>
+		<lastmod>2026-11-09</lastmod>
+		<changefreq>yearly</changefreq>
+		<priority>1</priority>
+		<xhtml:link rel="alternate" hreflang="it-IT" href="https://www.obo.it/prodotti/elemento-terminale-per-canale-porta-apparecchi-rapid-80-tipo-ga-70110-grigio-chiaro-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="ru-KZ" href="https://kz.obo-bettermann.com/produkcija/nakonechnik-dlja-kanala-dlja-montazha-elektroustanovochnyh-izdelij-rapid-80-tip-gk-70110-svetlo-seryj-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="da-DK" href="https://www.obo.dk/produkter/endestykke-til-installationskanal-rapid-80-type-70110-lysgra-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="pl-PL" href="https://www.obo.pl/produkty/koncowka-do-kanalu-podparapetowego-rapid-80-typ-gk-70110-jasnoszary-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="lv-LV" href="https://www.obo.lv/produkti/gala-elements-iericu-montazas-kanalam-rapid-80-tips-70110-gaisi-peleks-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="fr-FR" href="https://www.obo.fr/produits/embout-pour-goulotte-d-appareillage-rapid-80-type-70110-gris-clair-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="it-CH" href="https://www.obo.ch/it-ch/prodotti/elemento-terminale-per-canale-incasso-apparecchi-rapid-80-tipo-70110-grigio-chiaro-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="hu-HU" href="https://www.obo.hu/termekek/veglezaro-elem-rapid-80-szerelvenybeepito-csatornahoz-70110-tipus-vilagosszurke-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="fr-CH" href="https://www.obo.ch/fr-ch/produits/embout-pour-goulotte-d-appareillage-rapid-80-type-70110-gris-clair-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="sk-SK" href="https://www.obo.sk/vyrobky/koncovy-dil-pro-kanal-pro-vestavbu-p-istroj-rapid-80-typu-70110-svetlosiva-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="lt-LT" href="https://www.obo.lt/produktai/galinis-dangtelis-skirtas-70110-tipo-prietaisu-instaliaciniam-kanalui-rapid-80-sviesiai-pilka-ral-7035-6274372.html"/>
+		<xht
+0 200 1 176422 {'description': 'Scopri di più su Angolo sinistra, altezza 40-240 mm 600 adesso! ✓ OBO – il tuo fornitore p'} jsonld False False
+1 200 3 200267 {'description': 'Scopri di più su Riduzione e piastra terminale 60 DD 500 | 60 adesso! ✓ OBO – il tuo forni'} jsonld False False
+2 200 4 194837 {'description': 'Scopri di più su Inserto di riduzione, metrica 23 | 33,7 | 40 adesso! ✓ OBO – il tuo forni'} jsonld False False
+3 200 6 211002 {'description': 'Scopri di più su Inserto multi-tenuta, metrica 2 | 6 | 15,1 |  adesso! ✓ OBO – il tuo forn'} jsonld False False
+20 200 36 211738 {'description': 'Scopri di più su Derivazione a T 110 FS 600 | Acciaio | zincato in continuo adesso! ✓ OBO '} jsonld False False
+40 200 69 187290 {'description': 'Scopri di più su Canale di cablaggio, Tipo LKV H 75125 2000 | 125 | 75 | Perforazione di b'} jsonld False False
+60 200 100 143140 {'description': 'Scopri di più su Piastra a pavimento per ISS140100R 200 | 160 | 3 | bianco; RAL 9006 adess'} jsonld False False
+80 200 133 223897 {'description': 'Scopri di più su Canale portacavi, tipo LKM 60060 2000 | 60 | 64 |  | zincato a nastro / p'} jsonld False False
+100 200 165 266205 {'description': 'Scopri di più su Passerella SKS-Magic® 60 chiusa FS 3050 | 400 | 60 | 1,5 | no | zinco | A'} jsonld False False
+Counter({200: 120}) 195
