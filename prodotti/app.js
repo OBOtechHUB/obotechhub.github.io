@@ -158,7 +158,10 @@ function vocePagina(p, q = "") {
 let vista = "home", scheda = "tutti", soloNuovi = false, ordine = "rilevanza", mostra = 30, radiceAperta = null, filtroCat = "", filtroSotto = "";
 const Q = () => $("q").value.trim();
 
+let vistaContata = "";
 function disegna() {
+  const sez = Q() ? "ricerca" : vista;
+  if (sez !== vistaContata) { vistaContata = sez; window.OBORegistro?.uso(sez); } // statistiche d'uso (Amministrazione)
   document.querySelectorAll("[data-vista]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.vista === vista && !Q())));
   $("pulisci").hidden = !Q();
   const v = $("vista");
