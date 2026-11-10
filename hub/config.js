@@ -53,6 +53,16 @@ export const APP = [
     soloAdmin: true,
   },
   {
+    id: "manutenzione",
+    nome: "Manutenzione app",
+    nome_en: "App maintenance",
+    descrizione: "Metti in manutenzione un'app di OBO Hub o una sezione di Progettazione LPS, senza toccare i dati salvati.",
+    descrizione_en: "Put an OBO Hub app or a section of LPS Design under maintenance, without touching saved data.",
+    icona: "manutenzione",
+    url: "manutenzione-admin.html",
+    soloAdmin: true,
+  },
+  {
     id: "admin",
     nome: "Amministrazione",
     nome_en: "Administration",
