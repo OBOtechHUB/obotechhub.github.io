@@ -2,6 +2,40 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-10-tutte-2",
+      "data": "2026-11-10",
+      "app": "tutte",
+      "titolo": "Stesso aspetto in tutte le app, privacy e condizioni d'uso",
+      "voci": [
+        "Stessa barra con il logo, stesso pulsante \"Aspetto\" e stesso piè di pagina nelle app di OBO Hub",
+        "Nuove pagine Privacy e Condizioni d'uso, collegate in fondo a ogni app"
+      ],
+      "titolo_en": "Same look in every app, privacy and terms of use",
+      "voci_en": [
+        "Same bar with the logo, same \"Display\" button and same footer in the OBO Hub apps",
+        "New Privacy and Terms of use pages, linked at the bottom of every app"
+      ]
+    },
+    {
+      "id": "2026-11-10-hub-2",
+      "data": "2026-11-10",
+      "app": "hub",
+      "titolo": "Ricerca unica in OBO Hub",
+      "voci": [
+        "Nella pagina iniziale una sola casella cerca in app e sezioni, prodotti e notizie OBO e nei tuoi progetti salvati di Progettazione LPS",
+        "Il numero d'articolo esatto compare per primo; \"Tutti i risultati\" apre la ricerca completa in Prodotti OBO",
+        "Un progetto trovato si apre direttamente in Progettazione LPS",
+        "Premi / sulla tastiera per andare subito alla ricerca"
+      ],
+      "titolo_en": "One search box in OBO Hub",
+      "voci_en": [
+        "On the home page one box searches apps and sections, OBO products and news, and your saved LPS Design projects",
+        "The exact article number comes first; \"All results\" opens the full search in OBO products",
+        "A project you find opens directly in LPS Design",
+        "Press / on the keyboard to jump to the search"
+      ]
+    },
+    {
       "id": "2026-11-10-prodotti-2",
       "data": "2026-11-10",
       "app": "prodotti",
