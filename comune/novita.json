@@ -1,8 +1,29 @@
 {
-  "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
+  "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
-      "id": "2026-11-09-tutte-1", "data": "2026-11-09", "app": "tutte",
+      "id": "2026-11-10-hub-1",
+      "data": "2026-11-10",
+      "app": "hub",
+      "titolo": "Nuova app Prodotti OBO e novità in evidenza",
+      "titolo_en": "New OBO products app and highlighted news",
+      "voci": [
+        "Nuova app \"Prodotti OBO\": tutto il catalogo di obo.it (oltre 10.000 prodotti), aggiornato ogni notte",
+        "Ricerca in un'unica casella su prodotti, articoli e notizie, come sul sito OBO, con le parole cercate evidenziate",
+        "Più codici d'articolo insieme: incolla un elenco e copia il risultato per Excel",
+        "Nella pagina iniziale di OBO Hub: prodotti nuovi e ultime notizie OBO"
+      ],
+      "voci_en": [
+        "New \"OBO products\" app: the whole obo.it catalogue (over 10,000 products), updated every night",
+        "One search box for products, articles and news, as on the OBO website, with matches highlighted",
+        "Several article codes at once: paste a list and copy the result for Excel",
+        "On the OBO Hub home page: new products and latest OBO news"
+      ]
+    },
+    {
+      "id": "2026-11-09-tutte-1",
+      "data": "2026-11-09",
+      "app": "tutte",
       "titolo": "Novità degli aggiornamenti sempre visibili",
       "titolo_en": "Update notes always visible",
       "voci": [
@@ -17,7 +38,9 @@
       ]
     },
     {
-      "id": "2026-11-09-hub-1", "data": "2026-11-09", "app": "hub",
+      "id": "2026-11-09-hub-1",
+      "data": "2026-11-09",
+      "app": "hub",
       "titolo": "Accesso visitatori a tutte le app",
       "titolo_en": "Visitor access to all apps",
       "voci": [
@@ -34,7 +57,9 @@
       ]
     },
     {
-      "id": "2026-11-09-mappa-1", "data": "2026-11-09", "app": "mappa",
+      "id": "2026-11-09-mappa-1",
+      "data": "2026-11-09",
+      "app": "mappa",
       "titolo": "Visitatori e aspetto",
       "titolo_en": "Visitors and display",
       "voci": [
@@ -49,7 +74,9 @@
       ]
     },
     {
-      "id": "2026-11-09-torrette-1", "data": "2026-11-09", "app": "torrette",
+      "id": "2026-11-09-torrette-1",
+      "data": "2026-11-09",
+      "app": "torrette",
       "titolo": "Prima versione del configuratore (solo amministratori)",
       "titolo_en": "First version of the configurator (administrators only)",
       "voci": [

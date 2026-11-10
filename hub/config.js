@@ -31,6 +31,17 @@ export const APP = [
     abilitataSe: (sezioni) => sezioni.includes("app_mappa"),
   },
   {
+    id: "prodotti",
+    nome: "Prodotti OBO",
+    nome_en: "OBO products",
+    descrizione: "Tutto il catalogo di obo.it aggiornato ogni notte: ricerca di prodotti, articoli e notizie, più codici insieme e novità in evidenza.",
+    descrizione_en: "The whole obo.it catalogue updated every night: search products, articles and news, several codes at once and new items highlighted.",
+    icona: "prodotti",
+    url: "prodotti/",
+    // dati pubblici del sito OBO: la vede chiunque sia entrato in OBO Hub (anche i visitatori)
+    abilitataSe: () => true,
+  },
+  {
     id: "torrette",
     nome: "Configuratore torrette",
     nome_en: "Service outlet configurator",

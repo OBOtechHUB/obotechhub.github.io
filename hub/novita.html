@@ -63,7 +63,7 @@
 <script>
 (function () {
   try { var t = localStorage.getItem("obo-tema"); if (t === "chiaro" || t === "scuro") document.documentElement.dataset.tema = t; var z = localStorage.getItem("obo-zoom"); if (z) document.documentElement.style.setProperty("--zoom", z); } catch (e) {}
-  var NOMI = { hub: "OBO Hub", lps: "Progettazione LPS", mappa: "Mappa carichi ufficio tecnico", torrette: "Configuratore torrette", tutte: "Tutte le app" };
+  var NOMI = { hub: "OBO Hub", lps: "Progettazione LPS", mappa: "Mappa carichi ufficio tecnico", torrette: "Configuratore torrette", prodotti: "Prodotti OBO", tutte: "Tutte le app" };
   var FONTI = ["novita.json", "appOBOtechHUB/novita.json"];
   var tutte = [];
   var $ = function (id) { return document.getElementById(id); };

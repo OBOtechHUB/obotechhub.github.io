@@ -97,6 +97,23 @@
   .pannello code { display: block; word-break: break-all; font-size: calc(12px * var(--zoom, 1)); color: var(--tenue); text-align: center; }
   .trappola { position: absolute; left: -9999px; }
   .caricamento { color: var(--tenue); padding: 40px 0; text-align: center; }
+  .novita-prodotti { margin-top: 36px; }
+  .novita-prodotti .testa { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .novita-prodotti h2 { margin: 0; }
+  .novita-prodotti .testa a { color: var(--arancio); font-weight: 600; text-decoration: none; }
+  .novita-prodotti .sotto { color: var(--tenue); margin: 4px 0 14px; font-size: calc(14px * var(--zoom, 1)); }
+  .strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(190px, 220px); gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+  .np { scroll-snap-align: start; border: .8px solid var(--bordo); border-radius: 12px; overflow: hidden; background: #fff; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+  :root[data-theme="dark"] .np { background: #242a2f; }
+  .np:hover { border-color: var(--arancio); }
+  .np .foto { aspect-ratio: 4/3; background: #fff; display: grid; place-items: center; }
+  .np .foto img { width: 100%; height: 100%; object-fit: contain; }
+  .np .foto.copri img { object-fit: cover; }
+  .np .corpo { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .np b { font-size: calc(14px * var(--zoom, 1)); line-height: 1.3; }
+  .np small { color: var(--tenue); font-size: calc(12px * var(--zoom, 1)); }
+  .np .etichetta { color: #fff; background: var(--arancio); align-self: flex-start; border-radius: 999px; padding: 1px 8px; font-size: calc(11px * var(--zoom, 1)); font-weight: 700; }
+  .np .etichetta.notizia { background: var(--ardesia, #41525d); }
   @media (max-width: 640px) {
     .marchio small { display: none; }
     .icona-barra { min-width: 44px; padding: 6px 2px; font-size: 11px; }
@@ -154,6 +171,7 @@
     <div id="pannello" class="pannello nascosto"></div>
     <h2 id="titolo-app" class="nascosto">Le tue app</h2>
     <div class="griglia" id="griglia"><p class="caricamento">Caricamento…</p></div>
+    <section id="novitaProdotti" class="novita-prodotti nascosto" aria-label="Novità prodotti OBO"></section>
     <div class="vantaggi" id="vantaggi">
       <div><b>Un solo accesso</b><span>Email, password e codice dell'app Authenticator: entri una volta e trovi tutte le tue app.</span></div>
       <div><b>Su ogni dispositivo</b><span>Installa OBO Hub su PC, iPhone, iPad e Android come una normale app.</span></div>
@@ -180,6 +198,8 @@
 
   const ICONE = {
     fulmine: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    prodotti: '<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>',
+    stella: '<path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/>',
     torretta: '<circle cx="12" cy="13" r="8"/><circle cx="12" cy="13" r="4"/><path d="M12 9v8M8 13h8M12 2v3"/>',
     carichi: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h8"/>',
     admin: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
@@ -415,6 +435,27 @@
       griglia.appendChild(el);
     }
     if (profilo && !mie.length) griglia.innerHTML = '<p class="caricamento">Al momento non hai strumenti abilitati. Chiedi all\'amministratore.</p>';
+    novitaProdotti(mie.some((a) => a.id === "prodotti"));
+  }
+
+  // Novità prodotti OBO in evidenza (dati rigenerati ogni notte, vedi prodotti/)
+  async function novitaProdotti(mostra) {
+    const box = $("novitaProdotti");
+    if (!mostra) { box.classList.add("nascosto"); box.innerHTML = ""; return; }
+    let n = null; try { const r = await fetch("prodotti/dati/novita.json?v=" + Math.floor(Date.now() / 36e5)); if (r.ok) n = await r.json(); } catch {}
+    if (!n || (!n.prodotti?.length && !n.notizie?.length)) { box.classList.add("nascosto"); return; }
+    const en = lingua === "en", T = (i, e) => (en ? e : i);
+    const data = (d) => { try { return new Date(d + "T12:00:00").toLocaleDateString(en ? "en-GB" : "it-IT", { day: "numeric", month: "short" }); } catch { return d; } };
+    const sito = (u) => (u && u.startsWith("http") ? u : "https://www.obo.it" + (u || ""));
+    const prodotti = (n.prodotti || []).slice(0, 10).map((r) => {
+      const d = r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
+      return `<a class="np" href="${esc(sito(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta">${T("NUOVO", "NEW")}${d ? " · " + esc(data(d)) : ""}</span><b>${esc(r[1])}</b><small>${esc(r[0])}</small></span></a>`;
+    });
+    const notizie = (n.notizie || []).slice(0, 4).map((x) => `<a class="np" href="${esc(sito(x[0]))}" target="_blank" rel="noopener"><span class="foto copri">${x[3] ? `<img src="${esc(x[3])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta notizia">${T("NOTIZIA", "NEWS")} · ${esc(data(x[4]))}</span><b>${esc(x[1])}</b></span></a>`);
+    box.innerHTML = `<div class="testa"><h2>${svg("stella").replace("<svg", '<svg width="22" height="22" style="color:var(--arancio);vertical-align:-3px"')} ${T("Novità OBO", "OBO news")}</h2><a href="prodotti/?vista=novita">${T("Tutte le novità", "All new items")} →</a></div>
+      <p class="sotto">${n.prodottiNuovi ? T(`${n.prodottiNuovi} prodotti nuovi negli ultimi ${n.giorni} giorni`, `${n.prodottiNuovi} new products in the last ${n.giorni} days`) + " · " : ""}${T("aggiornato ogni notte da obo.it", "updated every night from obo.it")}</p>
+      <div class="strip">${prodotti.join("")}${notizie.join("")}</div>`;
+    box.classList.remove("nascosto");
   }
 
   function avviso(html) { const a = $("avviso"); a.innerHTML = html; a.classList.toggle("nascosto", !html); }

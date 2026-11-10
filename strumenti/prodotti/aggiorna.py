@@ -360,7 +360,7 @@ def main() -> int:
     adesso = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
     scrivi_json("novita.json", {
         "aggiornato": adesso, "giorni": GIORNI_NOVITA, "prodottiNuovi": len(nuovi),
-        "prodotti": [r[:7] + [data_novita(r)] for r in nuovi[:60]],
+        "prodotti": [r[:8] + [data_novita(r)] for r in nuovi[:60]],  # come prodotti.json + data della novità
         "notizie": lista_notizie[:12], "tolti": tolti[:200],
     })
     con_dettagli = sum(1 for p in prodotti.values() if p.get("d") or p.get("i"))
