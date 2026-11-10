@@ -441,8 +441,8 @@ def main() -> int:
     scrivi_json("notizie-cache.json", notizie)
     scrivi_json("pagine-cache.json", pagine)
 
-    # file leggeri per l'app: [numero, nome, descrizione, url, icona, attivo dal, prima vista, immagine grande]
-    elenco = [[a, p.get("t", ""), p.get("d", "")[:300], p.get("u", ""), p.get("i", ""), p.get("as", ""), p.get("pv", ""), p.get("im", "")]
+    # file leggeri per l'app: [numero, nome, descrizione, url, icona, attivo dal, prima vista, immagine grande, categoria]
+    elenco = [[a, p.get("t", ""), p.get("d", "")[:300], p.get("u", ""), p.get("i", ""), p.get("as", ""), p.get("pv", ""), p.get("im", ""), p.get("c", "")]
               for a, p in sorted(prodotti.items(), key=lambda x: x[1].get("t", "").lower())]
     scrivi_json("prodotti.json", elenco)
     albero = [[u, c.get("t", ""), c.get("im", "")] for u, c in sorted(categorie.items())]
@@ -468,7 +468,7 @@ def main() -> int:
     adesso = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
     scrivi_json("novita.json", {
         "aggiornato": adesso, "giorni": GIORNI_NOVITA, "prodottiNuovi": len(nuovi),
-        "prodotti": [r[:8] + [data_novita(r)] for r in nuovi[:60]],  # come prodotti.json + data della novità
+        "prodotti": [r[:9] + [data_novita(r)] for r in nuovi[:60]],  # come prodotti.json + data della novità (indice 9)
         "notizie": lista_notizie[:12], "tolti": tolti[:200],
     })
     con_dettagli = sum(1 for p in prodotti.values() if p.get("pg") and p.get("d"))

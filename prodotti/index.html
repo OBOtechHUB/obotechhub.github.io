@@ -53,7 +53,9 @@
   .scheda[aria-selected="true"] { background:var(--arancio); border-color:var(--arancio); color:#fff; }
   .scheda span { opacity:.8; font-weight:400; }
   .filtri { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 12px; font-size:calc(14px * var(--zoom,1)); }
-  .filtri select { border:1px solid var(--bordo); background:var(--carta); border-radius:8px; padding:6px 8px; }
+  .cat { display:block; font-size:calc(12px * var(--zoom,1)); color:var(--tenue); font-weight:600; margin-bottom:1px; }
+  .filtri label { max-width:100%; display:flex; align-items:center; gap:6px; }
+  .filtri select { max-width:100%; min-width:0; border:1px solid var(--bordo); background:var(--carta); border-radius:8px; padding:6px 8px; }
   .lista { display:flex; flex-direction:column; gap:8px; }
   .prodotto { display:grid; grid-template-columns:72px 1fr auto; gap:12px; align-items:center; border:1px solid var(--bordo); border-radius:12px; padding:10px 12px; background:var(--carta); text-decoration:none; }
   .prodotto:hover { border-color:var(--arancio); }

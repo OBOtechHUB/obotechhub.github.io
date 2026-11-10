@@ -80,7 +80,14 @@ async function carica() {
   PRODOTTI = p ?? []; CATEGORIE = c ?? []; NOTIZIE = n ?? []; PAGINE = pg ?? []; NOVITA = nv ?? NOVITA; STATO = st;
   NUOVI = new Set((NOVITA.prodotti ?? []).map((r) => r[0]));
   INDICE = PRODOTTI.map((r) => norm(`${r[0]} ${r[1]} ${r[2]}`));
+  NOMI_CAT = new Map(CATEGORIE.map((c) => [c[0], c[1]]));
 }
+let NOMI_CAT = new Map();
+/** Foto: quella grande (sitemap o pagina prodotto), altrimenti l'icona. */
+const fotoDi = (r) => r[7] || r[4] || "";
+/** Categoria del prodotto (ultimo livello) e suoi livelli sotto /prodotti/ (1 = famiglia, 2 = gruppo). */
+const catDi = (r) => r[8] || "";
+const famiglia = (u, liv = 1) => { const p = (u || "").split("/").filter(Boolean); return p.length > liv ? `/${p.slice(0, liv + 1).join("/")}/` : ""; };
 
 // ---------- ricerca ----------
 const RE_CODICE = /^\d{6,8}$/;
@@ -125,15 +132,17 @@ function evidenzia(testo, q) {
 const url = (u) => (u?.startsWith("http") ? u : SITO + (u || ""));
 const dataIt = (d) => { if (!d) return ""; try { return new Date(d + "T12:00:00").toLocaleDateString(en() ? "en-GB" : "it-IT", { day: "numeric", month: "short", year: "numeric" }); } catch { return d; } };
 function rigaProdotto(r, q = "") {
-  const img = r[4] ? `<img src="${esc(r[4])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="noimg">${T("senza foto", "no photo")}</span>`;
+  const f = fotoDi(r);
+  const img = f ? `<img src="${esc(f)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="noimg">${T("senza foto", "no photo")}</span>`;
   const nuovo = NUOVI.has(r[0]) ? `<span class="nuovo">${T("NUOVO", "NEW")}</span>` : "";
+  const cat = NOMI_CAT.get(catDi(r));
   return `<a class="prodotto" href="${esc(url(r[3]))}" target="_blank" rel="noopener">${img}
-    <span><h3>${evidenzia(r[1], q)}${nuovo}</h3>${r[2] ? `<p>${evidenzia(r[2], q)}</p>` : ""}</span>
+    <span>${cat ? `<span class="cat">${esc(cat)}</span>` : ""}<h3>${evidenzia(r[1], q)}${nuovo}</h3>${r[2] ? `<p>${evidenzia(r[2], q)}</p>` : ""}</span>
     <span class="art">${evidenzia(r[0], q)}<small>${T("art.", "item")}${r[5] ? ` · ${T("dal", "since")} ${dataIt(r[5])}` : ""}</small></span></a>`;
 }
 function cartaProdotto(r) {
-  // novita.json: come prodotti.json + data della novità in fondo
-  const data = r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
+  // novita.json: come prodotti.json + data della novità in fondo (indice 9; 8 nei file vecchi)
+  const data = r.length > 9 ? r[9] : r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
   return `<a class="carta" href="${esc(url(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
     <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${data ? ` · ${dataIt(data)}` : ""}</span><h3>${esc(r[1])}</h3><p>${esc(r[2] || "")}</p><span class="art">${esc(r[0])}</span></span></a>`;
 }
@@ -146,7 +155,7 @@ function vocePagina(p, q = "") {
 }
 
 // ---------- viste ----------
-let vista = "home", scheda = "tutti", soloNuovi = false, ordine = "rilevanza", mostra = 30, radiceAperta = null;
+let vista = "home", scheda = "tutti", soloNuovi = false, ordine = "rilevanza", mostra = 30, radiceAperta = null, filtroCat = "", filtroSotto = "";
 const Q = () => $("q").value.trim();
 
 function disegna() {
@@ -169,7 +178,17 @@ function disegna() {
 function vistaRicerca(q) {
   const codici = soloCodici(q);
   if (codici) return tabellaCodici(codici);
-  const prodotti = cercaProdotti(q).filter((r) => !soloNuovi || NUOVI.has(r[0]));
+  const trovati = cercaProdotti(q).filter((r) => !soloNuovi || NUOVI.has(r[0]));
+  // filtro per famiglia e gruppo, con i conteggi sui risultati (come i filtri del sito OBO)
+  const conta = (lista, liv) => { const m = new Map(); for (const r of lista) { const k = famiglia(catDi(r), liv); if (k) m.set(k, (m.get(k) || 0) + 1); } return [...m].sort((a, b) => b[1] - a[1]); };
+  const famiglie = conta(trovati, 1);
+  if (filtroCat && !famiglie.some(([k]) => k === filtroCat)) { filtroCat = ""; filtroSotto = ""; }
+  const inFamiglia = filtroCat ? trovati.filter((r) => catDi(r).startsWith(filtroCat)) : trovati;
+  const gruppi = filtroCat ? conta(inFamiglia, 2) : [];
+  if (filtroSotto && !gruppi.some(([k]) => k === filtroSotto)) filtroSotto = "";
+  const prodotti = filtroSotto ? inFamiglia.filter((r) => catDi(r).startsWith(filtroSotto)) : inFamiglia;
+  const nome = (u) => NOMI_CAT.get(u) || u.split("/").filter(Boolean).pop() || u;
+  const opzioni = (lista, scelto, tutti) => `<option value="">${tutti}</option>` + lista.map(([k, n]) => `<option value="${esc(k)}" ${k === scelto ? "selected" : ""}>${esc(nome(k))} (${n})</option>`).join("");
   if (ordine === "nome") prodotti.sort((a, b) => a[1].localeCompare(b[1]));
   if (ordine === "recenti") prodotti.sort((a, b) => (b[5] || "").localeCompare(a[5] || ""));
   const pagine = cercaVoci(PAGINE, q, [1, 2, 3]);
@@ -182,6 +201,8 @@ function vistaRicerca(q) {
     const quanti = scheda === "tutti" ? 8 : mostra;
     h += `<h2>${T("Prodotti", "Products")} <small>${prodotti.length}</small></h2>`;
     if (scheda === "prodotti") h += `<div class="filtri"><label><input type="checkbox" id="soloNuovi" ${soloNuovi ? "checked" : ""}> ${T("Solo novità", "New only")}</label>
+      ${famiglie.length ? `<label>${T("Famiglia", "Family")} <select id="filtroCat">${opzioni(famiglie, filtroCat, T(`Tutte (${trovati.length})`, `All (${trovati.length})`))}</select></label>` : ""}
+      ${gruppi.length > 1 ? `<label>${T("Gruppo", "Group")} <select id="filtroSotto">${opzioni(gruppi, filtroSotto, T(`Tutti (${inFamiglia.length})`, `All (${inFamiglia.length})`))}</select></label>` : ""}
       <label>${T("Ordina", "Sort")} <select id="ordine"><option value="rilevanza" ${ordine === "rilevanza" ? "selected" : ""}>${T("Pertinenza", "Relevance")}</option><option value="nome" ${ordine === "nome" ? "selected" : ""}>${T("Nome", "Name")}</option><option value="recenti" ${ordine === "recenti" ? "selected" : ""}>${T("Più recenti", "Newest")}</option></select></label></div>`;
     h += prodotti.length ? `<div class="lista">${prodotti.slice(0, quanti).map((r) => rigaProdotto(r, q)).join("")}</div>` : `<p class="vuoto">${T("Nessun prodotto.", "No products.")}</p>`;
     if (prodotti.length > quanti) h += `<p class="altro"><button class="btn" data-altro="prodotti">${scheda === "tutti" ? T(`Tutti i ${prodotti.length} prodotti`, `All ${prodotti.length} products`) : T("Mostra altri", "Show more")}</button></p>`;
@@ -202,7 +223,7 @@ function vistaRicerca(q) {
 function tabellaCodici(codici) {
   const per = new Map(PRODOTTI.map((r) => [r[0], r]));
   const righe = codici.map((c) => { const r = per.get(c); return r
-    ? `<tr><td class="art">${esc(c)}</td><td><a href="${esc(url(r[3]))}" target="_blank" rel="noopener">${esc(r[1])}</a>${NUOVI.has(c) ? `<span class="nuovo">${T("NUOVO", "NEW")}</span>` : ""}<br><small>${esc(r[2] || "")}</small></td><td>${r[4] ? `<img src="${esc(r[4])}" alt="" width="48" height="48" loading="lazy" referrerpolicy="no-referrer" style="object-fit:contain;background:#fff;border-radius:6px">` : ""}</td></tr>`
+    ? `<tr><td class="art">${esc(c)}</td><td><a href="${esc(url(r[3]))}" target="_blank" rel="noopener">${esc(r[1])}</a>${NUOVI.has(c) ? `<span class="nuovo">${T("NUOVO", "NEW")}</span>` : ""}<br><small>${esc(r[2] || "")}</small></td><td>${fotoDi(r) ? `<img src="${esc(fotoDi(r))}" alt="" width="48" height="48" loading="lazy" referrerpolicy="no-referrer" style="object-fit:contain;background:#fff;border-radius:6px">` : ""}</td></tr>`
     : `<tr><td class="art">${esc(c)}</td><td class="ko" colspan="2">${T("Non trovato su obo.it: codice errato o non più a catalogo in Italia.", "Not found on obo.it: wrong code or no longer in the Italian catalogue.")}</td></tr>`; }).join("");
   const trovati = codici.filter((c) => per.has(c)).length;
   return `<h2>${T("Ricerca di più codici", "Multiple code search")} <small>${T(`${trovati} trovati su ${codici.length}`, `${trovati} found out of ${codici.length}`)}</small></h2>
@@ -260,13 +281,15 @@ $("vista").addEventListener("click", (e) => {
   else if (t.id === "cercaCodici") { const c = $("elencoCodici").value.match(/\d{6,8}/g) ?? []; $("q").value = [...new Set(c)].join(", "); disegna(); salvaUrl(); }
   else if (t.id === "copiaCodici") {
     const per = new Map(PRODOTTI.map((r) => [r[0], r]));
-    const testo = (soloCodici(Q()) ?? []).map((c) => { const r = per.get(c); return [c, r?.[1] ?? T("non trovato", "not found"), r?.[2] ?? "", r ? url(r[3]) : ""].join("\t"); }).join("\n");
+    const testo = (soloCodici(Q()) ?? []).map((c) => { const r = per.get(c); return [c, r?.[1] ?? T("non trovato", "not found"), r?.[2] ?? "", r ? NOMI_CAT.get(catDi(r)) ?? "" : "", r ? url(r[3]) : ""].join("\t"); }).join("\n");
     navigator.clipboard?.writeText(testo).then(() => { t.textContent = T("Copiato", "Copied"); });
   }
 });
 $("vista").addEventListener("change", (e) => {
   if (e.target.id === "soloNuovi") { soloNuovi = e.target.checked; disegna(); }
   if (e.target.id === "ordine") { ordine = e.target.value; disegna(); }
+  if (e.target.id === "filtroCat") { filtroCat = e.target.value; filtroSotto = ""; mostra = 30; disegna(); }
+  if (e.target.id === "filtroSotto") { filtroSotto = e.target.value; mostra = 30; disegna(); }
 });
 function salvaUrl() {
   const p = new URLSearchParams(); if (Q()) p.set("q", Q()); else if (vista !== "home") p.set("vista", vista);

@@ -448,7 +448,7 @@
     const data = (d) => { try { return new Date(d + "T12:00:00").toLocaleDateString(en ? "en-GB" : "it-IT", { day: "numeric", month: "short" }); } catch { return d; } };
     const sito = (u) => (u && u.startsWith("http") ? u : "https://www.obo.it" + (u || ""));
     const prodotti = (n.prodotti || []).slice(0, 10).map((r) => {
-      const d = r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
+      const d = r.length > 9 ? r[9] : r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
       return `<a class="np" href="${esc(sito(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta">${T("NUOVO", "NEW")}${d ? " · " + esc(data(d)) : ""}</span><b>${esc(r[1])}</b><small>${esc(r[0])}</small></span></a>`;
     });
     const notizie = (n.notizie || []).slice(0, 4).map((x) => `<a class="np" href="${esc(sito(x[0]))}" target="_blank" rel="noopener"><span class="foto copri">${x[3] ? `<img src="${esc(x[3])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta notizia">${T("NOTIZIA", "NEWS")} · ${esc(data(x[4]))}</span><b>${esc(x[1])}</b></span></a>`);
