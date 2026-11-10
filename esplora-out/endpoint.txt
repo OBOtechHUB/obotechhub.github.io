@@ -1,0 +1,7 @@
+      2 "/api/auth-internal/redirect/login"
+      1 "/typo3conf/ext/powermail/Resources/Public/JavaScript/Libraries/jquery.datetimepicker.min.js?1619004802"
+      1 "/search/"
+      1 "/api/auth/signin?"
+      1 "/api/auth/callback/azure-ad-b2c"
+      1 "/api/auth-internal/redirect/website"
+      1 https://maps.googleapis.com/maps/api/js
