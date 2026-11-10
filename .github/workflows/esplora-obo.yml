@@ -14,7 +14,7 @@ jobs:
         run: bash esplora.sh
       - name: Salva i risultati sul ramo
         run: |
-          rm -rf esplora-out2 && mv out2 esplora-out2 && rm -f esplora-out2/c*.js
-          find esplora-out2 -size +8M -delete
+          rm -rf esplora-out3 && mv out3 esplora-out3
+          find esplora-out3 -size +8M -delete
           git config user.name "github-actions" && git config user.email "actions@github.com"
-          git add esplora-out2 && git commit -qm "[risultati] esplorazione OBO" && git push
+          git add esplora-out3 && git commit -qm "[risultati] esplorazione OBO" && git push

@@ -1,24 +1,22 @@
 #!/bin/bash
-# Seconda esplorazione: chunk della pagina di ricerca e prove dell'API (con Origin per vedere il CORS)
-mkdir -p out2 && cd out2
+# Terza esplorazione: elenco completo dei prodotti via API, sitemap italiane, notizie
+mkdir -p out3 && cd out3
 UA="Mozilla/5.0 (OBO Hub; ufficio tecnico OBO Italia)"
-B=https://www.obo-bettermann.com
 A=https://api.production.obo.digital/v1
-curl -sSL -A "$UA" -o search.html "$B/en-xi/search?q=spd"
-grep -oE '/_next/static/[^"]+\.js' search.html ../esplora-out/pag_en-xi_search.html ../esplora-out/pag_it-it.html | sed 's/^[^:]*://' | sort -u > chunks.txt
-i=0; while read c; do i=$((i+1)); curl -sSL -A "$UA" -o "c$i.js" "$B$c"; done < chunks.txt
-grep -ohE '.{120}/search/.{260}' c*.js | sort -u > search-calls.txt
-grep -ohE '"/search/[^"]*"|search/suggestion/[^"]*|/search/"\)\.concat\([^)]*\)' c*.js | sort | uniq -c > search-paths.txt
-prova() { echo "### $1"; curl -sS -A "$UA" -H "Origin: https://obotechhub.github.io" -H "Accept: application/json" -D - -o body.tmp "$1" | grep -iE '^(HTTP|access-control|content-type|cache-control)'; head -c 1500 body.tmp; echo; echo; }
+j() { curl -sS -A "$UA" -H "Accept: application/json" "$1"; }
 {
-for loc in en-xi it-it; do
-  for t in product article news page content download reference category all; do
-    prova "$A/search/suggestion/$loc/$t?searchText=spd&pageSize=5"
-  done
-  prova "$A/search/$loc/product?searchText=5094652"
-  prova "$A/search/$loc/product?searchText=spd"
+for q in "" "*" "a" "e"; do
+  echo "### q=[$q] page=1 pageSize=100"; j "$A/search/it-it/product?searchText=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$q")&page=1&pageSize=100" | python3 -c "import json,sys;d=json.load(sys.stdin);print('total',d.get('totalResults'),'pageSize',d.get('pageSize'),'n',len(d.get('results',[])),'keys',list(d.keys()));print([f.get('key') or f.get('name') or list(f.keys()) for f in d.get('filters',[])][:20])" 2>&1
 done
-} > prove-api.txt 2>&1
-for s in products product_categories.1 news.1 pages.1; do curl -sSL -A "$UA" -o "sitemap.$s.xml" "$B/en-xi/sitemap.$s.xml"; done
-curl -sSL -A "$UA" -o it-sitemap.xml "$B/it-it/sitemap.xml"
-ls -la
+echo "### pagina 2"; j "$A/search/it-it/product?searchText=a&page=2&pageSize=100" | python3 -c "import json,sys;d=json.load(sys.stdin);print('n',len(d.get('results',[])),[r['articleNumber'] for r in d.get('results',[])][:5])"
+echo "### filtri completi"; j "$A/search/it-it/product?searchText=a&page=1&pageSize=5" | python3 -c "import json,sys;d=json.load(sys.stdin);print(json.dumps(d.get('filters'),ensure_ascii=False)[:3000]);r=d['results'][0];print(json.dumps({k:(v if not isinstance(v,(list,dict)) else type(v).__name__) for k,v in r.items()},ensure_ascii=False))"
+echo "### articolo per numero"; j "$A/search/suggestion/it-it/product?searchText=5096849&pageSize=3" | head -c 600; echo
+echo "### content suggestion keys"; j "$A/search/suggestion/it-it/content?searchText=spd&pageSize=50" | python3 -c "import json,sys;d=json.load(sys.stdin);print(d.get('totalResults'),sorted({r.get('type') for r in d['results']}))"
+echo "### content news"; j "$A/search/suggestion/it-it/content?searchText=news&pageSize=10" | python3 -c "import json,sys;d=json.load(sys.stdin);print(d.get('totalResults'),[(r.get('type'),r.get('title')) for r in d['results']][:10])"
+} > prove3.txt 2>&1
+for s in sitemap.xml it-it/sitemap.xml; do curl -sSL -A "$UA" -o "it.$(echo $s|tr / _)" -w "%{http_code} it.production $s\n" "https://it.production.obo.digital/$s"; done
+for s in sitemap.xml it-it/sitemap.xml; do curl -sSL -A "$UA" -o "oboit.$(echo $s|tr / _)" -w "%{http_code} obo.it $s\n" "https://www.obo.it/$s"; done
+curl -sSL -A "$UA" -o oboit-robots.txt https://www.obo.it/robots.txt
+curl -sSL -A "$UA" -o en-products.xml https://www.obo-bettermann.com/en-xi/sitemap.products.xml
+ls -la; grep -c "<loc>" *.xml
+head -c 600 en-products.xml > en-products-testa.txt; rm -f en-products.xml
