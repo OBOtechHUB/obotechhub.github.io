@@ -1,0 +1,80 @@
+== sug-it 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=5408969&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    5408969 | Treppiede isFang | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== full-it 200 https://api.production.obo.digital/v1/search/it-it/product?searchText=5408969
+  keys ['totalResults', 'pageSize', 'results', 'filters'] tot 1
+    5408969 | Treppiede isFang | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-en 200 https://api.production.obo.digital/v1/search/suggestion/en-xi/product?searchText=5408969&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    5408969 | isFang tripod | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-de 200 https://api.production.obo.digital/v1/search/suggestion/de-de/product?searchText=5408969&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    5408969 | isFang-Dreibeinstativ | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-it-spazio 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=5408%20969&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    5408969 | Treppiede isFang | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-it 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=6216670&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6216670 | Giunto di dilatazione 110 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== full-it 200 https://api.production.obo.digital/v1/search/it-it/product?searchText=6216670
+  keys ['totalResults', 'pageSize', 'results', 'filters'] tot 1
+    6216670 | Giunto di dilatazione 110 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-en 200 https://api.production.obo.digital/v1/search/suggestion/en-xi/product?searchText=6216670&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6216670 | Expansion connector 110 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-de 200 https://api.production.obo.digital/v1/search/suggestion/de-de/product?searchText=6216670&pageSize=5
+  keys ['totalResults', 'results'] tot 0
+== sug-it-spazio 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=6216%20670&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6216670 | Giunto di dilatazione 110 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-it 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=6279300&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6279300 | Canale porta apparecchi Rapid 80, base 70 mm, altezza 130 mm | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== full-it 200 https://api.production.obo.digital/v1/search/it-it/product?searchText=6279300
+  keys ['totalResults', 'pageSize', 'results', 'filters'] tot 1
+    6279300 | Canale porta apparecchi Rapid 80, base 70 mm, altezza 130 mm | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-en 200 https://api.production.obo.digital/v1/search/suggestion/en-xi/product?searchText=6279300&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6279300 | Device installation trunking Rapid 80, trunking width 130, t | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-de 200 https://api.production.obo.digital/v1/search/suggestion/de-de/product?searchText=6279300&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6279300 | Geräteeinbaukanal Rapid 80, Kanalbreite 130, Kanalhöhe 70, s | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-it-spazio 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=6279%20300&pageSize=5
+  keys ['totalResults', 'results'] tot 240
+    6001828 | Coperchio per passerella grigliata, a scatto FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    6003774 | Coperchio per passerelle grigliate GRM, a scatto FS | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    6049123 | Coperchio in lamiera scanalato DBKR FS | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    6052656 | Coperchio, non forato DD | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    6044404 | Supporti a pavimento simmetrici, traversa 300 | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-it 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=5000973&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    5000973 | Dispersore di terra, ramato | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== full-it 200 https://api.production.obo.digital/v1/search/it-it/product?searchText=5000973
+  keys ['totalResults', 'pageSize', 'results', 'filters'] tot 1
+    5000973 | Dispersore di terra, ramato | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-en 200 https://api.production.obo.digital/v1/search/suggestion/en-xi/product?searchText=5000973&pageSize=5
+  keys ['totalResults', 'results'] tot 0
+== sug-de 200 https://api.production.obo.digital/v1/search/suggestion/de-de/product?searchText=5000973&pageSize=5
+  keys ['totalResults', 'results'] tot 0
+== sug-it-spazio 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=5000%20973&pageSize=5
+  keys ['totalResults', 'results'] tot 12
+    6373103 | Profilato angolare WP30/35 | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    6373070 | Profilato angolare WP40/65 | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    6373062 | Profilato angolare WP40/65 A2 | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    5304008 | Connettore Quick, per RD 8-10 mm, acciaio zincato | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+    5900370 | Support profile for PV module mounting, flat roofs | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-it 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=6002435&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6002435 | Passerella grigliata GR-Magic® 105 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== full-it 200 https://api.production.obo.digital/v1/search/it-it/product?searchText=6002435
+  keys ['totalResults', 'pageSize', 'results', 'filters'] tot 1
+    6002435 | Passerella grigliata GR-Magic® 105 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-en 200 https://api.production.obo.digital/v1/search/suggestion/en-xi/product?searchText=6002435&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6002435 | Mesh cable tray GR-Magic® 105 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-de 200 https://api.production.obo.digital/v1/search/suggestion/de-de/product?searchText=6002435&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6002435 | Gitterrinne GR-Magic® 105 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
+== sug-it-spazio 200 https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=6002%20435&pageSize=5
+  keys ['totalResults', 'results'] tot 1
+    6002435 | Passerella grigliata GR-Magic® 105 FT | ['id', 'title', 'url', 'articleNumber', 'tenantArticleNumber', 'shortDescription', 'active', 'activeSince', 'vpe', 'minimumUnitQuantity']
