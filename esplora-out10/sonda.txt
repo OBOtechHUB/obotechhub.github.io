@@ -1,0 +1,35 @@
+url 5000 image:loc 11090
+eda-ral-7035-6274372.html"/>
+		<xhtml:link rel="alternate" hreflang="de-CH" href="https://www.obo.ch/produkte/endstueck-fuer-geraeteeinbaukanal-rapid-80-typ-70110-lichtgrau-ral-7035-6274372.html"/>
+		<image:image>
+			<image:loc>https://www.obo.it/out/pictures/generated/product/1/457_457_75/6274372_PG1.jpg</image:loc>
+		</image:image>
+		<image:image>
+			<image:loc>https://www.obo.it/out/pictures/generated/product/8/457_457_75/6274372_MZ1.jpg</image:loc>
+		</image:image>
+	</url>
+	<url>
+		<loc>https://www.obo.it/prodotti/passerella-sks-60-fs-3000-300-1-5-s-acciaio-zincato-in-continuo-6056296.html
+LD 
+        {
+	        "@context": "https://schema.org/",
+	        "@type": "Product",
+	        "name": "Angolo sinistra, altezza 40-240 mm",
+            "image": [
+                "https://www.obo.it/out/pictures/generated/product/1/457_457_75/7423968_PG1.jpg","https://www.obo.it/out/pictures/generated/product/8/457_457_75/7423968_MZM.jpg"
+            ],
+            "description": "Per la realizzazione sul posto di una derivazione del canale come angolo di 90° verso sinistra. Con tutte le parti necessarie per il montaggio. Adatto ai sistemi di canali OKA-G e OKA-W.",
+            "sku": "7423968",
+            "mpn": "",
+        "brand": {
+            "@type": "brand",
+            "name": "OBO Bettermann"
+        },
+        "offers": {
+            "@type": "AggregateOffer"
+        }
+}
+LD {"@context": "https://schema.org","@type": "BreadcrumbList","itemListElement": [{"@type": "ListItem","position": 1,"name": "Prodotti","item": "https://www.obo.it/prodotti/"},{"@type": "ListItem","position": 2,"name": "Sistemi nel settore terziario","item": "https://www.obo.it/prodotti/sistemi-nel-settore-terziario/"},{"@type": "ListItem","position": 3,"name": "Sistemi di installazione soprapavimento e sottopavimento","item": "https://www.obo.it/prodotti/sistemi-nel-settore-terziario/sistemi-di-installazione-soprapavimento-e-sottopavimento/"},{"@type": "ListItem","position": 4,"name": "Applicazioni sottopavimento in massetto","item": "https://www.obo.it/prodotti/sistemi-nel-settore-terziario/sistemi-di-installazione-soprapavimento-e-sottopavimento/applicazioni-sottopavimento-in-massetto/"},{"@type": "ListItem","position": 5,"name": "Canali a filo massetto","item": "https://www.obo.it/prodotti/sistemi-nel-settore-terziario/sistemi-di-installazione-soprapavimento-e-sottopavimento/applicazioni-sottopavimento-in-massetto/canali-a-filo-massetto/"},{"@type": "ListItem","position": 6,"name": "Accessori canale OKB","item": "https://www.obo.it/prodotti/sistemi-nel-settore-terziario/sistemi-di-installazione-soprapavimento-e-sottopavimento/applicazioni-sottopavimento-in-massetto/canali-a-filo-massetto/accessori-canale-okb/"},{"@type": "ListItem","position": 7,"name": "Kit angolo","item": "https://www.obo.it/prodotti/sistemi-nel-settore-terziario/sistemi-di-installazione-soprapavimento-e-sottopavimento/applicazioni-sottopavimento-in-massetto/canali-a-filo-massetto/accessori-canale-okb/kit-angolo/"}]}
+TITLE ['Angolo sinistra, altezza 40-240 mm | OBO'] H1 ['Angolo sinistra, altezza 40-240 mm']
+IMG ['https://www.obo.it/out/pictures/generated/product/1/457_457_75/7423968_PG1.jpg', 'https://www.obo.it/out/pictures/generated/product/8/457_457_75/7423968_MZM.jpg', 'https://www.obo.it/out/obo/img/favicons/apple-touch-icon.png', 'https://www.obo.it/out/obo/img/favicons/favicon-32x32.png', 'https://www.obo.it/out/obo/img/favicons/favicon-16x16.png', 'https://www.obo.it/out/pictures/master/product/1/7423968_PG1.jpg']
+ERR /prodotti/passerella-grigliata-gr-magic-105-ft-6002435.html HTTP Error 404: Not Found
