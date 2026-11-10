@@ -2,10 +2,14 @@ name: Esplora sito OBO (temporaneo)
 on:
   push:
     branches: [esplora-obo]
+permissions:
+  contents: write
 jobs:
   esplora:
+    if: "!contains(github.event.head_commit.message, '[risultati]')"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Scarica pagine
         run: |
           mkdir -p out && cd out
@@ -23,7 +27,9 @@ jobs:
           grep -hoE '"(/[a-zA-Z0-9_./-]*(api|search|suche|graphql|query|autocomplete|suggest)[a-zA-Z0-9_./?=&-]*)"' *.js *.html 2>/dev/null | sort | uniq -c | sort -rn | head -80 > endpoint.txt || true
           grep -hoE 'https?://[a-zA-Z0-9.-]+(algolia|elastic|search|api|solr|typesense|meili|coveo|findologic|doofinder|klevu|factfinder)[a-zA-Z0-9./_-]*' *.js *.html 2>/dev/null | sort | uniq -c | sort -rn | head -40 >> endpoint.txt || true
           cat endpoint.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: esplora
-          path: out
+      - name: Salva i risultati sul ramo
+        run: |
+          rm -rf esplora-out && mv out esplora-out
+          find esplora-out -size +3M -delete
+          git config user.name "github-actions" && git config user.email "actions@github.com"
+          git add esplora-out && git commit -qm "[risultati] esplorazione OBO" && git push
