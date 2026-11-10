@@ -1,0 +1,23 @@
+Sitemap prodotti di obo.it…
+  10208 prodotti nelle sitemap
+  dettagli da scaricare: 60 nuovi + 0 a rotazione
+Sitemap categorie…
+  1132 categorie, 15 pagine lette stanotte
+Sitemap notizie…
+  32 notizie, 15 pagine lette stanotte
+Sitemap pagine e referenze…
+  131 pagine, 15 lette stanotte
+Fatto: {"aggiornato": "2026-11-10T12:35+00:00", "prodotti": 10208, "conDettagli": 23, "categorie": 1132, "notizie": 32, "pagine": 131, "nuovi": 0, "tolti": 0, "fonte": "obo.it (sitemap) e API pubblica del sito OBO"}
+total 4208
+drwxr-xr-x 2 runner runner    4096 Nov 10 12:35 .
+drwxr-xr-x 3 runner runner    4096 Nov 10 12:32 ..
+-rw-r--r-- 1 runner runner  185404 Nov 10 12:35 categorie-cache.json
+-rw-r--r-- 1 runner runner  183383 Nov 10 12:35 categorie.json
+-rw-r--r-- 1 runner runner    9713 Nov 10 12:35 notizie-cache.json
+-rw-r--r-- 1 runner runner    9013 Nov 10 12:35 notizie.json
+-rw-r--r-- 1 runner runner    5647 Nov 10 12:35 novita.json
+-rw-r--r-- 1 runner runner   15555 Nov 10 12:35 pagine-cache.json
+-rw-r--r-- 1 runner runner   14578 Nov 10 12:35 pagine.json
+-rw-r--r-- 1 runner runner 1915125 Nov 10 12:35 prodotti-cache.json
+-rw-r--r-- 1 runner runner 1940178 Nov 10 12:35 prodotti.json
+-rw-r--r-- 1 runner runner     191 Nov 10 12:35 stato.json
