@@ -1,0 +1,42 @@
+/* Stile comune delle pagine di OBO Hub (stessi colori di Progettazione LPS e delle altre app).
+ * Uso: <link rel="stylesheet" href="obo.css"> (o "../obo.css") e la struttura
+ *   <header class="barra"><div class="contenitore"><a class="marchio" href="./">…</a><nav class="azioni">…</nav></div></header>
+ *   <section class="eroe"><div class="contenitore"><h1>…</h1><p>…</p></div></section>
+ * Il piè di pagina comune lo aggiunge piede.js. */
+:root {
+  --arancio: #f39b00; --arancio-scuro: #c47c00; --ardesia: #41525d; --testo: #212529; --tenue: #6c757d; --bordo: #dee2e6;
+  --sfondo: #fff; --grigio: #f5f6f7; --carta: #fff; --scelto: #fff4e0; --rosso: #b3261e; --rosso-chiaro: #fdecea; --marrone: #7a4b00;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-tema="chiaro"]):not([data-theme="light"]) { color-scheme: dark; --testo: #eef1f3; --tenue: #a7b4bc; --bordo: #3a454d; --sfondo: #1b1f23; --grigio: #242a2f; --ardesia: #2a3238; --carta: #242a2f; --scelto: #3d3020; --rosso-chiaro: #3a1a18; } }
+:root[data-tema="scuro"], :root[data-theme="dark"] { color-scheme: dark; --testo: #eef1f3; --tenue: #a7b4bc; --bordo: #3a454d; --sfondo: #1b1f23; --grigio: #242a2f; --ardesia: #2a3238; --carta: #242a2f; --scelto: #3d3020; --rosso-chiaro: #3a1a18; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; font: calc(16px * var(--zoom, 1))/1.55 var(--font); color: var(--testo); background: var(--sfondo); }
+body > main { flex: 1; }
+.contenitore { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.contenitore.stretto { max-width: 820px; }
+header.barra { position: sticky; top: 0; z-index: 20; background: var(--carta); box-shadow: 0 2px 10px rgba(0,0,0,.06); padding-top: env(safe-area-inset-top); }
+header.barra .contenitore { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
+.marchio { display: flex; align-items: center; gap: 10px; color: var(--testo); text-decoration: none; min-width: 0; }
+.marchio img { width: 36px; height: 36px; border-radius: 9px; flex: none; }
+.marchio b { display: block; font-size: calc(18px * var(--zoom, 1)); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.marchio small { display: block; color: var(--tenue); font-size: 12px; }
+.azioni { display: flex; align-items: center; gap: 4px; }
+.ib { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; min-width: 56px; padding: 6px 8px; border: 0; border-radius: 10px; background: none; color: var(--testo); font: 600 12px var(--font); cursor: pointer; text-decoration: none; }
+.ib:hover { background: var(--grigio); }
+.ib svg { width: 22px; height: 22px; }
+.eroe { background: var(--ardesia); color: #fff; padding: 30px 0 34px; }
+.eroe h1 { margin: 0; font-size: clamp(26px, 4vw, 36px); line-height: 1.15; }
+.eroe p { margin: 8px 0 0; opacity: .9; max-width: 720px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 999px; border: 1px solid var(--bordo); background: var(--carta); color: var(--testo); font: 600 15px var(--font); cursor: pointer; text-decoration: none; }
+.btn-primario { background: var(--arancio); border-color: var(--arancio); color: #fff; }
+.btn:disabled { opacity: .6; cursor: default; }
+.nota { color: var(--tenue); font-size: 14px; }
+a { color: var(--arancio-scuro); }
+footer.obo-piede { margin-top: 48px; background: var(--ardesia); color: rgba(255,255,255,.85); font-size: 14px; padding: 22px 0 calc(22px + env(safe-area-inset-bottom)); }
+footer.obo-piede .contenitore { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between; align-items: center; }
+footer.obo-piede nav { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+footer.obo-piede a { color: inherit; text-decoration: none; }
+footer.obo-piede a:hover { color: #fff; text-decoration: underline; }
+[hidden] { display: none !important; }
+@media (max-width: 560px) { .ib { min-width: 48px; padding: 6px 4px; } .ib small { font-size: 11px; } }

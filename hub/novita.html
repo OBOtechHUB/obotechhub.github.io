@@ -6,8 +6,9 @@
 <title>Novità · OBO Hub</title>
 <meta name="description" content="Registro degli aggiornamenti delle app di OBO Hub, con il testo pronto da inviare agli utenti.">
 <link rel="icon" href="favicon-32.png">
+<link rel="stylesheet" href="obo.css">
 <style>
-  :root { --arancio:#f39b00; --arancio-scuro:#c47c00; --ardesia:#1f2a30; --testo:#1f2a30; --tenue:#5b6770; --bordo:#d9dee2; --grigio:#f3f5f6; --sfondo:#fff; --carta:#fff;
+  :root { --arancio:#f39b00; --arancio-scuro:#c47c00; --ardesia:#41525d; --testo:#1f2a30; --tenue:#5b6770; --bordo:#d9dee2; --grigio:#f3f5f6; --sfondo:#fff; --carta:#fff;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; color-scheme: light; }
   @media (prefers-color-scheme: dark) { :root:not([data-tema="chiaro"]) { --testo:#e8ecef; --tenue:#a7b1b8; --bordo:#3a4750; --grigio:#26323a; --sfondo:#141b20; --carta:#1b252b; color-scheme: dark; } }
   :root[data-tema="scuro"] { --testo:#e8ecef; --tenue:#a7b1b8; --bordo:#3a4750; --grigio:#26323a; --sfondo:#141b20; --carta:#1b252b; color-scheme: dark; }
@@ -36,8 +37,10 @@
 </style>
 </head>
 <body>
+<header class="barra"><div class="contenitore">
+  <a class="marchio" href="./"><img src="icona-192.png" alt=""><span><b>Novità</b><small>← OBO Hub</small></span></a>
+</div></header>
 <section class="eroe"><div class="contenitore">
-  <a href="./">← OBO Hub</a>
   <h1>Novità e aggiornamenti</h1>
   <p>Cosa è cambiato nelle app di OBO Hub. Scegli app e periodo e copia il testo pronto da inviare agli utenti.</p>
 </div></section>
@@ -125,5 +128,6 @@
     });
 })();
 </script>
+<script src="piede.js"></script>
 </body>
 </html>

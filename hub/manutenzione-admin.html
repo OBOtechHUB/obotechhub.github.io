@@ -6,8 +6,9 @@
 <title>Manutenzione app · OBO Hub</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="favicon-32.png">
+<link rel="stylesheet" href="obo.css">
 <style>
-  :root { --arancio:#f39b00; --arancio-scuro:#c47c00; --marrone:#7a4b00; --ardesia:#1f2a30; --testo:#1f2a30; --tenue:#5b6770; --bordo:#d9dee2; --grigio:#f3f5f6; --sfondo:#fff; --carta:#fff; --evid:#fff4e0; --rosso:#b3261e; --rosso-chiaro:#fdecea;
+  :root { --arancio:#f39b00; --arancio-scuro:#c47c00; --marrone:#7a4b00; --ardesia:#41525d; --testo:#1f2a30; --tenue:#5b6770; --bordo:#d9dee2; --grigio:#f3f5f6; --sfondo:#fff; --carta:#fff; --evid:#fff4e0; --rosso:#b3261e; --rosso-chiaro:#fdecea;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; color-scheme: light; }
   @media (prefers-color-scheme: dark) { :root:not([data-tema="chiaro"]) { --testo:#e8ecef; --tenue:#a7b1b8; --bordo:#3a4750; --grigio:#26323a; --sfondo:#141b20; --carta:#1b252b; --evid:#3a2a10; --rosso-chiaro:#3a1a18; color-scheme: dark; } }
   :root[data-tema="scuro"] { --testo:#e8ecef; --tenue:#a7b1b8; --bordo:#3a4750; --grigio:#26323a; --sfondo:#141b20; --carta:#1b252b; --evid:#3a2a10; --rosso-chiaro:#3a1a18; color-scheme: dark; }
@@ -41,8 +42,10 @@
 </style>
 </head>
 <body>
+<header class="barra"><div class="contenitore">
+  <a class="marchio" href="./"><img src="icona-192.png" alt=""><span><b>Manutenzione app</b><small>← OBO Hub</small></span></a>
+</div></header>
 <section class="eroe"><div class="contenitore">
-  <a href="./">← OBO Hub</a>
   <h1>Manutenzione app</h1>
   <p>Chiudi temporaneamente un'app di OBO Hub o una sezione di Progettazione LPS. I dati salvati non vengono toccati.</p>
 </div></section>
@@ -154,5 +157,6 @@ GRANT EXECUTE ON FUNCTION public.stato_manutenzione() TO anon, authenticated;`;
     disegna();
   })();
 </script>
+<script src="piede.js"></script>
 </body>
 </html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy · OBO Hub</title>
+<meta name="description" content="Come OBO Hub e le sue app trattano i dati di chi le usa.">
+<link rel="icon" href="favicon-32.png">
+<link rel="stylesheet" href="obo.css">
+<style>
+  .testo { padding: 28px 0 8px; }
+  .testo h2 { font-size: 21px; margin: 30px 0 8px; }
+  .testo h3 { font-size: 17px; margin: 20px 0 6px; }
+  .testo table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0; }
+  .testo th, .testo td { text-align: left; vertical-align: top; padding: 8px; border-bottom: .8px solid var(--bordo); }
+  .testo th { background: var(--grigio); }
+  .tab { overflow-x: auto; }
+  .bozza { border-left: 4px solid var(--arancio); background: var(--scelto); border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+</style>
+<script>try { var t = localStorage.getItem("obo-tema"); if (t === "chiaro" || t === "scuro") document.documentElement.dataset.tema = t; var z = localStorage.getItem("obo-zoom"); if (z) document.documentElement.style.setProperty("--zoom", z); } catch (e) {}</script>
+</head>
+<body>
+<header class="barra"><div class="contenitore stretto">
+  <a class="marchio" href="./"><img src="icona-192.png" alt=""><span><b>Privacy</b><small>← OBO Hub</small></span></a>
+</div></header>
+<section class="eroe"><div class="contenitore stretto">
+  <h1>Informativa privacy</h1>
+  <p>Come OBO Hub e le sue app (Progettazione LPS, Mappa carichi ufficio tecnico, Prodotti OBO, Configuratore torrette) trattano i dati di chi le usa.</p>
+</div></section>
+<main class="contenitore stretto testo">
+  <p class="bozza">Testo preparato sulla base di come funzionano le app. Le parti tra [parentesi quadre] e la base giuridica vanno completate e validate dal referente privacy di OBO prima di aprire le app a persone esterne all'azienda.</p>
+
+  <h2>1. Chi tratta i dati</h2>
+  <p>Titolare del trattamento: [ragione sociale OBO Italia, indirizzo, partita IVA]. Referente per la privacy / DPO: [nome e contatto]. Le app sono strumenti interni dell'ufficio tecnico, gestiti dall'amministratore di OBO Hub.</p>
+
+  <h2>2. Quali dati e perché</h2>
+  <div class="tab"><table>
+    <thead><tr><th>Dati</th><th>A cosa servono</th><th>Per quanto tempo</th></tr></thead>
+    <tbody>
+      <tr><td>Account: email, nome, azienda, motivo della richiesta di accesso, app e sezioni abilitate, ruolo</td><td>Dare l'accesso personale e decidere cosa può vedere ciascuno</td><td>Finché l'account è attivo; l'admin può eliminarlo</td></tr>
+      <tr><td>Accesso sicuro: password (salvata cifrata dal servizio di autenticazione, nessuno la può leggere) e collegamento a Microsoft Authenticator</td><td>Proteggere l'accesso ai dati di lavoro</td><td>Finché l'account è attivo</td></tr>
+      <tr><td>Registro accessi: data e ora di entrata e uscita, cambio password, eventi di amministrazione</td><td>Sicurezza e controllo degli accessi</td><td>Mostrato per un anno</td></tr>
+      <tr><td>Statistiche d'uso: quale app o sezione è stata aperta e quando (una volta ogni 30 minuti), da quale utente o visitatore</td><td>Capire quali strumenti servono e migliorarli; gli amministratori non vengono contati</td><td>400 giorni</td></tr>
+      <tr><td>Registro errori: pagina, messaggio d'errore tecnico, tipo di browser e sistema, versione dell'app, utente collegato</td><td>Correggere i problemi prima che vengano segnalati. Non contiene i dati inseriti nelle pagine</td><td>90 giorni, o meno se l'errore viene segnato come risolto</td></tr>
+      <tr><td>Progetti salvati di Progettazione LPS (dati dell'edificio, indirizzo e coordinate, calcoli) e cataloghi personali</td><td>Salvare il proprio lavoro nel cloud; li vede solo chi li ha creati, l'admin solo in lettura</td><td>Finché non vengono eliminati; quelli eliminati restano nell'archivio consultabile dall'admin</td></tr>
+      <tr><td>Mappa carichi: nomi delle persone dell'ufficio tecnico, progetti, giorni e ore pianificati</td><td>Organizzare il lavoro dell'ufficio tecnico</td><td>Finché servono all'ufficio</td></tr>
+      <tr><td>Visitatori: il nome indicato all'ingresso</td><td>Accesso in sola consultazione senza account</td><td>Nelle statistiche d'uso, 400 giorni</td></tr>
+      <tr><td>Preferenze sul dispositivo: tema, lingua, dimensione del testo, lavoro in corso non ancora salvato</td><td>Ricordare le impostazioni; restano solo nel browser di chi usa l'app</td><td>Finché non si cancellano i dati del browser</td></tr>
+    </tbody>
+  </table></div>
+  <p>Le app non usano cookie di profilazione né strumenti pubblicitari o di tracciamento di terze parti.</p>
+
+  <h2>3. Dove stanno i dati e chi li vede</h2>
+  <ul>
+    <li><strong>Supabase</strong> (database e autenticazione): conserva account, progetti, registri e statistiche. Ogni tabella è protetta da regole di accesso: ogni utente vede solo ciò che gli spetta.</li>
+    <li><strong>GitHub Pages</strong> (GitHub Inc.): pubblica le pagine delle app; come ogni sito registra l'indirizzo IP di chi le apre nei propri log tecnici. Non conserva dati degli utenti delle app.</li>
+    <li><strong>jsDelivr</strong>: fornisce la libreria di collegamento al database.</li>
+    <li><strong>Ricerca dell'indirizzo</strong> (Dati edificio): il testo cercato viene inviato a Photon (komoot, dati OpenStreetMap); "La mia posizione" invia le coordinate a Nominatim (OpenStreetMap Foundation). La vista satellitare è di Google Maps, che riceve l'indirizzo IP e la posizione mostrata.</li>
+    <li><strong>Prodotti OBO</strong>: foto e pagine dei prodotti si aprono da obo.it.</li>
+    <li><strong>Copie di sicurezza</strong>: l'amministratore scarica periodicamente una copia dei dati (senza password) e la conserva nella cartella SharePoint riservata di OBO.</li>
+  </ul>
+  <p>Solo gli amministratori di OBO Hub vedono utenti, registri, statistiche, errori e (in sola lettura) i progetti salvati. I dati non vengono venduti né ceduti.</p>
+  <p>[Da verificare: regione dei server Supabase e trasferimenti fuori dall'Unione europea, con le relative garanzie.]</p>
+
+  <h2>4. Base giuridica</h2>
+  <p>[Da completare dal referente privacy: per esempio legittimo interesse dell'azienda all'organizzazione del lavoro e alla sicurezza dei sistemi, contratto di lavoro, eventuali accordi previsti per gli strumenti di lavoro.]</p>
+
+  <h2>5. I tuoi diritti</h2>
+  <p>Puoi chiedere di vedere, correggere o cancellare i tuoi dati, limitarne l'uso o opporti, scrivendo a [contatto]. Puoi anche presentare reclamo al Garante per la protezione dei dati personali.</p>
+
+  <p class="nota">Ultimo aggiornamento: 10 novembre 2026.</p>
+</main>
+<script src="piede.js"></script>
+</body>
+</html>
