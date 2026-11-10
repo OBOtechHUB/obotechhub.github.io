@@ -14,6 +14,6 @@ jobs:
         run: bash esplora.sh
       - name: Salva i risultati sul ramo
         run: |
-          rm -rf esplora-out6 && mv out6 esplora-out6 && rm -rf prodotti
+          rm -rf esplora-out7 && mv out7 esplora-out7 && rm -rf prodotti
           git config user.name "github-actions" && git config user.email "actions@github.com"
-          git add esplora-out6 && git commit -qm "[risultati] esplorazione OBO" && git push
+          git add esplora-out7 && git commit -qm "[risultati] esplorazione OBO" && git push
