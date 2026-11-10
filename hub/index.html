@@ -144,6 +144,8 @@
   .pannello-impost .seg button { border: 0; background: none; color: var(--testo); font: 600 13px var(--font); padding: 7px 11px; cursor: pointer; }
   .pannello-impost .seg button[aria-pressed="true"] { background: var(--arancio); color: #fff; }
   .pannello-impost .zoomval { min-width: 46px; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+  .app.in-manutenzione { opacity: .8; }
+  .etichetta-manutenzione { display:inline-block; margin-right:auto; padding:2px 10px; border-radius:999px; background:#7a4b00; color:#fff; font-size:12px; font-weight:700; }
 </style>
 </head>
 <body>
@@ -186,6 +188,7 @@
 </footer>
 
 <script src="install.js"></script>
+<script src="manutenzione.js"></script>
 <script src="aggiorna.js" data-versione="version.json" data-app="hub"></script>
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
@@ -436,6 +439,23 @@
     }
     if (profilo && !mie.length) griglia.innerHTML = '<p class="caricamento">Al momento non hai strumenti abilitati. Chiedi all\'amministratore.</p>';
     novitaProdotti(mie.some((a) => a.id === "prodotti"));
+    segnaManutenzione(mie, profilo);
+  }
+
+  // App in manutenzione (Admin → Manutenzione): etichetta sulla scheda; chi non è admin va alla pagina di manutenzione
+  async function segnaManutenzione(mie, profilo) {
+    if (!window.OBOManutenzione || !mie.length) return;
+    const s = await OBOManutenzione.stato(true);
+    if (!s) return;
+    const admin = s.admin || profilo?.ruolo === "admin";
+    const schede = $("griglia").querySelectorAll("a.app");
+    mie.forEach((app, i) => {
+      const voce = s.sezioni["app:" + app.id], el = schede[i];
+      if (!voce || !el) return;
+      el.classList.add("in-manutenzione");
+      el.querySelector(".piede").insertAdjacentHTML("afterbegin", `<span class="etichetta-manutenzione">${lingua === "en" ? "Under maintenance" : "In manutenzione"}</span>`);
+      if (!admin) el.href = "manutenzione.html?s=" + encodeURIComponent("app:" + app.id) + "&torna=" + encodeURIComponent(new URL(app.url, location.href).pathname);
+    });
   }
 
   // Novità prodotti OBO in evidenza (dati rigenerati ogni notte, vedi prodotti/)

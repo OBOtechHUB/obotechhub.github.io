@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Under maintenance · OBO Hub</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon-32.png">
+<style>
+  :root { --arancio:#f39b00; --arancio-scuro:#c47c00; --ardesia:#1f2a30; --testo:#1f2a30; --tenue:#5b6770; --bordo:#d9dee2; --sfondo:#f3f5f6; --carta:#fff;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root:not([data-tema="chiaro"]) { --testo:#e8ecef; --tenue:#a7b1b8; --bordo:#3a4750; --sfondo:#141b20; --carta:#1b252b; color-scheme: dark; } }
+  :root[data-tema="scuro"] { --testo:#e8ecef; --tenue:#a7b1b8; --bordo:#3a4750; --sfondo:#141b20; --carta:#1b252b; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; font: calc(16px * var(--zoom, 1))/1.55 var(--font); color: var(--testo); background: var(--sfondo); }
+  header { background: var(--ardesia); color: #fff; padding: 14px 16px; }
+  header a { color: #fff; text-decoration: none; font-weight: 700; letter-spacing: .02em; }
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 16px; }
+  .scheda { width: 100%; max-width: 560px; background: var(--carta); border: .8px solid var(--bordo); border-radius: 16px; padding: 32px 28px; text-align: center; box-shadow: 0 10px 30px rgba(31,42,48,.08); }
+  .icona { width: 72px; height: 72px; margin: 0 auto 8px; color: var(--arancio); }
+  h1 { margin: 4px 0 6px; font-size: clamp(26px, 5vw, 34px); line-height: 1.15; }
+  .sezione { display: inline-block; margin: 4px 0 14px; padding: 4px 14px; border-radius: 999px; background: #fff4e0; color: var(--arancio-scuro); font-weight: 700; font-size: 15px; }
+  p { margin: 8px 0; }
+  .tenue { color: var(--tenue); font-size: 14px; }
+  .fino { font-weight: 600; }
+  .nota { text-align: left; background: var(--sfondo); border-left: 4px solid var(--arancio); border-radius: 8px; padding: 10px 14px; margin: 16px 0 4px; white-space: pre-line; }
+  .azioni { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 22px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 999px; border: 1px solid var(--bordo); background: var(--carta); color: var(--testo); font: 600 15px var(--font); cursor: pointer; text-decoration: none; }
+  .btn-primario { background: var(--arancio); border-color: var(--arancio); color: #fff; }
+  .admin { margin-top: 18px; padding: 10px 14px; border-radius: 10px; background: #7a4b00; color: #fff; font-size: 14px; }
+  .admin a { color: #fff; font-weight: 700; }
+  .it { margin-top: 22px; padding-top: 14px; border-top: .8px solid var(--bordo); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header><a href="./">OBO Hub</a></header>
+<main>
+  <section class="scheda" aria-labelledby="titolo">
+    <svg class="icona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.6 17.2a1.6 1.6 0 0 0 2.3 2.3l5.7-5.7a4 4 0 0 0 5.2-5.4l-2.4 2.4-2.1-.6-.6-2.1z"/><path d="M17 14l4 4"/><path d="M19 12l2 2"/>
+    </svg>
+    <h1 id="titolo">Under maintenance</h1>
+    <span class="sezione" id="sezione" hidden></span>
+    <p id="testo">This section is temporarily unavailable while we carry out maintenance and improvements.</p>
+    <p class="fino" id="fino" hidden></p>
+    <div class="nota" id="nota" hidden></div>
+    <p class="tenue" id="controllo">This page checks every minute and takes you back automatically as soon as it is available again.</p>
+    <div class="azioni">
+      <button class="btn btn-primario" id="riprova" type="button">Try again</button>
+      <a class="btn" href="./">Back to OBO Hub</a>
+    </div>
+    <div class="admin" id="admin" hidden>You are an administrator: <a id="apri" href="#">open it anyway</a>. Maintenance is switched on and off in Admin → Maintenance.</div>
+    <p class="tenue it" lang="it">In manutenzione: la sezione torna disponibile appena finito il lavoro. Questa pagina controlla da sola ogni minuto e ti riporta indietro.</p>
+  </section>
+</main>
+<script src="manutenzione.js"></script>
+<script>
+(function () {
+  try { var t = localStorage.getItem("obo-tema"); if (t === "chiaro" || t === "scuro") document.documentElement.dataset.tema = t; var z = localStorage.getItem("obo-zoom"); if (z) document.documentElement.style.setProperty("--zoom", z); } catch (e) {}
+  var q = new URLSearchParams(location.search);
+  var id = q.get("s") || "";
+  var torna = q.get("torna") || "";
+  // solo percorsi dello stesso sito
+  if (!/^\/(?!\/)/.test(torna)) torna = "";
+  var $ = function (i) { return document.getElementById(i); };
+  var NOMI = { "app:lps": "Lightning protection design", "app:mappa": "Technical office workload map", "app:prodotti": "OBO products", "app:torrette": "Floor box configurator" };
+  if (torna) $("apri").href = torna;
+
+  function mostra(s) {
+    var voce = s && s.sezioni ? s.sezioni[id] : null;
+    if (s && !voce) { // manutenzione finita
+      if (torna) { location.replace(torna); return; }
+      $("titolo").textContent = "Available again";
+      $("testo").textContent = "Maintenance has finished. You can go back to OBO Hub.";
+      $("controllo").hidden = true; $("fino").hidden = true; $("nota").hidden = true;
+      return;
+    }
+    var nome = (voce && voce.nome_en) || NOMI[id] || "";
+    $("sezione").textContent = nome; $("sezione").hidden = !nome;
+    if (voce && voce.fino) {
+      var d = new Date(voce.fino);
+      if (!isNaN(d)) { $("fino").textContent = "Expected back: " + d.toLocaleString("en-GB", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }); $("fino").hidden = false; }
+    } else $("fino").hidden = true;
+    if (voce && voce.nota) { $("nota").textContent = voce.nota; $("nota").hidden = false; } else $("nota").hidden = true;
+    $("admin").hidden = !(s && s.admin && torna);
+  }
+  function aggiorna() { if (window.OBOManutenzione) OBOManutenzione.stato(true).then(mostra); }
+  $("riprova").addEventListener("click", aggiorna);
+  aggiorna();
+  setInterval(aggiorna, 60000);
+})();
+</script>
+</body>
+</html>

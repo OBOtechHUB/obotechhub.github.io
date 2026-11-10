@@ -2,6 +2,23 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-10-tutte-1",
+      "data": "2026-11-10",
+      "app": "tutte",
+      "titolo": "Pagina di manutenzione",
+      "voci": [
+        "Quando un'app o una sezione è in manutenzione si apre una pagina che lo spiega, con l'orario previsto di ritorno",
+        "La pagina controlla da sola ogni minuto e riporta all'app appena la manutenzione finisce",
+        "Nella pagina iniziale di OBO Hub le app in manutenzione hanno l'etichetta \"In manutenzione\""
+      ],
+      "titolo_en": "Maintenance page",
+      "voci_en": [
+        "When an app or section is under maintenance a page explains it, with the expected time it will be back",
+        "The page checks every minute and takes you back as soon as maintenance ends",
+        "On the OBO Hub home page, apps under maintenance are labelled \"Under maintenance\""
+      ]
+    },
+    {
       "id": "2026-11-10-prodotti-2",
       "data": "2026-11-10",
       "app": "hub",
