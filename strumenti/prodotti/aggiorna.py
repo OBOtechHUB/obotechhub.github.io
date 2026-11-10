@@ -5,9 +5,12 @@ Aggiorna l'indice dei prodotti OBO per l'app "Prodotti" di OBO Hub.
 Gira ogni notte su GitHub Actions (solo libreria standard di Python).
 Fonti pubbliche, nel rispetto di robots.txt (le pagine /search/ non vengono mai lette):
   - mappe del sito di obo.it (sitemap): elenco di prodotti, categorie, notizie e pagine;
-  - API pubblica usata dal sito OBO (api.production.obo.digital): nome, descrizione, immagini
-    e data di inserimento di ogni prodotto, cercato per numero d'articolo;
-  - pagine di obo.it solo per titolo e immagine di categorie, notizie e pagine (una volta sola, poi in cache).
+    (le sitemap dei prodotti contengono anche le foto);
+  - pagine prodotto di obo.it: nome, descrizione, foto e categoria dai dati strutturati (schema.org),
+    lette una volta e poi solo quando la sitemap segnala una modifica;
+  - API pubblica usata dal sito OBO (api.production.obo.digital), con calma perché limita le richieste:
+    data di inserimento (per le novità), confezione e icona;
+  - pagine di obo.it per titolo e immagine di categorie, notizie e pagine (una volta sola, poi in cache).
 
 Il lavoro è incrementale: i dettagli già scaricati restano nei file di cache e ogni notte si scaricano
 solo i prodotti nuovi più un gruppo a rotazione. L'API limita la frequenza delle richieste: si va piano,
@@ -45,11 +48,11 @@ CARTELLA = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file_
 OGGI = dt.date.today().isoformat()
 
 # Limiti per una notte (si possono cambiare con variabili d'ambiente)
-MAX_NUOVI = int(os.environ.get("MAX_NUOVI", "12000"))        # dettagli di prodotti mai visti
-MAX_ROTAZIONE = int(os.environ.get("MAX_ROTAZIONE", "600"))  # dettagli rinfrescati a rotazione
-MAX_PAGINE = int(os.environ.get("MAX_PAGINE", "400"))        # pagine HTML lette per titoli/immagini
-PARALLELO = int(os.environ.get("PARALLELO", "2"))            # solo per le pagine HTML di obo.it
-PAUSA_API = float(os.environ.get("PAUSA_API", "0.6"))        # secondi tra due richieste all'API
+MAX_RILETTURE = int(os.environ.get("MAX_RILETTURE", "1500"))  # pagine prodotto cambiate da rileggere
+MAX_PAGINE = int(os.environ.get("MAX_PAGINE", "400"))        # pagine HTML di categorie, notizie e pagine
+PARALLELO = int(os.environ.get("PARALLELO", "2"))            # pagine di obo.it lette insieme
+PAUSA_PAGINE = float(os.environ.get("PAUSA_PAGINE", "0.4"))  # secondi di pausa dopo ogni pagina, per lettore
+PAUSA_API = float(os.environ.get("PAUSA_API", "9"))          # l'API accetta circa 30 ricerche ogni 5 minuti
 MINUTI_MAX = float(os.environ.get("MINUTI_MAX", "150"))      # tempo massimo per i dettagli dei prodotti
 GIORNI_NOVITA = int(os.environ.get("GIORNI_NOVITA", "120"))  # un prodotto è "nuovo" se attivo da meno di N giorni
 INIZIO = time.time()
@@ -62,22 +65,33 @@ def log(*a: object) -> None:
     print(*a, flush=True)
 
 
-def scarica(url: str, tentativi: int = 5, accetta: str = "*/*") -> bytes | None:
+def richiesta(url: str, tentativi: int = 5, accetta: str = "*/*") -> tuple[int, bytes | None]:
+    """Restituisce (codice HTTP, contenuto). 429 = il server chiede di rallentare: chi chiama decide."""
+    codice = 0
     for i in range(tentativi):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accetta})
             with urllib.request.urlopen(req, timeout=30) as r:
-                return r.read()
+                return r.status, r.read()
         except urllib.error.HTTPError as e:
-            if e.code in (404, 410):
-                return None
-            if e.code == 429:  # troppe richieste: aspetta quanto chiede il server, o sempre di più
-                attesa = e.headers.get("Retry-After")
-                time.sleep(float(attesa) if attesa and attesa.isdigit() else 10 * (2 ** i))
-                continue
+            codice = e.code
+            if e.code in (404, 410, 429):
+                return e.code, None
             time.sleep(1.5 * (i + 1))
         except Exception:  # rete instabile: riprova
             time.sleep(1.5 * (i + 1))
+    return codice, None
+
+
+def scarica(url: str, tentativi: int = 5, accetta: str = "*/*") -> bytes | None:
+    for i in range(tentativi):
+        codice, dati = richiesta(url, 1, accetta)
+        if codice == 429:
+            time.sleep(30 * (i + 1))
+            continue
+        if dati is not None or codice in (404, 410):
+            return dati
+        time.sleep(1.5 * (i + 1))
     return None
 
 
@@ -138,12 +152,25 @@ def da_slug(s: str) -> str:
 # ------------------------------------------------------------------ prodotti
 
 RE_ART = re.compile(r"-(\d{7,8})\.html$")
+RE_LD = re.compile(r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>', re.S | re.I)
 
 
-def dettaglio_prodotto(art: str) -> dict | None:
+class Rallenta(Exception):
+    """L'API ha chiesto di rallentare (429) anche dopo l'attesa."""
+
+
+def dettaglio_api(art: str) -> dict | None:
+    """Dati dall'API: {} se il prodotto non c'è, None se non è stato possibile chiedere."""
     q = urllib.parse.urlencode({"searchText": art, "pageSize": 5})
-    dati = scarica(f"{API}/search/suggestion/{LOCALE}/product?{q}", accetta="application/json")
-    if not dati:
+    for attesa in (0, 120, 300):
+        if attesa:
+            time.sleep(attesa)
+        codice, dati = richiesta(f"{API}/search/suggestion/{LOCALE}/product?{q}", accetta="application/json")
+        if codice != 429:
+            break
+    else:
+        raise Rallenta()
+    if dati is None:
         return None
     try:
         risultati = json.loads(dati).get("results") or []
@@ -151,19 +178,51 @@ def dettaglio_prodotto(art: str) -> dict | None:
         return None
     r = next((x for x in risultati if str(x.get("articleNumber")) == art), None)
     if not r:
-        return None
-    icona = r.get("iconUrl") or ""
+        return {}
     imm = r["images"][0] if r.get("images") else {}
     return {
         "t": (r.get("title") or "").strip(),
         "d": (r.get("shortDescription") or "").strip(),
-        "i": icona,
-        "im": imm.get("mobileImageUrl") or imm.get("imageUrl") or icona,
+        "i": r.get("iconUrl") or "",
+        "im": imm.get("mobileImageUrl") or imm.get("imageUrl") or "",
         "as": (r.get("activeSince") or "")[:10],
         "a": bool(r.get("active", True)),
         "v": r.get("vpe") or "",
-        "ag": OGGI,
     }
+
+
+def dettaglio_pagina(url: str) -> dict | None:
+    """Dati strutturati (schema.org) della pagina prodotto: {} se la pagina non c'è più, None se errore."""
+    codice, dati = richiesta(url, 3)
+    if codice == 429:
+        time.sleep(60)
+        codice, dati = richiesta(url, 2)
+    if codice in (404, 410):
+        return {}
+    if not dati:
+        return None
+    t = dati.decode("utf-8", "replace")
+    out: dict = {}
+    for blocco in RE_LD.findall(t):
+        try:
+            j = json.loads(blocco)
+        except json.JSONDecodeError:
+            continue
+        if j.get("@type") == "Product":
+            out["t"] = html.unescape(j.get("name") or "").strip()
+            out["d"] = re.sub(r"\s+", " ", html.unescape(j.get("description") or "")).strip()[:600]
+            imm = j.get("image") or []
+            imm = [imm] if isinstance(imm, str) else imm
+            if imm:
+                out["im"] = imm[0]
+        elif j.get("@type") == "BreadcrumbList":
+            voci = j.get("itemListElement") or []
+            if len(voci) > 1:
+                out["c"] = str(voci[-1].get("item", "")).replace(SITO, "")
+    if not out.get("t"):  # pagina senza dati strutturati: titolo e descrizione dai meta
+        info = info_da_html(t)
+        out.update({k: v for k, v in info.items() if v})
+    return out
 
 
 def aggiorna_prodotti(vecchi: dict[str, dict]) -> tuple[dict[str, dict], list[str]]:
@@ -185,35 +244,81 @@ def aggiorna_prodotti(vecchi: dict[str, dict]) -> tuple[dict[str, dict], list[st
         p = dict(vecchi.get(art, {}))
         p["u"] = v["url"].replace(SITO, "")
         p.setdefault("t", da_slug(re.sub(r"-\d{7,8}\.html$", "", v["url"].rsplit("/", 1)[-1])))
+        if v.get("immagine"):
+            p["im"] = v["immagine"]  # la foto principale è già nella sitemap
+        if v.get("lastmod"):
+            p["lm"] = v["lastmod"]
         # data in cui l'indice ha visto il prodotto la prima volta (non al primo avvio: lì è tutto "esistente")
         if art not in vecchi and not primo_avvio:
             p["pv"] = OGGI
         prodotti[art] = p
     tolti = sorted(set(vecchi) - set(prodotti))
 
-    da_fare = [a for a in prodotti if "ag" not in prodotti[a]][:MAX_NUOVI]
-    gia = set(da_fare)
-    rotazione = sorted((a for a in prodotti if "ag" in prodotti[a]), key=lambda a: prodotti[a]["ag"])[:MAX_ROTAZIONE]
-    lavoro = da_fare + [a for a in rotazione if a not in gia]
-    log(f"  dettagli da scaricare: {len(da_fare)} nuovi + {len(lavoro) - len(da_fare)} a rotazione")
+    # 1) pagine prodotto: prima quelle mai lette (le più recenti prima), poi quelle modificate
+    mai = sorted((a for a in prodotti if "pg" not in prodotti[a]), key=lambda a: prodotti[a].get("pv", ""), reverse=True)
+    cambiate = [a for a in prodotti if "pg" in prodotti[a] and prodotti[a].get("lm", "") > prodotti[a]["pg"]][:MAX_RILETTURE]
+    pagine = mai + cambiate
+    # 2) API: prima i prodotti senza data di inserimento, poi a rotazione
+    senza_data = [a for a in prodotti if not prodotti[a].get("as") and not prodotti[a].get("nx")]
+    senza_data.sort(key=lambda a: prodotti[a].get("pv", ""), reverse=True)
+    rotazione = sorted((a for a in prodotti if prodotti[a].get("as") or prodotti[a].get("nx")), key=lambda a: prodotti[a].get("ag", ""))
+    api = senza_data + rotazione
+    log(f"  pagine prodotto da leggere: {len(mai)} mai lette + {len(cambiate)} modificate; API: {len(senza_data)} senza data")
 
-    # una richiesta alla volta, con pausa: l'API limita la frequenza (risponde 429 se si esagera)
-    fatti = trovati = 0
-    for a in lavoro:
-        if (time.time() - INIZIO) / 60 > MINUTI_MAX:
-            log(f"  tempo massimo raggiunto: continuo la prossima notte ({len(lavoro) - fatti} rimasti)")
-            break
-        d = dettaglio_prodotto(a)
-        if d:
-            prodotti[a].update({k: v for k, v in d.items() if v not in ("", None) or k == "a"})
-            trovati += 1
-        else:
-            prodotti[a]["ag"] = OGGI  # non trovato nell'API: si riprova a rotazione
-        fatti += 1
-        if fatti % 500 == 0:
-            log(f"  {fatti}/{len(lavoro)} ({trovati} con dettagli)")
-        time.sleep(PAUSA_API)
-    log(f"  dettagli scaricati: {trovati} su {fatti}")
+    def scaduto() -> bool:
+        return (time.time() - INIZIO) / 60 > MINUTI_MAX
+
+    conta = {"pagine": 0, "pagineOk": 0, "api": 0, "apiOk": 0}
+
+    def lettore(coda: list[str]) -> None:
+        while coda and not scaduto():
+            try:
+                a = coda.pop()
+            except IndexError:
+                return
+            d = dettaglio_pagina(SITO + prodotti[a]["u"])
+            if d is not None:
+                prodotti[a].update({k: v for k, v in d.items() if v})
+                prodotti[a]["pg"] = OGGI
+                conta["pagineOk"] += 1 if d else 0
+            conta["pagine"] += 1
+            if conta["pagine"] % 1000 == 0:
+                log(f"  pagine: {conta['pagine']}/{len(pagine)}")
+            time.sleep(PAUSA_PAGINE)
+
+    def interroga_api() -> None:
+        for a in api:
+            if scaduto():
+                return
+            try:
+                d = dettaglio_api(a)
+            except Rallenta:
+                log("  l'API chiede di rallentare: riprendo la prossima notte")
+                return
+            if d is not None:
+                p = prodotti[a]
+                for k in ("t", "d", "im"):  # i testi delle pagine hanno la precedenza
+                    if d.get(k) and not p.get("pg"):
+                        p[k] = d[k]
+                for k in ("i", "as", "v"):
+                    if d.get(k):
+                        p[k] = d[k]
+                if d:
+                    p["a"] = d["a"]
+                    p.pop("nx", None)
+                    conta["apiOk"] += 1
+                else:
+                    p["nx"] = OGGI  # non presente nell'API in italiano
+                p["ag"] = OGGI
+            conta["api"] += 1
+            time.sleep(PAUSA_API)
+
+    coda = list(reversed(pagine))  # pop() dalla fine = ordine di priorità
+    with cf.ThreadPoolExecutor(max_workers=max(1, PARALLELO) + 1) as ex:
+        lavori = [ex.submit(lettore, coda) for _ in range(max(1, PARALLELO))] + [ex.submit(interroga_api)]
+        for f in lavori:
+            f.result()
+    log(f"  pagine prodotto lette: {conta['pagine']} ({conta['pagineOk']} con dati); API: {conta['api']} ({conta['apiOk']} trovati)")
     return prodotti, tolti
 
 
@@ -229,7 +334,10 @@ def info_pagina(url: str) -> dict:
     dati = scarica(url, tentativi=3)
     if not dati:
         return {}
-    t = dati.decode("utf-8", "replace")
+    return info_da_html(dati.decode("utf-8", "replace"))
+
+
+def info_da_html(t: str) -> dict:
     meta = {k.lower(): html.unescape(v).strip() for k, v in RE_META.findall(t)}
     h1 = RE_H1.search(t)
     titolo = html.unescape(RE_TAG.sub("", h1.group(1))).strip() if h1 else ""
@@ -334,7 +442,7 @@ def main() -> int:
     scrivi_json("pagine-cache.json", pagine)
 
     # file leggeri per l'app: [numero, nome, descrizione, url, icona, attivo dal, prima vista, immagine grande]
-    elenco = [[a, p.get("t", ""), p.get("d", ""), p.get("u", ""), p.get("i", ""), p.get("as", ""), p.get("pv", ""), p.get("im", "")]
+    elenco = [[a, p.get("t", ""), p.get("d", "")[:300], p.get("u", ""), p.get("i", ""), p.get("as", ""), p.get("pv", ""), p.get("im", "")]
               for a, p in sorted(prodotti.items(), key=lambda x: x[1].get("t", "").lower())]
     scrivi_json("prodotti.json", elenco)
     albero = [[u, c.get("t", ""), c.get("im", "")] for u, c in sorted(categorie.items())]
@@ -363,10 +471,11 @@ def main() -> int:
         "prodotti": [r[:8] + [data_novita(r)] for r in nuovi[:60]],  # come prodotti.json + data della novità
         "notizie": lista_notizie[:12], "tolti": tolti[:200],
     })
-    con_dettagli = sum(1 for p in prodotti.values() if p.get("d") or p.get("i"))
-    stato = {"aggiornato": adesso, "prodotti": len(elenco), "conDettagli": con_dettagli, "categorie": len(albero),
+    con_dettagli = sum(1 for p in prodotti.values() if p.get("pg") and p.get("d"))
+    con_data = sum(1 for p in prodotti.values() if p.get("as"))
+    stato = {"aggiornato": adesso, "prodotti": len(elenco), "conDettagli": con_dettagli, "conData": con_data, "categorie": len(albero),
              "notizie": len(lista_notizie), "pagine": len(pagine), "nuovi": len(nuovi), "tolti": len(tolti),
-             "dateInBlocco": sorted(in_blocco), "fonte": "obo.it (sitemap) e API pubblica del sito OBO"}
+             "dateInBlocco": sorted(in_blocco), "fonte": "obo.it (sitemap e pagine prodotto) e API pubblica del sito OBO"}
     scrivi_json("stato.json", stato)
     log("Fatto:", json.dumps(stato, ensure_ascii=False))
     return 0 if elenco else 1
