@@ -1,0 +1,132 @@
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/product?searchText=spd&pageSize=5
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":3,"results":[{"id":"8a8183687bf2588f017c2dabfe3d3814","title":"Ion charging station with surge protection","url":"\/en-xi\/products\/ion-charging-station-basic-protect-3-phase-22-1-6570024.html","articleNumber":"6570024","tenantArticleNumber":"","shortDescription":"Charging station Basic Protect","active":true,"activeSince":"2025-05-02T00:02:05+00:00","vpe":"1","minimumUnitQuantity":"","minimumUnitUnit":"piece","iconUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/116_116_75\/6570024_PG1.jpg","images":[{"imageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/794_794_75\/6570024_PG1.jpg","zoomImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/1\/6570024_PG1.jpg","iconUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/116_116_75\/6570024_PG1.jpg","mobileImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/342_342_75\/6570024_PG1.jpg"},{"imageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg","zoomImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg","iconUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg","mobileImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg"}],"datasheet":[{"locale":"en","type":"Data sheet","url":"https:\/\/www.obo-bettermann.com\/out\/m
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/article?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/news?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/page?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/content?searchText=spd&pageSize=5
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":3,"results":[{"title":"OBO Ion charging station: Charge your electric vehicle with solar power","summary":"Our OBO Ion charging station is the smart, efficient solution for charging your electric car \u2013 including using your PV system. All technical details at a glance.","image":{"id":"1743mJ2A4vKAfhAuXsG_Q-","altText":"Electric Vehicle Car Wallbox Carport","openInNewTab":false,"filename":"Gebaeude_Einfamilienhaus_Privat_Elektrofahrzeug_Auto_Wallbox_Carport_MG3.tif","width":5000,"height":3535},"url":"https:\/\/www.obo-bettermann.com\/en-xi\/know-how\/guide\/charging-station","type":"cluster_page"},{"title":"BET Testcenter: tested quality","summary":"At our in-house BET Test Centre, we test the resilience and load capacity of our OBO products to ensure the highest-possible quality.","image":{"id":"B3o3aG3n4M3BAXG2VV_ZtJ","openInNewTab":false,"filename":"Bild LPSC lose Klemme 100kA.JPG","width":1712,"height":1368},"url":"https:\/\/www.obo-bettermann.com\/en-xi\/service\/bet-test-centre","type":"cluster_page"},{"title":"Equipotential bonding for photovoltaic systems","summary":"OBO offers innovative solutions for equipotential bonding of your photovoltaic system. Optimal safety and functionality for your system \u2013 today and in the future.","image":{"id":"FjSPnR8n4Rm975bAChkqPK","openInNewTab":false,"filename":"Geb\u00e4ude_Photovoltaik_Potentialausgleichsschiene_Wechselrichter_Hausanschlussraum_1.tif","width":2000,"height":1414},"url":"https:\/\/www.obo-be
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/download?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/reference?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/category?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/en-xi/all?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/en-xi/product?searchText=5094652
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":0,"pageSize":20,"results":[],"filters":[]}
+
+### https://api.production.obo.digital/v1/search/en-xi/product?searchText=spd
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":3,"pageSize":20,"results":[{"id":"8a8183687bf2588f017c2dabfe3d3814","title":"Ion charging station with surge protection","url":"\/en-xi\/products\/ion-charging-station-basic-protect-3-phase-22-1-6570024.html","articleNumber":"6570024","tenantArticleNumber":"","shortDescription":"Charging station Basic Protect","active":true,"activeSince":"2025-05-02T00:02:05+00:00","vpe":"1","minimumUnitQuantity":"","minimumUnitUnit":"piece","iconUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/116_116_75\/6570024_PG1.jpg","images":[{"imageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/794_794_75\/6570024_PG1.jpg","zoomImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/1\/6570024_PG1.jpg","iconUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/116_116_75\/6570024_PG1.jpg","mobileImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/generated\/product\/1\/342_342_75\/6570024_PG1.jpg"},{"imageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg","zoomImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg","iconUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg","mobileImageUrl":"https:\/\/www.obo-bettermann.com\/out\/pictures\/master\/product\/8\/6570024_MZ1.jpg"}],"datasheet":[{"locale":"en","type":"Data sheet","url":"https:\/\/www.obo-betterma
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/product?searchText=spd&pageSize=5
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":15,"results":[{"id":"8a815c68873775070187564bb3ce6022","title":"Controdado per staffa per profilato a soffitto SPC","url":"\/it-it\/prodotti\/controdado-per-staffa-per-profilato-a-soffitto-spc-m6-1488607.html","articleNumber":"1488607","tenantArticleNumber":"","shortDescription":"Controdado per clip prof. a soffitto M6","active":true,"activeSince":"2025-05-02T00:02:05+00:00","vpe":"100","minimumUnitQuantity":"","minimumUnitUnit":"Pezzo","iconUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/116_116_75\/1488607_PG1.jpg","images":[{"imageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/794_794_75\/1488607_PG1.jpg","zoomImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/1\/1488607_PG1.jpg","iconUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/116_116_75\/1488607_PG1.jpg","mobileImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/342_342_75\/1488607_PG1.jpg"},{"imageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg","zoomImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg","iconUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg","mobileImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg"}],"datasheet":[{"locale":"it","type":"Scheda
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/article?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/news?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/page?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/content?searchText=spd&pageSize=5
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":3,"results":[{"title":"Centro di prova BET: qualit\u00e0 certificata","summary":"Nel nostro centro di prova BET interno all\u0027azienda, testiamo la resistenza e la capacit\u00e0 di carico dei prodotti OBO per garantire la massima qualit\u00e0.","image":{"id":"B3o3aG3n4M3BAXG2VV_ZtJ","openInNewTab":false,"filename":"Bild LPSC lose Klemme 100kA.JPG","width":1712,"height":1368},"url":"https:\/\/it.production.obo.digital\/it-it\/assistenza\/centro-di-prova-bet","type":"cluster_page"},{"title":"Equipotenzializzazione di impianti fotovoltaici","summary":"OBO offre soluzioni innovative per l\u0027equipotenzializzazione del tuo impianto fotovoltaico. Sicurezza e funzionalit\u00e0 ottimali per il vostro impianto: oggi e in futuro.","image":{"id":"FjSPnR8n4Rm975bAChkqPK","openInNewTab":false,"filename":"Geb\u00e4ude_Photovoltaik_Potentialausgleichsschiene_Wechselrichter_Hausanschlussraum_1.tif","width":2000,"height":1414},"url":"https:\/\/it.production.obo.digital\/it-it\/soluzioni-per-il-settore\/alimentazione-elettrica\/impianti-fotovoltaici\/equipotenzializzazione","type":"cluster_page"},{"title":"OBO Ion Wallbox: ricarica la tua auto elettrica con corrente solare","summary":"Con la nostra OBO Ion Wallbox \u00e8 possibile ricaricare l\u0027auto elettrica in modo intelligente ed efficiente, ad esempio utilizzando semplicemente il proprio impianto fotovoltaico. Tut","image":{"id":"1743mJ2A4vKAfhAuXsG_Q-","openInNewTab":false,"filename":"Gebaeude_Einfamilienhaus_Priva
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/download?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/reference?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/category?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/suggestion/it-it/all?searchText=spd&pageSize=5
+HTTP/2 404 
+cache-control: no-cache, private
+content-type: application/json
+{"type":"https:\/\/tools.ietf.org\/html\/rfc2616#section-10","title":"An error occurred","status":404,"detail":"Not Found"}
+
+### https://api.production.obo.digital/v1/search/it-it/product?searchText=5094652
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":0,"pageSize":20,"results":[],"filters":[]}
+
+### https://api.production.obo.digital/v1/search/it-it/product?searchText=spd
+HTTP/2 200 
+content-type: application/json
+cache-control: public, s-maxage=600, stale-while-revalidate=300, stale-if-error=300
+{"totalResults":15,"pageSize":20,"results":[{"id":"8a815c68873775070187564bb3ce6022","title":"Controdado per staffa per profilato a soffitto SPC","url":"\/it-it\/prodotti\/controdado-per-staffa-per-profilato-a-soffitto-spc-m6-1488607.html","articleNumber":"1488607","tenantArticleNumber":"","shortDescription":"Controdado per clip prof. a soffitto M6","active":true,"activeSince":"2025-05-02T00:02:05+00:00","vpe":"100","minimumUnitQuantity":"","minimumUnitUnit":"Pezzo","iconUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/116_116_75\/1488607_PG1.jpg","images":[{"imageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/794_794_75\/1488607_PG1.jpg","zoomImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/1\/1488607_PG1.jpg","iconUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/116_116_75\/1488607_PG1.jpg","mobileImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/generated\/product\/1\/342_342_75\/1488607_PG1.jpg"},{"imageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg","zoomImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg","iconUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg","mobileImageUrl":"https:\/\/it.production.obo.digital\/out\/pictures\/master\/product\/8\/1488607_MZM.jpg"}],"datasheet":[{"locale":"it",
+
