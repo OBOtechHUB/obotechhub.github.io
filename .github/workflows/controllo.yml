@@ -1,0 +1,43 @@
+# Controllo notturno del sito pubblicato: apre le pagine principali e verifica i dati dei prodotti.
+# Se qualcosa non va apre (o aggiorna) una segnalazione "Controllo notturno" nel repository: GitHub la manda per email.
+# Quando tutto torna a posto la segnalazione si chiude da sola.
+name: Controllo notturno del sito
+on:
+  schedule:
+    - cron: "43 4 * * *"   # 05:43 in Italia (ora solare), dopo l'aggiornamento dei prodotti
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency: { group: controllo, cancel-in-progress: true }
+jobs:
+  controllo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Playwright
+        run: |
+          npm init -y >/dev/null
+          npm install --no-save playwright@1.48.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Controllo delle pagine
+        id: prova
+        continue-on-error: true
+        run: node strumenti/controllo/prova.mjs
+      - name: Segnalazione
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ESITO: ${{ steps.prova.outcome }}
+        run: |
+          TITOLO="Controllo notturno: qualcosa non funziona sul sito"
+          N=$(gh issue list --state open --search "in:title \"$TITOLO\"" --json number -q '.[0].number' || true)
+          if [ "$ESITO" = "failure" ]; then
+            { echo "Il controllo di stanotte ha trovato problemi ($(date -u +'%d/%m/%Y %H:%M') UTC)."; echo; cat controllo.md; echo; echo "Dettagli: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; } > corpo.md
+            if [ -n "$N" ]; then gh issue comment "$N" --body-file corpo.md; else gh issue create --title "$TITOLO" --body-file corpo.md; fi
+            exit 1
+          elif [ -n "$N" ]; then
+            gh issue comment "$N" --body "Controllo del $(date -u +'%d/%m/%Y'): tutto di nuovo a posto." && gh issue close "$N"
+          fi
