@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<sitemap>
+		<loc>https://www.obo.it/sitemaps/categories_18_1.xml</loc>
+		<lastmod>2026-11-10T02:56:27+01:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>https://www.obo.it/sitemaps/products_18_1.xml</loc>
+		<lastmod>2026-11-10T02:56:27+01:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>https://www.obo.it/sitemaps/products_18_2.xml</loc>
+		<lastmod>2026-11-10T02:56:27+01:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>https://www.obo.it/sitemaps/products_18_3.xml</loc>
+		<lastmod>2026-11-10T02:56:27+01:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>https://www.obo.it/xml-sitemap/</loc>
+		<lastmod>2026-11-10T02:56:27+01:00</lastmod>
+	</sitemap>
+</sitemapindex>

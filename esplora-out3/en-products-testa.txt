@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+	<url>
+		<loc>https://www.obo-bettermann.com/en-xi/products/fastening-clip-604-light-duty-3-1003038.html</loc>
+		<lastmod>2026-11-09</lastmod>
+		<changefreq>yearly</changefreq>
+		<priority>1</priority>
+		<xhtml:link rel="alternate" hreflang="en-xi" href="https://www.obo-bettermann.com/en-xi/products/fastening-clip-604-light-duty-3-1003038.html"/>
+		<xhtml:link rel="alternate" hreflang="bg-bg"

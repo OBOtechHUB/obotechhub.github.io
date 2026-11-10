@@ -1,0 +1,27 @@
+### q=[] page=1 pageSize=100
+total None pageSize None n 0 keys ['type', 'title', 'status', 'detail', 'violations']
+[]
+### q=[*] page=1 pageSize=100
+total None pageSize None n 0 keys ['type', 'title', 'status', 'detail', 'violations']
+[]
+### q=[a] page=1 pageSize=100
+total None pageSize None n 0 keys ['type', 'title', 'status', 'detail', 'violations']
+[]
+### q=[e] page=1 pageSize=100
+total None pageSize None n 0 keys ['type', 'title', 'status', 'detail', 'violations']
+[]
+### pagina 2
+n 0 []
+### filtri completi
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json,sys;d=json.load(sys.stdin);print(json.dumps(d.get('filters'),ensure_ascii=False)[:3000]);r=d['results'][0];print(json.dumps({k:(v if not isinstance(v,(list,dict)) else type(v).__name__) for k,v in r.items()},ensure_ascii=False))
+                                                                                                           ~^^^^^^^^^^^
+KeyError: 'results'
+null
+### articolo per numero
+{"totalResults":0,"results":[]}
+### content suggestion keys
+3 ['cluster_page']
+### content news
+33 [('cluster_page', 'News BIM@OBO: panoramica degli aggiornamenti.'), ('news_article', 'Competenze tecniche in breve: la guida OBO'), ('news_article', 'Sostenibilità senza compromessi: una nuova concezione della pellicola estensibile'), ('news_article', 'Nuova pagina dedicata al settore automotive'), ('news_article', 'Novità nella gamma FV: sistema di montaggio FV senza zavorra per tetti piani')]

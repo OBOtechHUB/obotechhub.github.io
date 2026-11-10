@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html class="no-js no-touch" lang="it">
+<head>
+
+<meta charset="utf-8">
+<!-- 
+	This website is powered by TYPO3 - inspiring people to share!
+	TYPO3 is a free open source Content Management Framework initially created by Kasper Skaarhoj and licensed under GNU/GPL.
+	TYPO3 is copyright 1998-2023 of Kasper Skaarhoj. Extensions are copyright of their respective owners.
+	Information and contribution at https://typo3.org/
+-->
+
+
+
+<title> 404 | OBO </title>
+<meta name="generator" content="TYPO3 CMS">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="content-language" content="it-IT">
+<meta name="env" content="production">
+<meta property="og:title" content="404">
+<meta property="og:site_name" content="OBO CMS">
+<link rel="apple-touch-icon" size="180x180" href="/out/obo/img/favicons/apple-touch-icon.png">
+<link rel="icon" size="32x32" href="/out/obo/img/favicons/favicon-32x32.png">
+<link rel="icon" size="16x16" href="/out/obo/img/favicons/favicon-16x16.png">
+<link rel="manifest" href="/out/obo/img/favicons/site.webmanifest">
+<link rel="mask-icon" href="/out/obo/img/favicons/safari-pinned-tab.svg" color="#f39b00">
+<link rel="shortcut icon" href="/out/obo/img/favicons/favicon.ico">
+<meta name="msapplication-config" content="/out/obo/img/favicons/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#f39b00">
+<meta name="theme-color" content="#f39b00">
+
+
+<link rel="stylesheet" type="text/css" href="/out/obo/src/css/style.css?1756985932" media="all">
+<link rel="stylesheet" type="text/css" href="/out/obo/src/css/ownfonts.css?1730110073" media="all">
+
+
+<script type="text/javascript">
+/*<![CDATA[*/
+var TYPO3 = TYPO3 || {};
+TYPO3.lang = {"tx_obodealersearch.headline":[{"source":"Vertriebspartner finden","target":"Trova il tuo agente di vendita"}],"tx_obodealersearch.resetFilters":[{"source":"Filter zur\u00fccksetzen","target":"Elimina filtro"}],"tx_obodealersearch.list.loadMore":[{"source":"Mehr laden","target":"Carica di pi\u00f9"}],"tx_obodealersearch.list.noSearchResults":[{"source":"Keine Suchergebnisse. Bitte ziehen oder zoomen sie die Karte oder aktualisieren Sie Ihre Filter.","target":"Nessun risultato di ricerca Per favore sposta o ingrandisci la mappa, oppure elimina i tuoi filtri."}],"tx_obodealersearch.filter.company.placeholder":[{"source":"Firma","target":"Ditta"}],"tx_obodealersearch.filter.place.placeholder":[{"source":"PLZ Ort","target":"CAP\/Localit\u00e0"}],"tx_obodealersearch.filter.category.option.all":[{"source":"Alle Kategorien","target":"Tutte le categorie"}],"tx_obodealersearch.filter.country.option.all":[{"source":"Alle L\u00e4nder","target":"Tutti i Paesi"}],"magnificpopup.lightbox.counterLabel":[{"source":"%curr% von %total%","target":"%curr% di %totale%"}],"obodealersearch.filter.headline":[{"source":"Vertriebspartner finden","target":"Trova il tuo agente di vendita"}],"obodealersearch.filter.company":[{"source":"Unternehmen","target":"Azienda"}],"obodealersearch.filter.place":[{"source":"PLZ Stadt","target":"Codice postale"}],"obodealersearch.filter.all":[{"source":"Alle","target":"Tutti i"}]};/*]]>*/
+</script>
+
+
+
+<link rel="canonical" href="/404/"><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5LFQV3');</script><script id="usercentrics-cmp" data-language="it" data-settings-id="-BjYOVryF" src="https://app.usercentrics.eu/browser-ui/latest/loader.js" async></script>  <script type="application/javascript" src="https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js"></script>
+  <script>
+    uc.blockElements({'BJz7qNsdj-7': '.fancybox-slide--current'});
+    uc.reloadOnOptIn('BJz7qNsdj-7');
+    uc.blockOnly(['BJz7qNsdj-7','ko1w5PpFl']);
+  </script>
+</head>
+<body id="p68658" class="default-content" data-uid-current="68658">
+
+		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5LFQV3" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+		
+
+
+	
+
+	<header class="page-header is--sticky" data-header>
+		
+		<div class="grid-container grid-container-padded">
+			<div class="content">
+				<a class="logo-link" href="/">
+					<img class="logo" alt="Logo" src="/typo3conf/ext/obo_template/Resources/Public/Images/logo.svg" width="148" height="91" />
+					<img class="logo logo-print" alt="Logo" src="/typo3conf/ext/obo_template/Resources/Public/Images/logo-orange.svg" width="148" height="91" />
+				</a>
+				<div class="navigation-wrapper">
+					<div class="meta-wrapper">
+						
+								<div id="search" class="search" data-toggler="is--open">
+									<form class="search-form" action="/trova/?searchparam=#!searchresult-0" method="get" data-auto-suggest-action="/?eID=autosuggest&amp;L=10"
+												data-auto-suggest-method="get" autocomplete="off">
+										<div class="search-wrapper">
+											<div class="input-search-container">
+												<input name="searchparam" id="js-search" type="search" aria-label="Campo di ricerca"
+													 placeholder="Nome del prodotto, numero articolo, argomento, ecc." required="required" title=" " maxlength="255">
+												<button class="btn is--secondary is--icon-left">
+													
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#search"></use>
+	</svg>
+
+													<span class="show-for-sr">Cerca</span>
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+								<div class="auto-suggest-result-list" id="js-auto-suggest-result-list"></div>
+							
+
+						<div class="site-settings">
+							<div class="site-settings-item">
+								
+
+	
+		
+			<svg class="icon icon--is-left" viewBox="0 0 36 36"><path d="M17.7 35.4C7.9 35.4 0 27.4 0 17.7 0 7.9 8 0 17.7 0c9.8 0 17.7 8 17.7 17.7 0 9.8-7.9 17.7-17.7 17.7zm0-33C9.2 2.4 2.4 9.2 2.4 17.7S9.2 33 17.7 33 33 26.1 33 17.7 26.1 2.4 17.7 2.4z" fill-rule="nonzero"/><path d="M17.7 34.4c-4.9 0-9-7-9-16.7 0-9.8 4.15-16.7 9-16.7 4.9 0 9.1 7 9.1 16.7 0 9.8-4.2 16.7-9.1 16.7zm0-32c-4.25 0-7.65 6.8-7.65 15.3S13.45 33 17.7 33s7.65-6.9 7.65-15.3S21.9 2.4 17.7 2.4z" fill-rule="nonzero"/><path d="M0 17h35.4v1.4H0z"/><path d="M18.4 0v35.4H17V0z"/><path d="M29.4 6.05V4.5s-5.8 5-11.7 5c-5.9 0-11.7-5-11.7-5v1.55s5.8 5 11.7 5c5.9 0 11.7-5 11.7-5zM6 29.35v1.55s5.8-5 11.7-5c5.9 0 11.7 5 11.7 5v-1.55s-5.8-5-11.7-5c-5.9 0-11.7 5-11.7 5z"/></svg>
+			
+				
+					<span class="lang cc">Italien - Italiano</span>
+				
+			
+			
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#arrow"></use>
+	</svg>
+
+			<ul class="c-langmenu">
+				
+				<!-- LANGUAGES -->
+				
+					<li class="c-langmenu__item"><a class="c-langmenu__link" href="/404/">Italien - Italiano</a></li>
+				
+				<!-- /LANGUAGES -->
+				
+					<li class="c-langmenu__item c-langmenu__item--global">
+						<a class="c-langmenu__link" href="https://www.obo-bettermann.com">
+							Selezionare un altro Paese
+						</a>
+					</li>
+				
+			</ul>
+		
+	
+
+
+							</div>
+							<div class="site-settings-item hide">
+							</div>
+						</div>
+						
+	<nav id="metaNavigation" class="meta-navigation">
+		<ul>
+			
+			<li class="meta-search">
+				<button class="btn is--secondary is--icon-left meta-navigation-action-item showsearch" data-toggle="search">
+					
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#search"></use>
+	</svg>
+
+					<span class="show-for-sr">Attiva/disattiva ricerca</span>
+				</button>
+			</li>
+			
+			
+			
+				
+    <li class="meta-wishlist">
+        <a href="/carrello/" class="btn is--secondary is--icon-left meta-navigation-action-item" data-badge-wishlist data-resource="https://obo.it/index.php?cl=obo_noticelist_public&fnc=countOboNoticelistItems">
+            
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#wishlist"></use>
+	</svg>
+
+            <span class="show-for-large" data-source="don">Carrello</span>
+        </a>
+    </li>
+
+
+			
+			
+			<li class="meta-main-navigation">
+				<button class="btn is--secondary is--icon-left meta-navigation-action-item shownav" data-toggle="mainNavigation">
+					
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#menu"></use>
+	</svg>
+
+				</button>
+			</li>
+		</ul>
+	</nav>
+
+					</div>
+
+					
+							
+	
+			
+		
+	<nav id="mainNavigation" class="main-navigation" role="navigation" data-off-canvas  data-url="https://www.obo.it/?type=1358&_rnd=2026110919" data-home="26___">
+		<div class="meta">
+
+			<div class="actions">
+				<a href="javascript:void(0);" class="btn is--secondary is--icon-left hide" data-toggle="login"><svg class="icon" viewBox="0 0 30 30"><g id="Ebene_2_1_"><path
+									d="M3.7,29.8l0.1-0.9c0-0.2,0.3-3.8,1.8-7.5c2-5.1,5.3-7.8,9.6-7.8c4.2,0,7.5,2.7,9.5,7.7c1.4,3.7,1.7,7.3,1.7,7.5l0.1,0.9 L3.7,29.8z M15.1,15.2C7.9,15.2,6,25,5.6,28h18.9C24.1,24.9,22.3,15.2,15.1,15.2z"/></g><path
+								d="M15,11.6c-2.8,0-5.1-2.5-5.1-5.5c0-3.1,2.3-5.6,5.1-5.6s5,2.5,5,5.6S17.8,11.6,15,11.6z M15,2.2c-1.8,0-3.4,1.7-3.4,3.9 c0,2.1,1.5,3.8,3.4,3.8c1.8,0,3.4-1.7,3.4-3.8S16.8,2.2,15,2.2z"/></svg></a>
+
+				<div class="site-settings off-canvas">
+					<div class="site-settings-item show-for-xlarge">
+						
+
+	
+		
+			<svg class="icon icon--is-left" viewBox="0 0 36 36"><path d="M17.7 35.4C7.9 35.4 0 27.4 0 17.7 0 7.9 8 0 17.7 0c9.8 0 17.7 8 17.7 17.7 0 9.8-7.9 17.7-17.7 17.7zm0-33C9.2 2.4 2.4 9.2 2.4 17.7S9.2 33 17.7 33 33 26.1 33 17.7 26.1 2.4 17.7 2.4z" fill-rule="nonzero"/><path d="M17.7 34.4c-4.9 0-9-7-9-16.7 0-9.8 4.15-16.7 9-16.7 4.9 0 9.1 7 9.1 16.7 0 9.8-4.2 16.7-9.1 16.7zm0-32c-4.25 0-7.65 6.8-7.65 15.3S13.45 33 17.7 33s7.65-6.9 7.65-15.3S21.9 2.4 17.7 2.4z" fill-rule="nonzero"/><path d="M0 17h35.4v1.4H0z"/><path d="M18.4 0v35.4H17V0z"/><path d="M29.4 6.05V4.5s-5.8 5-11.7 5c-5.9 0-11.7-5-11.7-5v1.55s5.8 5 11.7 5c5.9 0 11.7-5 11.7-5zM6 29.35v1.55s5.8-5 11.7-5c5.9 0 11.7 5 11.7 5v-1.55s-5.8-5-11.7-5c-5.9 0-11.7 5-11.7 5z"/></svg>
+			
+				
+					<span class="lang cc">Italien - Italiano</span>
+				
+			
+			
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#arrow"></use>
+	</svg>
+
+			<ul class="c-langmenu">
+				
+				<!-- LANGUAGES -->
+				
+					<li class="c-langmenu__item"><a class="c-langmenu__link" href="/404/">Italien - Italiano</a></li>
+				
+				<!-- /LANGUAGES -->
+				
+					<li class="c-langmenu__item c-langmenu__item--global">
+						<a class="c-langmenu__link" href="https://www.obo-bettermann.com">
+							Selezionare un altro Paese
+						</a>
+					</li>
+				
+			</ul>
+		
+	
+
+
+					</div>
+					<div class="site-settings-item">
+						
+					</div>
+				</div>
+			</div>
+
+			
+	<div id="login" class="login">
+		<form class="has-validation-callback" id="cllbckfrm1" action="#">
+			<fieldset>
+				<div class="formrow">
+					<label for="login-email">E-Mail-Adresse</label>
+					<input type="text" name="email" id="login-email" placeholder="E-Mail-Adresse" data-validation="email" data-validation-error-msg="Bitte nennen Sie uns Ihre E-Mail-Adresse">
+				</div>
+				<div class="formrow">
+					<label class="va-mid" for="inputpassword">Passwort</label>
+					<input type="password" id="inputpassword" placeholder="Passwort">
+				</div>
+			</fieldset>
+			<a class="link-arrow" href="">Passwort vergessen?</a>
+			<a class="link-arrow" href="">Noch nicht registriert?</a>
+			<div class="formrow">
+				<input class="button-primary" type="submit">
+			</div>
+		</form>
+	</div>
+
+		</div>
+
+		<div class="drilldown" data-drilldown>
+			<div class="navigation level-0">
+				<div class="actions">
+					<button class="btn is--secondary" aria-label="close menu" data-close="mainNavigation"><span aria-hidden="true"><svg class="icon" viewBox="0 0 36 36"><g><path class="st0"
+													d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/><polygon
+											points="24.9,12.9 23.1,11.1 18,16.2 12.9,11.1 11.1,12.9 16.2,18 11.1,23.1 12.9,24.9 18,19.8 23.1,24.9 24.9,23.1 19.8,18"/></g></svg></span></button>
+				</div>
+
+				
+					
+						<ul class="menu menu-level-0" tabindex="0" data-menu data-menu-list>
+							
+								
+										<li data-uid="178042">
+											
+											
+													
+												
+											<a href="/prodotti/" 
+											data-forward>
+											Prodotti
+											
+												<svg class="icon" viewBox="0 0 40 40"><polygon points="7.3,34.6 12.6,39.9 32.6,20 12.6,0 7.3,5.4 21.9,20 "/></svg>
+											
+											</a>
+											
+                                                
+    												<div class="level-1 products-dropdown-wrapper" data-version="3" data-sublevel="1">
+    													
+	<div class="actions">
+		<button class="btn is--secondary is--icon-left back" tabindex="0" data-back><svg class="icon" viewBox="0 0 40 40"><polygon points="32.6,5.3 27.3,0 7.3,19.9 27.3,39.9 32.6,34.5 18,19.9 "/></svg><span class="btn__text">
+				Indietro
+			</span></button>
+		<button class="btn is--secondary" aria-label="close menu" data-close="mainNavigation"><span aria-hidden="true"><svg class="icon" viewBox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/><polygon
+							points="24.9,12.9 23.1,11.1 18,16.2 12.9,11.1 11.1,12.9 16.2,18 11.1,23.1 12.9,24.9 18,19.8 23.1,24.9 24.9,23.1 19.8,18"/></g></svg></span></button>
+	</div>
+
+    													
+	<div class="menu-header">
+		<span class="menu-title">Prodotti</span>
+		<a class="btn is--secondary" href="/prodotti/"><span aria-hidden="true"><svg class="icon" viewbox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/></g><g><rect x="10.4" y="10.5" width="3.1" height="3.1"/><rect x="10.4" y="16.5" width="3.1" height="3.1"/><rect x="10.4" y="22.5" width="3.1" height="3.1"/><rect x="16.4" y="10.5" width="3.1" height="3.1"/><rect x="16.4" y="16.5" width="3.1" height="3.1"/><rect x="16.4" y="22.5" width="3.1" height="3.1"/><rect x="22.4" y="10.5" width="3.1" height="3.1"/><rect x="22.4" y="16.5" width="3.1" height="3.1"/><rect x="22.4" y="22.5" width="3.1" height="3.1"/></g></svg></span></a>
+	</div>
+
+    													<div class="products-dropdown show-for-xlarge">
+    														<div style="display: none;" class="old-menu-seo--container">
+    															
+    																<ul class="menu menu-level-1" tabindex="-1" data-menu-list>
+    																	
+    																		<li data-uid="179788">
+    																			
+    																			
+    																					
+    																				
+    																			<a href="/prodotti/sistemi-di-distribuzione/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																				
+    																						<svg class="icon">
+    																							<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																						</svg>
+    																						<span class="btn__text">Sistemi di distribuzione</span>
+    																					
+    																				
+    																					<span class="menu-subtitle">Canalizzazioni metalliche, soluzioni per fissaggio e cablaggio</span>
+    																				
+    																			</a>
+    																			
+    																				
+    																					<ul class="menu menu-level-2" tabindex="0">
+    																						
+    																							<li data-uid="">
+    																								<a href="/prodotti/sistemi-di-distribuzione/sistemi-portacavi/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																									<svg class="icon">
+    																										<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																									</svg>
+    																									<span class="btn__text">Sistemi portacavi</span>
+    																								</a>
+    																							</li>
+    																						
+    																							<li data-uid="">
+    																								<a href="/prodotti/sistemi-di-distribuzione/sistemi-di-collegamento-e-posa/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																									<svg class="icon">
+    																										<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																									</svg>
+    																									<span class="btn__text">Sistemi di collegamento e posa</span>
+    																								</a>
+    																							</li>
+    																						
+    																							<li data-uid="">
+    																								<a href="/prodotti/sistemi-di-distribuzione/materiale-di-fissaggio/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																									<svg class="icon">
+    																										<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																									</svg>
+    																									<span class="btn__text">Materiale di fissaggio</span>
+    																								</a>
+    																							</li>
+    																						
+    																					</ul>
+    																				
+    																			
+    																			
+    																			
+    																		</li>
+    																	
+    																		<li data-uid="178819">
+    																			
+    																			
+    																					
+    																				
+    																			<a href="/prodotti/sistemi-nel-settore-terziario/" class="flyout-menu-gebaeude btn is--secondary is--icon-left">
+    																				
+    																						<svg class="icon">
+    																							<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																						</svg>
+    																						<span class="btn__text">Sistemi nel settore terziario</span>
+    																					
+    																				
+    																					<span class="menu-subtitle">Distribuzione sottopavimento, canalizzazione da parete, colonne attrezzate</span>
+    																				
+    																			</a>
+    																			
+    																				
+    																					<ul class="menu menu-level-2" tabindex="0">
+    																						
+    																					</ul>
+    																				
+    																			
+    																			
+    																			
+    																		</li>
+    																	
+    																		<li data-uid="178048">
+    																			
+    																			
+    																					
+    																				
+    																			<a href="/prodotti/sistemi-di-protezione/" class="flyout-menu-schutzinstallation btn is--secondary is--icon-left">
+    																				
+    																						<svg class="icon">
+    																							<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																						</svg>
+    																						<span class="btn__text">Sistemi di protezione</span>
+    																					
+    																				
+    																					<span class="menu-subtitle">Parafulmine (LPS), Limitatori di sovratensione, protezione passiva dall'incendio</span>
+    																				
+    																			</a>
+    																			
+    																				
+    																					<ul class="menu menu-level-2" tabindex="0">
+    																						
+    																					</ul>
+    																				
+    																			
+    																			
+    																			
+    																		</li>
+    																	
+    																		<li data-uid="283048">
+    																			
+    																			
+    																					
+    																				
+    																			<a href="https://www.obo.it/prodotti/prodotti-per-settore/" class=" btn is--secondary is--icon-left">
+    																				
+    																						<svg class="icon">
+    																							<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																						</svg>
+    																						<span class="btn__text">Prodotti per settore</span>
+    																					
+    																				
+    																			</a>
+    																			
+    																			
+    																			
+    																		</li>
+    																	
+    																</ul>
+    															
+    														</div>
+    														<aside class="product-submenu--container">
+    															
+    														</aside>
+    														<section class="js-product-list">
+    															<!-- ajax content is loaded here. hopefully... -->
+    														</section>
+    														<aside class="marketing--container">
+    															<ul>
+    																
+
+
+        
+                
+                        
+                    
+            
+    
+
+
+
+    <li class="marketing-list--item " style="background-image: url(/fileadmin/default/OBO/Startseite/Teaser/Megamenu-navigation/2-row/planungshilfen-bild-icon-290px.jpg)">
+        <a href="/prodotti/quaderni-tecnici/">
+					<svg class="product-menu--icon"><use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use></svg>
+					<span>Quaderni Tecnici</span>
+        </a>
+    </li>
+
+
+
+
+        
+                
+                        
+                    
+            
+    
+
+
+
+    <li class="marketing-list--item " style="background-image: url(/fileadmin/default/OBO/Startseite/Teaser/Megamenu-navigation/2-row/phs-dunkel-icon-290px.jpg)">
+        <a href="/prodotti/caratteristiche-del-prodotto/">
+					<svg class="product-menu--icon"><use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use></svg>
+					<span>Caratteristiche del prodotto</span>
+        </a>
+    </li>
+
+
+    															</ul>
+    														</aside>
+    													</div>
+    													
+    														<ul class="menu menu-level-1 hide-for-xlarge" tabindex="-1" data-menu-list>
+    															
+    																<li data-uid="179788">
+    																	
+    																	
+    																			
+    																		
+    																	<a href="/prodotti/sistemi-di-distribuzione/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																		<svg class="icon">
+    																			<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																		</svg>
+    																		<span class="btn__text">Sistemi di distribuzione</span>
+    																		
+    																			<span class="menu-subtitle">Canalizzazioni metalliche, soluzioni per fissaggio e cablaggio</span>
+    																		
+    																	</a>
+    																	
+    																		
+    																			<ul class="menu menu-level-2" tabindex="0">
+    																				
+    																					<li data-uid="">
+    																						<a href="/prodotti/sistemi-di-distribuzione/sistemi-portacavi/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																							<svg class="icon">
+    																								<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																							</svg>
+    																							<span class="btn__text">Sistemi portacavi</span>
+    																						</a>
+    																					</li>
+    																				
+    																					<li data-uid="">
+    																						<a href="/prodotti/sistemi-di-distribuzione/sistemi-di-collegamento-e-posa/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																							<svg class="icon">
+    																								<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																							</svg>
+    																							<span class="btn__text">Sistemi di collegamento e posa</span>
+    																						</a>
+    																					</li>
+    																				
+    																					<li data-uid="">
+    																						<a href="/prodotti/sistemi-di-distribuzione/materiale-di-fissaggio/" class="flyout-menu-industrie btn is--secondary is--icon-left">
+    																							<svg class="icon">
+    																								<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																							</svg>
+    																							<span class="btn__text">Materiale di fissaggio</span>
+    																						</a>
+    																					</li>
+    																				
+    																			</ul>
+    																		
+    																	
+    																</li>
+    															
+    																<li data-uid="178819">
+    																	
+    																	
+    																			
+    																		
+    																	<a href="/prodotti/sistemi-nel-settore-terziario/" class="flyout-menu-gebaeude btn is--secondary is--icon-left">
+    																		<svg class="icon">
+    																			<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																		</svg>
+    																		<span class="btn__text">Sistemi nel settore terziario</span>
+    																		
+    																			<span class="menu-subtitle">Distribuzione sottopavimento, canalizzazione da parete, colonne attrezzate</span>
+    																		
+    																	</a>
+    																	
+    																		
+    																			<ul class="menu menu-level-2" tabindex="0">
+    																				
+    																			</ul>
+    																		
+    																	
+    																</li>
+    															
+    																<li data-uid="178048">
+    																	
+    																	
+    																			
+    																		
+    																	<a href="/prodotti/sistemi-di-protezione/" class="flyout-menu-schutzinstallation btn is--secondary is--icon-left">
+    																		<svg class="icon">
+    																			<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																		</svg>
+    																		<span class="btn__text">Sistemi di protezione</span>
+    																		
+    																			<span class="menu-subtitle">Parafulmine (LPS), Limitatori di sovratensione, protezione passiva dall'incendio</span>
+    																		
+    																	</a>
+    																	
+    																		
+    																			<ul class="menu menu-level-2" tabindex="0">
+    																				
+    																			</ul>
+    																		
+    																	
+    																</li>
+    															
+    																<li data-uid="283048">
+    																	
+    																	
+    																			
+    																		
+    																	<a href="https://www.obo.it/prodotti/prodotti-per-settore/" class=" btn is--secondary is--icon-left">
+    																		<svg class="icon">
+    																			<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+    																		</svg>
+    																		<span class="btn__text">Prodotti per settore</span>
+    																		
+    																	</a>
+    																	
+    																</li>
+    															
+    														</ul>
+    													
+    												</div>
+                                                
+											
+										</li>
+									
+							
+								
+										<li data-uid="277524">
+											
+											
+													
+												
+											<a href="/soluzioni/" 
+											data-forward>
+											Soluzioni
+											
+												<svg class="icon" viewBox="0 0 40 40"><polygon points="7.3,34.6 12.6,39.9 32.6,20 12.6,0 7.3,5.4 21.9,20 "/></svg>
+											
+											</a>
+											
+												<div class="level-1" data-sublevel="1">
+													
+	<div class="actions">
+		<button class="btn is--secondary is--icon-left back" tabindex="0" data-back><svg class="icon" viewBox="0 0 40 40"><polygon points="32.6,5.3 27.3,0 7.3,19.9 27.3,39.9 32.6,34.5 18,19.9 "/></svg><span class="btn__text">
+				Indietro
+			</span></button>
+		<button class="btn is--secondary" aria-label="close menu" data-close="mainNavigation"><span aria-hidden="true"><svg class="icon" viewBox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/><polygon
+							points="24.9,12.9 23.1,11.1 18,16.2 12.9,11.1 11.1,12.9 16.2,18 11.1,23.1 12.9,24.9 18,19.8 23.1,24.9 24.9,23.1 19.8,18"/></g></svg></span></button>
+	</div>
+
+													
+	<div class="menu-header">
+		<span class="menu-title">Soluzioni</span>
+		<a class="btn is--secondary" href="/soluzioni/"><span aria-hidden="true"><svg class="icon" viewbox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/></g><g><rect x="10.4" y="10.5" width="3.1" height="3.1"/><rect x="10.4" y="16.5" width="3.1" height="3.1"/><rect x="10.4" y="22.5" width="3.1" height="3.1"/><rect x="16.4" y="10.5" width="3.1" height="3.1"/><rect x="16.4" y="16.5" width="3.1" height="3.1"/><rect x="16.4" y="22.5" width="3.1" height="3.1"/><rect x="22.4" y="10.5" width="3.1" height="3.1"/><rect x="22.4" y="16.5" width="3.1" height="3.1"/><rect x="22.4" y="22.5" width="3.1" height="3.1"/></g></svg></span></a>
+	</div>
+
+													
+														<ul class="menu menu-level-1" tabindex="-1" data-menu-list>
+															
+																<li data-uid="277725">
+																	
+																	
+																			
+																		
+																	<a href="/soluzioni/architettura/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Architettura</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="281209">
+																	
+																	
+																			
+																		
+																	<a href="/soluzioni/fotovoltaico/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Fotovoltaico</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="283204">
+																	
+																	
+																			
+																		
+																	<a href="/soluzioni/energia-eolica/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Energia eolica</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+														</ul>
+													
+												</div>
+											
+										</li>
+									
+							
+								
+										<li data-uid="97600">
+											
+											
+													
+												
+											<a href="/novita/" 
+											data-forward>
+											Novità
+											
+												<svg class="icon" viewBox="0 0 40 40"><polygon points="7.3,34.6 12.6,39.9 32.6,20 12.6,0 7.3,5.4 21.9,20 "/></svg>
+											
+											</a>
+											
+												<div class="level-1" data-sublevel="1">
+													
+	<div class="actions">
+		<button class="btn is--secondary is--icon-left back" tabindex="0" data-back><svg class="icon" viewBox="0 0 40 40"><polygon points="32.6,5.3 27.3,0 7.3,19.9 27.3,39.9 32.6,34.5 18,19.9 "/></svg><span class="btn__text">
+				Indietro
+			</span></button>
+		<button class="btn is--secondary" aria-label="close menu" data-close="mainNavigation"><span aria-hidden="true"><svg class="icon" viewBox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/><polygon
+							points="24.9,12.9 23.1,11.1 18,16.2 12.9,11.1 11.1,12.9 16.2,18 11.1,23.1 12.9,24.9 18,19.8 23.1,24.9 24.9,23.1 19.8,18"/></g></svg></span></button>
+	</div>
+
+													
+	<div class="menu-header">
+		<span class="menu-title">Novità</span>
+		<a class="btn is--secondary" href="/novita/"><span aria-hidden="true"><svg class="icon" viewbox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/></g><g><rect x="10.4" y="10.5" width="3.1" height="3.1"/><rect x="10.4" y="16.5" width="3.1" height="3.1"/><rect x="10.4" y="22.5" width="3.1" height="3.1"/><rect x="16.4" y="10.5" width="3.1" height="3.1"/><rect x="16.4" y="16.5" width="3.1" height="3.1"/><rect x="16.4" y="22.5" width="3.1" height="3.1"/><rect x="22.4" y="10.5" width="3.1" height="3.1"/><rect x="22.4" y="16.5" width="3.1" height="3.1"/><rect x="22.4" y="22.5" width="3.1" height="3.1"/></g></svg></span></a>
+	</div>
+
+													
+														<ul class="menu menu-level-1" tabindex="-1" data-menu-list>
+															
+																<li data-uid="97630">
+																	
+																	
+																			
+																		
+																	<a href="/novita/news/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">News</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="97624">
+																	
+																	
+																			
+																		
+																	<a href="/novita/stampa/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Stampa</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="97636">
+																	
+																	
+																			
+																		
+																	<a href="/novita/prossimi-eventi/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Prossimi eventi</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+														</ul>
+													
+												</div>
+											
+										</li>
+									
+							
+								
+										<li data-uid="97618">
+											
+											
+													
+												
+											<a href="/azienda/" 
+											data-forward>
+											Azienda
+											
+												<svg class="icon" viewBox="0 0 40 40"><polygon points="7.3,34.6 12.6,39.9 32.6,20 12.6,0 7.3,5.4 21.9,20 "/></svg>
+											
+											</a>
+											
+												<div class="level-1" data-sublevel="1">
+													
+	<div class="actions">
+		<button class="btn is--secondary is--icon-left back" tabindex="0" data-back><svg class="icon" viewBox="0 0 40 40"><polygon points="32.6,5.3 27.3,0 7.3,19.9 27.3,39.9 32.6,34.5 18,19.9 "/></svg><span class="btn__text">
+				Indietro
+			</span></button>
+		<button class="btn is--secondary" aria-label="close menu" data-close="mainNavigation"><span aria-hidden="true"><svg class="icon" viewBox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/><polygon
+							points="24.9,12.9 23.1,11.1 18,16.2 12.9,11.1 11.1,12.9 16.2,18 11.1,23.1 12.9,24.9 18,19.8 23.1,24.9 24.9,23.1 19.8,18"/></g></svg></span></button>
+	</div>
+
+													
+	<div class="menu-header">
+		<span class="menu-title">Azienda</span>
+		<a class="btn is--secondary" href="/azienda/"><span aria-hidden="true"><svg class="icon" viewbox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/></g><g><rect x="10.4" y="10.5" width="3.1" height="3.1"/><rect x="10.4" y="16.5" width="3.1" height="3.1"/><rect x="10.4" y="22.5" width="3.1" height="3.1"/><rect x="16.4" y="10.5" width="3.1" height="3.1"/><rect x="16.4" y="16.5" width="3.1" height="3.1"/><rect x="16.4" y="22.5" width="3.1" height="3.1"/><rect x="22.4" y="10.5" width="3.1" height="3.1"/><rect x="22.4" y="16.5" width="3.1" height="3.1"/><rect x="22.4" y="22.5" width="3.1" height="3.1"/></g></svg></span></a>
+	</div>
+
+													
+														<ul class="menu menu-level-1" tabindex="-1" data-menu-list>
+															
+																<li data-uid="97834">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/lazienda/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">L’azienda</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="97816">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/bet-testcenter/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">BET Testcenter</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="97666">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/lavora-con-noi/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Lavora con noi</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="97648">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/la-sostenibilita-con-obo/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">La sostenibilità con OBO</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="272889">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/conformita/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Conformità</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="272892">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/politica-aziendale/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Politica Aziendale</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="97621">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/referenze/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Referenze</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="272910">
+																	
+																	
+																			
+																		
+																	<a href="/azienda/referenze-italiane/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Referenze italiane</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+														</ul>
+													
+												</div>
+											
+										</li>
+									
+							
+								
+										<li data-uid="97858">
+											
+											
+													
+												
+											<a href="/assistenza/" 
+											data-forward>
+											Assistenza
+											
+												<svg class="icon" viewBox="0 0 40 40"><polygon points="7.3,34.6 12.6,39.9 32.6,20 12.6,0 7.3,5.4 21.9,20 "/></svg>
+											
+											</a>
+											
+												<div class="level-1" data-sublevel="1">
+													
+	<div class="actions">
+		<button class="btn is--secondary is--icon-left back" tabindex="0" data-back><svg class="icon" viewBox="0 0 40 40"><polygon points="32.6,5.3 27.3,0 7.3,19.9 27.3,39.9 32.6,34.5 18,19.9 "/></svg><span class="btn__text">
+				Indietro
+			</span></button>
+		<button class="btn is--secondary" aria-label="close menu" data-close="mainNavigation"><span aria-hidden="true"><svg class="icon" viewBox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/><polygon
+							points="24.9,12.9 23.1,11.1 18,16.2 12.9,11.1 11.1,12.9 16.2,18 11.1,23.1 12.9,24.9 18,19.8 23.1,24.9 24.9,23.1 19.8,18"/></g></svg></span></button>
+	</div>
+
+													
+	<div class="menu-header">
+		<span class="menu-title">Assistenza</span>
+		<a class="btn is--secondary" href="/assistenza/"><span aria-hidden="true"><svg class="icon" viewbox="0 0 36 36"><g><path class="st0"
+									d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/></g><g><rect x="10.4" y="10.5" width="3.1" height="3.1"/><rect x="10.4" y="16.5" width="3.1" height="3.1"/><rect x="10.4" y="22.5" width="3.1" height="3.1"/><rect x="16.4" y="10.5" width="3.1" height="3.1"/><rect x="16.4" y="16.5" width="3.1" height="3.1"/><rect x="16.4" y="22.5" width="3.1" height="3.1"/><rect x="22.4" y="10.5" width="3.1" height="3.1"/><rect x="22.4" y="16.5" width="3.1" height="3.1"/><rect x="22.4" y="22.5" width="3.1" height="3.1"/></g></svg></span></a>
+	</div>
+
+													
+														<ul class="menu menu-level-1" tabindex="-1" data-menu-list>
+															
+																<li data-uid="98167">
+																	
+																	
+																			
+																		
+																	<a href="/assistenza/obo-construct/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">OBO Construct</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="98164">
+																	
+																	
+																			
+																		
+																	<a href="/assistenza/bim/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">BIM</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="274010">
+																	
+																	
+																			
+																		
+																	<a href="/assistenza/cad-support/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">CAD Support</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="98125">
+																	
+																	
+																			
+																		
+																	<a href="/assistenza/contatti/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Contatti</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="97969">
+																	
+																	
+																			
+																		
+																	<a href="/assistenza/download/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Download</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+																<li data-uid="260641">
+																	
+																	
+																			
+																		
+																	<a href="/assistenza/media/" class=" btn is--secondary is--icon-left">
+																		
+																				<svg class="icon">
+																					<use xlink:href="/out/obo/src/svg/icons.svg#arrow"></use>
+																				</svg>
+																				<span class="btn__text">Media</span>
+																			
+																		
+																	</a>
+																	
+																	
+																	
+																</li>
+															
+														</ul>
+													
+												</div>
+											
+										</li>
+									
+							
+							<li class="hide-for-xlarge">
+								
+
+	
+		
+			
+				
+					<a href="#" data-forward>
+						Italien - Italiano
+						
+							<svg class="icon icon--is-left" viewBox="0 0 36 36"><path d="M17.7 35.4C7.9 35.4 0 27.4 0 17.7 0 7.9 8 0 17.7 0c9.8 0 17.7 8 17.7 17.7 0 9.8-7.9 17.7-17.7 17.7zm0-33C9.2 2.4 2.4 9.2 2.4 17.7S9.2 33 17.7 33 33 26.1 33 17.7 26.1 2.4 17.7 2.4z" fill-rule="nonzero"/><path d="M17.7 34.4c-4.9 0-9-7-9-16.7 0-9.8 4.15-16.7 9-16.7 4.9 0 9.1 7 9.1 16.7 0 9.8-4.2 16.7-9.1 16.7zm0-32c-4.25 0-7.65 6.8-7.65 15.3S13.45 33 17.7 33s7.65-6.9 7.65-15.3S21.9 2.4 17.7 2.4z" fill-rule="nonzero"/><path d="M0 17h35.4v1.4H0z"/><path d="M18.4 0v35.4H17V0z"/><path d="M29.4 6.05V4.5s-5.8 5-11.7 5c-5.9 0-11.7-5-11.7-5v1.55s5.8 5 11.7 5c5.9 0 11.7-5 11.7-5zM6 29.35v1.55s5.8-5 11.7-5c5.9 0 11.7 5 11.7 5v-1.55s-5.8-5-11.7-5c-5.9 0-11.7 5-11.7 5z"/></svg>
+							<svg class="icon" viewBox="0 0 40 40"><polygon points="7.3,34.6 12.6,39.9 32.6,20 12.6,0 7.3,5.4 21.9,20 "/></svg>
+						
+					</a>
+				
+			
+
+			
+				<div class="level-1" data-sublevel="1">
+					<!-- ACTIONS -->
+					<div class="actions">
+						<button class="btn is--secondary is--icon-left back" tabindex="0" data-back><svg class="icon" viewBox="0 0 40 40"><polygon points="32.6,5.3 27.3,0 7.3,19.9 27.3,39.9 32.6,34.5 18,19.9 "/></svg><span class="btn__text">
+									Indietro
+								</span></button>
+						<button class="btn is--secondary" aria-label="close menu" data-close="mainNavigation"><span aria-hidden="true"><svg class="icon" viewBox="0 0 36 36"><g><path class="st0"
+														d="M18,35.7c-9.8,0-17.7-8-17.7-17.7c0-9.8,8-17.7,17.7-17.7c9.8,0,17.7,8,17.7,17.7C35.7,27.8,27.8,35.7,18,35.7z M18,2.7C9.5,2.7,2.7,9.5,2.7,18S9.5,33.3,18,33.3S33.3,26.4,33.3,18S26.4,2.7,18,2.7z"/><polygon
+												points="24.9,12.9 23.1,11.1 18,16.2 12.9,11.1 11.1,12.9 16.2,18 11.1,23.1 12.9,24.9 18,19.8 23.1,24.9 24.9,23.1 19.8,18"/></g></svg></span></button>
+					</div>
+					<!-- /ACTIONS -->
+
+					<ul class="menu menu-level-1" tabindex="-1" data-menu-list>
+						
+						<!-- LANGUAGES-MOBILE -->
+						
+							<li><a href="/404/">Italien - Italiano</a></li>
+						
+						<!-- /LANGUAGES-MOBILE -->
+						
+							<li>
+								<a href="https://www.obo-bettermann.com">
+									Selezionare un altro Paese
+								</a>
+							</li>
+						
+					</ul>
+				</div>
+			
+		
+	
+
+
+							</li>
+						</ul>
+					
+				
+			</div>
+		</div>
+	</nav>
+
+						
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+
+    
+
+
+	
+	<main class="page-content  has--breadcrumb" role="main">
+
+		
+
+		
+	
+		<div class="breadcrumb-wrapper">
+			<div class="row show-for-medium">
+				<div class="xsmall-12 columns">
+					<nav class="nav nav--breadcrumb" data-breadcrumb data-threshold="4">
+						<ul class="nav__lvl" itemscope itemtype="https://schema.org/BreadcrumbList"><li class="nav__item _15" itemscope itemprop="itemListElement" itemtype="https://schema.org/ListItem"><meta itemprop="position" content="1" /><a href="/" class="nav__item__trigger" itemprop="item"><svg class="icon" viewBox="0 0 40 40"><polygon points="7.3,34.6 12.6,39.9 32.6,20 12.6,0 7.3,5.4 21.9,20 "/></svg><span class="nav__item__inner" itemprop="name">OBO Italia</span></a></li></ul>
+						<span class="nav__close is--hidden" data-close>
+							
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#close"></use>
+	</svg>
+
+						</span>
+					</nav>
+				</div>
+			</div>
+		</div>
+	
+
+
+
+
+		<div class="row">
+	<div class="xsmall-12 columns">
+		<div class="main-content">
+			
+			<!--TYPO3SEARCH_begin-->
+			
+			
+<div id="c1691740" class="col-lg-12 "><header id="c1691740" class="section-header "><div class="shield"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#info"></use></svg></div><div class="heading-container"><h1 class=" section-title">
+				404 
+			</h1><span class="subheadline">
+						Pagina non trovata.
+					</span></div></header><p>Siamo spiacenti, ma non abbiamo trovato la pagina richiesta</p><p>Non esiti a contattarci, o utilizzi la funzione di ricerca per trovare i risultati.</p><p><a href="/">Pagina iniziale</a></p></div>
+
+
+			<!--TYPO3SEARCH_end-->
+		
+		</div>
+	</div>
+</div>
+
+
+	</main>
+	
+
+
+    <footer>
+	<div class="o-box">
+		<div class="o-box__inner">
+			
+		</div>
+	</div>
+	<div class="c-footer">
+		<div class="row">
+			<div class="xsmall-12 small-3 columns">
+				<img class="c-footer__logo" alt="Logo" src="/typo3conf/ext/obo_template/Resources/Public/Images/logo-orange.svg" width="148" height="91" />
+			</div>
+			<div class="xsmall-12 small-9 columns">
+				
+	
+		
+			<ul class="socialmedia">
+				
+					<li>
+						<a
+							class="social-icon social-icon--facebook"
+							href="https://www.facebook.com/obobettermannitalia" target="_blank"
+							title="Facebook">
+							
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#facebook"></use>
+	</svg>
+
+							<span class="show-for-sr">Facebook</span>
+						</a>
+					</li>
+				
+					<li>
+						<a
+							class="social-icon social-icon--youtube"
+							href="https://www.youtube.com/@OBOBettermannGroup/featured" target="_blank"
+							title="Youtube">
+							
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#youtube"></use>
+	</svg>
+
+							<span class="show-for-sr">Youtube</span>
+						</a>
+					</li>
+				
+					<li>
+						<a
+							class="social-icon social-icon--linkedin"
+							href="https://www.linkedin.com/company/obobettermannitalia/" target="_blank"
+							title="LinkedIn">
+							
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#linkedin"></use>
+	</svg>
+
+							<span class="show-for-sr">LinkedIn</span>
+						</a>
+					</li>
+				
+					<li>
+						<a
+							class="social-icon social-icon--instagram"
+							href="https://www.instagram.com/obobettermanngroup/" target="_blank"
+							title="Instagram">
+							
+	<svg class="icon">
+		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/out/obo/src/svg/icons.svg?1719792000#instagram"></use>
+	</svg>
+
+							<span class="show-for-sr">Instagram</span>
+						</a>
+					</li>
+				
+			</ul>
+		
+	
+
+			</div>
+		</div>
+		
+	<div class="row xsmall-up-1 small-up-2 medium-up-3 large-up-5">
+		<div class="columns">
+			
+		<h5 class="c-footer__heading">Prodotti</h5>
+		<ul class="c-footer__menu">
+			
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/prodotti/sistemi-di-distribuzione/" class="c-footer__menuLink">
+									Sistemi di distribuzione
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/prodotti/sistemi-nel-settore-terziario/" class="c-footer__menuLink">
+									Sistemi nel settore terziario
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/prodotti/sistemi-di-protezione/" class="c-footer__menuLink">
+									Sistemi di protezione
+								</a>
+							
+
+					</li>
+				
+			
+		</ul>
+	
+		</div>
+		<div class="columns">
+			
+		<h5 class="c-footer__heading">Azienda</h5>
+		<ul class="c-footer__menu">
+			
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/azienda/lavora-con-noi/" class="c-footer__menuLink">
+									Lavora con noi
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/novita/news/" class="c-footer__menuLink">
+									News
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/novita/prossimi-eventi/" class="c-footer__menuLink">
+									Prossimi eventi
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/azienda/la-sostenibilita-con-obo/" class="c-footer__menuLink">
+									La sostenibilità con OBO
+								</a>
+							
+
+					</li>
+				
+			
+		</ul>
+	
+		</div>
+		<div class="columns">
+			
+		<h5 class="c-footer__heading">Assistenza</h5>
+		<ul class="c-footer__menu">
+			
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/assistenza/download/" class="c-footer__menuLink">
+									Download
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/assistenza/obo-construct/" class="c-footer__menuLink">
+									OBO Construct
+								</a>
+							
+
+					</li>
+				
+			
+		</ul>
+	
+		</div>
+		<div class="columns">
+			
+		<h5 class="c-footer__heading">Note legali</h5>
+		<ul class="c-footer__menu">
+			
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/colofon/" class="c-footer__menuLink">
+									Colofon
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/dichiarazione-sulla-protezione-dei-dati/" class="c-footer__menuLink">
+									Dichiarazione sulla protezione dei dati
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/whistleblower-system/" class="c-footer__menuLink">
+									Whistleblower System
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/condizioni-generali-di-vendita/" class="c-footer__menuLink">
+									Condizioni generali di vendita
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="javascript:UC_UI.showSecondLayer();" class="c-footer__menuLink">
+									Impostazioni della privacy
+								</a>
+							
+
+					</li>
+				
+			
+		</ul>
+	
+		</div>
+		<div class="columns">
+			
+		<h5 class="c-footer__heading">A vostra disposizione</h5>
+		<ul class="c-footer__menu">
+			
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/assistenza/contatti/indicazioni-stradali/" class="c-footer__menuLink">
+									Indicazioni stradali
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/assistenza/contatti/modulo-di-contatto/" class="c-footer__menuLink">
+									Modulo di contatto
+								</a>
+							
+
+					</li>
+				
+					<li class="c-footer__menuItem">
+						
+								<a href="/assistenza/contatti/obo-nel-mondo/" class="c-footer__menuLink">
+									OBO nel mondo
+								</a>
+							
+
+					</li>
+				
+			
+		</ul>
+	
+
+	
+		
+			
+			
+					
+		
+			
+					<div id="c3212614" class="col-lg-12 ">
+				
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<p><strong>Telefono: +39 011 9548 811<br> Fax +39 011 9548 899<br> E-Mail:</strong>&nbsp;<a href="mailto:info@obo.it">info<span style="display: none;">noSpam</span>@obo.it</a></p>
+<p>Orari di apertura:<br> Lun - Ven: ore&nbsp; 8.30 - 12.30 - 13.30 - 17.30</p>
+		
+			</div>
+		
+	
+				
+		
+
+	
+
+
+
+	
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+		</div>
+	</div>
+
+	</div>
+	
+	<div class="c-bottom-bar">
+		<div class="row column">
+			<div class="c-bottom-bar__copyright">
+				
+<div id="c1554823" class=""><h4 class="">
+				OBO Bettermann Holding GmbH &amp; Co. KG
+			</h4></div>
+
+
+			</div>
+		</div>
+	</div>
+
+	<div id="offcanvas-menu-anchor">
+		
+	</div>
+	
+</footer>
+
+
+<script>
+ //Replace the absolute url part https://obo.de/ with relative syntax: /
+ var oboReplaceHotspotImageSrc = function(el)
+ {
+    var src = jQuery(el).attr('src');
+    var newSrc = src.replace('https://obo.de', '');
+    jQuery(el).attr('src', newSrc);
+ };
+
+ document.addEventListener('readystatechange', function(event) {
+    if (document.readyState === "complete") {
+
+        //Replace image src for background image
+        let imgs = jQuery('.obo-hotspot-image img');
+        imgs.each(function(index) {
+          oboReplaceHotspotImageSrc(this);
+        });
+        
+        //Replace image src for hotspot overlay images
+        $('.obo-hotspot-marker').on('click', function(e) {
+          setTimeout(function() {
+            var imgs = jQuery('.hotspot-overlay img');
+            imgs.each(function(index) {
+              oboReplaceHotspotImageSrc(this);
+            });
+           }, 500);
+        });
+    }
+  });</script>
+
+<script src="/out/obo/src/js/app.bundle.js?1739453447" type="text/javascript"></script>
+<script src="/typo3conf/ext/powermail/Resources/Public/JavaScript/Libraries/jquery.datetimepicker.min.js?1619004802" type="text/javascript"></script>
+<script src="/typo3conf/ext/powermail/Resources/Public/JavaScript/Libraries/parsley.min.js?1619004802" type="text/javascript"></script>
+<script src="/typo3conf/ext/powermail/Resources/Public/JavaScript/Powermail/Tabs.min.js?1619004802" type="text/javascript"></script>
+<script src="/typo3conf/ext/powermail/Resources/Public/JavaScript/Powermail/Form.min.js?1619004802" type="text/javascript"></script>
+<script src="/out/obo/src/js/mtiFontTrackingCode.js?1730110073" type="text/javascript"></script>
+<script src="/typo3conf/ext/obo_template/Resources/Public/JavaScript/powermail.js?1730303275" type="text/javascript"></script>
+
+
+</body>
+</html><!-- Segment "it-it" was not a keyword for a postVarSet as expected on page with id=26. -->
