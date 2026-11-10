@@ -27,6 +27,8 @@ const testo = async (p, sel, atteso) => { const t = await p.locator(sel).first()
 
 await pagina("/", (p) => testo(p, "body", /OBO/), "OBO Hub, pagina iniziale");
 await pagina("/novita.html", (p) => p.waitForSelector(".voce", { timeout: 15000 }), "Pagina Novità");
+await pagina("/privacy.html", (p) => testo(p, "h1", /privacy/i), "Privacy");
+await pagina("/condizioni.html", (p) => testo(p, "h1", /condizioni/i), "Condizioni d'uso");
 await pagina("/manutenzione.html?s=app%3Aprodotti", (p) => testo(p, "h1", /maintenance|available/i), "Pagina di manutenzione");
 await pagina("/appOBOtechHUB/", (p) => p.waitForSelector("main, #root > *", { timeout: 20000 }), "Progettazione LPS");
 await pagina("/mappa-carichi/", (p) => testo(p, "body", /\S/), "Mappa carichi ufficio tecnico");
