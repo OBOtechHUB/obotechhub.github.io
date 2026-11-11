@@ -39,6 +39,7 @@ jobs:
           cp mappa-carichi/index.html mappa-carichi/i18n-en.js mappa-carichi/manifest.webmanifest mappa-carichi/sw.js mappa-carichi/install.js mappa-carichi/icone/* site/mappa-carichi/
           cp torrette/*.html torrette/*.js site/torrette/
           cp prodotti/*.html prodotti/*.js site/prodotti/ 2>/dev/null || true
+          mkdir -p site/spd && cp spd/*.html spd/*.js site/spd/   # Conversione SPD
           # dati dei prodotti per l'app (le cache complete restano solo nel repository)
           for f in prodotti categorie notizie pagine novita stato; do cp prodotti/dati/$f.json site/prodotti/dati/ 2>/dev/null || true; done
           cp comune/vecchio-lps.html site/lps/index.html   # vecchi link /lps/ → nuovo nome dell'app LPS

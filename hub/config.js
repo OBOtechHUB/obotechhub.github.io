@@ -53,6 +53,17 @@ export const APP = [
     soloAdmin: true,
   },
   {
+    id: "spd",
+    nome: "Conversione SPD",
+    nome_en: "SPD conversion",
+    descrizione: "Dal codice di uno scaricatore DEHN, Zotup, Lovato o di altre marche all'equivalente OBO, confrontando i dati tecnici.",
+    descrizione_en: "From a DEHN, Zotup, Lovato or other brand's surge arrester code to the OBO equivalent, by comparing technical data.",
+    icona: "spd",
+    url: "spd/",
+    abilitataSe: (sezioni) => sezioni.includes("app_spd"),
+    visitatori: false,
+  },
+  {
     id: "manutenzione",
     nome: "Manutenzione app",
     nome_en: "App maintenance",
