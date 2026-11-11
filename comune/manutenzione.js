@@ -42,7 +42,7 @@
   function stato(nuovo) {
     // sessione scaduta: l'app la rinnova appena aperta, aspetto un attimo per riconoscere l'admin
     if (!promessa || nuovo) promessa = attendi(sessioneScaduta() ? 2500 : 0).then(function () { return chiedi(true); }).then(function (s) {
-      return s && typeof s === "object" ? { sezioni: s.sezioni || {}, admin: !!s.admin } : null;
+      return s && typeof s === "object" ? { sezioni: s.sezioni || {}, admin: !!s.admin, ricerca: typeof s.ricerca === "string" ? s.ricerca : null } : null;
     }).catch(function () { return null; });
     return promessa;
   }

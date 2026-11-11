@@ -166,6 +166,15 @@
   .cerca-ris .tx small { display: block; color: var(--tenue, #5b6770); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .cerca-ris mark { background: #ffe1a8; color: inherit; border-radius: 2px; }
   .cerca-ris .tutti { font-weight: 600; color: var(--arancio-scuro, #c47c00); }
+  .filtri-cerca { position: sticky; top: -6px; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px; margin: -6px -6px 4px; padding: 10px 10px 8px; background: var(--carta, #fff); border-bottom: .8px solid var(--bordo, #d9dee2); }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: .8px solid var(--bordo, #d9dee2); background: var(--carta, #fff); color: inherit; font: 600 13px var(--font, sans-serif); cursor: pointer; }
+  .chip span { font-weight: 500; color: var(--tenue, #5b6770); }
+  .chip[aria-pressed="true"] { background: var(--arancio, #f39b00); border-color: var(--arancio, #f39b00); color: #fff; }
+  .chip[aria-pressed="true"] span { color: #fff; }
+  .chip:disabled { opacity: .45; cursor: default; }
+  .chip:focus-visible, .cerca-ris button.cr:focus { outline: 2px solid var(--arancio, #f39b00); outline-offset: 1px; }
+  .cerca-ris button.cr { width: 100%; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+  .cerca-ris button.cr:hover { background: var(--grigio, #f3f5f6); }
   .cerca-ris .vuoto { padding: 14px 12px; color: var(--tenue, #5b6770); }
 </style>
 </head>
@@ -457,6 +466,7 @@
   // ---------- ricerca unica: app, sezioni, prodotti, notizie, progetti salvati ----------
   const cerca = (() => {
     let profilo = null, mie = [], prodotti = null, notizie = null, progetti = null, timer = 0;
+    let attivi = ["app", "prodotti", "notizie", "progetti"]; // tipi di risultato scelti dall'admin (Amministrazione → Impostazioni)
     const norm = (t) => String(t ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const T = (i, e) => (lingua === "en" ? e : i);
     // sezioni di Progettazione LPS: [permesso, nome, nome inglese, percorso, parole in più]
@@ -478,38 +488,54 @@
     const haApp = (id) => mie.some((a) => a.id === id);
 
     async function carica() {
-      if (haApp("prodotti") && !prodotti) {
+      if (haApp("prodotti") && !prodotti && (attivi.includes("prodotti") || attivi.includes("notizie"))) {
         prodotti = fetch("prodotti/dati/prodotti.json?v=" + Math.floor(Date.now() / 36e5)).then((r) => r.json()).then((l) => l.map((r) => ({ r, k: norm(r[0] + " " + r[1]) }))).catch(() => []);
         notizie = fetch("prodotti/dati/notizie.json?v=" + Math.floor(Date.now() / 36e5)).then((r) => r.json()).catch(() => []);
       }
-      if (haApp("lps") && profilo?.ruolo !== "visitatore" && !progetti) {
+      if (haApp("lps") && profilo?.ruolo !== "visitatore" && !progetti && attivi.includes("progetti")) {
         progetti = supabase.from("progetti").select("id,codice,nome,comune,data_modifica").order("data_modifica", { ascending: false }).limit(500).then(({ data }) => data || [], () => []);
       }
     }
+    // filtri in cima ai risultati: Tutto / App e sezioni / Prodotti / Notizie / Progetti (solo i tipi scelti dall'admin)
+    let filtro = "tutto";
+    const TIPI = [["app", "App e sezioni", "Apps and sections"], ["progetti", "Progetti", "Projects"], ["prodotti", "Prodotti", "Products"], ["notizie", "Notizie", "News"]];
     async function esegui() {
       const q = $("cercaQ").value.trim(), box = $("cercaRis");
       if (q.length < 2) { box.hidden = true; $("cercaQ").setAttribute("aria-expanded", "false"); return; }
-      const w = parole(q);
-      let html = "";
-      // app e sezioni
-      const app = mie.filter((a) => trova(`${a.nome} ${a.nome_en || ""} ${a.descrizione || ""}`, w)).map((a) => voce(a.url, svg(a.icona), lingua === "en" && a.nome_en || a.nome, lingua === "en" && a.descrizione_en || a.descrizione, w));
-      if (haApp("lps")) SEZ.filter(([sez, n, e, , extra]) => vede(sez) && trova(`${n} ${e} ${extra}`, w)).forEach(([, n, e, path]) => app.push(voce(CONFIG.lps + path, svg("fulmine"), T(n, e), T("Progettazione LPS", "LPS Design"), w)));
-      if (trova("novita aggiornamenti news updates", w)) app.push(voce("novita.html", svg("stella"), T("Novità e aggiornamenti", "News and updates"), T("Cosa è cambiato nelle app", "What changed in the apps"), w));
-      if (app.length) html += `<h4>${T("App e sezioni", "Apps and sections")}</h4>` + app.slice(0, 6).join("");
-      // progetti salvati
-      const pr = progetti ? (await progetti).filter((p) => trova(`${p.codice} ${p.nome} ${p.comune}`, w)) : [];
-      if (pr.length) html += `<h4>${T("I miei progetti LPS", "My LPS projects")}</h4>` + pr.slice(0, 5).map((p) => voce(CONFIG.lps + "progetti?apri=" + p.id, svg("fulmine"), (p.codice ? p.codice + " · " : "") + p.nome, (p.comune || "") + " · " + new Date(p.data_modifica).toLocaleDateString(lingua === "en" ? "en-GB" : "it-IT"), w)).join("");
-      // prodotti: numero d'articolo esatto in cima
-      if (prodotti) {
+      const w = parole(q), g = { app: [], progetti: [], prodotti: [], notizie: [] };
+      if (attivi.includes("app")) {
+        mie.filter((a) => trova(`${a.nome} ${a.nome_en || ""} ${a.descrizione || ""}`, w)).forEach((a) => g.app.push(voce(a.url, svg(a.icona), lingua === "en" && a.nome_en || a.nome, lingua === "en" && a.descrizione_en || a.descrizione, w)));
+        if (haApp("lps")) SEZ.filter(([sez, n, e, , extra]) => vede(sez) && trova(`${n} ${e} ${extra}`, w)).forEach(([, n, e, path]) => g.app.push(voce(CONFIG.lps + path, svg("fulmine"), T(n, e), T("Progettazione LPS", "LPS Design"), w)));
+        if (trova("novita aggiornamenti news updates", w)) g.app.push(voce("novita.html", svg("stella"), T("Novità e aggiornamenti", "News and updates"), T("Cosa è cambiato nelle app", "What changed in the apps"), w));
+      }
+      if (attivi.includes("progetti") && progetti) g.progetti = (await progetti).filter((p) => trova(`${p.codice} ${p.nome} ${p.comune}`, w))
+        .map((p) => voce(CONFIG.lps + "progetti?apri=" + p.id, svg("fulmine"), (p.codice ? p.codice + " · " : "") + p.nome, (p.comune || "") + " · " + new Date(p.data_modifica).toLocaleDateString(lingua === "en" ? "en-GB" : "it-IT"), w));
+      let nProdotti = 0;
+      if (attivi.includes("prodotti") && prodotti) {
         const l = await prodotti, codice = /^\d{6,8}$/.test(q) ? q : "";
         const trovati = l.filter((x) => w.every((p) => x.k.includes(p)));
         trovati.sort((a, b) => (b.r[0] === codice) - (a.r[0] === codice) || (norm(b.r[1]).startsWith(w[0]) - norm(a.r[1]).startsWith(w[0])));
-        if (trovati.length) html += `<h4>${T("Prodotti OBO", "OBO products")} (${trovati.length})</h4>` + trovati.slice(0, 6).map((x) => voce(sito(x.r[3]), img(x.r[7] || x.r[4]), x.r[1], x.r[0], w, true)).join("") +
-          `<a class="cr tutti" href="prodotti/?q=${encodeURIComponent(q)}"><span class="ic">${svg("freccia")}</span><span class="tx"><b>${trovati.length === 1 ? T("Apri in Prodotti OBO", "Open in OBO products") : T(`Tutti i ${trovati.length} risultati in Prodotti OBO`, `All ${trovati.length} results in OBO products`)}</b></span></a>`;
-        const nz = (await notizie).filter((n) => trova(n[1], w));
-        if (nz.length) html += `<h4>${T("Notizie OBO", "OBO news")}</h4>` + nz.slice(0, 3).map((n) => voce(sito(n[0]), n[3] ? img(n[3]) : svg("stella"), n[1], n[4] || "", w, true)).join("");
+        nProdotti = trovati.length;
+        g.prodotti = trovati.slice(0, 30).map((x) => voce(sito(x.r[3]), img(x.r[7] || x.r[4]), x.r[1], x.r[0], w, true));
       }
-      box.innerHTML = html || `<p class="vuoto">${T("Nessun risultato per", "No results for")} “${esc(q)}”.</p>`;
+      if (attivi.includes("notizie") && notizie) g.notizie = (await notizie).filter((n) => trova(n[1], w)).map((n) => voce(sito(n[0]), n[3] ? img(n[3]) : svg("stella"), n[1], n[4] || "", w, true));
+      const conta = { app: g.app.length, progetti: g.progetti.length, prodotti: nProdotti, notizie: g.notizie.length };
+      const tipi = TIPI.filter(([id]) => attivi.includes(id) && (id !== "progetti" || progetti));
+      if (filtro !== "tutto" && !tipi.some(([id]) => id === filtro)) filtro = "tutto";
+      const totale = tipi.reduce((t, [id]) => t + conta[id], 0);
+      const chip = (id, nome, n) => `<button type="button" class="chip" data-filtro="${id}" aria-pressed="${filtro === id}"${n === 0 && id !== "tutto" ? " disabled" : ""}>${esc(nome)} <span>${n}</span></button>`;
+      let html = `<div class="filtri-cerca" role="group" aria-label="${T("Filtra i risultati", "Filter results")}">${chip("tutto", T("Tutto", "All"), totale)}${tipi.map(([id, i, e]) => chip(id, T(i, e), conta[id])).join("")}</div>`;
+      // con "Tutto" pochi risultati per tipo, con un filtro l'elenco lungo
+      const quanti = { app: filtro === "tutto" ? 5 : 50, progetti: filtro === "tutto" ? 4 : 50, prodotti: filtro === "tutto" ? 5 : 30, notizie: filtro === "tutto" ? 3 : 30 };
+      for (const [id, i, e] of tipi) {
+        if ((filtro !== "tutto" && filtro !== id) || !g[id].length) continue;
+        const titolo = id === "app" ? T("App e sezioni", "Apps and sections") : id === "progetti" ? T("I miei progetti LPS", "My LPS projects") : id === "prodotti" ? T("Prodotti OBO", "OBO products") : T("Notizie OBO", "OBO news");
+        html += `<h4>${titolo}${conta[id] > quanti[id] ? ` (${conta[id]})` : ""}</h4>` + g[id].slice(0, quanti[id]).join("");
+        if (filtro === "tutto" && conta[id] > quanti[id] && id !== "prodotti") html += `<button type="button" class="cr tutti" data-filtro="${id}"><span class="ic">${svg("freccia")}</span><span class="tx"><b>${T(`Mostra tutti (${conta[id]})`, `Show all (${conta[id]})`)}</b></span></button>`;
+        if (id === "prodotti") html += `<a class="cr tutti" href="prodotti/?q=${encodeURIComponent(q)}"><span class="ic">${svg("freccia")}</span><span class="tx"><b>${nProdotti === 1 ? T("Apri in Prodotti OBO", "Open in OBO products") : T(`Tutti i ${nProdotti} risultati in Prodotti OBO, con i filtri per famiglia`, `All ${nProdotti} results in OBO products, with family filters`)}</b></span></a>`;
+      }
+      if (!totale) html += `<p class="vuoto">${T("Nessun risultato per", "No results for")} “${esc(q)}”.</p>`;
+      box.innerHTML = html;
       box.hidden = false; $("cercaQ").setAttribute("aria-expanded", "true");
     }
     const q = $("cercaQ"), box = $("cercaRis");
@@ -518,18 +544,33 @@
     q.addEventListener("keydown", (e) => {
       if (e.key === "Escape") { q.value = ""; box.hidden = true; q.blur(); }
       if (e.key === "Enter") { const a = box.querySelector("a.cr"); if (a) { e.preventDefault(); a.click(); } }
-      if (e.key === "ArrowDown") { const a = box.querySelector("a.cr"); if (a) { e.preventDefault(); a.focus(); } }
+      if (e.key === "ArrowDown") { const a = box.querySelector(".chip:not([disabled]), .cr"); if (a) { e.preventDefault(); a.focus(); } }
     });
     box.addEventListener("keydown", (e) => {
-      const l = [...box.querySelectorAll("a.cr")], i = l.indexOf(document.activeElement);
+      const l = [...box.querySelectorAll(".chip:not([disabled]), .cr")], i = l.indexOf(document.activeElement);
       if (e.key === "ArrowDown" && i < l.length - 1) { e.preventDefault(); l[i + 1].focus(); }
       if (e.key === "ArrowUp") { e.preventDefault(); (i > 0 ? l[i - 1] : q).focus(); }
       if (e.key === "Escape") { box.hidden = true; q.focus(); }
     });
-    document.addEventListener("click", (e) => { if (!e.target.closest("#cercaHub")) box.hidden = true; });
+    // composedPath: vale anche se il clic ha appena ridisegnato i risultati (per esempio un filtro)
+    document.addEventListener("click", (e) => { if (!e.composedPath().some((n) => n.id === "cercaHub")) box.hidden = true; });
+    box.addEventListener("click", (e) => { const b = e.target.closest("[data-filtro]"); if (!b || b.disabled) return; e.preventDefault(); filtro = b.dataset.filtro; esegui().then(() => box.querySelector(`.chip[data-filtro="${filtro}"]`)?.focus()); });
     document.addEventListener("keydown", (e) => { if (e.key === "/" && !/input|textarea|select/i.test(document.activeElement?.tagName || "") && !$("cercaHub").classList.contains("nascosto")) { e.preventDefault(); q.focus(); } });
     return {
-      imposta(p, m) { profilo = p; mie = m; progetti = null; $("cercaHub").classList.toggle("nascosto", !p || !m.length); if (lingua === "en") q.placeholder = "Search OBO Hub: apps, sections, products, news, projects…"; },
+      imposta(p, m) {
+        profilo = p; mie = m; progetti = null; filtro = "tutto";
+        $("cercaHub").classList.toggle("nascosto", !p || !m.length);
+        if (lingua === "en") q.placeholder = "Search OBO Hub: apps, sections, products, news, projects…";
+        // impostazione "ricerca" (stato_manutenzione()): senza valore tutti i tipi, "nessuno" = casella nascosta
+        if (p && window.OBOManutenzione) OBOManutenzione.stato().then((s) => {
+          const v = s && typeof s.ricerca === "string" ? s.ricerca.trim() : "";
+          if (!v) return;
+          attivi = v.split(",").map((x) => x.trim()).filter((x) => TIPI.some(([id]) => id === x));
+          if (!attivi.length) { $("cercaHub").classList.add("nascosto"); return; }
+          const nomi = attivi.map((id) => { const t = TIPI.find(([x]) => x === id); return T(t[1], t[2]).toLowerCase(); });
+          q.placeholder = T("Cerca in OBO Hub: ", "Search OBO Hub: ") + nomi.join(", ") + "…";
+        });
+      },
     };
   })();
 
