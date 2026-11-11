@@ -2,27 +2,6 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
-      "id": "2026-11-11-spd-1",
-      "data": "2026-11-11",
-      "app": "spd",
-      "titolo": "Nuova app: Conversione SPD",
-      "voci": [
-        "Scrivi o incolla uno o più codici di scaricatori di altre marche (DEHN, Zotup, Lovato…) e ottieni l'equivalente OBO, con il confronto voce per voce: tipo, poli, Uc, Up, Iimp, In, Imax e segnalazione a distanza",
-        "Se un codice non c'è, lo aggiungi in pochi secondi: mentre inserisci i dati compare già l'equivalente OBO",
-        "Molti SPD insieme si incollano da Excel, con il modello pronto da scaricare",
-        "Chi verifica un equivalente lo può confermare: da quel momento compare per primo per tutti",
-        "Riepilogo da copiare in Excel ed elenco scaricabile"
-      ],
-      "titolo_en": "New app: SPD conversion",
-      "voci_en": [
-        "Type or paste one or more surge arrester codes from other brands (DEHN, Zotup, Lovato…) and get the OBO equivalent, compared item by item: type, poles, Uc, Up, Iimp, In, Imax and remote signalling",
-        "If a code is missing you add it in seconds: the OBO equivalent appears while you enter the data",
-        "Many SPDs can be pasted from Excel, with a ready-made template",
-        "Whoever checks an equivalent can confirm it: from then on it is shown first to everyone",
-        "Summary to copy into Excel and downloadable list"
-      ]
-    },
-    {
       "id": "2026-11-11-tutte-1",
       "data": "2026-11-11",
       "app": "tutte",
