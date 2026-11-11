@@ -62,6 +62,12 @@
     if (!token() && !v) return; // solo chi è entrato
     rpc("registra_uso", { app: APP, sezione: s, visitatore: token() ? null : v });
   }
+  // nessuna pagina deve scorrere di lato (le tabelle larghe scorrono dentro il loro riquadro)
+  try {
+    var blocco = document.createElement("style");
+    blocco.textContent = "html,body{max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}@supports (overflow:clip){html,body{overflow-x:clip}}";
+    (document.head || document.documentElement).appendChild(blocco);
+  } catch (e) {}
   window.OBORegistro = { errore: errore, uso: uso };
   if (tag && tag.getAttribute("data-uso") !== "no") setTimeout(function () { uso(""); }, 3000);
 })();

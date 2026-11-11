@@ -11,6 +11,9 @@
 @media (prefers-color-scheme: dark) { :root:not([data-tema="chiaro"]):not([data-theme="light"]) { color-scheme: dark; --testo: #eef1f3; --tenue: #a7b4bc; --bordo: #3a454d; --sfondo: #1b1f23; --grigio: #242a2f; --ardesia: #2a3238; --carta: #242a2f; --scelto: #3d3020; --rosso-chiaro: #3a1a18; } }
 :root[data-tema="scuro"], :root[data-theme="dark"] { color-scheme: dark; --testo: #eef1f3; --tenue: #a7b4bc; --bordo: #3a454d; --sfondo: #1b1f23; --grigio: #242a2f; --ardesia: #2a3238; --carta: #242a2f; --scelto: #3d3020; --rosso-chiaro: #3a1a18; }
 * { box-sizing: border-box; }
+/* nessuna pagina deve scorrere di lato */
+html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
+@supports (overflow: clip) { html, body { overflow-x: clip; } }
 body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; font: calc(16px * var(--zoom, 1))/1.55 var(--font); color: var(--testo); background: var(--sfondo); }
 body > main { flex: 1; }
 .contenitore { max-width: 1100px; margin: 0 auto; padding: 0 16px; }

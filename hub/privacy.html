@@ -39,12 +39,12 @@
     <tbody>
       <tr><td>Account: email, nome, azienda, motivo della richiesta di accesso, app e sezioni abilitate, ruolo</td><td>Dare l'accesso personale e decidere cosa può vedere ciascuno</td><td>Finché l'account è attivo; l'admin può eliminarlo</td></tr>
       <tr><td>Accesso sicuro: password (salvata cifrata dal servizio di autenticazione, nessuno la può leggere) e collegamento a Microsoft Authenticator</td><td>Proteggere l'accesso ai dati di lavoro</td><td>Finché l'account è attivo</td></tr>
-      <tr><td>Registro accessi: data e ora di entrata e uscita, cambio password, eventi di amministrazione</td><td>Sicurezza e controllo degli accessi</td><td>Mostrato per un anno</td></tr>
-      <tr><td>Statistiche d'uso: quale app o sezione è stata aperta e quando (una volta ogni 30 minuti), da quale utente o visitatore</td><td>Capire quali strumenti servono e migliorarli; gli amministratori non vengono contati</td><td>400 giorni</td></tr>
-      <tr><td>Registro errori: pagina, messaggio d'errore tecnico, tipo di browser e sistema, versione dell'app, utente collegato</td><td>Correggere i problemi prima che vengano segnalati. Non contiene i dati inseriti nelle pagine</td><td>90 giorni, o meno se l'errore viene segnato come risolto</td></tr>
+      <tr><td>Registro accessi: data e ora di entrata e uscita, cambio password, eventi di amministrazione</td><td>Sicurezza e controllo degli accessi</td><td>Non viene cancellato (in Amministrazione si vede l'ultimo anno, il file scaricabile contiene tutto)</td></tr>
+      <tr><td>Statistiche d'uso: quale app o sezione è stata aperta e quando (una volta ogni 30 minuti), da quale utente o visitatore</td><td>Capire quali strumenti servono e migliorarli; gli amministratori non vengono contati</td><td>Non viene cancellato</td></tr>
+      <tr><td>Registro errori: pagina, messaggio d'errore tecnico, tipo di browser e sistema, versione dell'app, utente collegato</td><td>Correggere i problemi prima che vengano segnalati. Non contiene i dati inseriti nelle pagine</td><td>Non viene cancellato; gli errori sistemati vengono segnati come risolti</td></tr>
       <tr><td>Progetti salvati di Progettazione LPS (dati dell'edificio, indirizzo e coordinate, calcoli) e cataloghi personali</td><td>Salvare il proprio lavoro nel cloud; li vede solo chi li ha creati, l'admin solo in lettura</td><td>Finché non vengono eliminati; quelli eliminati restano nell'archivio consultabile dall'admin</td></tr>
       <tr><td>Mappa carichi: nomi delle persone dell'ufficio tecnico, progetti, giorni e ore pianificati</td><td>Organizzare il lavoro dell'ufficio tecnico</td><td>Finché servono all'ufficio</td></tr>
-      <tr><td>Visitatori: il nome indicato all'ingresso</td><td>Accesso in sola consultazione senza account</td><td>Nelle statistiche d'uso, 400 giorni</td></tr>
+      <tr><td>Visitatori: il nome indicato all'ingresso</td><td>Accesso in sola consultazione senza account</td><td>Nelle statistiche d'uso, non viene cancellato</td></tr>
       <tr><td>Preferenze sul dispositivo: tema, lingua, dimensione del testo, lavoro in corso non ancora salvato</td><td>Ricordare le impostazioni; restano solo nel browser di chi usa l'app</td><td>Finché non si cancellano i dati del browser</td></tr>
     </tbody>
   </table></div>
@@ -70,6 +70,7 @@
 
   <p class="nota">Ultimo aggiornamento: 10 novembre 2026.</p>
 </main>
+<script src="testo.js"></script>
 <script src="piede.js"></script>
 </body>
 </html>

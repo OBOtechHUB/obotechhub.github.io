@@ -35,6 +35,19 @@ await pagina("/mappa-carichi/", (p) => testo(p, "body", /\S/), "Mappa carichi uf
 await pagina("/prodotti/", (p) => testo(p, "body", /\S/), "Prodotti OBO");
 await pagina("/torrette/", (p) => testo(p, "body", /\S/), "Configuratore torrette");
 
+// su telefono nessuna pagina deve scorrere di lato
+for (const percorso of ["/", "/novita.html", "/privacy.html", "/condizioni.html", "/manutenzione.html?s=app%3Aprodotti", "/appOBOtechHUB/", "/mappa-carichi/", "/prodotti/", "/torrette/"]) {
+  const p = await b.newPage({ viewport: { width: 375, height: 800 }, isMobile: true, hasTouch: true });
+  try {
+    await p.goto(SITO + percorso, { waitUntil: "networkidle", timeout: 45000 });
+    await p.mouse.wheel(600, 0); await p.waitForTimeout(300);
+    const x = await p.evaluate(() => ({ largo: document.documentElement.scrollWidth, schermo: innerWidth, sx: scrollX }));
+    if (x.sx > 0) throw new Error(`la pagina scorre di lato di ${x.sx} px (contenuto largo ${x.largo} px su ${x.schermo})`);
+    ok.push(`Telefono, niente scorrimento laterale: ${percorso}`);
+  } catch (e) { problemi.push(`**Telefono** (${SITO}${percorso}): ${e.message}`); }
+  finally { await p.close(); }
+}
+
 // dati notturni dei prodotti: recenti e completi
 try {
   const r = await fetch(SITO + "/prodotti/dati/stato.json?t=" + Date.now());

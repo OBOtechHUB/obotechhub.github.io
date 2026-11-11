@@ -2,6 +2,21 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-11-tutte-1",
+      "data": "2026-11-11",
+      "app": "tutte",
+      "titolo": "Pagine ferme di lato e testo regolabile in alto",
+      "voci": [
+        "Su telefono e tablet le pagine non scorrono più di lato: si muovono solo su e giù",
+        "Pulsanti A− e A+ in alto anche nelle pagine Novità, Privacy e Condizioni d'uso; in Progettazione LPS c'è il pulsante \"Testo\" nella barra"
+      ],
+      "titolo_en": "Pages locked sideways and text size at the top",
+      "voci_en": [
+        "On phones and tablets pages no longer move sideways: only up and down",
+        "A− and A+ buttons at the top also on What's new, Privacy and Terms of use; in LPS Design there is the \"Text\" button in the bar"
+      ]
+    },
+    {
       "id": "2026-11-11-hub-1",
       "data": "2026-11-11",
       "app": "hub",
