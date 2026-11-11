@@ -98,23 +98,6 @@
   .pannello code { display: block; word-break: break-all; font-size: calc(12px * var(--zoom, 1)); color: var(--tenue); text-align: center; }
   .trappola { position: absolute; left: -9999px; }
   .caricamento { color: var(--tenue); padding: 40px 0; text-align: center; }
-  .novita-prodotti { margin-top: 36px; }
-  .novita-prodotti .testa { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .novita-prodotti h2 { margin: 0; }
-  .novita-prodotti .testa a { color: var(--arancio); font-weight: 600; text-decoration: none; }
-  .novita-prodotti .sotto { color: var(--tenue); margin: 4px 0 14px; font-size: calc(14px * var(--zoom, 1)); }
-  .strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(190px, 220px); gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
-  .np { scroll-snap-align: start; border: .8px solid var(--bordo); border-radius: 12px; overflow: hidden; background: #fff; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
-  :root[data-theme="dark"] .np { background: #242a2f; }
-  .np:hover { border-color: var(--arancio); }
-  .np .foto { aspect-ratio: 4/3; background: #fff; display: grid; place-items: center; }
-  .np .foto img { width: 100%; height: 100%; object-fit: contain; }
-  .np .foto.copri img { object-fit: cover; }
-  .np .corpo { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 3px; }
-  .np b { font-size: calc(14px * var(--zoom, 1)); line-height: 1.3; }
-  .np small { color: var(--tenue); font-size: calc(12px * var(--zoom, 1)); }
-  .np .etichetta { color: #fff; background: var(--arancio); align-self: flex-start; border-radius: 999px; padding: 1px 8px; font-size: calc(11px * var(--zoom, 1)); font-weight: 700; }
-  .np .etichetta.notizia { background: var(--ardesia, #41525d); }
   @media (max-width: 640px) {
     .marchio small { display: none; }
     .icona-barra { min-width: 44px; padding: 6px 2px; font-size: 11px; }
@@ -145,8 +128,6 @@
   .pannello-impost .seg button { border: 0; background: none; color: var(--testo); font: 600 13px var(--font); padding: 7px 11px; cursor: pointer; }
   .pannello-impost .seg button[aria-pressed="true"] { background: var(--arancio); color: #fff; }
   .pannello-impost .zoomval { min-width: 46px; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
-  .app.in-manutenzione { opacity: .8; }
-  .etichetta-manutenzione { display:inline-block; margin-right:auto; padding:2px 10px; border-radius:999px; background:#7a4b00; color:#fff; font-size:12px; font-weight:700; }
   .cerca-hub { position: relative; margin: 0 0 22px; }
   .cerca-hub > svg { position: absolute; left: 16px; top: 50%; width: 20px; height: 20px; transform: translateY(-50%); color: var(--tenue, #5b6770); pointer-events: none; }
   .cerca-hub input { width: 100%; padding: 14px 52px 14px 46px; border: 1px solid var(--bordo, #d9dee2); border-radius: 999px; background: var(--carta, #fff); color: inherit; font: inherit; font-size: calc(17px * var(--zoom, 1)); box-shadow: 0 2px 10px rgba(31,42,48,.06); }
@@ -203,13 +184,12 @@
     <div id="pannello" class="pannello nascosto"></div>
     <div class="cerca-hub nascosto" id="cercaHub" role="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="search" id="cercaQ" autocomplete="off" spellcheck="false" aria-label="Cerca in OBO Hub" aria-controls="cercaRis" aria-expanded="false" placeholder="Cerca in OBO Hub: app, sezioni, prodotti, notizie, progetti…">
+      <input type="search" id="cercaQ" autocomplete="off" spellcheck="false" aria-label="Cerca in OBO Hub" aria-controls="cercaRis" aria-expanded="false" placeholder="Cerca in OBO Hub: app, sezioni, progetti…">
       <kbd aria-hidden="true">/</kbd>
       <div id="cercaRis" class="cerca-ris" hidden></div>
     </div>
     <h2 id="titolo-app" class="nascosto">Le tue app</h2>
     <div class="griglia" id="griglia"><p class="caricamento">Caricamento…</p></div>
-    <section id="novitaProdotti" class="novita-prodotti nascosto" aria-label="Novità prodotti OBO"></section>
     <div class="vantaggi" id="vantaggi">
       <div><b>Un solo accesso</b><span>Email, password e codice dell'app Authenticator: entri una volta e trovi tutte le tue app.</span></div>
       <div><b>Su ogni dispositivo</b><span>Installa OBO Hub su PC, iPhone, iPad e Android come una normale app.</span></div>
@@ -224,7 +204,6 @@
 </footer>
 
 <script src="install.js"></script>
-<script src="manutenzione.js"></script>
 <script src="aggiorna.js" data-versione="version.json" data-app="hub"></script>
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
@@ -237,11 +216,9 @@
 
   const ICONE = {
     fulmine: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
-    prodotti: '<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>',
     stella: '<path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/>',
     torretta: '<circle cx="12" cy="13" r="8"/><circle cx="12" cy="13" r="4"/><path d="M12 9v8M8 13h8M12 2v3"/>',
     carichi: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h8"/>',
-    manutenzione: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.6 17.2a1.6 1.6 0 0 0 2.3 2.3l5.7-5.7a4 4 0 0 0 5.2-5.4l-2.4 2.4-2.1-.6-.6-2.1z"/>',
     admin: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
     accedi: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>',
     esci: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
@@ -463,10 +440,10 @@
   }
 
   // Solo le app abilitate: chi non è dentro non vede né nomi né riferimenti.
-  // ---------- ricerca unica: app, sezioni, prodotti, notizie, progetti salvati ----------
+  // ---------- ricerca unica: app, sezioni, progetti salvati ----------
   const cerca = (() => {
-    let profilo = null, mie = [], prodotti = null, notizie = null, progetti = null, timer = 0;
-    let attivi = ["app", "prodotti", "notizie", "progetti"]; // tipi di risultato scelti dall'admin (Amministrazione → Impostazioni)
+    let profilo = null, mie = [], progetti = null, timer = 0;
+    let attivi = ["app", "progetti"]; // tipi di risultato scelti dall'admin (Amministrazione → Impostazioni)
     const norm = (t) => String(t ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const T = (i, e) => (lingua === "en" ? e : i);
     // sezioni di Progettazione LPS: [permesso, nome, nome inglese, percorso, parole in più]
@@ -481,28 +458,22 @@
     const parole = (q) => norm(q).split(/[\s,;]+/).filter(Boolean);
     const trova = (testo, w) => { const t = norm(testo); return w.every((x) => t.includes(x)); };
     const evid = (t, w) => { let h = esc(t); for (const x of w.filter((x) => x.length > 1).sort((a, b) => b.length - a.length)) { const n = norm(h); let o = "", i = 0, k; while ((k = n.indexOf(x, i)) >= 0) { o += h.slice(i, k) + "<mark>" + h.slice(k, k + x.length) + "</mark>"; i = k + x.length; } h = o + h.slice(i); break; } return h; };
-    const sito = (u) => (u && u.startsWith("http") ? u : "https://www.obo.it" + (u || ""));
     const voce = (href, ic, titolo, sotto, w, esterno) => `<a class="cr" href="${esc(href)}"${esterno ? ' target="_blank" rel="noopener"' : ""}><span class="ic">${ic}</span><span class="tx"><b>${evid(titolo, w)}</b>${sotto ? `<small>${evid(sotto, w)}</small>` : ""}</span></a>`;
-    const img = (u) => (u ? `<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : svg("prodotti"));
     const vede = (sez) => !sez || profilo?.ruolo === "admin" || profilo?.ruolo === "visitatore" || (profilo?.sezioni || []).includes("tutte") || (profilo?.sezioni || []).includes(sez);
     const haApp = (id) => mie.some((a) => a.id === id);
 
     async function carica() {
-      if (haApp("prodotti") && !prodotti && (attivi.includes("prodotti") || attivi.includes("notizie"))) {
-        prodotti = fetch("prodotti/dati/prodotti.json?v=" + Math.floor(Date.now() / 36e5)).then((r) => r.json()).then((l) => l.map((r) => ({ r, k: norm(r[0] + " " + r[1]) }))).catch(() => []);
-        notizie = fetch("prodotti/dati/notizie.json?v=" + Math.floor(Date.now() / 36e5)).then((r) => r.json()).catch(() => []);
-      }
       if (haApp("lps") && profilo?.ruolo !== "visitatore" && !progetti && attivi.includes("progetti")) {
         progetti = supabase.from("progetti").select("id,codice,nome,comune,data_modifica").order("data_modifica", { ascending: false }).limit(500).then(({ data }) => data || [], () => []);
       }
     }
-    // filtri in cima ai risultati: Tutto / App e sezioni / Prodotti / Notizie / Progetti (solo i tipi scelti dall'admin)
+    // filtri in cima ai risultati: Tutto / App e sezioni / Progetti (solo i tipi scelti dall'admin)
     let filtro = "tutto";
-    const TIPI = [["app", "App e sezioni", "Apps and sections"], ["progetti", "Progetti", "Projects"], ["prodotti", "Prodotti", "Products"], ["notizie", "Notizie", "News"]];
+    const TIPI = [["app", "App e sezioni", "Apps and sections"], ["progetti", "Progetti", "Projects"]];
     async function esegui() {
       const q = $("cercaQ").value.trim(), box = $("cercaRis");
       if (q.length < 2) { box.hidden = true; $("cercaQ").setAttribute("aria-expanded", "false"); return; }
-      const w = parole(q), g = { app: [], progetti: [], prodotti: [], notizie: [] };
+      const w = parole(q), g = { app: [], progetti: [] };
       if (attivi.includes("app")) {
         mie.filter((a) => trova(`${a.nome} ${a.nome_en || ""} ${a.descrizione || ""}`, w)).forEach((a) => g.app.push(voce(a.url, svg(a.icona), lingua === "en" && a.nome_en || a.nome, lingua === "en" && a.descrizione_en || a.descrizione, w)));
         if (haApp("lps")) SEZ.filter(([sez, n, e, , extra]) => vede(sez) && trova(`${n} ${e} ${extra}`, w)).forEach(([, n, e, path]) => g.app.push(voce(CONFIG.lps + path, svg("fulmine"), T(n, e), T("Progettazione LPS", "LPS Design"), w)));
@@ -510,29 +481,19 @@
       }
       if (attivi.includes("progetti") && progetti) g.progetti = (await progetti).filter((p) => trova(`${p.codice} ${p.nome} ${p.comune}`, w))
         .map((p) => voce(CONFIG.lps + "progetti?apri=" + p.id, svg("fulmine"), (p.codice ? p.codice + " · " : "") + p.nome, (p.comune || "") + " · " + new Date(p.data_modifica).toLocaleDateString(lingua === "en" ? "en-GB" : "it-IT"), w));
-      let nProdotti = 0;
-      if (attivi.includes("prodotti") && prodotti) {
-        const l = await prodotti, codice = /^\d{6,8}$/.test(q) ? q : "";
-        const trovati = l.filter((x) => w.every((p) => x.k.includes(p)));
-        trovati.sort((a, b) => (b.r[0] === codice) - (a.r[0] === codice) || (norm(b.r[1]).startsWith(w[0]) - norm(a.r[1]).startsWith(w[0])));
-        nProdotti = trovati.length;
-        g.prodotti = trovati.slice(0, 30).map((x) => voce(sito(x.r[3]), img(x.r[7] || x.r[4]), x.r[1], x.r[0], w, true));
-      }
-      if (attivi.includes("notizie") && notizie) g.notizie = (await notizie).filter((n) => trova(n[1], w)).map((n) => voce(sito(n[0]), n[3] ? img(n[3]) : svg("stella"), n[1], n[4] || "", w, true));
-      const conta = { app: g.app.length, progetti: g.progetti.length, prodotti: nProdotti, notizie: g.notizie.length };
+      const conta = { app: g.app.length, progetti: g.progetti.length };
       const tipi = TIPI.filter(([id]) => attivi.includes(id) && (id !== "progetti" || progetti));
       if (filtro !== "tutto" && !tipi.some(([id]) => id === filtro)) filtro = "tutto";
       const totale = tipi.reduce((t, [id]) => t + conta[id], 0);
       const chip = (id, nome, n) => `<button type="button" class="chip" data-filtro="${id}" aria-pressed="${filtro === id}"${n === 0 && id !== "tutto" ? " disabled" : ""}>${esc(nome)} <span>${n}</span></button>`;
       let html = `<div class="filtri-cerca" role="group" aria-label="${T("Filtra i risultati", "Filter results")}">${chip("tutto", T("Tutto", "All"), totale)}${tipi.map(([id, i, e]) => chip(id, T(i, e), conta[id])).join("")}</div>`;
       // con "Tutto" pochi risultati per tipo, con un filtro l'elenco lungo
-      const quanti = { app: filtro === "tutto" ? 5 : 50, progetti: filtro === "tutto" ? 4 : 50, prodotti: filtro === "tutto" ? 5 : 30, notizie: filtro === "tutto" ? 3 : 30 };
+      const quanti = { app: filtro === "tutto" ? 5 : 50, progetti: filtro === "tutto" ? 4 : 50 };
       for (const [id, i, e] of tipi) {
         if ((filtro !== "tutto" && filtro !== id) || !g[id].length) continue;
-        const titolo = id === "app" ? T("App e sezioni", "Apps and sections") : id === "progetti" ? T("I miei progetti LPS", "My LPS projects") : id === "prodotti" ? T("Prodotti OBO", "OBO products") : T("Notizie OBO", "OBO news");
+        const titolo = id === "app" ? T("App e sezioni", "Apps and sections") : T("I miei progetti LPS", "My LPS projects");
         html += `<h4>${titolo}${conta[id] > quanti[id] ? ` (${conta[id]})` : ""}</h4>` + g[id].slice(0, quanti[id]).join("");
-        if (filtro === "tutto" && conta[id] > quanti[id] && id !== "prodotti") html += `<button type="button" class="cr tutti" data-filtro="${id}"><span class="ic">${svg("freccia")}</span><span class="tx"><b>${T(`Mostra tutti (${conta[id]})`, `Show all (${conta[id]})`)}</b></span></button>`;
-        if (id === "prodotti") html += `<a class="cr tutti" href="prodotti/?q=${encodeURIComponent(q)}"><span class="ic">${svg("freccia")}</span><span class="tx"><b>${nProdotti === 1 ? T("Apri in Prodotti OBO", "Open in OBO products") : T(`Tutti i ${nProdotti} risultati in Prodotti OBO, con i filtri per famiglia`, `All ${nProdotti} results in OBO products, with family filters`)}</b></span></a>`;
+        if (filtro === "tutto" && conta[id] > quanti[id]) html += `<button type="button" class="cr tutti" data-filtro="${id}"><span class="ic">${svg("freccia")}</span><span class="tx"><b>${T(`Mostra tutti (${conta[id]})`, `Show all (${conta[id]})`)}</b></span></button>`;
       }
       if (!totale) html += `<p class="vuoto">${T("Nessun risultato per", "No results for")} “${esc(q)}”.</p>`;
       box.innerHTML = html;
@@ -560,9 +521,9 @@
       imposta(p, m) {
         profilo = p; mie = m; progetti = null; filtro = "tutto";
         $("cercaHub").classList.toggle("nascosto", !p || !m.length);
-        if (lingua === "en") q.placeholder = "Search OBO Hub: apps, sections, products, news, projects…";
-        // impostazione "ricerca" (stato_manutenzione()): senza valore tutti i tipi, "nessuno" = casella nascosta
-        if (p && window.OBOManutenzione) OBOManutenzione.stato().then((s) => {
+        if (lingua === "en") q.placeholder = "Search OBO Hub: apps, sections, projects…";
+        // impostazione "ricerca" (Amministrazione → Impostazioni, letta con stato_manutenzione()): senza valore tutti i tipi, "nessuno" = casella nascosta
+        if (p) supabase.rpc("stato_manutenzione").then(({ data: s }) => {
           const v = s && typeof s.ricerca === "string" ? s.ricerca.trim() : "";
           if (!v) return;
           attivi = v.split(",").map((x) => x.trim()).filter((x) => TIPI.some(([id]) => id === x));
@@ -587,44 +548,6 @@
       griglia.appendChild(el);
     }
     if (profilo && !mie.length) griglia.innerHTML = '<p class="caricamento">Al momento non hai strumenti abilitati. Chiedi all\'amministratore.</p>';
-    novitaProdotti(mie.some((a) => a.id === "prodotti"));
-    segnaManutenzione(mie, profilo);
-  }
-
-  // App in manutenzione (Admin → Manutenzione): etichetta sulla scheda; chi non è admin va alla pagina di manutenzione
-  async function segnaManutenzione(mie, profilo) {
-    if (!window.OBOManutenzione || !mie.length) return;
-    const s = await OBOManutenzione.stato(true);
-    if (!s) return;
-    const admin = s.admin || profilo?.ruolo === "admin";
-    const schede = $("griglia").querySelectorAll("a.app");
-    mie.forEach((app, i) => {
-      const voce = s.sezioni["app:" + app.id], el = schede[i];
-      if (!voce || !el) return;
-      el.classList.add("in-manutenzione");
-      el.querySelector(".piede").insertAdjacentHTML("afterbegin", `<span class="etichetta-manutenzione">${lingua === "en" ? "Under maintenance" : "In manutenzione"}</span>`);
-      if (!admin) el.href = "manutenzione.html?s=" + encodeURIComponent("app:" + app.id) + "&torna=" + encodeURIComponent(new URL(app.url, location.href).pathname);
-    });
-  }
-
-  // Novità prodotti OBO in evidenza (dati rigenerati ogni notte, vedi prodotti/)
-  async function novitaProdotti(mostra) {
-    const box = $("novitaProdotti");
-    if (!mostra) { box.classList.add("nascosto"); box.innerHTML = ""; return; }
-    let n = null; try { const r = await fetch("prodotti/dati/novita.json?v=" + Math.floor(Date.now() / 36e5)); if (r.ok) n = await r.json(); } catch {}
-    if (!n || (!n.prodotti?.length && !n.notizie?.length)) { box.classList.add("nascosto"); return; }
-    const en = lingua === "en", T = (i, e) => (en ? e : i);
-    const data = (d) => { try { return new Date(d + "T12:00:00").toLocaleDateString(en ? "en-GB" : "it-IT", { day: "numeric", month: "short" }); } catch { return d; } };
-    const sito = (u) => (u && u.startsWith("http") ? u : "https://www.obo.it" + (u || ""));
-    const prodotti = (n.prodotti || []).slice(0, 10).map((r) => {
-      const d = r.length > 9 ? r[9] : r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
-      return `<a class="np" href="${esc(sito(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta">${T("NUOVO", "NEW")}${d ? " · " + esc(data(d)) : ""}</span><b>${esc(r[1])}</b><small>${esc(r[0])}</small></span></a>`;
-    });
-    const notizie = (n.notizie || []).slice(0, 4).map((x) => `<a class="np" href="${esc(sito(x[0]))}" target="_blank" rel="noopener"><span class="foto copri">${x[3] ? `<img src="${esc(x[3])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta notizia">${T("NOTIZIA", "NEWS")} · ${esc(data(x[4]))}</span><b>${esc(x[1])}</b></span></a>`);
-    box.innerHTML = `<div class="testa"><h2>${svg("stella").replace("<svg", '<svg width="22" height="22" style="color:var(--arancio);vertical-align:-3px"')} ${T("Novità OBO", "OBO news")}</h2><a href="prodotti/?vista=novita">${T("Tutte le novità", "All new items")} →</a></div>
-      <p class="sotto">${n.prodottiNuovi ? T(`${n.prodottiNuovi} prodotti nuovi negli ultimi ${n.giorni} giorni`, `${n.prodottiNuovi} new products in the last ${n.giorni} days`) + " · " : ""}${T("aggiornato ogni notte da obo.it", "updated every night from obo.it")}</p>
-      <div class="strip">${prodotti.join("")}${notizie.join("")}</div>`;
-    box.classList.remove("nascosto");
   }
 
   function avviso(html) { const a = $("avviso"); a.innerHTML = html; a.classList.toggle("nascosto", !html); }

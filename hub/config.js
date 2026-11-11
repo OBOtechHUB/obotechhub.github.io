@@ -31,38 +31,6 @@ export const APP = [
     abilitataSe: (sezioni) => sezioni.includes("app_mappa"),
   },
   {
-    id: "prodotti",
-    nome: "Prodotti OBO",
-    nome_en: "OBO products",
-    descrizione: "Tutto il catalogo di obo.it aggiornato ogni notte: ricerca di prodotti, articoli e notizie, più codici insieme e novità in evidenza.",
-    descrizione_en: "The whole obo.it catalogue updated every night: search products, articles and news, several codes at once and new items highlighted.",
-    icona: "prodotti",
-    url: "prodotti/",
-    // si abilita per persona (Amministrazione → Utenti → Cambia sezioni → Prodotti OBO); i visitatori la vedono
-    abilitataSe: (sezioni) => sezioni.includes("app_prodotti"),
-  },
-  {
-    id: "torrette",
-    nome: "Configuratore torrette",
-    nome_en: "Service outlet configurator",
-    descrizione: "Torrette a pavimento OBO (GES R2, GESR9…): scegli famiglia, modello e configurazione e scarica la distinta con i codici.",
-    descrizione_en: "OBO floor service outlets (GES R2, GESR9…): choose family, model and configuration and download the parts list with codes.",
-    icona: "torretta",
-    url: "torrette/",
-    // In preparazione: per ora la vede solo l'amministratore. Quando sarà pronta: abilitataSe: (s) => s.includes("app_torrette")
-    soloAdmin: true,
-  },
-  {
-    id: "manutenzione",
-    nome: "Manutenzione app",
-    nome_en: "App maintenance",
-    descrizione: "Metti in manutenzione un'app di OBO Hub o una sezione di Progettazione LPS, senza toccare i dati salvati.",
-    descrizione_en: "Put an OBO Hub app or a section of LPS Design under maintenance, without touching saved data.",
-    icona: "manutenzione",
-    url: "manutenzione-admin.html",
-    soloAdmin: true,
-  },
-  {
     id: "admin",
     nome: "Amministrazione",
     nome_en: "Administration",

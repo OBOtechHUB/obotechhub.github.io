@@ -1,10 +1,10 @@
-# Controllo notturno del sito pubblicato: apre le pagine principali e verifica i dati dei prodotti.
+# Controllo notturno del sito pubblicato: apre le pagine principali e verifica che si carichino senza errori.
 # Se qualcosa non va apre (o aggiorna) una segnalazione "Controllo notturno" nel repository: GitHub la manda per email.
 # Quando tutto torna a posto la segnalazione si chiude da sola.
 name: Controllo notturno del sito
 on:
   schedule:
-    - cron: "43 4 * * *"   # 05:43 in Italia (ora solare), dopo l'aggiornamento dei prodotti
+    - cron: "43 4 * * *"   # 05:43 in Italia (ora solare)
   workflow_dispatch:
 permissions:
   contents: read

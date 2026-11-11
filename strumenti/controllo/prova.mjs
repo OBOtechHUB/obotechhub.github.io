@@ -29,14 +29,11 @@ await pagina("/", (p) => testo(p, "body", /OBO/), "OBO Hub, pagina iniziale");
 await pagina("/novita.html", (p) => p.waitForSelector(".voce", { timeout: 15000 }), "Pagina Novità");
 await pagina("/privacy.html", (p) => testo(p, "h1", /privacy/i), "Privacy");
 await pagina("/condizioni.html", (p) => testo(p, "h1", /condizioni/i), "Condizioni d'uso");
-await pagina("/manutenzione.html?s=app%3Aprodotti", (p) => testo(p, "h1", /maintenance|available/i), "Pagina di manutenzione");
 await pagina("/appOBOtechHUB/", (p) => p.waitForSelector("main, #root > *", { timeout: 20000 }), "Progettazione LPS");
 await pagina("/mappa-carichi/", (p) => testo(p, "body", /\S/), "Mappa carichi ufficio tecnico");
-await pagina("/prodotti/", (p) => testo(p, "body", /\S/), "Prodotti OBO");
-await pagina("/torrette/", (p) => testo(p, "body", /\S/), "Configuratore torrette");
 
 // su telefono nessuna pagina deve scorrere di lato
-for (const percorso of ["/", "/novita.html", "/privacy.html", "/condizioni.html", "/manutenzione.html?s=app%3Aprodotti", "/appOBOtechHUB/", "/mappa-carichi/", "/prodotti/", "/torrette/"]) {
+for (const percorso of ["/", "/novita.html", "/privacy.html", "/condizioni.html", "/appOBOtechHUB/", "/mappa-carichi/"]) {
   const p = await b.newPage({ viewport: { width: 375, height: 800 }, isMobile: true, hasTouch: true });
   try {
     await p.goto(SITO + percorso, { waitUntil: "networkidle", timeout: 45000 });
@@ -47,16 +44,6 @@ for (const percorso of ["/", "/novita.html", "/privacy.html", "/condizioni.html"
   } catch (e) { problemi.push(`**Telefono** (${SITO}${percorso}): ${e.message}`); }
   finally { await p.close(); }
 }
-
-// dati notturni dei prodotti: recenti e completi
-try {
-  const r = await fetch(SITO + "/prodotti/dati/stato.json?t=" + Date.now());
-  const s = await r.json();
-  const ore = (Date.now() - new Date(s.aggiornato).getTime()) / 36e5;
-  if (ore > 36) throw new Error(`ultimo aggiornamento ${Math.round(ore)} ore fa (${s.aggiornato})`);
-  if (s.prodotti < 9000) throw new Error(`solo ${s.prodotti} prodotti nell'indice`);
-  ok.push(`Indice prodotti: ${s.prodotti} prodotti, ${s.conDettagli} con descrizione, aggiornato ${Math.round(ore)} ore fa`);
-} catch (e) { problemi.push(`**Indice prodotti** (prodotti/dati/stato.json): ${e.message}`); }
 
 await b.close();
 const md = (problemi.length ? `## Problemi trovati\n\n${problemi.map((x) => "- " + x).join("\n")}\n\n` : "") + `## Pagine a posto\n\n${ok.map((x) => "- " + x).join("\n")}\n`;

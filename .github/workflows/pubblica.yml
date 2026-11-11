@@ -4,10 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # i salvataggi fatti da GitHub Actions non fanno partire altri flussi: si pubblica dopo l'aggiornamento notturno
-  workflow_run:
-    workflows: ["Aggiorna prodotti OBO"]
-    types: [completed]
 
 permissions:
   contents: read
@@ -31,16 +27,12 @@ jobs:
           MAPPA_SUPABASE_ANON_KEY: ${{ secrets.MAPPA_SUPABASE_ANON_KEY }}
         run: |
           # Il sito pubblicato ha sempre gli stessi indirizzi: i file del repository sono solo ordinati in cartelle.
-          mkdir -p site/mappa-carichi site/torrette site/lps site/prodotti/dati
+          mkdir -p site/mappa-carichi site/lps
           cp hub/* site/ 2>/dev/null || true          # OBO Hub: pagina iniziale (le sottocartelle non vengono copiate qui)
           cp hub/icone/* site/                         # icone di OBO Hub
           cp comune/* site/                            # file usati da tutte le app (barra "Aggiorna app", pagina 404)
           cp .nojekyll site/
           cp mappa-carichi/index.html mappa-carichi/i18n-en.js mappa-carichi/manifest.webmanifest mappa-carichi/sw.js mappa-carichi/install.js mappa-carichi/icone/* site/mappa-carichi/
-          cp torrette/*.html torrette/*.js site/torrette/
-          cp prodotti/*.html prodotti/*.js site/prodotti/ 2>/dev/null || true
-          # dati dei prodotti per l'app (le cache complete restano solo nel repository)
-          for f in prodotti categorie notizie pagine novita stato; do cp prodotti/dati/$f.json site/prodotti/dati/ 2>/dev/null || true; done
           cp comune/vecchio-lps.html site/lps/index.html   # vecchi link /lps/ → nuovo nome dell'app LPS
           # Senza secrets dedicati la Mappa usa lo stesso database di OBO Hub / Progettazione LPS (config.js).
           if [ -z "$MAPPA_SUPABASE_URL" ] || [ -z "$MAPPA_SUPABASE_ANON_KEY" ]; then

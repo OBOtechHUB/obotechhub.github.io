@@ -2,6 +2,21 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-11-hub-2",
+      "data": "2026-11-11",
+      "app": "hub",
+      "titolo": "Tolte l'app Prodotti OBO e le Novità OBO",
+      "voci": [
+        "L'app Prodotti OBO e il riquadro \"Novità OBO\" della pagina iniziale non ci sono più",
+        "La ricerca di OBO Hub cerca in app, sezioni e progetti salvati; per i prodotti resta la sezione Prodotti di Progettazione LPS e il sito obo.it"
+      ],
+      "titolo_en": "OBO products app and OBO news removed",
+      "voci_en": [
+        "The OBO products app and the \"OBO news\" box on the home page are gone",
+        "The OBO Hub search looks in apps, sections and saved projects; for products use the Products section of LPS Design and obo.it"
+      ]
+    },
+    {
       "id": "2026-11-11-tutte-1",
       "data": "2026-11-11",
       "app": "tutte",
@@ -63,44 +78,6 @@
         "The exact article number comes first; \"All results\" opens the full search in OBO products",
         "A project you find opens directly in LPS Design",
         "Press / on the keyboard to jump to the search"
-      ]
-    },
-    {
-      "id": "2026-11-10-prodotti-2",
-      "data": "2026-11-10",
-      "app": "prodotti",
-      "titolo": "Prodotti OBO: foto, descrizioni e filtri per famiglia",
-      "voci": [
-        "Foto per tutti i prodotti, anche nell'elenco dei risultati",
-        "Descrizione completa e categoria lette dalla pagina di ogni prodotto su obo.it",
-        "Nuovi filtri Famiglia e Gruppo nella ricerca, con il numero di prodotti",
-        "Nella copia per Excel dei codici c'è anche la categoria"
-      ],
-      "titolo_en": "OBO products: photos, descriptions and family filters",
-      "voci_en": [
-        "Photos for every product, also in the results list",
-        "Full description and category read from each product page on obo.it",
-        "New Family and Group filters in the search, with product counts",
-        "The code list copied for Excel now includes the category"
-      ]
-    },
-    {
-      "id": "2026-11-10-hub-1",
-      "data": "2026-11-10",
-      "app": "hub",
-      "titolo": "Nuova app Prodotti OBO e novità in evidenza",
-      "titolo_en": "New OBO products app and highlighted news",
-      "voci": [
-        "Nuova app \"Prodotti OBO\": tutto il catalogo di obo.it (oltre 10.000 prodotti), aggiornato ogni notte",
-        "Ricerca in un'unica casella su prodotti, articoli e notizie, come sul sito OBO, con le parole cercate evidenziate",
-        "Più codici d'articolo insieme: incolla un elenco e copia il risultato per Excel",
-        "Nella pagina iniziale di OBO Hub: prodotti nuovi e ultime notizie OBO"
-      ],
-      "voci_en": [
-        "New \"OBO products\" app: the whole obo.it catalogue (over 10,000 products), updated every night",
-        "One search box for products, articles and news, as on the OBO website, with matches highlighted",
-        "Several article codes at once: paste a list and copy the result for Excel",
-        "On the OBO Hub home page: new products and latest OBO news"
       ]
     },
     {
