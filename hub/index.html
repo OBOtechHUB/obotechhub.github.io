@@ -447,7 +447,7 @@
     const norm = (t) => String(t ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const T = (i, e) => (lingua === "en" ? e : i);
     // sezioni di Progettazione LPS: [permesso, nome, nome inglese, percorso, parole in più]
-    const SEZ = [["assistente", "Assistente di progetto", "Project assistant", "assistente", "guida passo passo"], ["progetti", "I miei progetti", "My projects", "progetti", "salvati"],
+    const SEZ = [["progetti", "I miei progetti", "My projects", "progetti", "salvati"],
       ["edificio", "Dati edificio e normativi", "Building and standard data", "dati-edificio", "comune indirizzo"], ["rischio", "Analisi del rischio", "Risk assessment", "rischio", "r1 zone perdite"],
       ["captazione", "Edificio 3D e captazione", "3D building and air-termination", "edificio-3d", "sfera rotolante maglia aste"], ["calate", "Calate e distanza di separazione", "Down conductors and separation distance", "calate", "kc ki km"],
       ["terra", "Impianto e resistenza di terra", "Earthing system", "resistenza-terra", "dispersore picchetti l1"], ["spd", "Scelta SPD", "SPD selection", "spd", "scaricatori sovratensioni"],
