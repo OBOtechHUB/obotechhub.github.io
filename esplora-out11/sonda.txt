@@ -1,0 +1,86 @@
+===== /robots.txt 200 24
+User-agent: *
+Disallow:
+
+===== /home 200 9693
+FORM: ['<form class="mt-4 mb-3 d-md-none">']
+INPUT: ['<input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">']
+SCRIPT: ['https://myspdconfigurator.lovatoelectric.com/argon/vendor/jquery/dist/jquery.min.js', 'https://myspdconfigurator.lovatoelectric.com/argon/vendor/bootstrap/dist/js/bootstrap.bundle.min.js', 'https://myspdconfigurator.lovatoelectric.com/argon/js/argon.js?v=1.0.0', 'https://myspdconfigurator.lovatoelectric.com/libs/datatables.js', 'https://myspdconfigurator.lovatoelectric.com/libs/html2canvas.js', 'https://myspdconfigurator.lovatoelectric.com/libs/html2pdf.js', 'https://myspdconfigurator.lovatoelectric.com/js/cookies.js', 'https://www.googletagmanager.com/gtag/js?id=G-5MGE3X0ZJ3']
+LINK: []
+TESTO:  MySPDConfigurator --> Home Seleziona SPD Ricerca SPD --> Home Inizia qui ITA ENG Seleziona SPD Trova lo scaricatore più adatto in base alle caratteristiche dell&#039;impianto Continua Ricerca SPD Trova lo scaricatore a partire dal codice della concorrenza Continua Supporto Tecnico +39 035 4282422 Service@LovatoElectric.com LOVATO Electric S.p.A. Azienda Prodotti Soluzioni 
+JSINLINE:  window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-5MGE3X0ZJ3'); 
+JSINLINE: 
+
+===== /codice 200 9304
+FORM: ['<form class="mt-4 mb-3 d-md-none">', '<form method="POST" action="https://myspdconfigurator.lovatoelectric.com/codice_risultati">']
+INPUT: ['<input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">', '<input type="text" class="form-control" name="codice" id="codice" />', '<input type="hidden" name="_token" value="mk9D3BHsjbFOcn6Xw5voHCgZOD2B3phxX27C2iXA" autocomplete="off">']
+SCRIPT: ['https://myspdconfigurator.lovatoelectric.com/argon/vendor/jquery/dist/jquery.min.js', 'https://myspdconfigurator.lovatoelectric.com/argon/vendor/bootstrap/dist/js/bootstrap.bundle.min.js', 'https://myspdconfigurator.lovatoelectric.com/argon/js/argon.js?v=1.0.0', 'https://myspdconfigurator.lovatoelectric.com/libs/datatables.js', 'https://myspdconfigurator.lovatoelectric.com/libs/html2canvas.js', 'https://myspdconfigurator.lovatoelectric.com/libs/html2pdf.js', 'https://myspdconfigurator.lovatoelectric.com/js/cookies.js', 'https://www.googletagmanager.com/gtag/js?id=G-5MGE3X0ZJ3']
+LINK: []
+TESTO:  MySPDConfigurator --> Home Seleziona SPD Ricerca SPD --> Ricerca Trova lo scaricatore per codice ITA ENG Inserisci il codice del tuo scaricatore Codice dispositivo Cerca Supporto Tecnico +39 035 4282422 Service@LovatoElectric.com LOVATO Electric S.p.A. Azienda Prodotti Soluzioni 
+JSINLINE:  window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-5MGE3X0ZJ3'); 
+JSINLINE: 
+
+===== /targa_impianto 200 14205
+FORM: ['<form class="mt-4 mb-3 d-md-none">', '<form method="POST" action="https://myspdconfigurator.lovatoelectric.com/targa_impianto_risultati">']
+INPUT: ['<input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">', '<select class="form-control" name="impianto" id="impianto" onchange="nextFilter(this)">', '<input type="hidden" name="_token" value="mk9D3BHsjbFOcn6Xw5voHCgZOD2B3phxX27C2iXA" autocomplete="off">', '<select class="form-control" name="\'+data.field+\'" id="\'+data.field+\'" onchange="nextFilter(this)">', '<input type="hidden" name="\'+select.id+\'" value="\'+select.value+\'" />', '<input type="hidden" name="\'+select.id+\'" value="\'+select.value+\'" />']
+SCRIPT: ['https://myspdconfigurator.lovatoelectric.com/argon/vendor/jquery/dist/jquery.min.js', 'https://myspdconfigurator.lovatoelectric.com/argon/vendor/bootstrap/dist/js/bootstrap.bundle.min.js', 'https://myspdconfigurator.lovatoelectric.com/argon/js/argon.js?v=1.0.0', 'https://myspdconfigurator.lovatoelectric.com/libs/datatables.js', 'https://myspdconfigurator.lovatoelectric.com/libs/html2canvas.js', 'https://myspdconfigurator.lovatoelectric.com/libs/html2pdf.js', 'https://myspdconfigurator.lovatoelectric.com/js/cookies.js', 'https://www.googletagmanager.com/gtag/js?id=G-5MGE3X0ZJ3']
+LINK: []
+TESTO:  MySPDConfigurator --> Home Seleziona SPD Ricerca SPD --> Seleziona Targa impianto ITA ENG Inserisci i dati relativi al tuo impianto Impianto Seleziona Corrente alternata 230 / 400 V Stazione di ricarica veicoli elettrici Centralino monofase 230 V Impianto fotovoltaico Linea dati RS485/Ethernet/Telefonica Inserisci i dati relativi allo scaricatore Reset Procedi Supporto Tecnico +39 035 4282422 Service@LovatoElectric.com LOVATO Electric S.p.A. Azienda Prodotti Soluzioni 
+JSINLINE:  window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-5MGE3X0ZJ3'); 
+JSINLINE: 
+
+	var baseUrl = "https://myspdconfigurator.lovatoelectric.com/api/filters";
+	var selections = new Array();
+	var options = new Array();
+	
+	//lista degli elementi delle form, mi serve per il cleanup degli elementi al cambio delle select
+	var formGroupIds = new Array();
+	formGroupIds.push("impianto");
+	formGroupIds.push("sistema_distribuzione");
+	formGroupIds.push("tensione_fotovoltaico");
+	formGroupIds.push("tipo_distribuzione");
+	formGroupIds.push("classe_tipo_scaricatore");
+	formGroupIds.push("numero_stringhe");
+	formGroupIds.push("corrente_impulsiva");
+	formGroupIds.push("tipologia_segnale");
+	formGroupIds.push("corrente_nominale");
+	formGroupIds.push("tipo_installazione");
+	formGroupIds.push("contatto_telesegnalazione");
+	formGroupIds.push("corrente_cortocircuito");
+	formGroupIds.push("taglia_interruttore_quadro");
+	formGroupIds.push("soluzione_ecosmart");
+	formGroupIds.push("punto_inserzione_quadro");
+	//////////////
+	
+	function nextFilter(select)
+	{
+		//controllo di sicurezza
+		if(select.id == "impianto" && select.value == "Seleziona")
+		{
+			cleanupNext(select);
+			return;
+		}
+		////
+		
+		cleanupNext(select);
+		setSelection(select);
+			
+		//console.log(selections);
+		jQuery.post( baseUrl, { selections : JSON.stringify(selections), options : JSON.stringify(options), _token : jQuery("input[name=_token]").val() }, function(data) {
+			console.log(data);
+			data = jQuery.parseJSON(data);
+			if(data.field != "")
+			{
+				var outputSelect = '<div class="form-group" id="form-gr
+TOKEN True
+=== RICERCA GET https://myspdconfigurator.lovatoelectric.com/codice?codice=SA2 200 9304  MySPDConfigurator --> Home Seleziona SPD Ricerca SPD --> Ricerca Trova lo scaricatore per codice ITA ENG Inserisci il codice del tuo scaricatore Codice dispositivo Cerca Supporto Tecnico +39 035 4282422 Service@LovatoElectric.com LOVATO Electric S.p.A. Azienda Prodotti Soluzioni 
+=== RICERCA POST https://myspdconfigurator.lovatoelectric.com/codice?codice=SA2 405 1009  An Error Occurred: Method Not Allowed ❌ " /> Oops! An Error Occurred The server returned a "405 Method Not Allowed". Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused. 
+=== RICERCA POST https://myspdconfigurator.lovatoelectric.com/codice 405 1009  An Error Occurred: Method Not Allowed ❌ " /> Oops! An Error Occurred The server returned a "405 Method Not Allowed". Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused. 
+=== RICERCA GET https://myspdconfigurator.lovatoelectric.com/codice?codice=DPS 200 9304  MySPDConfigurator --> Home Seleziona SPD Ricerca SPD --> Ricerca Trova lo scaricatore per codice ITA ENG Inserisci il codice del tuo scaricatore Codice dispositivo Cerca Supporto Tecnico +39 035 4282422 Service@LovatoElectric.com LOVATO Electric S.p.A. Azienda Prodotti Soluzioni 
+=== RICERCA POST https://myspdconfigurator.lovatoelectric.com/codice?codice=DPS 405 1009  An Error Occurred: Method Not Allowed ❌ " /> Oops! An Error Occurred The server returned a "405 Method Not Allowed". Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused. 
+=== RICERCA POST https://myspdconfigurator.lovatoelectric.com/codice 405 1009  An Error Occurred: Method Not Allowed ❌ " /> Oops! An Error Occurred The server returned a "405 Method Not Allowed". Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused. 
+LEGAL /privacy 404 3000
+LEGAL /termini 404 3000
+LEGAL /note-legali 404 3000
+LEGAL /terms 404 3000
+LEGAL /legal 404 3000
