@@ -34,9 +34,10 @@ await pagina("/appOBOtechHUB/", (p) => p.waitForSelector("main, #root > *", { ti
 await pagina("/mappa-carichi/", (p) => testo(p, "body", /\S/), "Mappa carichi ufficio tecnico");
 await pagina("/prodotti/", (p) => testo(p, "body", /\S/), "Prodotti OBO");
 await pagina("/torrette/", (p) => testo(p, "body", /\S/), "Configuratore torrette");
+await pagina("/spd/", (p) => testo(p, "body", /\S/), "Conversione SPD");
 
 // su telefono nessuna pagina deve scorrere di lato
-for (const percorso of ["/", "/novita.html", "/privacy.html", "/condizioni.html", "/manutenzione.html?s=app%3Aprodotti", "/appOBOtechHUB/", "/mappa-carichi/", "/prodotti/", "/torrette/"]) {
+for (const percorso of ["/", "/novita.html", "/privacy.html", "/condizioni.html", "/manutenzione.html?s=app%3Aprodotti", "/appOBOtechHUB/", "/mappa-carichi/", "/prodotti/", "/torrette/", "/spd/"]) {
   const p = await b.newPage({ viewport: { width: 375, height: 800 }, isMobile: true, hasTouch: true });
   try {
     await p.goto(SITO + percorso, { waitUntil: "networkidle", timeout: 45000 });
