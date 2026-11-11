@@ -63,6 +63,11 @@ async function accesso() {
     if (!session) { fuori(T("Entra da OBO Hub per vedere i prodotti.", "Sign in from OBO Hub to see the products.")); return false; }
     const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
     if (aal?.nextLevel === "aal2" && aal?.currentLevel !== "aal2") { fuori(T("Completa l'accesso con Authenticator da OBO Hub.", "Complete the Authenticator sign-in from OBO Hub.")); return false; }
+    // app abilitata per persona (Amministrazione → Utenti → Cambia sezioni → Prodotti OBO)
+    const { data: p, error } = await supabase.from("accessi_profili").select("ruolo,stato,sezioni").eq("utente", session.user.id).maybeSingle();
+    if (!error && p && (p.stato !== "attivo" || (p.ruolo !== "admin" && !(p.sezioni || []).some((s) => s === "tutte" || s === "app_prodotti")))) {
+      fuori(T("Non hai ancora l'app Prodotti OBO: chiedila all'amministratore.", "You don't have the OBO products app yet: ask the administrator.")); return false;
+    }
     return true;
   } catch { fuori(T("Accesso non riuscito: riprova da OBO Hub.", "Sign-in failed: try again from OBO Hub.")); return false; }
 }

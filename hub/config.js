@@ -38,8 +38,8 @@ export const APP = [
     descrizione_en: "The whole obo.it catalogue updated every night: search products, articles and news, several codes at once and new items highlighted.",
     icona: "prodotti",
     url: "prodotti/",
-    // dati pubblici del sito OBO: la vede chiunque sia entrato in OBO Hub (anche i visitatori)
-    abilitataSe: () => true,
+    // si abilita per persona (Amministrazione → Utenti → Cambia sezioni → Prodotti OBO); i visitatori la vedono
+    abilitataSe: (sezioni) => sezioni.includes("app_prodotti"),
   },
   {
     id: "torrette",
