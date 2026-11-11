@@ -128,35 +128,6 @@
   .pannello-impost .seg button { border: 0; background: none; color: var(--testo); font: 600 13px var(--font); padding: 7px 11px; cursor: pointer; }
   .pannello-impost .seg button[aria-pressed="true"] { background: var(--arancio); color: #fff; }
   .pannello-impost .zoomval { min-width: 46px; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
-  .cerca-hub { position: relative; margin: 0 0 22px; }
-  .cerca-hub > svg { position: absolute; left: 16px; top: 50%; width: 20px; height: 20px; transform: translateY(-50%); color: var(--tenue, #5b6770); pointer-events: none; }
-  .cerca-hub input { width: 100%; padding: 14px 52px 14px 46px; border: 1px solid var(--bordo, #d9dee2); border-radius: 999px; background: var(--carta, #fff); color: inherit; font: inherit; font-size: calc(17px * var(--zoom, 1)); box-shadow: 0 2px 10px rgba(31,42,48,.06); }
-  .cerca-hub input:focus { outline: 2px solid var(--arancio, #f39b00); outline-offset: 1px; }
-  .cerca-hub input::-webkit-search-cancel-button { -webkit-appearance: none; }
-  .cerca-hub kbd { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 600 12px var(--font, sans-serif); color: var(--tenue, #5b6770); border: 1px solid var(--bordo, #d9dee2); border-radius: 6px; padding: 1px 7px; }
-  .cerca-hub input:focus ~ kbd { display: none; }
-  .cerca-ris { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 6px); max-height: min(70vh, 640px); overflow: auto; background: var(--carta, #fff); border: 1px solid var(--bordo, #d9dee2); border-radius: 14px; box-shadow: 0 14px 40px rgba(31,42,48,.18); padding: 6px; }
-  .cerca-ris h4 { margin: 10px 10px 4px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--tenue, #5b6770); }
-  .cerca-ris a.cr { display: flex; gap: 12px; align-items: center; padding: 8px 10px; border-radius: 10px; color: inherit; text-decoration: none; }
-  .cerca-ris a.cr:hover, .cerca-ris a.cr:focus { background: var(--grigio, #f3f5f6); outline: none; }
-  .cerca-ris .ic { flex: none; width: 40px; height: 40px; border-radius: 8px; background: var(--grigio, #f3f5f6); display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--arancio, #f39b00); }
-  .cerca-ris .ic img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
-  .cerca-ris .ic svg { width: 22px; height: 22px; }
-  .cerca-ris .tx { min-width: 0; }
-  .cerca-ris .tx b { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .cerca-ris .tx small { display: block; color: var(--tenue, #5b6770); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .cerca-ris mark { background: #ffe1a8; color: inherit; border-radius: 2px; }
-  .cerca-ris .tutti { font-weight: 600; color: var(--arancio-scuro, #c47c00); }
-  .filtri-cerca { position: sticky; top: -6px; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px; margin: -6px -6px 4px; padding: 10px 10px 8px; background: var(--carta, #fff); border-bottom: .8px solid var(--bordo, #d9dee2); }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: .8px solid var(--bordo, #d9dee2); background: var(--carta, #fff); color: inherit; font: 600 13px var(--font, sans-serif); cursor: pointer; }
-  .chip span { font-weight: 500; color: var(--tenue, #5b6770); }
-  .chip[aria-pressed="true"] { background: var(--arancio, #f39b00); border-color: var(--arancio, #f39b00); color: #fff; }
-  .chip[aria-pressed="true"] span { color: #fff; }
-  .chip:disabled { opacity: .45; cursor: default; }
-  .chip:focus-visible, .cerca-ris button.cr:focus { outline: 2px solid var(--arancio, #f39b00); outline-offset: 1px; }
-  .cerca-ris button.cr { width: 100%; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
-  .cerca-ris button.cr:hover { background: var(--grigio, #f3f5f6); }
-  .cerca-ris .vuoto { padding: 14px 12px; color: var(--tenue, #5b6770); }
 </style>
 </head>
 <body>
@@ -182,12 +153,6 @@
   <div class="contenitore">
     <div id="avviso" class="avviso nascosto" role="status"></div>
     <div id="pannello" class="pannello nascosto"></div>
-    <div class="cerca-hub nascosto" id="cercaHub" role="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="search" id="cercaQ" autocomplete="off" spellcheck="false" aria-label="Cerca in OBO Hub" aria-controls="cercaRis" aria-expanded="false" placeholder="Cerca in OBO Hub: app, sezioni, progetti…">
-      <kbd aria-hidden="true">/</kbd>
-      <div id="cercaRis" class="cerca-ris" hidden></div>
-    </div>
     <h2 id="titolo-app" class="nascosto">Le tue app</h2>
     <div class="griglia" id="griglia"><p class="caricamento">Caricamento…</p></div>
     <div class="vantaggi" id="vantaggi">
@@ -440,105 +405,9 @@
   }
 
   // Solo le app abilitate: chi non è dentro non vede né nomi né riferimenti.
-  // ---------- ricerca unica: app, sezioni, progetti salvati ----------
-  const cerca = (() => {
-    let profilo = null, mie = [], progetti = null, timer = 0;
-    let attivi = ["app", "progetti"]; // tipi di risultato scelti dall'admin (Amministrazione → Impostazioni)
-    const norm = (t) => String(t ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const T = (i, e) => (lingua === "en" ? e : i);
-    // sezioni di Progettazione LPS: [permesso, nome, nome inglese, percorso, parole in più]
-    const SEZ = [["progetti", "I miei progetti", "My projects", "progetti", "salvati"],
-      ["edificio", "Dati edificio e normativi", "Building and standard data", "dati-edificio", "comune indirizzo"], ["rischio", "Analisi del rischio", "Risk assessment", "rischio", "r1 zone perdite"],
-      ["captazione", "Edificio 3D e captazione", "3D building and air-termination", "edificio-3d", "sfera rotolante maglia aste"], ["calate", "Calate e distanza di separazione", "Down conductors and separation distance", "calate", "kc ki km"],
-      ["spd", "Scelta SPD", "SPD selection", "spd", "scaricatori sovratensioni"],
-      ["computo", "Computo materiali", "Bill of materials", "computo-materiali", "distinta codici"], ["particolari", "Particolari costruttivi", "Construction details", "particolari", "dettagli"],
-      ["modelli3d", "Modelli 3D prodotti", "3D product models", "modelli-3d", ""],
-      ["cad", "Download CAD", "CAD downloads", "download-cad", "dwg"], [null, "Norma 62305: calcoli e tabelle", "IEC 62305 calculations and tables", "norma", "sezioni minime fotovoltaico schermatura"],
-      [null, "Strumenti di progettazione", "Design tools", "strumenti", ""]];
-    const parole = (q) => norm(q).split(/[\s,;]+/).filter(Boolean);
-    const trova = (testo, w) => { const t = norm(testo); return w.every((x) => t.includes(x)); };
-    const evid = (t, w) => { let h = esc(t); for (const x of w.filter((x) => x.length > 1).sort((a, b) => b.length - a.length)) { const n = norm(h); let o = "", i = 0, k; while ((k = n.indexOf(x, i)) >= 0) { o += h.slice(i, k) + "<mark>" + h.slice(k, k + x.length) + "</mark>"; i = k + x.length; } h = o + h.slice(i); break; } return h; };
-    const voce = (href, ic, titolo, sotto, w, esterno) => `<a class="cr" href="${esc(href)}"${esterno ? ' target="_blank" rel="noopener"' : ""}><span class="ic">${ic}</span><span class="tx"><b>${evid(titolo, w)}</b>${sotto ? `<small>${evid(sotto, w)}</small>` : ""}</span></a>`;
-    const vede = (sez) => !sez || profilo?.ruolo === "admin" || profilo?.ruolo === "visitatore" || (profilo?.sezioni || []).includes("tutte") || (profilo?.sezioni || []).includes(sez);
-    const haApp = (id) => mie.some((a) => a.id === id);
-
-    async function carica() {
-      if (haApp("lps") && profilo?.ruolo !== "visitatore" && !progetti && attivi.includes("progetti")) {
-        progetti = supabase.from("progetti").select("id,codice,nome,comune,data_modifica").order("data_modifica", { ascending: false }).limit(500).then(({ data }) => data || [], () => []);
-      }
-    }
-    // filtri in cima ai risultati: Tutto / App e sezioni / Progetti (solo i tipi scelti dall'admin)
-    let filtro = "tutto";
-    const TIPI = [["app", "App e sezioni", "Apps and sections"], ["progetti", "Progetti", "Projects"]];
-    async function esegui() {
-      const q = $("cercaQ").value.trim(), box = $("cercaRis");
-      if (q.length < 2) { box.hidden = true; $("cercaQ").setAttribute("aria-expanded", "false"); return; }
-      const w = parole(q), g = { app: [], progetti: [] };
-      if (attivi.includes("app")) {
-        mie.filter((a) => trova(`${a.nome} ${a.nome_en || ""} ${a.descrizione || ""}`, w)).forEach((a) => g.app.push(voce(a.url, svg(a.icona), lingua === "en" && a.nome_en || a.nome, lingua === "en" && a.descrizione_en || a.descrizione, w)));
-        if (haApp("lps")) SEZ.filter(([sez, n, e, , extra]) => vede(sez) && trova(`${n} ${e} ${extra}`, w)).forEach(([, n, e, path]) => g.app.push(voce(CONFIG.lps + path, svg("fulmine"), T(n, e), T("Progettazione LPS", "LPS Design"), w)));
-        if (trova("novita aggiornamenti news updates", w)) g.app.push(voce("novita.html", svg("stella"), T("Novità e aggiornamenti", "News and updates"), T("Cosa è cambiato nelle app", "What changed in the apps"), w));
-      }
-      if (attivi.includes("progetti") && progetti) g.progetti = (await progetti).filter((p) => trova(`${p.codice} ${p.nome} ${p.comune}`, w))
-        .map((p) => voce(CONFIG.lps + "progetti?apri=" + p.id, svg("fulmine"), (p.codice ? p.codice + " · " : "") + p.nome, (p.comune || "") + " · " + new Date(p.data_modifica).toLocaleDateString(lingua === "en" ? "en-GB" : "it-IT"), w));
-      const conta = { app: g.app.length, progetti: g.progetti.length };
-      const tipi = TIPI.filter(([id]) => attivi.includes(id) && (id !== "progetti" || progetti));
-      if (filtro !== "tutto" && !tipi.some(([id]) => id === filtro)) filtro = "tutto";
-      const totale = tipi.reduce((t, [id]) => t + conta[id], 0);
-      const chip = (id, nome, n) => `<button type="button" class="chip" data-filtro="${id}" aria-pressed="${filtro === id}"${n === 0 && id !== "tutto" ? " disabled" : ""}>${esc(nome)} <span>${n}</span></button>`;
-      let html = `<div class="filtri-cerca" role="group" aria-label="${T("Filtra i risultati", "Filter results")}">${chip("tutto", T("Tutto", "All"), totale)}${tipi.map(([id, i, e]) => chip(id, T(i, e), conta[id])).join("")}</div>`;
-      // con "Tutto" pochi risultati per tipo, con un filtro l'elenco lungo
-      const quanti = { app: filtro === "tutto" ? 5 : 50, progetti: filtro === "tutto" ? 4 : 50 };
-      for (const [id, i, e] of tipi) {
-        if ((filtro !== "tutto" && filtro !== id) || !g[id].length) continue;
-        const titolo = id === "app" ? T("App e sezioni", "Apps and sections") : T("I miei progetti LPS", "My LPS projects");
-        html += `<h4>${titolo}${conta[id] > quanti[id] ? ` (${conta[id]})` : ""}</h4>` + g[id].slice(0, quanti[id]).join("");
-        if (filtro === "tutto" && conta[id] > quanti[id]) html += `<button type="button" class="cr tutti" data-filtro="${id}"><span class="ic">${svg("freccia")}</span><span class="tx"><b>${T(`Mostra tutti (${conta[id]})`, `Show all (${conta[id]})`)}</b></span></button>`;
-      }
-      if (!totale) html += `<p class="vuoto">${T("Nessun risultato per", "No results for")} “${esc(q)}”.</p>`;
-      box.innerHTML = html;
-      box.hidden = false; $("cercaQ").setAttribute("aria-expanded", "true");
-    }
-    const q = $("cercaQ"), box = $("cercaRis");
-    q.addEventListener("focus", carica);
-    q.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(esegui, 140); });
-    q.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") { q.value = ""; box.hidden = true; q.blur(); }
-      if (e.key === "Enter") { const a = box.querySelector("a.cr"); if (a) { e.preventDefault(); a.click(); } }
-      if (e.key === "ArrowDown") { const a = box.querySelector(".chip:not([disabled]), .cr"); if (a) { e.preventDefault(); a.focus(); } }
-    });
-    box.addEventListener("keydown", (e) => {
-      const l = [...box.querySelectorAll(".chip:not([disabled]), .cr")], i = l.indexOf(document.activeElement);
-      if (e.key === "ArrowDown" && i < l.length - 1) { e.preventDefault(); l[i + 1].focus(); }
-      if (e.key === "ArrowUp") { e.preventDefault(); (i > 0 ? l[i - 1] : q).focus(); }
-      if (e.key === "Escape") { box.hidden = true; q.focus(); }
-    });
-    // composedPath: vale anche se il clic ha appena ridisegnato i risultati (per esempio un filtro)
-    document.addEventListener("click", (e) => { if (!e.composedPath().some((n) => n.id === "cercaHub")) box.hidden = true; });
-    box.addEventListener("click", (e) => { const b = e.target.closest("[data-filtro]"); if (!b || b.disabled) return; e.preventDefault(); filtro = b.dataset.filtro; esegui().then(() => box.querySelector(`.chip[data-filtro="${filtro}"]`)?.focus()); });
-    document.addEventListener("keydown", (e) => { if (e.key === "/" && !/input|textarea|select/i.test(document.activeElement?.tagName || "") && !$("cercaHub").classList.contains("nascosto")) { e.preventDefault(); q.focus(); } });
-    return {
-      imposta(p, m) {
-        profilo = p; mie = m; progetti = null; filtro = "tutto";
-        $("cercaHub").classList.toggle("nascosto", !p || !m.length);
-        if (lingua === "en") q.placeholder = "Search OBO Hub: apps, sections, projects…";
-        // impostazione "ricerca" (Amministrazione → Impostazioni, letta con stato_manutenzione()): senza valore tutti i tipi, "nessuno" = casella nascosta
-        if (p) supabase.rpc("stato_manutenzione").then(({ data: s }) => {
-          const v = s && typeof s.ricerca === "string" ? s.ricerca.trim() : "";
-          if (!v) return;
-          attivi = v.split(",").map((x) => x.trim()).filter((x) => TIPI.some(([id]) => id === x));
-          if (!attivi.length) { $("cercaHub").classList.add("nascosto"); return; }
-          const nomi = attivi.map((id) => { const t = TIPI.find(([x]) => x === id); return T(t[1], t[2]).toLowerCase(); });
-          q.placeholder = T("Cerca in OBO Hub: ", "Search OBO Hub: ") + nomi.join(", ") + "…";
-        });
-      },
-    };
-  })();
-
   function disegnaApp(profilo) {
     const griglia = $("griglia"); griglia.innerHTML = "";
     const mie = profilo ? APP.filter((a) => puoAprire(a, profilo)) : [];
-    cerca.imposta(profilo, mie);
     $("titolo-app").classList.toggle("nascosto", !mie.length);
     for (const app of mie) {
       const el = document.createElement("a");

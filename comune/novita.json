@@ -2,6 +2,19 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-11-hub-3",
+      "data": "2026-11-11",
+      "app": "hub",
+      "titolo": "Tolta la casella di ricerca",
+      "voci": [
+        "La pagina iniziale di OBO Hub non ha più la casella di ricerca: le app si aprono dalle schede"
+      ],
+      "titolo_en": "Search box removed",
+      "voci_en": [
+        "The OBO Hub home page no longer has the search box: open the apps from their cards"
+      ]
+    },
+    {
       "id": "2026-11-11-hub-2",
       "data": "2026-11-11",
       "app": "hub",
