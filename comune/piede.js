@@ -11,7 +11,6 @@
     "<span>" + T("OBO Hub · strumenti interni dell'ufficio tecnico OBO Italia", "OBO Hub · internal tools of the OBO Italia technical office") + "</span>" +
     '<nav aria-label="' + T("Collegamenti", "Links") + '" style="display:flex;flex-wrap:wrap;gap:6px 14px">' +
     '<a href="' + radice + '">OBO Hub</a>' +
-    '<a href="' + radice + 'novita.html">' + T("Novità", "What's new") + "</a>" +
     '<a href="' + radice + 'privacy.html">Privacy</a>' +
     '<a href="' + radice + 'condizioni.html">' + T("Condizioni d'uso", "Terms of use") + "</a>" +
     "</nav></div>";
