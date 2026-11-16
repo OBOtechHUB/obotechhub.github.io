@@ -119,7 +119,24 @@
     "»: non è stato salvato. Scegli un nome diverso.": "»: not saved. Choose a different name.", "è ora tra le persone.": "is now among the people.",
     "← Accedi come Guest": "← Sign in as Guest", "← OBO Hub": "← OBO Hub", "OBO Hub": "OBO Hub", "Accessi": "Sign-ins", "Ore": "Hours",
     "Mappa carichi ufficio tecnico": "Technical office workload map", "Il tuo nome ": "Your name ", "Entra in sola lettura ": "Enter read-only ",
-    "questa settimana lavorativa (lun–ven)": "this working week (Mon–Fri)"
+    "questa settimana lavorativa (lun–ven)": "this working week (Mon–Fri)",
+    "Daily task": "Daily task", "Nuova attività del giorno": "New daily activity", "Giorno": "Day", "Tipo di mail": "Email type",
+    "Tecnica": "Technical", "Commerciale": "Commercial", "Quante mail": "How many emails", "Quali mail": "Which emails", "Scegli…": "Choose…",
+    "Difficoltà della richiesta: ": "Request difficulty: ", "Molto facile": "Very easy", "Facile": "Easy", "Difficile": "Hard", "Molto difficile": "Very hard",
+    "Aggiungi attività": "Add activity", "Report settimanale": "Weekly report", "Questa settimana": "This week", "Scarica CSV della settimana": "Download the week's CSV",
+    "Tutte le persone": "Everyone", "Dettaglio delle attività": "Activity details", "Mail tecniche": "Technical emails", "Mail commerciali": "Commercial emails",
+    "Totale mail": "Total emails", "Attività": "Activities", "Priorità alta / media / bassa": "Priority high / medium / low", "Difficoltà media": "Average difficulty",
+    "Difficoltà": "Difficulty", "Quali": "Which", "Tipo": "Type", "Mail": "Emails", "Annulla": "Cancel", "Totale": "Total",
+    "Nessuna attività in questa settimana.": "No activities this week.", "Attività aggiunta.": "Activity added.", "Attività aggiornata.": "Activity updated.",
+    "Scegli se le mail sono tecniche o commerciali.": "Choose whether the emails are technical or commercial.", "Scegli la priorità.": "Choose the priority.",
+    "Vedi le attività di tutto il team. Modifichi solo le tue.": "You see the whole team's activities. You can edit only yours.",
+    "Vedi solo le tue attività. Il report di tutti lo vede l'amministratore.": "You see only your activities. The administrator sees everyone's report.",
+    "Accedi per vedere e inserire le tue attività.": "Sign in to see and add your activities.",
+    "Le mail tecniche e commerciali a cui hai risposto, giorno per giorno, e il report della settimana.": "The technical and commercial emails you answered, day by day, and the weekly report.",
+    "Persone nei carichi": "People in the workload", "Compare nei carichi": "Shown in the workload", "Ruolo": "Role", "Sì": "Yes",
+    "Scegli come pianificare: Periodo o Giorni precisi.": "Choose how to plan: Period or Specific days.",
+    "Scegli tu: un periodo (inizio, giorni e ore al giorno) oppure i singoli giorni.": "Your choice: a period (start, days and hours per day) or individual days.",
+    "Indica le ore per ogni giorno scelto.": "Enter the hours for each chosen day.", "Scrivi prima le ore da applicare.": "First enter the hours to apply.",
   };
   // frasi dentro testi composti (prima delle parole sciolte)
   var FRASI = [

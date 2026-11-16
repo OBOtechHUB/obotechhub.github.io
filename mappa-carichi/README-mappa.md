@@ -9,6 +9,7 @@ manifest.webmanifest    permette di installarla come app (PC, Android, iPhone/iP
 sw.js, install.js       service worker minimo e pulsante "Installa app"
 icon-192.png, icon-512.png, apple-touch-icon.png   icona dell'omino OBO
 database/1-database.sql tabelle e funzioni di Supabase (si può rieseguire senza perdere dati)
+database/5-daily-task-e-persone.sql  Daily task (mail tecniche/commerciali, report settimanale) e scelta delle persone nei carichi: si esegue una volta, aggiunge solo tabelle e funzioni, non cancella nulla
 .github/workflows/deploy.yml      pubblica il sito a ogni modifica
 .github/workflows/keepalive.yml   evita la pausa di Supabase gratuito
 ```
