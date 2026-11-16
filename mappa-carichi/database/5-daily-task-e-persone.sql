@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Mappa Carichi · Daily task (mail tecniche e commerciali) e Persone nei carichi
 -- Si esegue una volta in Supabase → SQL Editor. Si può rieseguire: non cancella nulla.
--- Regole: ognuno inserisce, modifica ed elimina solo le proprie attività;
+-- Regole: ognuno inserisce, modifica e annulla solo le proprie attività;
 -- l'Admin vede le attività di tutti (report settimanale) ma non modifica quelle degli altri;
 -- il Visitatore non vede questa sezione.
 -- NIENTE SI CANCELLA: "Annulla" nasconde l'attività dal report ma la riga resta;
