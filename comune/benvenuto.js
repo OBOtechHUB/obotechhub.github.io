@@ -2,8 +2,9 @@
  * Animazione di apertura comune a tutte le app di OBO Hub.
  * Icona di OBO Hub con bagliore e riflesso di luce, poi il saluto: "Buongiorno / Buon pomeriggio / Buonasera, <nome>"
  * e sotto "Bentornato in <app>" (o "Benvenuto" alla prima apertura).
- * Compare OGNI volta che si apre l'app e ogni volta che la si riprende dallo sfondo (app non chiusa, scheda o finestra
- * che torna visibile). Non compare solo passando da una pagina all'altra della stessa app. Un tocco o un tasto la chiudono.
+ * Compare SOLO quando si torna dopo un po' che non si usa nessuna app di OBO Hub (inattività di almeno 30 minuti),
+ * sia aprendo l'app sia riprendendola dallo sfondo. Passare da un'app all'altra o da una pagina all'altra non la mostra.
+ * L'ultima attività è condivisa tra tutte le app (localStorage "obo-attivita"). Un tocco o un tasto la chiudono.
  * Il nome si legge da localStorage "obo-nome" (lo scrivono tutte le app all'accesso); se manca si ricava dalla sessione
  * condivisa di OBO Hub (visitatore o utente collegato), così funziona anche per le app nuove.
  * Uso: <script src="benvenuto.js" data-app="OBO Hub"></script>
@@ -13,10 +14,14 @@
   var app = ds.app || "OBO Hub", chiave = "obo-benvenuto-" + app.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   var prova = /[?&]provabenvenuto\b/.test(location.search);
   if (!prova && (/[?&]nobenvenuto\b/.test(location.search) || navigator.webdriver)) return; // controlli automatici: niente animazione
-  // cambio pagina dentro la stessa app (uscita da meno di 3 secondi verso una pagina della stessa app): niente animazione
-  var interna = false;
-  try { var u = JSON.parse(sessionStorage.getItem("obo-bv-uscita") || "null"); interna = !prova && !!u && u.app === app && Date.now() - u.t < 3000; sessionStorage.removeItem("obo-bv-uscita"); } catch (e) {}
-  addEventListener("pagehide", function () { try { sessionStorage.setItem("obo-bv-uscita", JSON.stringify({ app: app, t: Date.now() })); } catch (e) {} });
+  // inattività: si mostra solo se dall'ultima attività in una qualsiasi app di OBO Hub sono passati almeno 30 minuti
+  var SOGLIA = 30 * 60 * 1000, CHIAVE_ATT = "obo-attivita", ultimoSegno = 0;
+  function ultima() { try { return Number(localStorage.getItem(CHIAVE_ATT)) || 0; } catch (e) { return 0; } }
+  function segna(forza) { var n = Date.now(); if (!forza && n - ultimoSegno < 20000) return; ultimoSegno = n; try { localStorage.setItem(CHIAVE_ATT, String(n)); } catch (e) {} }
+  function inattiva() { var u = ultima(); return !u || Date.now() - u > SOGLIA; }
+  // app rimasta aperta ma non usata a lungo: al primo tocco dopo 30 minuti l'animazione ricompare
+  ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (ev) { addEventListener(ev, function () { if (!d && inattiva() && document.visibilityState === "visible") mostra(); segna(false); }, { passive: true, capture: true }); });
+  addEventListener("pagehide", function () { segna(true); });
 
   function nomeOra() {
     var n = "";
@@ -115,13 +120,9 @@
     setTimeout(function () { el.remove(); if (d === el) d = null; }, 650);
   }
 
-  if (!interna) mostra();
-  // app ripresa dallo sfondo (non chiusa): l'animazione ricompare
-  var nascosta = 0;
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "hidden") { nascosta = Date.now(); return; }
-    if (nascosta && Date.now() - nascosta > 800) { if (d) { d.remove(); d = null; } mostra(); }
-    nascosta = 0;
-  });
-  addEventListener("pageshow", function (e) { if (e.persisted) { if (d) { d.remove(); d = null; } mostra(); } }); // ritorno con il tasto Indietro (pagina in memoria)
+  function controlla() { if (prova || inattiva()) { if (d) { d.remove(); d = null; } mostra(); } segna(true); }
+  controlla();
+  // app ripresa dallo sfondo dopo tanto tempo (o pagina tornata dalla memoria con Indietro)
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") segna(true); else { prova = false; controlla(); } });
+  addEventListener("pageshow", function (e) { if (e.persisted) { prova = false; controlla(); } });
 })();
