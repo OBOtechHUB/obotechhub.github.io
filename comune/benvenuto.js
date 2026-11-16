@@ -2,8 +2,10 @@
  * Animazione di apertura comune a tutte le app di OBO Hub.
  * Icona di OBO Hub con bagliore e riflesso di luce, poi il saluto: "Buongiorno / Buon pomeriggio / Buonasera, <nome>"
  * e sotto "Bentornato in <app>" (o "Benvenuto" alla prima apertura).
- * Compare una volta per sessione del browser per ogni app; un tocco o un tasto la chiudono subito.
- * Il nome si legge da localStorage "obo-nome" (lo scrivono OBO Hub e Mappa carichi all'accesso).
+ * Compare OGNI volta che si apre l'app e ogni volta che la si riprende dallo sfondo (app non chiusa, scheda o finestra
+ * che torna visibile). Non compare solo passando da una pagina all'altra della stessa app. Un tocco o un tasto la chiudono.
+ * Il nome si legge da localStorage "obo-nome" (lo scrivono tutte le app all'accesso); se manca si ricava dalla sessione
+ * condivisa di OBO Hub (visitatore o utente collegato), così funziona anche per le app nuove.
  * Uso: <script src="benvenuto.js" data-app="OBO Hub"></script>
  */
 (function () {
@@ -11,13 +13,43 @@
   var app = ds.app || "OBO Hub", chiave = "obo-benvenuto-" + app.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   var prova = /[?&]provabenvenuto\b/.test(location.search);
   if (!prova && (/[?&]nobenvenuto\b/.test(location.search) || navigator.webdriver)) return; // controlli automatici: niente animazione
-  try { if (!prova && sessionStorage.getItem(chiave)) return; sessionStorage.setItem(chiave, "1"); } catch (e) { /* senza sessionStorage la si mostra comunque */ }
+  // cambio pagina dentro la stessa app (uscita da meno di 3 secondi verso una pagina della stessa app): niente animazione
+  var interna = false;
+  try { var u = JSON.parse(sessionStorage.getItem("obo-bv-uscita") || "null"); interna = !prova && !!u && u.app === app && Date.now() - u.t < 3000; sessionStorage.removeItem("obo-bv-uscita"); } catch (e) {}
+  addEventListener("pagehide", function () { try { sessionStorage.setItem("obo-bv-uscita", JSON.stringify({ app: app, t: Date.now() })); } catch (e) {} });
 
-  var en = false, nome = "", visto = false;
-  try { en = localStorage.getItem("obo-lingua") === "en"; nome = (localStorage.getItem("obo-nome") || "").trim().split(/\s+/)[0] || ""; visto = !!localStorage.getItem(chiave + "-visto"); localStorage.setItem(chiave + "-visto", "1"); } catch (e) {}
-  var ora = new Date().getHours();
-  var saluto = en ? (ora < 12 ? "Good morning" : ora < 18 ? "Good afternoon" : "Good evening") : (ora < 13 ? "Buongiorno" : ora < 18 ? "Buon pomeriggio" : "Buonasera");
-  var riga2 = en ? (visto ? "Welcome back to " : "Welcome to ") + app : (visto ? "Bentornato in " : "Benvenuto in ") + app;
+  function nomeOra() {
+    var n = "";
+    try { n = (localStorage.getItem("obo-nome") || "").trim().split(/\s+/)[0] || ""; } catch (e) {}
+    if (!n) n = nomeDallaSessione();
+    try { if (n) localStorage.setItem("obo-nome", n); } catch (e) {}
+    return n;
+  }
+  /* Nome anche per le app che non lo salvano da sé: sessione condivisa di OBO Hub (stesso indirizzo per tutte le app).
+     Ordine: visitatore, nome dell'utente, poi dall'email (cognome.nome@… → Nome). */
+  function nomeDallaSessione() {
+    try {
+      var v = JSON.parse(localStorage.getItem("obo-visitatore") || "null");
+      if (v && v.name) return String(v.name).trim().split(/\s+/)[0];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!/^sb-.+-auth-token$/.test(k)) continue;
+        var j = JSON.parse(localStorage.getItem(k) || "null"), u = j && (j.user || (j.currentSession && j.currentSession.user));
+        if (!u) continue;
+        var m = u.user_metadata || {}, n = String(m.nome_visualizzato || m.nome || m.full_name || "").trim();
+        if (n && !/^amministratore$/i.test(n)) return n.split(/\s+/)[0];
+        var parti = String(u.email || "").split("@")[0].split(/[._-]/).filter(Boolean), x = parti.length > 1 ? parti[parti.length - 1] : parti[0] || "";
+        if (x) return x.charAt(0).toUpperCase() + x.slice(1).toLowerCase();
+      }
+    } catch (e) {}
+    return "";
+  }
+  function testi() {
+    var en = false, visto = false, nome = nomeOra(), ora = new Date().getHours();
+    try { en = localStorage.getItem("obo-lingua") === "en"; visto = !!localStorage.getItem(chiave + "-visto"); localStorage.setItem(chiave + "-visto", "1"); } catch (e) {}
+    var saluto = en ? (ora < 12 ? "Good morning" : ora < 18 ? "Good afternoon" : "Good evening") : (ora < 13 ? "Buongiorno" : ora < 18 ? "Buon pomeriggio" : "Buonasera");
+    return [saluto + (nome ? ", " + nome : ""), en ? (visto ? "Welcome back to " : "Welcome to ") + app : (visto ? "Bentornato in " : "Benvenuto in ") + app];
+  }
   var piano = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var css = "#obo-bv{position:fixed;inset:0;z-index:2147483646;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;" +
@@ -61,20 +93,35 @@
 
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   var st = document.createElement("style"); st.textContent = css;
-  var d = document.createElement("div"); d.id = "obo-bv"; d.setAttribute("role", "status"); d.setAttribute("aria-live", "polite");
-  d.innerHTML = '<div class="ic"><div class="alone"></div><div class="onda"></div>' + svg +
-    '<i class="sc" style="left:-6%;top:12%;animation-delay:1.25s"></i><i class="sc" style="right:-4%;top:-4%;animation-delay:1.45s"></i><i class="sc" style="right:8%;bottom:-8%;animation-delay:1.6s"></i></div>' +
-    '<div class="tx"><div class="s1">' + esc(saluto + (nome ? ", " + nome : "")) + '</div><div class="s2">' + esc(riga2) + "</div></div>";
   (document.head || document.documentElement).appendChild(st);
-  document.documentElement.appendChild(d);
 
-  var chiuso = false;
-  function chiudi() {
-    if (chiuso) return; chiuso = true; d.classList.add("via");
-    setTimeout(function () { d.remove(); st.remove(); }, 650);
-    removeEventListener("keydown", chiudi, true);
+  var d = null, timer = 0;
+  function mostra() {
+    if (d) return;
+    var t = testi();
+    d = document.createElement("div"); d.id = "obo-bv"; d.setAttribute("role", "status"); d.setAttribute("aria-live", "polite");
+    d.innerHTML = '<div class="ic"><div class="alone"></div><div class="onda"></div>' + svg +
+      '<i class="sc" style="left:-6%;top:12%;animation-delay:1.25s"></i><i class="sc" style="right:-4%;top:-4%;animation-delay:1.45s"></i><i class="sc" style="right:8%;bottom:-8%;animation-delay:1.6s"></i></div>' +
+      '<div class="tx"><div class="s1">' + esc(t[0]) + '</div><div class="s2">' + esc(t[1]) + "</div></div>";
+    d.addEventListener("click", chiudi);
+    addEventListener("keydown", chiudi, true);
+    document.documentElement.appendChild(d);
+    timer = setTimeout(chiudi, piano ? 1400 : 2700);
   }
-  d.addEventListener("click", chiudi);
-  addEventListener("keydown", chiudi, true);
-  setTimeout(chiudi, piano ? 1400 : 2700);
+  function chiudi() {
+    if (!d || d.classList.contains("via")) return;
+    var el = d; clearTimeout(timer); el.classList.add("via");
+    removeEventListener("keydown", chiudi, true);
+    setTimeout(function () { el.remove(); if (d === el) d = null; }, 650);
+  }
+
+  if (!interna) mostra();
+  // app ripresa dallo sfondo (non chiusa): l'animazione ricompare
+  var nascosta = 0;
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") { nascosta = Date.now(); return; }
+    if (nascosta && Date.now() - nascosta > 800) { if (d) { d.remove(); d = null; } mostra(); }
+    nascosta = 0;
+  });
+  addEventListener("pageshow", function (e) { if (e.persisted) { if (d) { d.remove(); d = null; } mostra(); } }); // ritorno con il tasto Indietro (pagina in memoria)
 })();
