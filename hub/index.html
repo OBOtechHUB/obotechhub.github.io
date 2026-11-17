@@ -204,7 +204,7 @@
     <div id="pannello" class="pannello nascosto"></div>
     <div class="cerca-hub nascosto" id="cercaHub" role="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="search" id="cercaQ" autocomplete="off" spellcheck="false" aria-label="Cerca in OBO Hub" aria-controls="cercaRis" aria-expanded="false" placeholder="Cerca in OBO Hub: app, sezioni, prodotti, notizie, progetti…">
+      <input type="search" id="cercaQ" autocomplete="off" spellcheck="false" aria-label="Cerca in OBO Hub" aria-controls="cercaRis" aria-expanded="false" placeholder="Cerca in OBO Hub: app, sezioni, prodotti, progetti…">
       <kbd aria-hidden="true">/</kbd>
       <div id="cercaRis" class="cerca-ris" hidden></div>
     </div>
@@ -467,7 +467,7 @@
   // ---------- ricerca unica: app, sezioni, prodotti, notizie, progetti salvati ----------
   const cerca = (() => {
     let profilo = null, mie = [], prodotti = null, notizie = null, progetti = null, timer = 0;
-    let attivi = ["app", "prodotti", "notizie", "progetti"]; // tipi di risultato scelti dall'admin (Amministrazione → Impostazioni)
+    let attivi = ["app", "prodotti", "progetti"]; // le notizie OBO non si cercano più // tipi di risultato scelti dall'admin (Amministrazione → Impostazioni)
     const norm = (t) => String(t ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const T = (i, e) => (lingua === "en" ? e : i);
     // sezioni di Progettazione LPS: [permesso, nome, nome inglese, percorso, parole in più]
@@ -491,7 +491,7 @@
     async function carica() {
       if (haApp("prodotti") && !prodotti && (attivi.includes("prodotti") || attivi.includes("notizie"))) {
         prodotti = fetch("prodotti/dati/prodotti.json?v=" + Math.floor(Date.now() / 36e5)).then((r) => r.json()).then((l) => l.map((r) => ({ r, k: norm(r[0] + " " + r[1]) }))).catch(() => []);
-        notizie = fetch("prodotti/dati/notizie.json?v=" + Math.floor(Date.now() / 36e5)).then((r) => r.json()).catch(() => []);
+        notizie = Promise.resolve([]); // notizie OBO tolte su richiesta
       }
       if (haApp("lps") && profilo?.ruolo !== "visitatore" && !progetti && attivi.includes("progetti")) {
         progetti = supabase.from("progetti").select("id,codice,nome,comune,data_modifica").order("data_modifica", { ascending: false }).limit(500).then(({ data }) => data || [], () => []);
@@ -499,7 +499,7 @@
     }
     // filtri in cima ai risultati: Tutto / App e sezioni / Prodotti / Notizie / Progetti (solo i tipi scelti dall'admin)
     let filtro = "tutto";
-    const TIPI = [["app", "App e sezioni", "Apps and sections"], ["progetti", "Progetti", "Projects"], ["prodotti", "Prodotti", "Products"], ["notizie", "Notizie", "News"]];
+    const TIPI = [["app", "App e sezioni", "Apps and sections"], ["progetti", "Progetti", "Projects"], ["prodotti", "Prodotti", "Products"]];
     async function esegui() {
       const q = $("cercaQ").value.trim(), box = $("cercaRis");
       if (q.length < 2) { box.hidden = true; $("cercaQ").setAttribute("aria-expanded", "false"); return; }
@@ -561,7 +561,7 @@
       imposta(p, m) {
         profilo = p; mie = m; progetti = null; filtro = "tutto";
         $("cercaHub").classList.toggle("nascosto", !p || !m.length);
-        if (lingua === "en") q.placeholder = "Search OBO Hub: apps, sections, products, news, projects…";
+        if (lingua === "en") q.placeholder = "Search OBO Hub: apps, sections, products, projects…";
         // impostazione "ricerca" (stato_manutenzione()): senza valore tutti i tipi, "nessuno" = casella nascosta
         if (p && window.OBOManutenzione) OBOManutenzione.stato().then((s) => {
           const v = s && typeof s.ricerca === "string" ? s.ricerca.trim() : "";
@@ -608,23 +608,19 @@
     });
   }
 
-  // Novità prodotti OBO in evidenza (dati rigenerati ogni notte, vedi prodotti/)
+  // Nuovi prodotti OBO: i "Product highlights" di OBO.global collegati alle pagine italiane di obo.it
+  // (prodotti/dati/evidenza.json, aggiornato ogni notte da .github/workflows/evidenza.yml). Le notizie OBO non si mostrano più.
   async function novitaProdotti(mostra) {
     const box = $("novitaProdotti");
     if (!mostra) { box.classList.add("nascosto"); box.innerHTML = ""; return; }
-    let n = null; try { const r = await fetch("prodotti/dati/novita.json?v=" + Math.floor(Date.now() / 36e5)); if (r.ok) n = await r.json(); } catch {}
-    if (!n || (!n.prodotti?.length && !n.notizie?.length)) { box.classList.add("nascosto"); return; }
+    let n = null; try { const r = await fetch("prodotti/dati/evidenza.json?v=" + Math.floor(Date.now() / 36e5)); if (r.ok) n = await r.json(); } catch {}
+    if (!n || !n.prodotti?.length) { box.classList.add("nascosto"); return; }
     const en = lingua === "en", T = (i, e) => (en ? e : i);
     const data = (d) => { try { return new Date(d + "T12:00:00").toLocaleDateString(en ? "en-GB" : "it-IT", { day: "numeric", month: "short" }); } catch { return d; } };
-    const sito = (u) => (u && u.startsWith("http") ? u : "https://www.obo.it" + (u || ""));
-    const prodotti = (n.prodotti || []).slice(0, 10).map((r) => {
-      const d = r.length > 9 ? r[9] : r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
-      return `<a class="np" href="${esc(sito(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta">${T("NUOVO", "NEW")}${d ? " · " + esc(data(d)) : ""}</span><b>${esc(r[1])}</b><small>${esc(r[0])}</small></span></a>`;
-    });
-    const notizie = (n.notizie || []).slice(0, 4).map((x) => `<a class="np" href="${esc(sito(x[0]))}" target="_blank" rel="noopener"><span class="foto copri">${x[3] ? `<img src="${esc(x[3])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta notizia">${T("NOTIZIA", "NEWS")} · ${esc(data(x[4]))}</span><b>${esc(x[1])}</b></span></a>`);
-    box.innerHTML = `<div class="testa"><h2>${svg("stella").replace("<svg", '<svg width="22" height="22" style="color:var(--arancio);vertical-align:-3px"')} ${T("Novità OBO", "OBO news")}</h2><a href="prodotti/?vista=novita">${T("Tutte le novità", "All new items")} →</a></div>
-      <p class="sotto">${n.prodottiNuovi ? T(`${n.prodottiNuovi} prodotti nuovi negli ultimi ${n.giorni} giorni`, `${n.prodottiNuovi} new products in the last ${n.giorni} days`) + " · " : ""}${T("aggiornato ogni notte da obo.it", "updated every night from obo.it")}</p>
-      <div class="strip">${prodotti.join("")}${notizie.join("")}</div>`;
+    const carte = n.prodotti.slice(0, 10).map((p) => `<a class="np" href="${esc(en ? p.urlGlobal || p.url : p.url)}" target="_blank" rel="noopener"><span class="foto">${p.immagine ? `<img src="${esc(p.immagine)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta">${T("NUOVO", "NEW")}${p.dal ? " · " + esc(data(p.dal)) : ""}</span><b>${esc(en ? p.nomeEn || p.nome : p.nome)}</b><small>${T("art.", "item")} ${esc(p.codice)}</small></span></a>`);
+    box.innerHTML = `<div class="testa"><h2>${svg("stella").replace("<svg", '<svg width="22" height="22" style="color:var(--arancio);vertical-align:-3px"')} ${T("Nuovi prodotti OBO", "New OBO products")}</h2><a href="prodotti/?vista=novita">${T("Tutti i nuovi prodotti", "All new products")} →</a></div>
+      <p class="sotto">${T("In evidenza su OBO.global, con la pagina italiana di obo.it", "Highlighted on OBO.global")} · ${T("aggiornato ogni notte", "updated every night")}</p>
+      <div class="strip">${carte.join("")}</div>`;
     box.classList.remove("nascosto");
   }
 

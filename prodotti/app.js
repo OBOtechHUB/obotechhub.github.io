@@ -24,7 +24,7 @@ const applicaTema = () => { const t = leggi("obo-tema"); document.documentElemen
 function testiFissi() {
   document.documentElement.lang = en() ? "en" : "it";
   document.querySelectorAll("[data-t]").forEach((el) => { const [i, e] = el.dataset.t.split("|"); el.textContent = en() ? e : i; });
-  $("q").placeholder = T("Prodotti, articoli, notizie", "Products, articles, news");
+  $("q").placeholder = T("Prodotti e articoli", "Products and articles");
   $("pulisci").setAttribute("aria-label", T("Cancella", "Clear"));
   $("aspetto").title = T("Aspetto", "Display");
   pannelloAspetto();
@@ -74,16 +74,17 @@ async function accesso() {
 
 // ---------- dati ----------
 // prodotti: [numero, nome, descrizione, url, icona, attivo dal, prima vista, immagine]
-let PRODOTTI = [], CATEGORIE = [], NOTIZIE = [], PAGINE = [], NOVITA = { prodotti: [], notizie: [], giorni: 120 }, STATO = null;
+let PRODOTTI = [], CATEGORIE = [], NOTIZIE = [], PAGINE = [], NOVITA = { prodotti: [], notizie: [], giorni: 120 }, STATO = null, EVIDENZA = { prodotti: [], storico: [] };
 let NUOVI = new Set();
 const norm = (s) => String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[®™]/g, "");
 let INDICE = []; // testo normalizzato per prodotto
 
 async function carica() {
   const j = (f) => fetch(`dati/${f}.json?v=${Math.floor(Date.now() / 36e5)}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-  const [p, c, n, pg, nv, st] = await Promise.all(["prodotti", "categorie", "notizie", "pagine", "novita", "stato"].map(j));
-  PRODOTTI = p ?? []; CATEGORIE = c ?? []; NOTIZIE = n ?? []; PAGINE = pg ?? []; NOVITA = nv ?? NOVITA; STATO = st;
-  NUOVI = new Set((NOVITA.prodotti ?? []).map((r) => r[0]));
+  // le notizie OBO non si mostrano più (richiesta di Marco): nuovi prodotti da OBO.global (evidenza.json)
+  const [p, c, pg, nv, st, ev] = await Promise.all(["prodotti", "categorie", "pagine", "novita", "stato", "evidenza"].map(j));
+  PRODOTTI = p ?? []; CATEGORIE = c ?? []; NOTIZIE = []; PAGINE = pg ?? []; NOVITA = nv ?? NOVITA; STATO = st; EVIDENZA = ev ?? EVIDENZA;
+  NUOVI = new Set([...(NOVITA.prodotti ?? []).map((r) => r[0]), ...(EVIDENZA.prodotti ?? []).map((x) => x.codice)]);
   INDICE = PRODOTTI.map((r) => norm(`${r[0]} ${r[1]} ${r[2]}`));
   NOMI_CAT = new Map(CATEGORIE.map((c) => [c[0], c[1]]));
 }
@@ -151,6 +152,12 @@ function cartaProdotto(r) {
   return `<a class="carta" href="${esc(url(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
     <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${data ? ` · ${dataIt(data)}` : ""}</span><h3>${esc(r[1])}</h3><p>${esc(r[2] || "")}</p><span class="art">${esc(r[0])}</span></span></a>`;
 }
+/** Prodotto in evidenza su OBO.global, con la pagina italiana di obo.it. */
+function cartaEvidenza(x) {
+  const en = T("", "en") === "en";
+  return `<a class="carta" href="${esc((en && x.urlGlobal) || x.url)}" target="_blank" rel="noopener"><span class="foto">${x.immagine ? `<img src="${esc(x.immagine)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
+    <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${x.dal ? ` · ${T("in evidenza dal", "highlighted since")} ${dataIt(x.dal)}` : ""}</span><h3>${esc((en && x.nomeEn) || x.nome)}</h3><p>${esc((en ? x.descrizioneEn : x.descrizione) || x.descrizioneEn || "")}</p><span class="art">${esc(x.codice)}</span></span></a>`;
+}
 function cartaNotizia(n, q = "") {
   return `<a class="carta" href="${esc(url(n[0]))}" target="_blank" rel="noopener"><span class="foto copri">${n[3] ? `<img src="${esc(n[3])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
     <span class="corpo"><span class="data">${dataIt(n[4])}</span><h3>${evidenzia(n[1], q)}</h3><p>${evidenzia(n[2] || "", q)}</p></span></a>`;
@@ -175,8 +182,8 @@ function disegna() {
   else if (vista === "codici") v.innerHTML = vistaCodici();
   else v.innerHTML = vistaHome();
   if (STATO) {
-    $("stato").textContent = T(`${STATO.prodotti.toLocaleString("it-IT")} prodotti · ${STATO.categorie} categorie · ${STATO.notizie} notizie · aggiornato ${new Date(STATO.aggiornato).toLocaleString("it-IT", { dateStyle: "medium", timeStyle: "short" })}`,
-      `${STATO.prodotti.toLocaleString("en-GB")} products · ${STATO.categorie} categories · ${STATO.notizie} news · updated ${new Date(STATO.aggiornato).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}`);
+    $("stato").textContent = T(`${STATO.prodotti.toLocaleString("it-IT")} prodotti · ${STATO.categorie} categorie · aggiornato ${new Date(STATO.aggiornato).toLocaleString("it-IT", { dateStyle: "medium", timeStyle: "short" })}`,
+      `${STATO.prodotti.toLocaleString("en-GB")} products · ${STATO.categorie} categories · updated ${new Date(STATO.aggiornato).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}`);
     $("fonte").innerHTML = T(`Fonte: <a href="${SITO}/prodotti/" target="_blank" rel="noopener">obo.it</a> e catalogo online OBO, aggiornati ogni notte. Prezzi, disponibilità e dati tecnici: vale sempre la scheda sul sito OBO.`,
       `Source: <a href="${SITO}/prodotti/" target="_blank" rel="noopener">obo.it</a> and the OBO online catalogue, updated every night. Prices, availability and technical data: the OBO website always prevails.`)
       + (STATO.conDettagli < STATO.prodotti ? " " + T(`Dettagli e foto disponibili per ${STATO.conDettagli.toLocaleString("it-IT")} prodotti: gli altri si completano nelle prossime notti.`, `Details and photos available for ${STATO.conDettagli.toLocaleString("en-GB")} products: the rest is completed over the next nights.`) : "");
@@ -203,7 +210,7 @@ function vistaRicerca(q) {
   const notizie = cercaVoci(NOTIZIE, q, [1, 2]);
   const n = { tutti: prodotti.length + pagine.length + notizie.length, prodotti: prodotti.length, articoli: pagine.length, notizie: notizie.length };
   const tab = (k, it, e) => `<button class="scheda" role="tab" data-scheda="${k}" aria-selected="${scheda === k}">${T(it, e)} <span>${n[k]}</span></button>`;
-  let h = `<div class="schede" role="tablist">${tab("tutti", "Tutti", "All")}${tab("prodotti", "Prodotti", "Products")}${tab("articoli", "Articoli", "Articles")}${tab("notizie", "Notizie", "News")}</div>`;
+  let h = `<div class="schede" role="tablist">${tab("tutti", "Tutti", "All")}${tab("prodotti", "Prodotti", "Products")}${tab("articoli", "Articoli", "Articles")}</div>`;
   if (!n.tutti) return h + `<p class="vuoto">${T("Nessun risultato. Prova con meno parole o con il numero d'articolo.", "No results. Try fewer words or the article number.")}</p>`;
   if (scheda === "tutti" || scheda === "prodotti") {
     const quanti = scheda === "tutti" ? 8 : mostra;
@@ -247,11 +254,14 @@ function vistaCodici() {
 }
 
 function vistaNovita() {
-  const prodotti = NOVITA.prodotti ?? [];
-  return `<h2>${T("Prodotti nuovi", "New products")} <small>${T(`ultimi ${NOVITA.giorni} giorni · ${NOVITA.prodottiNuovi ?? prodotti.length}`, `last ${NOVITA.giorni} days · ${NOVITA.prodottiNuovi ?? prodotti.length}`)}</small></h2>
-    ${prodotti.length ? `<div class="griglia">${prodotti.map(cartaProdotto).join("")}</div>` : `<p class="vuoto">${T("Nessun prodotto nuovo nel periodo, oppure l'indice si sta ancora completando.", "No new products in the period, or the index is still being completed.")}</p>`}
-    <h2>${T("Notizie OBO", "OBO news")} <small>${NOTIZIE.length}</small></h2>
-    <div class="griglia">${NOTIZIE.map((n) => cartaNotizia(n)).join("")}</div>`;
+  const prodotti = NOVITA.prodotti ?? [], ev = EVIDENZA.prodotti ?? [], attuali = new Set(ev.map((x) => x.codice));
+  const prima = (EVIDENZA.storico ?? []).filter((x) => !attuali.has(x.codice));
+  let h = `<h2>${T("In evidenza su OBO.global", "Highlighted on OBO.global")} <small>${ev.length}</small></h2>`;
+  h += ev.length ? `<div class="griglia">${ev.map(cartaEvidenza).join("")}</div>` : `<p class="vuoto">${T("I prodotti in evidenza si aggiornano ogni notte.", "Highlighted products are updated every night.")}</p>`;
+  if (prima.length) h += `<h2>${T("In evidenza in precedenza", "Previously highlighted")} <small>${prima.length}</small></h2><div class="griglia">${prima.map(cartaEvidenza).join("")}</div>`;
+  h += `<h2>${T("Comparsi di recente su obo.it", "Recently added on obo.it")} <small>${T(`ultimi ${NOVITA.giorni} giorni · ${NOVITA.prodottiNuovi ?? prodotti.length}`, `last ${NOVITA.giorni} days · ${NOVITA.prodottiNuovi ?? prodotti.length}`)}</small></h2>`;
+  h += prodotti.length ? `<div class="griglia">${prodotti.map(cartaProdotto).join("")}</div>` : `<p class="vuoto">${T("Nessun prodotto nuovo nel periodo, oppure l'indice si sta ancora completando.", "No new products in the period, or the index is still being completed.")}</p>`;
+  return h;
 }
 
 function figli(u) { const liv = u.split("/").length; return CATEGORIE.filter((c) => c[0].startsWith(u) && c[0].split("/").length === liv + 1); }
@@ -262,12 +272,12 @@ function ramo(u, prof = 0) {
     return `<li><a href="${esc(url(c[0]))}" target="_blank" rel="noopener">${esc(c[1])}</a>${n && !sotto ? ` <small style="color:var(--tenue)">(${n})</small>` : ""}${sotto}</li>`; }).join("")}</ul>`;
 }
 function vistaHome() {
-  const nuovi = (NOVITA.prodotti ?? []).slice(0, 8), notizie = NOTIZIE.slice(0, 4);
+  const nuovi = (NOVITA.prodotti ?? []).slice(0, 8), ev = EVIDENZA.prodotti ?? [];
   const radici = figli("/prodotti/");
   let h = "";
-  if (nuovi.length) h += `<h2>${T("Novità", "New")} <small>${T(`${NOVITA.prodottiNuovi} prodotti negli ultimi ${NOVITA.giorni} giorni`, `${NOVITA.prodottiNuovi} products in the last ${NOVITA.giorni} days`)}</small></h2>
+  if (ev.length) h += `<h2>${T("Nuovi prodotti in evidenza", "New highlighted products")} <small>OBO.global</small></h2><div class="griglia">${ev.map(cartaEvidenza).join("")}</div><p class="altro"><button class="btn" data-vai="novita">${T("Tutti i nuovi prodotti", "All new products")}</button></p>`;
+  if (nuovi.length) h += `<h2>${T("Comparsi di recente su obo.it", "Recently added on obo.it")} <small>${T(`${NOVITA.prodottiNuovi} prodotti negli ultimi ${NOVITA.giorni} giorni`, `${NOVITA.prodottiNuovi} products in the last ${NOVITA.giorni} days`)}</small></h2>
     <div class="griglia">${nuovi.map(cartaProdotto).join("")}</div><p class="altro"><button class="btn" data-vai="novita">${T("Tutte le novità", "All new items")}</button></p>`;
-  if (notizie.length) h += `<h2>${T("Ultime notizie", "Latest news")}</h2><div class="griglia">${notizie.map((n) => cartaNotizia(n)).join("")}</div>`;
   h += `<h2>${T("Categorie", "Categories")} <small>${CATEGORIE.length}</small></h2>`;
   h += `<div class="radici">${radici.map((c) => `<button class="radice" data-radice="${esc(c[0])}" aria-pressed="${radiceAperta === c[0]}">${esc(c[1])}<small>${figli(c[0]).length} ${T("gruppi", "groups")}</small></button>`).join("")}</div>`;
   if (radiceAperta) h += `<div class="albero">${ramo(radiceAperta)}<p class="altro"><a class="btn" href="${esc(url(radiceAperta))}" target="_blank" rel="noopener">${T("Apri su obo.it", "Open on obo.it")} ↗</a></p></div>`;

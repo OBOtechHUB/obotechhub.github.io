@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   # i salvataggi fatti da GitHub Actions non fanno partire altri flussi: si pubblica dopo l'aggiornamento notturno
   workflow_run:
-    workflows: ["Aggiorna prodotti OBO"]
+    workflows: ["Aggiorna prodotti OBO", "Prodotti OBO in evidenza"]
     types: [completed]
 
 permissions:

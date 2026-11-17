@@ -1,0 +1,38 @@
+name: Prodotti OBO in evidenza
+
+# Ogni notte legge i "Product highlights" di OBO.global e li collega alle pagine italiane di obo.it
+# (prodotti/dati/evidenza.json, riquadro "Nuovi prodotti OBO" della pagina iniziale). Poche richieste, con pausa.
+on:
+  schedule:
+    - cron: "43 1 * * *"   # 02:43 ora italiana d'inverno
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [strumenti/prodotti/evidenza.py, .github/workflows/evidenza.yml]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: evidenza
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prodotti in evidenza
+        run: python3 strumenti/prodotti/evidenza.py
+      - name: Salva se è cambiato qualcosa
+        run: |
+          git config user.name "OBO Hub (prodotti in evidenza)"
+          git config user.email "actions@github.com"
+          git add prodotti/dati/evidenza.json
+          if git diff --cached --quiet; then echo "Nessuna modifica"; exit 0; fi
+          git commit -qm "Prodotti OBO in evidenza: aggiornamento del $(date +%F)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 10; done
