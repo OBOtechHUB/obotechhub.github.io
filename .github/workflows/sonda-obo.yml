@@ -1,0 +1,19 @@
+name: Sonda siti OBO (temporanea)
+on:
+  push:
+    branches: [sonda-obo]
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          UA="OBO-Hub-indice-prodotti/1.0 (strumento interno OBO Italia; contatto ufficio tecnico)"
+          for s in https://www.obo.it https://www.obo.global; do
+            echo "=================== $s/robots.txt"; curl -sL -A "$UA" "$s/robots.txt" | head -60
+          done
+          for u in https://www.obo.it/sitemap.xml https://www.obo.it/it-it/sitemap.xml https://www.obo.global/sitemap.xml; do
+            echo "=================== $u"; curl -sL -A "$UA" "$u" | head -c 3000; echo
+          done
+          echo "=================== obo.global home links"; curl -sL -A "$UA" https://www.obo.global/ | grep -oE 'href="[^"]+"' | sort -u | grep -iE "new|neu|novit|product|produkt" | head -60
+          echo "=================== obo.global en"; curl -sL -A "$UA" -o g.html -w "%{http_code} %{url_effective}\n" https://www.obo.global/en; grep -oE 'href="[^"]+"' g.html | sort -u | grep -iE "new|neu|novit|innovation|product" | head -60
+          echo "=================== obo.it it-it link novita"; curl -sL -A "$UA" https://www.obo.it/it-it | grep -oE 'href="[^"]+"' | sort -u | grep -iE "nuov|novit|new" | head -30
