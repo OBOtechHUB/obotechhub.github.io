@@ -97,9 +97,18 @@ def completa(p: dict, indice: dict[str, list]) -> dict:
             nome_en = testo(t.group(1)).split(" | ")[0]
     if not url_it and r and r[3]:
         url_it = r[3] if r[3].startswith("http") else "https://www.obo.it" + r[3]
+    # il nuovo obo.it usa /it-it/prodotti/...: si porta l'indirizzo nella forma del sito attuale
+    originale = url_it
+    url_it = re.sub(r"^https://www\.obo\.it/(?!it-it/)", "https://www.obo.it/it-it/", url_it) if url_it else ""
     if url_it:
         it = scarica(url_it)
         time.sleep(3)
+        if not it and originale != url_it:
+            url_it = originale  # se la forma /it-it/ non risponde resta l'indirizzo indicato dalla pagina
+            it = scarica(url_it)
+            time.sleep(3)
+        if it:
+            url_it = it[1] if it[1].startswith("https://www.obo.it/") else url_it  # indirizzo finale dopo i reindirizzamenti
         if it:
             t = re.search(r"<title>(.*?)</title>", it[0], re.S)
             if t:
