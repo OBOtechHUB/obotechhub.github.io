@@ -7,13 +7,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          UA="OBO-Hub-indice-prodotti/1.0 (strumento interno OBO Italia; contatto ufficio tecnico)"
-          for s in https://www.obo.it https://www.obo.global; do
-            echo "=================== $s/robots.txt"; curl -sL -A "$UA" "$s/robots.txt" | head -60
-          done
-          for u in https://www.obo.it/sitemap.xml https://www.obo.it/it-it/sitemap.xml https://www.obo.global/sitemap.xml; do
-            echo "=================== $u"; curl -sL -A "$UA" "$u" | head -c 3000; echo
-          done
-          echo "=================== obo.global home links"; curl -sL -A "$UA" https://www.obo.global/ | grep -oE 'href="[^"]+"' | sort -u | grep -iE "new|neu|novit|product|produkt" | head -60
-          echo "=================== obo.global en"; curl -sL -A "$UA" -o g.html -w "%{http_code} %{url_effective}\n" https://www.obo.global/en; grep -oE 'href="[^"]+"' g.html | sort -u | grep -iE "new|neu|novit|innovation|product" | head -60
-          echo "=================== obo.it it-it link novita"; curl -sL -A "$UA" https://www.obo.it/it-it | grep -oE 'href="[^"]+"' | sort -u | grep -iE "nuov|novit|new" | head -30
+          UA="OBO-Hub-indice-prodotti/1.0 (strumento interno OBO Italia)"
+          g() { curl -sL -A "$UA" "$@"; }
+          echo "=== indice sitemap obo.it"; g https://www.obo.it/it-it/sitemap.xml | grep -oE "<loc>[^<]+</loc>" | head -40
+          P=$(g https://www.obo.it/it-it/sitemap.xml | grep -oE "<loc>[^<]+</loc>" | sed 's/<[^>]*>//g' | grep -i product | head -1)
+          echo "=== prima sitemap prodotti: $P"; g "$P" | head -c 2500; echo; echo "url prodotti:"; g "$P" | grep -o "<url>" | wc -l
+          echo "=== home obo-bettermann en-xi: testo vicino ai prodotti"; g https://www.obo-bettermann.com/en-xi > h.html; python3 - <<'X'
+          import re,html
+          t=open('h.html',encoding='utf-8',errors='ignore').read()
+          for m in re.finditer(r'/en-xi/products/[^"]+\.html',t):
+              a=max(0,m.start()-1500); s=re.sub(r'<[^>]+>',' ',t[a:m.start()]); s=re.sub(r'\s+',' ',html.unescape(s))
+              print('...',s[-400:]); print('---'); break
+          heads=re.findall(r'<h[1-3][^>]*>(.*?)</h[1-3]>',t,re.S)
+          print('TITOLI:',[re.sub(r'<[^>]+>','',h).strip()[:80] for h in heads][:30])
+          print('NEXT_DATA?', '__NEXT_DATA__' in t, 'isNew' in t, 'novelty' in t.lower(), 'newProduct' in t)
+          for k in ['isNew','novelty','New product','new products','Neuheit','novità','Novità']:
+              i=t.find(k)
+              if i>=0: print('TROVATO',k,':',re.sub(r'\s+',' ',re.sub(r'<[^>]+>',' ',t[max(0,i-200):i+300]))[:500])
+          X
+          echo "=== home obo.it it-it: prodotti in evidenza"; g https://www.obo.it/it-it > i.html; grep -oE '/it-it/prodotti/[^"]+\.html' i.html | sort -u | head
+          echo "=== pagina prodotto: dati strutturati"; g https://www.obo-bettermann.com/en-xi/products/lightning-current-arrester-mcf-c-ip20-no-25-1-5096915.html > p.html; python3 - <<'X'
+          import re,json
+          t=open('p.html',encoding='utf-8',errors='ignore').read()
+          for j in re.findall(r'<script type="application/ld\+json"[^>]*>(.*?)</script>',t,re.S)[:3]: print('LDJSON:',j[:700])
+          for k in ['isNew','"new"','novelty','releaseDate','launch','Neu','NEW']:
+              i=t.find(k)
+              if i>=0: print('TROVATO',k,':',t[max(0,i-150):i+200].replace('\n',' ')[:350])
+          X
+          echo "=== pagina it corrispondente"; g -o /dev/null -w "%{http_code} %{url_effective}\n" https://www.obo.it/it-it/prodotti/limitatore-di-corrente-di-fulmine-mcf-c-5096915.html
