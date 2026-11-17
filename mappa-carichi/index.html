@@ -195,6 +195,12 @@ table.list { border-collapse: collapse; width: 100%; min-width: 640px; }
 .dwhat { font-family: inherit; font-size: calc(14px * var(--zoom, 1)); min-height: 72px; }
 .ddiff input[type=range] { width: 100%; accent-color: var(--accent); padding: 0; border: 0; background: transparent; box-shadow: none; min-height: 28px; }
 .dscale { display: flex; justify-content: space-between; color: var(--muted); font-size: calc(12px * var(--zoom, 1)); }
+.dmap .cellbtn { display: flex; align-items: center; justify-content: center; cursor: default; }
+.dmap .cellbtn:hover { transform: none; }
+.dmap td.c .mn { display: block; font-size: calc(10px * var(--zoom, 1)); line-height: 1; opacity: .8; }
+.dstack { display: inline-flex; width: 110px; height: 8px; border-radius: 99px; overflow: hidden; background: color-mix(in srgb, var(--fg) 10%, transparent); vertical-align: middle; margin-right: 6px; }
+.dstack i { display: block; height: 100%; }
+.dstack .tt { background: var(--accent); } .dstack .cc { background: #41525d; }
 .dh3 { margin: 22px 0 8px; font-size: calc(16px * var(--zoom, 1)); }
 .dnote:empty { display: none; }
 .dbar { display: inline-block; width: 60px; height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--fg) 12%, transparent); vertical-align: middle; margin-right: 6px; overflow: hidden; }
@@ -1342,6 +1348,11 @@ html { touch-action: pan-x pan-y; }
           <label for="d-n">Quante mail</label>
           <input id="d-n" type="number" min="1" max="500" step="1" required>
         </div>
+        <div class="field narrow">
+          <label for="d-ore">Tempo di gestione (ore)</label>
+          <input id="d-ore" type="number" min="0.25" max="24" step="0.25" required placeholder="es. 1,5" aria-describedby="d-oreH">
+          <small class="fhint" id="d-oreH">0,25 = 15 min · 0,5 = 30 min</small>
+        </div>
         <div class="field">
           <label for="d-prio">Priorità</label>
           <select id="d-prio" required><option value="">Scegli…</option><option value="Alta">Alta</option><option value="Media">Media</option><option value="Bassa">Bassa</option></select>
@@ -1372,9 +1383,10 @@ html { touch-action: pan-x pan-y; }
     <div class="bar">
       <h2 id="h-drep">Report settimanale</h2>
       <div class="grp">
-        <button type="button" id="dPrev" aria-label="Settimana precedente">&larr; Settimana</button>
+        <span class="seg2" id="dPer" role="group" aria-label="Periodo del report"><button type="button" data-per="w" aria-pressed="true">Settimana</button><button type="button" data-per="m" aria-pressed="false">Mese</button></span>
+        <button type="button" id="dPrev">&larr; Settimana</button>
         <button type="button" id="dToday">Questa settimana</button>
-        <button type="button" id="dNext" aria-label="Settimana successiva">Settimana &rarr;</button>
+        <button type="button" id="dNext">Settimana &rarr;</button>
         <span class="range" id="dRange"></span>
       </div>
     </div>
@@ -1386,6 +1398,16 @@ html { touch-action: pan-x pan-y; }
       <button type="button" id="dCsv">Scarica CSV della settimana</button>
     </div>
     <p class="sub dnote" id="dNote" style="margin:0 0 10px"></p>
+    <h3 class="dh3" style="margin-top:4px">Carico di lavoro: ore di gestione giorno per giorno</h3>
+    <div class="scroll"><table class="map dmap" id="dMap"></table></div>
+    <div class="legend">
+      <span><i style="background:var(--cell)"></i>nessuna attività</span>
+      <span><i style="background:color-mix(in srgb,var(--heat) 35%,var(--cell))"></i>fino a 4 h</span>
+      <span><i style="background:var(--heat)"></i>8 h (pieno)</span>
+      <span><i style="background:var(--over)"></i>oltre 8 h</span>
+      <span>Queste ore contano anche nella Mappa dei carichi.</span>
+    </div>
+    <h3 class="dh3">Riepilogo per persona</h3>
     <div class="scroll"><table class="list" id="dSum"></table></div>
     <h3 class="dh3">Dettaglio delle attività</h3>
     <div class="scroll"><table class="list" id="dList"></table></div>
@@ -1403,6 +1425,10 @@ html { touch-action: pan-x pan-y; }
       <button class="primary" type="submit" id="teamAdd">Aggiungi persona</button>
     </form>
     <div class="status" id="teamMsg" role="status"></div>
+    <p class="sub" style="margin:0">
+      <b>Ore progetti</b>: somma delle ore pianificate in tutti i progetti della persona, passati, in corso e futuri (giorni × ore al giorno, oppure le ore dei giorni scelti).
+      <b>Daily task</b>: mail gestite negli ultimi 30 giorni (tecniche e commerciali) e tempo impiegato; queste ore contano anche nella Mappa dei carichi.
+    </p>
     <div class="scroll"><table class="list" id="teamList"></table></div>
   </section>
   </div>
@@ -1689,7 +1715,7 @@ html { touch-action: pan-x pan-y; }
       lastState = sig;
       setAdmins((r.people || []).filter(function (x) { return x.is_admin; }).map(function (x) { return x.name; }));
       projects = r.projects || []; team = (r.people || []).filter(function (x) { return !x.is_admin && !x.is_visitor; }).map(function (x) { return x.name; }); visitors = (r.people || []).filter(function (x) { return x.is_visitor; }).map(function (x) { return x.name; });
-      secrets = r.secrets || null; snap(); renderAll(); accLoad(!quiet); carLoad();
+      secrets = r.secrets || null; snap(); renderAll(); accLoad(!quiet); carLoad(); doreLoad();
     });
   }
   function startSession(r) {
@@ -1854,6 +1880,20 @@ html { touch-action: pan-x pan-y; }
         d = nextWork(addDays(d, 1));
       }
     });
+    // ore di gestione dei daily task: contano nei carichi (non quando si filtra per progetto, priorità o stato)
+    var dore = (typeof DORE === 'object' && DORE) || {};
+    if (!FLT.prj && !FLT.prio && !FLT.stato) {
+      var dp = {};
+      Object.keys(dore).forEach(function (k) {
+        var o = dore[k]; if (!(o.ore > 0)) return;
+        var i = k.lastIndexOf('|'), per = k.slice(0, i), dk = k.slice(i + 1);
+        if (!inCarichi(per) || (FLT.persone.length && FLT.persone.indexOf(per) < 0)) return;
+        var px = dp[per] || (dp[per] = { id: '__daily|' + per, _daily: true, person: per, name: 'Daily task (mail)', crm: '', prio: '–', dates: {}, days: 0, start: dk });
+        px.dates[dk] = o.ore; px.days++;
+        if (!m[k]) m[k] = { h: 0, items: [] };
+        m[k].h += o.ore; m[k].items.push(px);
+      });
+    }
     return m;
   }
   var ADMINS = ['Marco Lo Vetere'], adminName = '';
@@ -1954,7 +1994,7 @@ html { touch-action: pan-x pan-y; }
     if (!e) { el.innerHTML = head + 'libero, ' + CAP + ' h disponibili.'; return; }
     var free = CAP - e.h;
     head += fmtH(e.h) + ' h su ' + CAP + (free < 0 ? ' (sovraccarico di ' + fmtH(-free) + ' h)' : ' (' + fmtH(free) + ' h liberi)');
-    el.innerHTML = head + '<ul>' + e.items.map(function (p) { return '<li>' + crmTag(p) + esc(p.name) + ' · ' + fmtH(projHours(p, selected.d)) + ' h · priorità ' + esc(p.prio.toLowerCase()) + '</li>'; }).join('') + '</ul>';
+    el.innerHTML = head + '<ul>' + e.items.map(function (p) { return '<li>' + crmTag(p) + esc(p.name) + ' · ' + fmtH(projHours(p, selected.d)) + ' h' + (p._daily ? ' · mail tecniche e commerciali' : ' · priorità ' + esc(p.prio.toLowerCase())) + '</li>'; }).join('') + '</ul>';
   }
 
   function renderList() {
@@ -2278,7 +2318,7 @@ html { touch-action: pan-x pan-y; }
       hours += L[k].h; per[p] = (per[p] || 0) + L[k].h; dpp[p] = (dpp[p] || 0) + 1;
       if (L[k].h > CAP) { over++; overL.push({ p: p, d: d, h: L[k].h, items: L[k].items }); }
       L[k].items.forEach(function (x) {
-        pr[x.id] = 1; ppj[p] = ppj[p] || {}; ppj[p][x.id] = 1;
+        if (!x._daily) { pr[x.id] = 1; ppj[p] = ppj[p] || {}; ppj[p][x.id] = 1; } // i daily task non sono progetti
         var o = projH[x.id] = projH[x.id] || { p: x, h: 0, days: 0 };
         o.h += x.dates ? Number(x.dates[ds]) : Number(x.hpd); o.days++;
       });
@@ -2305,13 +2345,15 @@ html { touch-action: pan-x pan-y; }
     renderHist();
   }
   function renderTeam() {
-    var h = '<thead><tr><th>Persona</th><th>Progetti</th><th>Ore totali</th><th></th></tr></thead><tbody>';
-    var ppl = people();
-    if (!ppl.length) h += '<tr><td colspan="4" class="empty">Nessuna persona inserita.</td></tr>';
+    var h = '<thead><tr><th>Persona</th><th>Progetti</th><th>Ore progetti</th><th>Daily task (30 gg): mail</th><th>Tecniche / commerciali</th><th>Ore daily task</th><th></th></tr></thead><tbody>';
+    var ppl = people(), da30 = iso(addDays(today, -29)), dd = {}, dore = (typeof DORE === 'object' && DORE) || {};
+    Object.keys(dore).forEach(function (k) { var i = k.lastIndexOf('|'), per = k.slice(0, i), dk = k.slice(i + 1); if (dk < da30 || dk > iso(today)) return; var o = dd[per] || (dd[per] = { n: 0, t: 0, ore: 0 }), x = dore[k]; o.n += x.n; o.t += x.t; o.ore += x.ore; });
+    if (!ppl.length) h += '<tr><td colspan="7" class="empty">Nessuna persona inserita.</td></tr>';
     ppl.forEach(function (n) {
       var mine = projects.filter(function (p) { return p.person === n; }), tot = 0;
       mine.forEach(function (p) { tot += totalH(p); });
       h += '<tr><td><strong>' + esc(n) + '</strong>' + (n === me ? ' <span class="pill m">tu</span>' : '') + (isAdminName(n) ? ' <span class="pill a">Admin</span>' : '') + '</td><td class="num">' + mine.length + '</td><td class="num">' + fmtH(tot) + ' h</td>' +
+        (function (o) { return o ? '<td class="num">' + o.n + '</td><td class="num">' + o.t + ' / ' + (o.n - o.t) + '</td><td class="num">' + fmtH(o.ore) + ' h</td>' : '<td class="num">–</td><td class="num">–</td><td class="num">–</td>'; })(dd[n]) +
         '<td class="act"><button type="button" class="small danger" data-tdel="' + encodeURIComponent(n) + '"' + (isAdmin && !isAdminName(n) ? '' : ' disabled') + '>Rimuovi</button></td></tr>';
     });
     $('teamList').innerHTML = h + '</tbody>';
@@ -3236,30 +3278,82 @@ html { touch-action: pan-x pan-y; }
   /* ===== Daily task: mail tecniche e commerciali a cui si è risposto =====
      Ognuno inserisce e modifica solo le proprie attività; l'Admin vede tutti nel report.
      Nulla si cancella: "Annulla" nasconde l'attività dal report, la riga resta nel database con lo storico. */
-  var DT = { items: [], week: mondayOf(today), kind: '', edit: null, who: '', err: '' };
+  var DT = { items: [], week: mondayOf(today), per2: 'w', kind: '', edit: null, who: '', err: '' };
   var DIFF = ['', 'Molto facile', 'Facile', 'Media', 'Difficile', 'Molto difficile'];
   var DKEY = KEY + '-daily';
   function dLocal() { try { var a = JSON.parse(localStorage.getItem(DKEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
   function dSetLocal(a) { try { localStorage.setItem(DKEY, JSON.stringify(a)); } catch (e) {} }
   function dMe() { return isAdmin ? adminName : me; }
   function dChi() { return (CLOUD ? token : '') + '|' + dMe(); } // chi è collegato: se cambia, il report si ricarica
-  function dRangeIso() { return [iso(DT.week), iso(addDays(DT.week, 6))]; }
+  function dRange() { // periodo del report: settimana (lun–dom) o mese
+    if (DT.per2 === 'm') { var a = new Date(DT.week.getFullYear(), DT.week.getMonth(), 1); return [a, new Date(a.getFullYear(), a.getMonth() + 1, 0)]; }
+    return [DT.week, addDays(DT.week, 6)];
+  }
+  function dRangeIso() { var r = dRange(); return [iso(r[0]), iso(r[1])]; }
+  function dMove(dir) { DT.week = DT.per2 === 'm' ? new Date(DT.week.getFullYear(), DT.week.getMonth() + dir, 1) : addDays(DT.week, 7 * dir); dLoad(); }
   function dOpen() { if (!DT.edit && !$('d-day').value) dReset(); dLoad(); }
   function dLoad() {
     var r = dRangeIso(); DT.per = dChi();
     if (!CLOUD) { DT.err = ''; DT.items = dLocal().filter(function (x) { return !x.annullata && x.day >= r[0] && x.day <= r[1]; }); dRender(); return; }
     if (!token) { DT.items = []; DT.err = 'Accedi per vedere e inserire le tue attività.'; dRender(); return; }
-    rpc('app_daily_list', { token: token, from: r[0], to: r[1] }).then(function (j) { DT.items = j.items || []; DT.err = ''; dRender(); })
-      .catch(function (e) { DT.items = []; DT.err = /app_daily|schema cache|HTTP 404/i.test((e && e.message) || '') ? 'Daily task non ancora attivo: l\'amministratore deve eseguire database/5-daily-task-e-persone.sql in Supabase.' : errTxt(e); dRender(); });
+    rpc('app_daily_list', { token: token, from: r[0], to: r[1] }).then(function (j) {
+      DT.items = j.items || [];
+      DT.err = DT.items.length && !('ore' in DT.items[0]) ? 'Per salvare il tempo di gestione l\'amministratore deve eseguire database/6-daily-tempo.sql in Supabase.' : '';
+      dRender();
+    }).catch(function (e) { DT.items = []; DT.err = /app_daily|schema cache|HTTP 404/i.test((e && e.message) || '') ? 'Daily task non ancora attivo: l\'amministratore deve eseguire database/5-daily-task-e-persone.sql e 6-daily-tempo.sql in Supabase.' : errTxt(e); dRender(); });
+  }
+  /* ore di gestione dei daily task per persona e giorno (tutto il team, solo i totali): servono alla Mappa dei carichi e alla pagina Persone */
+  var DORE = {};
+  function doreSet(items) {
+    var m = {};
+    items.forEach(function (x) { var k = x.person + '|' + x.day, o = m[k] || (m[k] = { ore: 0, n: 0, t: 0 }); o.ore += Number(x.ore) || 0; o.n += Number(x.n) || 0; o.t += x.t != null ? Number(x.t) || 0 : (x.kind === 'Tecnica' ? Number(x.n) || 0 : 0); });
+    DORE = m;
+  }
+  function doreLoad() {
+    var a = iso(addDays(today, -120)), b = iso(addDays(today, 7));
+    if (!CLOUD) { doreSet(dLocal().filter(function (x) { return !x.annullata && x.day >= a && x.day <= b; })); renderAll(); return; }
+    if (!token) return;
+    rpc('app_daily_ore', { token: token, from: a, to: b }).then(function (r) { doreSet((r && r.items) || []); renderAll(); }).catch(function () {}); // script 6 non ancora eseguito: la mappa resta com'era
   }
   function dVisible() {
     var who = dMe();
     return DT.items.filter(function (x) { return (isAdmin || x.person === who) && (!DT.who || x.person === DT.who); });
   }
   function dBar(v) { return '<span class="dbar" aria-hidden="true"><i style="width:' + (v * 20) + '%"></i></span>' + esc(DIFF[v] || ''); }
+  function dCellStyle(hrs) {
+    if (!hrs) return { cls: 'cellbtn free', style: '' };
+    if (hrs > CAP) return { cls: 'cellbtn over', style: '' };
+    return { cls: 'cellbtn busy', style: 'background:color-mix(in srgb,var(--heat) ' + Math.round(25 + 75 * (hrs / CAP)) + '%,var(--cell));' + (hrs < CAP * 0.45 ? 'color:var(--fg);' : '') };
+  }
+  function dGrid(its, order) {
+    var r = dRange(), days = [], has = {};
+    its.forEach(function (x) { has[x.day] = 1; });
+    for (var d = new Date(r[0]); d <= r[1]; d = addDays(d, 1)) if (isWork(d) || has[iso(d)]) days.push(new Date(d));
+    var by = {};
+    its.forEach(function (x) { var k = x.person + '|' + x.day, o = by[k] || (by[k] = { h: 0, n: 0, t: 0, c: 0 }); o.h += Number(x.ore) || 0; o.n += Number(x.n) || 0; if (x.kind === 'Tecnica') o.t += Number(x.n) || 0; else o.c += Number(x.n) || 0; });
+    var h = '<thead><tr><th class="who">Persona</th>';
+    days.forEach(function (d) { h += '<th class="' + (d.getDay() === 1 ? 'mon ' : '') + (iso(d) === iso(today) ? 'today' : '') + '">' + DOWS[d.getDay()].charAt(0) + '<br>' + d.getDate() + '</th>'; });
+    h += '<th style="padding:0 8px;border-left:1px solid var(--line)">Ore</th></tr></thead><tbody>';
+    if (!order.length) h += '<tr><td class="who">&nbsp;</td><td colspan="' + (days.length + 1) + '" class="empty" style="padding:18px;text-align:left">Nessuna attività in questo periodo.</td></tr>';
+    order.forEach(function (n) {
+      var tot = 0;
+      h += '<tr><td class="who" title="' + esc(n) + '">' + esc(n) + '</td>';
+      days.forEach(function (d) {
+        var o = by[n + '|' + iso(d)], hrs = o ? o.h : 0, st = dCellStyle(hrs); tot += hrs;
+        var lab = esc(n) + ', ' + fmtShort(d) + ': ' + (o ? fmtH(hrs) + ' h, ' + o.n + ' mail (' + o.t + ' tecniche, ' + o.c + ' commerciali)' : 'nessuna attività');
+        h += '<td class="c' + (d.getDay() === 1 ? ' mon' : '') + (iso(d) === iso(today) ? ' today' : '') + '"><span class="' + st.cls + '" style="' + st.style + '" title="' + lab + '" aria-label="' + lab + '">' + (o ? (hrs ? fmtH(hrs) : '') + '<span class="mn">' + o.n + '✉</span>' : '') + '</span></td>';
+      });
+      h += '<td class="tot">' + fmtH(tot) + ' h</td></tr>';
+    });
+    $('dMap').innerHTML = h + '</tbody>';
+  }
   function dRender() {
-    var s = DT.week, e = addDays(s, 6), mine = dMe(), canWrite = !isVisitor && !!mine;
-    $('dRange').textContent = s.getDate() + ' ' + MONTHS[s.getMonth()] + ' – ' + e.getDate() + ' ' + MONTHS[e.getMonth()] + ' ' + e.getFullYear();
+    var r = dRange(), s = r[0], e = r[1], mine = dMe(), canWrite = !isVisitor && !!mine, mese = DT.per2 === 'm';
+    $('dRange').textContent = mese ? MONTHS[s.getMonth()] + ' ' + s.getFullYear() : s.getDate() + ' ' + MONTHS[s.getMonth()] + ' – ' + e.getDate() + ' ' + MONTHS[e.getMonth()] + ' ' + e.getFullYear();
+    $('dPrev').innerHTML = '&larr; ' + (mese ? 'Mese' : 'Settimana'); $('dNext').innerHTML = (mese ? 'Mese' : 'Settimana') + ' &rarr;'; $('dToday').textContent = mese ? 'Questo mese' : 'Questa settimana';
+    Array.prototype.forEach.call(document.querySelectorAll('#dPer button'), function (b) { b.setAttribute('aria-pressed', b.dataset.per === DT.per2 ? 'true' : 'false'); });
+    $('dCsv').textContent = mese ? 'Scarica CSV del mese' : 'Scarica CSV della settimana';
+    $('h-drep').textContent = mese ? 'Report mensile' : 'Report settimanale';
     $('dSubmit').disabled = !canWrite;
     var ppl = []; DT.items.forEach(function (x) { if (ppl.indexOf(x.person) < 0) ppl.push(x.person); });
     ppl.sort(function (a, b) { return a.localeCompare(b, 'it'); });
@@ -3272,25 +3366,28 @@ html { touch-action: pan-x pan-y; }
     $('dNote').textContent = DT.err || (isAdmin ? 'Vedi le attività di tutto il team. Modifichi solo le tue.' : 'Vedi solo le tue attività. Il report di tutti lo vede l\'amministratore.');
     var by = {}, order = [];
     its.forEach(function (x) {
-      var o = by[x.person]; if (!o) { o = by[x.person] = { t: 0, c: 0, a: 0, A: 0, M: 0, B: 0, d: 0 }; order.push(x.person); }
-      if (x.kind === 'Tecnica') o.t += Number(x.n); else o.c += Number(x.n);
-      o.a++; o[String(x.prio).charAt(0)]++; o.d += Number(x.diff);
+      var o = by[x.person]; if (!o) { o = by[x.person] = { t: 0, c: 0, a: 0, A: 0, M: 0, B: 0, d: 0, o: 0, ot: 0, oc: 0 }; order.push(x.person); }
+      var ore = Number(x.ore) || 0;
+      if (x.kind === 'Tecnica') { o.t += Number(x.n); o.ot += ore; } else { o.c += Number(x.n); o.oc += ore; }
+      o.a++; o[String(x.prio).charAt(0)]++; o.d += Number(x.diff); o.o += ore;
     });
     order.sort(function (a, b) { return a.localeCompare(b, 'it'); });
-    var tot = { t: 0, c: 0, a: 0, A: 0, M: 0, B: 0, d: 0 };
-    function row(n, o, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + esc(n) + '</td><td class="num">' + o.t + '</td><td class="num">' + o.c + '</td><td class="num"><b>' + (o.t + o.c) + '</b></td><td class="num">' + o.a + '</td><td class="num">' + o.A + ' / ' + o.M + ' / ' + o.B + '</td><td>' + (o.a ? dBar(Math.round(o.d / o.a)) + ' <span class="hint">(' + fmtH(o.d / o.a) + ')</span>' : '–') + '</td></tr>'; }
-    var h = '<thead><tr><th>Persona</th><th>Mail tecniche</th><th>Mail commerciali</th><th>Totale mail</th><th>Attività</th><th>Priorità alta / media / bassa</th><th>Difficoltà media</th></tr></thead><tbody>';
-    if (!order.length) h += '<tr><td colspan="7" class="empty">Nessuna attività in questa settimana.</td></tr>';
+    dGrid(its, order);
+    var tot = { t: 0, c: 0, a: 0, A: 0, M: 0, B: 0, d: 0, o: 0, ot: 0, oc: 0 };
+    function stack(o) { if (!o.o) return '–'; var pt = Math.round(100 * o.ot / o.o); return '<span class="dstack" aria-hidden="true"><i class="tt" style="width:' + pt + '%"></i><i class="cc" style="width:' + (100 - pt) + '%"></i></span>' + fmtH(o.ot) + ' / ' + fmtH(o.oc) + ' h'; }
+    function row(n, o, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + esc(n) + '</td><td class="num">' + o.t + '</td><td class="num">' + o.c + '</td><td class="num"><b>' + (o.t + o.c) + '</b></td><td class="num"><b>' + fmtH(o.o) + ' h</b></td><td>' + stack(o) + '</td><td class="num">' + o.a + '</td><td class="num">' + o.A + ' / ' + o.M + ' / ' + o.B + '</td><td>' + (o.a ? dBar(Math.round(o.d / o.a)) + ' <span class="hint">(' + fmtH(o.d / o.a) + ')</span>' : '–') + '</td></tr>'; }
+    var h = '<thead><tr><th>Persona</th><th>Mail tecniche</th><th>Mail commerciali</th><th>Totale mail</th><th>Ore di gestione</th><th>Ore tecniche / commerciali <span class="hint">(arancio / grigio)</span></th><th>Attività</th><th>Priorità alta / media / bassa</th><th>Difficoltà media</th></tr></thead><tbody>';
+    if (!order.length) h += '<tr><td colspan="9" class="empty">Nessuna attività in questo periodo.</td></tr>';
     order.forEach(function (n) { var o = by[n]; Object.keys(tot).forEach(function (k) { tot[k] += o[k]; }); h += row(n, o); });
     if (order.length > 1) h += row('Totale', tot, 'tot');
     $('dSum').innerHTML = h + '</tbody>';
     var l = its.slice().sort(function (a, b) { return a.day.localeCompare(b.day) || a.person.localeCompare(b.person, 'it'); });
-    var g = '<thead><tr><th>Giorno</th>' + (isAdmin ? '<th>Persona</th>' : '') + '<th>Tipo</th><th>Mail</th><th>Quali</th><th>Priorità</th><th>Difficoltà</th><th></th></tr></thead><tbody>';
-    if (!l.length) g += '<tr><td colspan="' + (isAdmin ? 8 : 7) + '" class="empty">Nessuna attività in questa settimana.</td></tr>';
+    var g = '<thead><tr><th>Giorno</th>' + (isAdmin ? '<th>Persona</th>' : '') + '<th>Tipo</th><th>Mail</th><th>Tempo</th><th>Quali</th><th>Priorità</th><th>Difficoltà</th><th></th></tr></thead><tbody>';
+    if (!l.length) g += '<tr><td colspan="' + (isAdmin ? 9 : 8) + '" class="empty">Nessuna attività in questo periodo.</td></tr>';
     l.forEach(function (x) {
       var d = parse(x.day), pc = x.prio === 'Alta' ? 'a' : x.prio === 'Media' ? 'm' : 'b', own = canWrite && x.person === mine;
       g += '<tr><td>' + DOWS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + '</td>' + (isAdmin ? '<td>' + esc(x.person) + '</td>' : '') +
-        '<td>' + esc(x.kind) + '</td><td class="num">' + Number(x.n) + '</td><td class="dw">' + esc(x.what || '') + '</td><td><span class="pill ' + pc + '">' + esc(x.prio) + '</span></td><td>' + dBar(Number(x.diff)) + '</td>' +
+        '<td>' + esc(x.kind) + '</td><td class="num">' + Number(x.n) + '</td><td class="num">' + (Number(x.ore) > 0 ? fmtH(Number(x.ore)) + ' h' : '–') + '</td><td class="dw">' + esc(x.what || '') + '</td><td><span class="pill ' + pc + '">' + esc(x.prio) + '</span></td><td>' + dBar(Number(x.diff)) + '</td>' +
         '<td class="act">' + (own ? '<button type="button" class="small" data-dedit="' + esc(x.id) + '">Modifica</button> <button type="button" class="small" data-dann="' + esc(x.id) + '">Annulla</button>' : '') + '</td></tr>';
     });
     $('dList').innerHTML = g + '</tbody>';
@@ -3309,7 +3406,8 @@ html { touch-action: pan-x pan-y; }
     if (!dMe() || isVisitor) { m.textContent = 'Accedi per inserire le tue attività.'; return; }
     if (!DT.kind) { m.textContent = 'Scegli se le mail sono tecniche o commerciali.'; return; }
     if (!$('d-prio').value) { m.textContent = 'Scegli la priorità.'; $('d-prio').focus(); return; }
-    var it = { id: DT.edit || uid(), day: $('d-day').value, kind: DT.kind, n: Math.max(1, Math.min(500, Math.round(Number($('d-n').value)))), what: $('d-what').value.trim(), prio: $('d-prio').value, diff: Number($('d-diff').value) };
+    var it = { id: DT.edit || uid(), day: $('d-day').value, kind: DT.kind, n: Math.max(1, Math.min(500, Math.round(Number($('d-n').value)))), what: $('d-what').value.trim(), prio: $('d-prio').value, diff: Number($('d-diff').value), ore: Math.round(Number(String($('d-ore').value).replace(',', '.')) * 100) / 100 };
+    if (!(it.ore > 0)) { m.textContent = 'Indica il tempo di gestione.'; $('d-ore').focus(); return; }
     if (!it.day || !(it.n > 0) || !it.what) return;
     var job;
     if (!CLOUD) {
@@ -3322,7 +3420,7 @@ html { touch-action: pan-x pan-y; }
       $('dSubmit').disabled = false;
       if (r && r.error) { m.textContent = r.error; return; }
       m.textContent = DT.edit ? 'Attività aggiornata.' : 'Attività aggiunta.';
-      DT.week = mondayOf(parse(it.day)); dReset(); dLoad();
+      var dd = parse(it.day); DT.week = DT.per2 === 'm' ? new Date(dd.getFullYear(), dd.getMonth(), 1) : mondayOf(dd); dReset(); dLoad(); doreLoad();
     }).catch(function (e) { $('dSubmit').disabled = false; m.textContent = /app_daily|schema cache|HTTP 404/i.test((e && e.message) || '') ? 'Daily task non ancora attivo: va eseguito database/5-daily-task-e-persone.sql in Supabase.' : errTxt(e); });
   });
   $('dCancel').addEventListener('click', function () { dReset(); $('dMsg').textContent = ''; });
@@ -3331,7 +3429,7 @@ html { touch-action: pan-x pan-y; }
     var id = b.dataset.dedit || b.dataset.dann, x = DT.items.filter(function (y) { return y.id === id; })[0];
     if (!x || x.person !== dMe()) return;
     if (b.dataset.dedit) {
-      DT.edit = x.id; $('d-day').value = x.day; dSetKind(x.kind); $('d-n').value = x.n; $('d-what').value = x.what || ''; $('d-prio').value = x.prio; dSetDiff(x.diff);
+      DT.edit = x.id; $('d-day').value = x.day; dSetKind(x.kind); $('d-n').value = x.n; $('d-what').value = x.what || ''; $('d-prio').value = x.prio; dSetDiff(x.diff); $('d-ore').value = Number(x.ore) > 0 ? x.ore : '';
       $('dSubmit').textContent = 'Salva modifiche'; $('dCancel').hidden = false; $('dMsg').textContent = '';
       $('dForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -3340,18 +3438,22 @@ html { touch-action: pan-x pan-y; }
     var job;
     if (!CLOUD) { var a = dLocal(); a.forEach(function (y) { if (y.id === id && y.person === dMe()) y.annullata = true; }); dSetLocal(a); job = Promise.resolve({ ok: true }); }
     else job = rpc('app_daily_annulla', { token: token, id: id });
-    job.then(function () { if (DT.edit === id) dReset(); dLoad(); }).catch(function (e) { toast(errTxt(e)); });
+    job.then(function () { if (DT.edit === id) dReset(); dLoad(); doreLoad(); }).catch(function (e) { toast(errTxt(e)); });
   });
-  $('dPrev').addEventListener('click', function () { DT.week = addDays(DT.week, -7); dLoad(); });
-  $('dNext').addEventListener('click', function () { DT.week = addDays(DT.week, 7); dLoad(); });
-  $('dToday').addEventListener('click', function () { DT.week = mondayOf(today); dLoad(); });
+  $('dPrev').addEventListener('click', function () { dMove(-1); });
+  $('dNext').addEventListener('click', function () { dMove(1); });
+  $('dToday').addEventListener('click', function () { DT.week = DT.per2 === 'm' ? new Date(today.getFullYear(), today.getMonth(), 1) : mondayOf(today); dLoad(); });
+  $('dPer').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button[data-per]'); if (!b || b.dataset.per === DT.per2) return;
+    DT.per2 = b.dataset.per; DT.week = DT.per2 === 'm' ? new Date(DT.week.getFullYear(), DT.week.getMonth(), 1) : mondayOf(DT.week.getMonth() === today.getMonth() && DT.week.getFullYear() === today.getFullYear() ? today : DT.week); dLoad();
+  });
   $('dWho').addEventListener('change', function () { DT.who = this.value; dRender(); });
   $('dCsv').addEventListener('click', function () {
     var its = dVisible().slice().sort(function (a, b) { return a.day.localeCompare(b.day) || a.person.localeCompare(b.person, 'it'); });
-    var lines = ['persona;giorno;tipo;mail;quali;priorita;difficolta'];
-    its.forEach(function (x) { lines.push([x.person, x.day, x.kind, x.n, String(x.what || '').replace(/\s+/g, ' '), x.prio, DIFF[x.diff] || x.diff].map(function (v) { return String(v).replace(/;/g, ','); }).join(';')); });
+    var lines = ['persona;giorno;tipo;mail;tempo_ore;quali;priorita;difficolta'];
+    its.forEach(function (x) { lines.push([x.person, x.day, x.kind, x.n, Number(x.ore) > 0 ? String(x.ore).replace('.', ',') : '', String(x.what || '').replace(/\s+/g, ' '), x.prio, DIFF[x.diff] || x.diff].map(function (v) { return String(v).replace(/;/g, ','); }).join(';')); });
     var url = URL.createObjectURL(new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' })), a = document.createElement('a');
-    a.href = url; a.download = 'daily-task-' + iso(DT.week) + '.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+    a.href = url; a.download = 'daily-task-' + dRangeIso()[0] + (DT.per2 === 'm' ? '-mese' : '') + '.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
   });
   $('carList').addEventListener('click', function (ev) {
     var b = ev.target.closest('button[data-car]'); if (!b || !isAdmin) return;
@@ -3403,7 +3505,7 @@ html { touch-action: pan-x pan-y; }
     renderAll();
   });
 
-  load(); resetForm(); renderAll();
+  load(); resetForm(); renderAll(); if (!CLOUD) doreLoad();
   if (CLOUD) {
     var ds = $('dataSub'); if (ds) ds.textContent = 'I dati sono salvati sul server e condivisi tra tutti. Per aprirli in Excel copia il CSV; per ricaricarli incolla il CSV qui sotto.';
     var gs = document.querySelector('#h-gpw + p'); if (gs) gs.textContent = 'Ogni Guest, al primo accesso, sostituisce la password standard con una propria. Qui l\'Admin vede la password aggiornata. "Reimposta" cancella la password personale: la persona dovrà rientrare con quella standard e sceglierne una nuova.';
