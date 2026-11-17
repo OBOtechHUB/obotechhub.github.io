@@ -2,6 +2,55 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-17-mappa-2",
+      "data": "2026-11-17",
+      "app": "mappa",
+      "titolo": "Daily task: tempo di gestione e grafico del carico",
+      "voci": [
+        "Ogni attività del Daily task ha il tempo di gestione: queste ore contano anche nella Mappa dei carichi",
+        "Report per settimana o per mese, con un grafico come la mappa (persona per giorno) e le ore tecniche e commerciali",
+        "Filtri in alto per persone, progetto, priorità e stato su dashboard, mappa ed elenco progetti",
+        "Pagina Persone: spiegate le ore dei progetti e aggiunte le mail e le ore dei daily task degli ultimi 30 giorni"
+      ],
+      "titolo_en": "Daily tasks: handling time and workload chart",
+      "voci_en": [
+        "Every daily task has its handling time: these hours also count in the workload map",
+        "Weekly or monthly report, with a map-style chart (person by day) and technical and commercial hours",
+        "Filters at the top for people, project, priority and status on dashboard, map and project list",
+        "People page: project hours explained, plus emails and daily-task hours of the last 30 days"
+      ]
+    },
+    {
+      "id": "2026-11-16-mappa-1",
+      "data": "2026-11-16",
+      "app": "mappa",
+      "titolo": "Nuova sezione Daily task e nuovo progetto vuoto",
+      "voci": [
+        "Nuova voce Daily task: registra ogni giorno quante e quali mail tecniche o commerciali hai gestito, con priorità e difficoltà",
+        "Report settimanale scaricabile in CSV",
+        "\"+ Nuovo progetto\" si apre vuoto: periodo, date e ore li scegli tu"
+      ],
+      "titolo_en": "New Daily tasks section and empty new project",
+      "voci_en": [
+        "New Daily tasks entry: record every day how many and which technical or commercial emails you handled, with priority and difficulty",
+        "Weekly report downloadable as CSV",
+        "\"+ New project\" opens empty: you choose period, dates and hours"
+      ]
+    },
+    {
+      "id": "2026-11-16-tutte-1",
+      "data": "2026-11-16",
+      "app": "tutte",
+      "titolo": "Saluto all'apertura",
+      "voci": [
+        "Quando torni nelle app dopo almeno 30 minuti compare un'animazione con il saluto e il tuo nome"
+      ],
+      "titolo_en": "Greeting on opening",
+      "voci_en": [
+        "When you come back to the apps after at least 30 minutes an animation greets you by name"
+      ]
+    },
+    {
       "id": "2026-11-11-tutte-1",
       "data": "2026-11-11",
       "app": "tutte",
