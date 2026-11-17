@@ -137,6 +137,8 @@
     "Scegli come pianificare: Periodo o Giorni precisi.": "Choose how to plan: Period or Specific days.",
     "Scegli tu: un periodo (inizio, giorni e ore al giorno) oppure i singoli giorni.": "Your choice: a period (start, days and hours per day) or individual days.",
     "Indica le ore per ogni giorno scelto.": "Enter the hours for each chosen day.", "Scrivi prima le ore da applicare.": "First enter the hours to apply.",
+    "Persone": "People", "Tutte": "All", "Tutti": "All", "Progetto": "Project", "Stato": "Status", "In corso": "In progress", "Da iniziare": "Not started", "Conclusi": "Completed",
+    "Azzera filtri": "Clear filters", "Mostra tutte": "Show all", "Filtri": "Filters",
   };
   // frasi dentro testi composti (prima delle parole sciolte)
   var FRASI = [
