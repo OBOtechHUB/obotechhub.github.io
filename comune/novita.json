@@ -2,6 +2,25 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-18-mappa-1",
+      "data": "2026-11-18",
+      "app": "mappa",
+      "titolo": "Cruscotto del team e ore dei daily task in evidenza",
+      "voci": [
+        "Nuova pagina Cruscotto: in un'unica pagina il carico del team per settimana, mese, trimestre o anno, con confronto tra persone per ore, occupazione, progetti, numero di daily task, mail, difficoltà, priorità e giorni oltre 8 ore, andamento nel tempo e tabella da copiare in Excel o Teams",
+        "Mappa carichi: la parte di ore dedicata ai daily task si vede con una banda verde in ogni cella; si può scegliere di vedere tutto, solo i progetti o solo i daily task, e il totale mostra progetti (P) e daily task (D)",
+        "Carico per persona: ora anche per settimana, con le barre divise tra progetti e daily task",
+        "Daily task: il tempo di gestione si scrive in minuti, con qualsiasi valore (es. 7, 25, 95)"
+      ],
+      "titolo_en": "Team dashboard and daily task hours highlighted",
+      "voci_en": [
+        "New Dashboard page: team workload by week, month, quarter or year in one place, comparing people by hours, occupancy, projects, number of daily tasks, emails, difficulty, priority and days over 8 hours, with trend and a table to copy into Excel or Teams",
+        "Workload map: the share of daily task hours shows as a green band in each cell; view everything, projects only or daily tasks only, and the total shows projects (P) and daily tasks (D)",
+        "Workload per person: now also by week, with bars split between projects and daily tasks",
+        "Daily task: handling time is entered in minutes, any value (e.g. 7, 25, 95)"
+      ]
+    },
+    {
       "id": "2026-11-17-hub-1",
       "data": "2026-11-17",
       "app": "hub",

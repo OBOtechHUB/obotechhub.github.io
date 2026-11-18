@@ -156,6 +156,12 @@ table.map { border-collapse: separate; border-spacing: 0; width: 100%; min-width
 .cellbtn.busy { color: var(--on-heat); }
 .cellbtn.over { background: var(--over); color: var(--on-over); font-weight: 600; }
 .cellbtn[aria-pressed="true"] { outline: 2px solid var(--fg); outline-offset: 0; }
+.cellbtn { position: relative; overflow: hidden; }
+.cellbtn .dq { position: absolute; left: 0; right: 0; bottom: 0; background: var(--daily, #1f8a70); pointer-events: none; }
+.cellbtn .tx { position: relative; z-index: 1; }
+.cellbtn.donly { background: color-mix(in srgb, var(--daily, #1f8a70) var(--q, 60%), var(--cell)); color: var(--on-daily, #fff); }
+.map td.tot small, .split small { display: block; font-size: .78em; color: var(--muted); font-weight: 400; white-space: nowrap; }
+.sw-d { color: var(--daily, #1f8a70); font-weight: 600; } .sw-p { color: var(--heat); font-weight: 600; }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: calc(12px * var(--zoom, 1)); color: var(--muted); align-items: center; }
 .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -3px; margin-right: 5px; }
 .detail { border: 1px dashed var(--line); border-radius: 4px; padding: 10px 12px; min-height: 48px; }
@@ -355,6 +361,35 @@ textarea { border-radius: 16px; }
 .bar-row .t { height: 10px; border-radius: 99px; }
 .bar-row .f { border-radius: 99px; background: linear-gradient(90deg, #5ac8fa, #007aff); transform-origin: left center; }
 .bar-row .f.over { background: linear-gradient(90deg, #ff9f0a, #ff3b30); }
+.bar-row .t.stk { display: flex; }
+.bar-row .t.stk .f { border-radius: 0; }
+.bar-row .t.stk .f:first-child { border-radius: 99px 0 0 99px; }
+.bar-row .t.stk .f:last-child { border-radius: 0 99px 99px 0; }
+.bar-row .t.stk .f:only-child { border-radius: 99px; }
+.bar-row .f.fp { background: var(--heat); }
+.bar-row .f.fd { background: var(--daily, #1f8a70); }
+.bar-row .f.fo { background: var(--over); }
+.bar-row.wide { grid-template-columns: minmax(80px, 160px) minmax(0, 1fr) 170px; }
+.bars-nav { display: flex; align-items: center; gap: 6px; }
+.cru-kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important; }
+.cru-kpis .kpi .v { font-size: calc(30px * var(--zoom, 1)); }
+.cru-ctl { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cru-met { flex-wrap: wrap; border-radius: 14px; }
+.cru-trend { display: flex; align-items: flex-end; gap: 3px; height: 170px; padding: 6px 0 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.cru-col { flex: 1 0 14px; max-width: 46px; display: flex; flex-direction: column-reverse; height: 100%; position: relative; }
+.cru-col i { display: block; width: 100%; }
+.cru-col i.p { background: var(--heat); border-radius: 0 0 3px 3px; } .cru-col i.d { background: var(--daily, #1f8a70); border-radius: 3px 3px 0 0; }
+.cru-col.we { opacity: .35; }
+.cru-col .cap { position: absolute; left: -2px; right: -2px; border-top: 1px dashed var(--muted); }
+.cru-lab { display: flex; gap: 3px; font-size: calc(10px * var(--zoom, 1)); color: var(--muted); overflow-x: hidden; }
+.cru-lab span { flex: 1 0 14px; max-width: 46px; text-align: center; white-space: nowrap; }
+.f.pA { background: var(--over); } .f.pM { background: var(--heat); } .f.pB { background: color-mix(in srgb, var(--heat) 40%, var(--cell)); }
+.f.mt { background: var(--accent); } .f.mc { background: color-mix(in srgb, var(--accent) 45%, var(--cell)); }
+.f.df { background: linear-gradient(90deg, var(--daily, #1f8a70), var(--over)); }
+#cruTab th[data-s] { cursor: pointer; user-select: none; white-space: nowrap; }
+#cruTab th[data-s][aria-sort]::after { content: " ▾"; } #cruTab th[aria-sort="ascending"]::after { content: " ▴"; }
+#cruTab td.num.zero { color: var(--muted); }
+#cruNote { flex: none; align-self: stretch; }
 
 /* calendario */
 .cal { border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
@@ -602,7 +637,7 @@ table.hist tr.sum td { border-top: 1px solid var(--line); padding-top: 8px; font
 /* ===== versione 2: stile "Dashboard V18", pensata per iPhone, iPad e PC ===== */
 :root {
   --bg: #e9eef0; --surface: #fafcfc; --fg: #282a31; --muted: #5d6a72; --line: rgba(40,42,49,.12);
-  --cell: #e4ebee; --accent: #b86e00; --on-accent: #ffffff; --heat: #547282; --on-heat: #ffffff;
+  --cell: #e4ebee; --accent: #b86e00; --on-accent: #ffffff; --heat: #547282; --on-heat: #ffffff; --daily: #1f8a70; --on-daily: #ffffff;
   --over: #d63c3c; --on-over: #ffffff; --today: #fff1d6; --glow: #f49d11;
   --glass: #fafcfc; --shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 14px 30px -22px rgba(40,42,49,.30);
   --r: 28px; --rail: #282a31; --pastel: #c5d9de; --pastel2: #dfeaed; --btn: #282a31; --on-btn: #ffffff;
@@ -611,7 +646,7 @@ table.hist tr.sum td { border-top: 1px solid var(--line); padding-top: 8px; font
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #1b1d22; --surface: #282a31; --fg: #f1f4f5; --muted: #9fb0b8; --line: rgba(255,255,255,.10);
-  --cell: #323540; --accent: #f49d11; --on-accent: #282a31; --heat: #7694a4; --on-heat: #14181b;
+  --cell: #323540; --accent: #f49d11; --on-accent: #282a31; --heat: #7694a4; --on-heat: #14181b; --daily: #4cc3a2; --on-daily: #10201b;
   --over: #ff6b6f; --on-over: #2a0709; --today: #3a3020; --glow: #f49d11;
   --glass: #282a31; --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 16px 34px -22px rgba(0,0,0,.8);
   --rail: #14151a; --pastel: #41525d; --pastel2: #34414a; --btn: #f49d11; --on-btn: #282a31; color-scheme: dark;
@@ -619,7 +654,7 @@ table.hist tr.sum td { border-top: 1px solid var(--line); padding-top: 8px; font
 }
 :root[data-theme="dark"] {
   --bg: #1b1d22; --surface: #282a31; --fg: #f1f4f5; --muted: #9fb0b8; --line: rgba(255,255,255,.10);
-  --cell: #323540; --accent: #f49d11; --on-accent: #282a31; --heat: #7694a4; --on-heat: #14181b;
+  --cell: #323540; --accent: #f49d11; --on-accent: #282a31; --heat: #7694a4; --on-heat: #14181b; --daily: #4cc3a2; --on-daily: #10201b;
   --over: #ff6b6f; --on-over: #2a0709; --today: #3a3020; --glow: #f49d11;
   --glass: #282a31; --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 16px 34px -22px rgba(0,0,0,.8);
   --rail: #14151a; --pastel: #41525d; --pastel2: #34414a; --btn: #f49d11; --on-btn: #282a31; color-scheme: dark;
@@ -1081,6 +1116,7 @@ html { touch-action: pan-x pan-y; }
     <nav class="nav" id="nav" aria-label="Sezioni">
       <a class="hubnav" href="../" aria-label="Torna a OBO Hub"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="lab">OBO Hub</span></a>
       <button type="button" data-go="home" data-tip="Dashboard" aria-label="Dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="lab">Home</span></button>
+      <button type="button" data-go="cru" data-tip="Cruscotto" aria-label="Cruscotto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M9.3 20V5M14.6 20v-6M20 20V8"/></svg><span class="lab">Cruscotto</span></button>
       <button type="button" data-go="ins" data-tip="Inserisci" aria-label="Inserisci"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span class="lab">Inserisci</span></button>
       <button type="button" data-go="map" data-tip="Mappa carichi" aria-label="Mappa carichi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span class="lab">Mappa</span></button>
       <button type="button" data-go="prj" data-tip="Progetti" aria-label="Progetti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span class="lab">Progetti</span><span class="bdg" id="bdgPrj">0</span></button>
@@ -1181,9 +1217,14 @@ html { touch-action: pan-x pan-y; }
       <h2 id="h-bars">Carico del mese per persona</h2>
       <div class="seg2" role="group" aria-label="Vista del carico">
         <button type="button" id="bvM" aria-pressed="true">Mese</button>
+        <button type="button" id="bvW" aria-pressed="false">Settimana</button>
         <button type="button" id="bvS" aria-pressed="false">Storico</button>
       </div>
     </div>
+    <div class="bars-hd" id="barsWk" hidden style="margin:6px 0 10px">
+      <div class="bars-nav"><button type="button" id="bwPrev" aria-label="Settimana precedente">&larr;</button><span class="range" id="bwLabel"></span><button type="button" id="bwNext" aria-label="Settimana successiva">&rarr;</button><button type="button" id="bwNow">Questa settimana</button></div>
+    </div>
+    <div class="legend" id="barsLeg" style="margin:0 0 10px"><span><i style="background:var(--heat)"></i>progetti</span><span><i style="background:var(--daily)"></i>daily task</span><span><i style="background:var(--over)"></i>oltre le ore disponibili</span></div>
     <div class="bars" id="bars"></div>
     <div id="histBox" hidden>
       <div class="bars-hd">
@@ -1205,6 +1246,54 @@ html { touch-action: pan-x pan-y; }
         <span>Nella cella: ore e % di occupazione. Il riquadro blu è il mese in corso. L'ultimo mese segue il calendario qui sopra.</span>
       </div>
     </div>
+  </section>
+  </div>
+
+  <div class="page" id="pg-cru" hidden>
+  <section class="panel" aria-labelledby="h-cru">
+    <div class="cru-ctl">
+      <h2 id="h-cru" style="margin:0">Carico del team</h2>
+      <div class="seg2" id="cruPer" role="group" aria-label="Periodo">
+        <button type="button" data-p="w" aria-pressed="false">Settimana</button>
+        <button type="button" data-p="m" aria-pressed="true">Mese</button>
+        <button type="button" data-p="q" aria-pressed="false">Trimestre</button>
+        <button type="button" data-p="y" aria-pressed="false">Anno</button>
+      </div>
+      <div class="bars-nav"><button type="button" id="cruPrev" aria-label="Periodo precedente">&larr;</button><span class="range" id="cruLabel" style="min-width:150px;text-align:center"></span><button type="button" id="cruNext" aria-label="Periodo successivo">&rarr;</button><button type="button" id="cruNow">Oggi</button></div>
+    </div>
+    <div class="kpis cru-kpis" id="cruKpi" aria-label="Riepilogo del periodo"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-cruP">
+    <div class="cru-ctl">
+      <h2 id="h-cruP" style="margin:0">Confronto tra persone</h2>
+      <div class="seg2 cru-met" id="cruMet" role="group" aria-label="Cosa confrontare">
+        <button type="button" data-m="ore" aria-pressed="true">Ore</button>
+        <button type="button" data-m="occ" aria-pressed="false">Occupazione</button>
+        <button type="button" data-m="prj" aria-pressed="false">Progetti</button>
+        <button type="button" data-m="dt" aria-pressed="false">N. daily task</button>
+        <button type="button" data-m="mail" aria-pressed="false">Mail</button>
+        <button type="button" data-m="diff" aria-pressed="false">Difficoltà</button>
+        <button type="button" data-m="prio" aria-pressed="false">Priorità</button>
+        <button type="button" data-m="over" aria-pressed="false">Giorni oltre 8 h</button>
+      </div>
+    </div>
+    <div class="legend" id="cruLeg" style="margin:0 0 10px"></div>
+    <div class="bars" id="cruBars"></div>
+    <p class="hint" id="cruNote" style="margin:10px 0 0"></p>
+  </section>
+
+  <section class="panel" aria-labelledby="h-cruT">
+    <div class="cru-ctl"><h2 id="h-cruT" style="margin:0">Andamento del team</h2><span class="sub" id="cruTsub" style="margin:0"></span></div>
+    <div class="cru-trend" id="cruTrend" role="img"></div>
+    <div class="cru-lab" id="cruTlab" aria-hidden="true"></div>
+    <div class="legend" style="margin-top:8px"><span><i style="background:var(--heat)"></i>progetti</span><span><i style="background:var(--daily)"></i>daily task</span><span><i style="border:1px dashed var(--muted);background:transparent"></i>ore disponibili del team</span></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-cruD">
+    <div class="cru-ctl"><h2 id="h-cruD" style="margin:0">Dettaglio per persona</h2><button type="button" id="cruCopy">Copia tabella (per Excel o Teams)</button></div>
+    <div class="scroll"><table class="list" id="cruTab"></table></div>
+    <div class="status" id="cruMsg" role="status"></div>
   </section>
   </div>
 
@@ -1298,6 +1387,11 @@ html { touch-action: pan-x pan-y; }
         <button type="button" id="next" aria-label="Settimana successiva">Settimana &rarr;</button>
         <span class="range" id="range"></span>
       </div>
+      <div class="seg2" id="mapV" role="group" aria-label="Ore mostrate nella mappa">
+        <button type="button" data-v="tutto" aria-pressed="true">Tutto</button>
+        <button type="button" data-v="prj" aria-pressed="false">Solo progetti</button>
+        <button type="button" data-v="daily" aria-pressed="false">Solo daily task</button>
+      </div>
     </div>
     <div class="scroll"><table class="map" id="map"></table></div>
     <div class="legend">
@@ -1305,7 +1399,8 @@ html { touch-action: pan-x pan-y; }
       <span><i style="background:color-mix(in srgb,var(--heat) 35%,var(--cell))"></i>fino a 4 h</span>
       <span><i style="background:var(--heat)"></i>8 h (pieno)</span>
       <span><i style="background:var(--over)"></i>oltre 8 h</span>
-      <span>Tocca una cella per vedere i progetti di quel giorno.</span>
+      <span><i style="background:var(--daily)"></i>parte delle ore per i daily task (banda in basso, alta quanto la loro quota)</span>
+      <span>Tocca una cella per vedere progetti e daily task di quel giorno.</span>
     </div>
     <div class="detail" id="detail" aria-live="polite"><span class="empty">Nessuna cella selezionata.</span></div>
   </section>
@@ -1349,9 +1444,9 @@ html { touch-action: pan-x pan-y; }
           <input id="d-n" type="number" min="1" max="500" step="1" required>
         </div>
         <div class="field narrow">
-          <label for="d-ore">Tempo di gestione (ore)</label>
-          <input id="d-ore" type="number" min="0.25" max="24" step="0.25" required placeholder="es. 1,5" aria-describedby="d-oreH">
-          <small class="fhint" id="d-oreH">0,25 = 15 min · 0,5 = 30 min</small>
+          <label for="d-ore">Tempo di gestione (minuti)</label>
+          <input id="d-ore" type="number" min="1" max="1440" step="1" inputmode="numeric" required placeholder="es. 25" aria-describedby="d-oreH">
+          <small class="fhint" id="d-oreH">Qualsiasi numero di minuti, es. 7, 25, 95</small>
         </div>
         <div class="field">
           <label for="d-prio">Priorità</label>
@@ -1644,6 +1739,7 @@ html { touch-action: pan-x pan-y; }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function fmtShort(d) { return d.getDate() + ' ' + MONTHS[d.getMonth()]; }
   function fmtH(h) { return (Math.round(h * 10) / 10).toString().replace('.', ','); }
+  function fmtMin(ore) { var m = Math.round(ore * 60), h = Math.floor(m / 60); m -= h * 60; return h ? h + ' h' + (m ? ' ' + m + ' min' : '') : m + ' min'; } // ore → "1 h 35 min"
   function uid() { return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 
   var today = new Date(); today.setHours(0, 0, 0, 0);
@@ -1896,6 +1992,38 @@ html { touch-action: pan-x pan-y; }
     }
     return m;
   }
+  /** Riepilogo per persona in un periodo [da, a] (date ISO): ore progetti e daily task, giorni, sovraccarichi,
+   *  progetti attivi e priorità, attività daily task, mail, difficoltà (se il server le fornisce). Segue i filtri in alto. */
+  function aggrega(da, a) {
+    var L = loads(), out = {}, ppl = carichi();
+    ppl.forEach(function (n) { out[n] = { p: 0, d: 0, gg: 0, over: 0, prj: {}, prio: { Alta: 0, Media: 0, Bassa: 0 }, dk: 0, mail: 0, tec: 0, sd: 0, dprio: { Alta: 0, Media: 0, Bassa: 0 }, perGiorno: {} }; });
+    Object.keys(L).forEach(function (k) {
+      var i = k.lastIndexOf('|'), per = k.slice(0, i), dk = k.slice(i + 1);
+      if (dk < da || dk > a || !out[per]) return;
+      var o = out[per], sp = split(L[k], dk);
+      o.p += sp.p; o.d += sp.d; o.gg++; if (L[k].h > CAP) o.over++;
+      o.perGiorno[dk] = sp;
+      L[k].items.forEach(function (x) { if (!x._daily && !o.prj[x.id]) { o.prj[x.id] = x; if (o.prio[x.prio] != null) o.prio[x.prio]++; } });
+    });
+    var dore = (typeof DORE === 'object' && DORE) || {};
+    if (!FLT.prj && !FLT.prio && !FLT.stato) Object.keys(dore).forEach(function (k) {
+      var i = k.lastIndexOf('|'), per = k.slice(0, i), dk = k.slice(i + 1), x = dore[k], o = out[per];
+      if (dk < da || dk > a || !o) return;
+      o.mail += x.n || 0; o.tec += x.t || 0;
+      if (x.k != null) { o.dk += x.k; o.sd += x.sd || 0; o.dprio.Alta += x.pa || 0; o.dprio.Media += x.pm || 0; o.dprio.Bassa += x.pb || 0; }
+    });
+    var wd = 0; for (var d = parse(da); iso(d) <= a; d = addDays(d, 1)) if (isWork(d)) wd++;
+    return { per: out, ppl: ppl, wd: wd, cap: wd * CAP, da: da, a: a };
+  }
+  function barraPD(o, cap, extra) {
+    var t = o.p + o.d, base = Math.max(cap, t) || 1, over = cap && t > cap;
+    var wp = o.p / base * 100, wd = o.d / base * 100;
+    return '<div class="t stk" title="Progetti ' + fmtH(o.p) + ' h · daily task ' + fmtH(o.d) + ' h">' + (o.p ? '<div class="f ' + (over ? 'fo' : 'fp') + '" style="width:' + wp + '%"></div>' : '') + (o.d ? '<div class="f fd" style="width:' + wd + '%"></div>' : '') + '</div>';
+  }
+  /** ore di una cella divise tra progetti e daily task */
+  function split(e, dk) { var d = 0; if (e) e.items.forEach(function (x) { if (x._daily) d += Number(x.dates[dk] || 0); }); var t = e ? e.h : 0; return { t: t, d: d, p: Math.max(0, t - d) }; }
+  var MAPV = 'tutto';
+  try { MAPV = localStorage.getItem('mc-mapv') || 'tutto'; } catch (e) {}
   var ADMINS = ['Marco Lo Vetere'], adminName = '';
   if (!CLOUD) { try { var la = JSON.parse(localStorage.getItem(KEY + '-admins') || 'null'); if (la && la.length) ADMINS = la; } catch (e) {} }
   function setAdmins(list) { ADMINS.length = 0; list.forEach(function (n) { ADMINS.push(n); }); ADMINS.sort(function (x, y) { return x.localeCompare(y, 'it'); }); }
@@ -1966,19 +2094,23 @@ html { touch-action: pan-x pan-y; }
     h += '</tr></thead><tbody>';
     if (!ppl.length) h += '<tr><td class="who">&nbsp;</td><td colspan="' + (days.length + 1) + '" style="padding:18px;text-align:left" class="empty">Nessun progetto. Inserisci il primo impegno nel modulo sopra.</td></tr>';
     ppl.forEach(function (p) {
-      var tot = 0;
+      var tot = 0, totD = 0, totP = 0;
       h += '<tr><td class="who" title="' + esc(p) + '">' + esc(p) + '</td>';
       days.forEach(function (d, i) {
-        var k = p + '|' + iso(d), e = L[k], hrs = e ? e.h : 0; tot += hrs;
-        var cls = 'cellbtn', style = '', txt = '';
+        var k = p + '|' + iso(d), e = L[k], sp = split(e, iso(d));
+        var hrs = MAPV === 'prj' ? sp.p : MAPV === 'daily' ? sp.d : sp.t;
+        tot += hrs; totD += sp.d; totP += sp.p;
+        var cls = 'cellbtn', style = '', txt = '', band = '';
         if (!hrs) cls += ' free';
+        else if (MAPV === 'daily') { cls += ' donly'; txt = fmtH(hrs); style = '--q:' + Math.round(30 + 70 * Math.min(1, hrs / CAP)) + '%;' + (hrs < CAP * 0.3 ? 'color:var(--fg);' : ''); }
         else if (hrs > CAP) { cls += ' over'; txt = fmtH(hrs); }
         else { cls += ' busy'; txt = fmtH(hrs); style = 'background:color-mix(in srgb,var(--heat) ' + Math.round(25 + 75 * (hrs / CAP)) + '%,var(--cell));'; if (hrs < CAP * 0.45) style += 'color:var(--fg);'; }
+        if (MAPV === 'tutto' && sp.d > 0 && sp.t > 0) band = '<i class="dq" style="height:' + Math.max(12, Math.round(sp.d / sp.t * 100)) + '%"></i>';
         var tcls = 'c' + (i % 5 === 0 ? ' mon' : '') + (iso(d) === iso(today) ? ' today' : '');
         var sel = selected && selected.p === p && selected.d === iso(d);
-        h += '<td class="' + tcls + '"><button type="button" class="' + cls + '" style="' + style + '" data-p="' + encodeURIComponent(p) + '" data-d="' + iso(d) + '" aria-pressed="' + (sel ? 'true' : 'false') + '" aria-label="' + esc(p) + ', ' + fmtShort(d) + ', ' + (hrs ? fmtH(hrs) + ' ore' : 'libero') + '">' + txt + '</button></td>';
+        h += '<td class="' + tcls + '"><button type="button" class="' + cls + '" style="' + style + '" data-p="' + encodeURIComponent(p) + '" data-d="' + iso(d) + '" aria-pressed="' + (sel ? 'true' : 'false') + '" aria-label="' + esc(p) + ', ' + fmtShort(d) + ', ' + (hrs ? fmtH(hrs) + ' ore' + (MAPV === 'tutto' && sp.d ? ', di cui ' + fmtH(sp.d) + ' di daily task' : '') : 'libero') + '">' + band + '<span class="tx">' + txt + '</span></button></td>';
       });
-      h += '<td class="tot">' + fmtH(tot) + ' h</td></tr>';
+      h += '<td class="tot">' + fmtH(tot) + ' h' + (MAPV === 'tutto' && totD ? '<small><span class="sw-p">P ' + fmtH(totP) + '</span> · <span class="sw-d">D ' + fmtH(totD) + '</span></small>' : '') + '</td></tr>';
     });
     h += '</tbody>';
     $('map').innerHTML = h;
@@ -1992,8 +2124,8 @@ html { touch-action: pan-x pan-y; }
     var e = loads()[selected.p + '|' + selected.d], d = parse(selected.d);
     var head = '<strong>' + esc(selected.p) + '</strong>, ' + fmtShort(d) + ': ';
     if (!e) { el.innerHTML = head + 'libero, ' + CAP + ' h disponibili.'; return; }
-    var free = CAP - e.h;
-    head += fmtH(e.h) + ' h su ' + CAP + (free < 0 ? ' (sovraccarico di ' + fmtH(-free) + ' h)' : ' (' + fmtH(free) + ' h liberi)');
+    var free = CAP - e.h, sp = split(e, selected.d);
+    head += fmtH(e.h) + ' h su ' + CAP + (free < 0 ? ' (sovraccarico di ' + fmtH(-free) + ' h)' : ' (' + fmtH(free) + ' h liberi)') + ' · <span class="sw-p">progetti ' + fmtH(sp.p) + ' h</span> · <span class="sw-d">daily task ' + fmtH(sp.d) + ' h</span>';
     el.innerHTML = head + '<ul>' + e.items.map(function (p) { return '<li>' + crmTag(p) + esc(p.name) + ' · ' + fmtH(projHours(p, selected.d)) + ' h' + (p._daily ? ' · mail tecniche e commerciali' : ' · priorità ' + esc(p.prio.toLowerCase())) + '</li>'; }).join('') + '</ul>';
   }
 
@@ -2305,9 +2437,10 @@ html { touch-action: pan-x pan-y; }
   }
   function setBarsView(v) {
     barsView = v;
-    $('bvM').setAttribute('aria-pressed', v === 'mese' ? 'true' : 'false'); $('bvS').setAttribute('aria-pressed', v === 'storico' ? 'true' : 'false');
-    $('bars').hidden = v !== 'mese'; $('histBox').hidden = v !== 'storico';
-    $('h-bars').textContent = v === 'mese' ? 'Carico del mese per persona' : 'Storico del carico per persona';
+    $('bvM').setAttribute('aria-pressed', v === 'mese' ? 'true' : 'false'); $('bvW').setAttribute('aria-pressed', v === 'sett' ? 'true' : 'false'); $('bvS').setAttribute('aria-pressed', v === 'storico' ? 'true' : 'false');
+    $('bars').hidden = v === 'storico'; $('barsLeg').hidden = v === 'storico'; $('barsWk').hidden = v !== 'sett'; $('histBox').hidden = v !== 'storico';
+    $('h-bars').textContent = v === 'mese' ? 'Carico del mese per persona' : v === 'sett' ? 'Carico della settimana per persona' : 'Storico del carico per persona';
+    if (v !== 'storico') renderBars();
   }
   function renderDash() {
     var L = loads(), m = monthStart.getMonth(), y = monthStart.getFullYear();
@@ -2337,13 +2470,122 @@ html { touch-action: pan-x pan-y; }
     dash = { m: m, y: y, per: per, projH: projH, overL: overL, dpp: dpp, ppj: ppj, cap: cap, ppl: ppl, hours: hours };
     renderKpiDetail();
     countUp();
-    var rows = ppl.slice().sort(function (a, b) { return (per[b] || 0) - (per[a] || 0) || a.localeCompare(b, 'it'); });
-    $('bars').innerHTML = rows.length ? rows.map(function (n) {
-      var h = per[n] || 0, pct = cap ? h / cap : 0;
-      return '<div class="bar-row"><span class="n" title="' + esc(n) + '">' + esc(n) + '</span><div class="t"><div class="f' + (pct > 1 ? ' over' : '') + '" style="width:' + Math.min(100, Math.round(pct * 100)) + '%"></div></div><span class="p">' + fmtH(h) + ' h · ' + Math.round(pct * 100) + '%</span></div>';
-    }).join('') : '<span class="empty">Nessuna persona ancora. Inserisci un progetto o aggiungi il team dalla sezione Persone.</span>';
+    renderBars();
     renderHist();
   }
+  var barsWeek = mondayOf(today);
+  function renderBars() {
+    var da, a;
+    if (barsView === 'sett') { da = iso(barsWeek); a = iso(addDays(barsWeek, 4)); $('bwLabel').textContent = fmtShort(barsWeek) + ' – ' + fmtShort(addDays(barsWeek, 4)) + ' ' + addDays(barsWeek, 4).getFullYear(); }
+    else { da = iso(new Date(monthStart.getFullYear(), monthStart.getMonth(), 1)); a = iso(new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0)); }
+    var g = aggrega(da, a), per = g.per;
+    var rows = g.ppl.slice().sort(function (x, y) { return (per[y].p + per[y].d) - (per[x].p + per[x].d) || x.localeCompare(y, 'it'); });
+    $('bars').innerHTML = rows.length ? rows.map(function (n) {
+      var o = per[n], h = o.p + o.d, pct = g.cap ? h / g.cap : 0;
+      return '<div class="bar-row wide"><span class="n" title="' + esc(n) + '">' + esc(n) + '</span>' + barraPD(o, g.cap) + '<span class="p split">' + fmtH(h) + ' h · ' + Math.round(pct * 100) + '%<small><span class="sw-p">P ' + fmtH(o.p) + '</span> · <span class="sw-d">D ' + fmtH(o.d) + '</span></small></span></div>';
+    }).join('') : '<span class="empty">Nessuna persona ancora. Inserisci un progetto o aggiungi il team dalla sezione Persone.</span>';
+  }
+  // ---------- Cruscotto: pagina unica di condivisione del carico ----------
+  var CRU = { per: 'm', ref: new Date(today.getFullYear(), today.getMonth(), 1), met: 'ore', sort: 'tot', dir: -1 };
+  try { var cs0 = JSON.parse(localStorage.getItem('mc-cru') || 'null'); if (cs0) { CRU.per = cs0.per || 'm'; CRU.met = cs0.met || 'ore'; CRU.sort = cs0.sort || 'tot'; CRU.dir = cs0.dir || -1; } } catch (e) {}
+  function cruRange() {
+    var r = CRU.ref, a, b, lab;
+    if (CRU.per === 'w') { a = mondayOf(r); b = addDays(a, 6); lab = 'Sett. ' + fmtShort(a) + ' – ' + fmtShort(addDays(a, 4)) + ' ' + addDays(a, 4).getFullYear(); }
+    else if (CRU.per === 'q') { var q0 = Math.floor(r.getMonth() / 3) * 3; a = new Date(r.getFullYear(), q0, 1); b = new Date(r.getFullYear(), q0 + 3, 0); lab = (q0 / 3 + 1) + '° trimestre ' + r.getFullYear(); }
+    else if (CRU.per === 'y') { a = new Date(r.getFullYear(), 0, 1); b = new Date(r.getFullYear(), 11, 31); lab = 'Anno ' + r.getFullYear(); }
+    else { a = new Date(r.getFullYear(), r.getMonth(), 1); b = new Date(r.getFullYear(), r.getMonth() + 1, 0); lab = MONTHS_FULL[r.getMonth()] + ' ' + r.getFullYear(); }
+    return { a: a, b: b, lab: lab };
+  }
+  function cruMove(dir) {
+    var r = CRU.ref;
+    CRU.ref = CRU.per === 'w' ? addDays(mondayOf(r), 7 * dir) : CRU.per === 'q' ? new Date(r.getFullYear(), r.getMonth() + 3 * dir, 1) : CRU.per === 'y' ? new Date(r.getFullYear() + dir, 0, 1) : new Date(r.getFullYear(), r.getMonth() + dir, 1);
+    renderCru();
+  }
+  function cruSave() { try { localStorage.setItem('mc-cru', JSON.stringify({ per: CRU.per, met: CRU.met, sort: CRU.sort, dir: CRU.dir })); } catch (e) {} }
+  function stk(parts, max, title) { // barra impilata generica: parts = [[classe, valore], ...]
+    var m = max || 1, h = parts.filter(function (x) { return x[1] > 0; }).map(function (x) { return '<div class="f ' + x[0] + '" style="width:' + (x[1] / m * 100) + '%"></div>'; }).join('');
+    return '<div class="t stk" title="' + esc(title || '') + '">' + h + '</div>';
+  }
+  function cruRighe(g) {
+    return g.ppl.map(function (n) {
+      var o = g.per[n], tot = o.p + o.d, np = Object.keys(o.prj).length;
+      return { n: n, o: o, p: o.p, d: o.d, tot: tot, occ: g.cap ? tot / g.cap : 0, gg: o.gg, over: o.over, np: np, pa: o.prio.Alta, pm: o.prio.Media, pb: o.prio.Bassa,
+        dk: o.dk, mail: o.mail, tec: o.tec, com: o.mail - o.tec, diff: o.dk ? o.sd / o.dk : 0, da: o.dprio.Alta, dm: o.dprio.Media, db: o.dprio.Bassa };
+    });
+  }
+  function renderCru() {
+    if (!$('pg-cru') || $('pg-cru').hidden) return;
+    var r = cruRange(), g = aggrega(iso(r.a), iso(r.b)), righe = cruRighe(g);
+    $('cruLabel').textContent = r.lab;
+    Array.prototype.forEach.call(document.querySelectorAll('#cruPer button'), function (b) { b.setAttribute('aria-pressed', b.dataset.p === CRU.per ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('#cruMet button'), function (b) { b.setAttribute('aria-pressed', b.dataset.m === CRU.met ? 'true' : 'false'); });
+    var S = function (k) { return righe.reduce(function (a, x) { return a + x[k]; }, 0); };
+    var P = S('p'), D = S('d'), T = P + D, capT = g.cap * g.ppl.length, prjAll = {}, dk = S('dk'), sd = righe.reduce(function (a, x) { return a + x.o.sd; }, 0);
+    righe.forEach(function (x) { Object.keys(x.o.prj).forEach(function (id) { prjAll[id] = 1; }); });
+    var dailyOk = !FLT.prj && !FLT.prio && !FLT.stato;
+    function k(v, l, sub) { return '<div class="kpi"><span class="v">' + v + (sub ? '<small>' + sub + '</small>' : '') + '</span><span class="l">' + l + '</span></div>'; }
+    $('cruKpi').innerHTML =
+      k(fmtH(T), 'Ore impegnate · progetti ' + fmtH(P) + ' h, daily task ' + fmtH(D) + ' h', 'h') +
+      k(capT ? Math.round(T / capT * 100) : 0, 'Occupazione del team su ' + fmtH(capT) + ' h disponibili', '%') +
+      k(T ? Math.round(D / T * 100) : 0, 'Quota delle ore per i daily task', '%') +
+      k(Object.keys(prjAll).length, 'Progetti attivi nel periodo') +
+      k(dailyOk ? (DSTAT ? dk : '–') : '–', DSTAT ? 'Daily task registrati · ' + S('mail') + ' mail' : 'Daily task: numero disponibile dopo lo script 7') +
+      k(DSTAT && dk ? fmtH(sd / dk) : '–', 'Difficoltà media dei daily task (1–5)') +
+      k(S('over'), 'Giorni-persona oltre ' + CAP + ' h');
+    // confronto tra persone
+    var M = CRU.met, leg = '', note = '', max = 0, val, parti, etich;
+    var L = { ore: [['fp', 'progetti'], ['fd', 'daily task'], ['fo', 'oltre le ore disponibili']], occ: [['fp', 'occupazione'], ['fo', 'oltre il 100%']], prj: [['pA', 'priorità alta'], ['pM', 'media'], ['pB', 'bassa']], dt: [['pA', 'priorità alta'], ['pM', 'media'], ['pB', 'bassa']], mail: [['mt', 'tecniche'], ['mc', 'commerciali']], diff: [['df', 'difficoltà media (1 molto facile – 5 molto difficile)']], prio: [['pA', 'alta'], ['pM', 'media'], ['pB', 'bassa']], over: [['fo', 'giorni oltre ' + CAP + ' h']] };
+    $('cruLeg').innerHTML = (L[M] || []).map(function (x) { var c = { fp: 'var(--heat)', fd: 'var(--daily)', fo: 'var(--over)', pA: 'var(--over)', pM: 'var(--heat)', pB: 'color-mix(in srgb,var(--heat) 40%,var(--cell))', mt: 'var(--accent)', mc: 'color-mix(in srgb,var(--accent) 45%,var(--cell))', df: 'linear-gradient(90deg,var(--daily),var(--over))' }[x[0]]; return '<span><i style="background:' + c + '"></i>' + x[1] + '</span>'; }).join('');
+    var key = { ore: 'tot', occ: 'occ', prj: 'np', dt: 'dk', mail: 'mail', diff: 'diff', prio: 'np', over: 'over' }[M];
+    var ord = righe.slice().sort(function (a, b) { return (M === 'prio' ? (b.pa + b.pm + b.pb + b.da + b.dm + b.db) - (a.pa + a.pm + a.pb + a.da + a.dm + a.db) : b[key] - a[key]) || a.n.localeCompare(b.n, 'it'); });
+    ord.forEach(function (x) { var v = M === 'ore' ? Math.max(x.tot, g.cap) : M === 'occ' ? Math.max(1, x.occ) : M === 'prio' ? x.pa + x.pm + x.pb + x.da + x.dm + x.db : M === 'diff' ? 5 : x[key]; if (v > max) max = v; });
+    if ((M === 'dt' || M === 'diff') && !DSTAT) note = 'Numero, difficoltà e priorità dei daily task di tutto il team compaiono dopo che l\'amministratore esegue database/7-daily-statistiche.sql in Supabase (solo lettura, nessun dato cambia).';
+    else if (!dailyOk && (M === 'dt' || M === 'mail' || M === 'diff')) note = 'Con un filtro di progetto, priorità o stato i daily task non si contano.';
+    else if (M === 'prio') note = 'Conta i progetti attivi nel periodo e i daily task registrati, per priorità.';
+    else if (M === 'ore' || M === 'occ') note = 'Ore disponibili per persona nel periodo: ' + fmtH(g.cap) + ' h (' + g.wd + ' giorni lavorativi × ' + CAP + ' h).';
+    $('cruNote').textContent = note;
+    $('cruBars').innerHTML = ord.length ? ord.map(function (x) {
+      if (M === 'ore') { parti = null; val = barraPD(x.o, g.cap); etich = fmtH(x.tot) + ' h<small><span class="sw-p">P ' + fmtH(x.p) + '</span> · <span class="sw-d">D ' + fmtH(x.d) + '</span></small>'; }
+      else if (M === 'occ') { val = stk([[x.occ > 1 ? 'fo' : 'fp', x.occ]], max); etich = Math.round(x.occ * 100) + '%<small>' + fmtH(x.tot) + ' / ' + fmtH(g.cap) + ' h</small>'; }
+      else if (M === 'prj') { val = stk([['pA', x.pa], ['pM', x.pm], ['pB', x.pb]], max, 'Alta ' + x.pa + ' · Media ' + x.pm + ' · Bassa ' + x.pb); etich = x.np + (x.np === 1 ? ' progetto' : ' progetti') + '<small>A ' + x.pa + ' · M ' + x.pm + ' · B ' + x.pb + '</small>'; }
+      else if (M === 'dt') { val = stk([['pA', x.da], ['pM', x.dm], ['pB', x.db]], max); etich = (DSTAT ? x.dk : '–') + ' attività<small>' + fmtH(x.d) + ' h</small>'; }
+      else if (M === 'mail') { val = stk([['mt', x.tec], ['mc', x.com]], max); etich = x.mail + ' mail<small>tec ' + x.tec + ' · comm ' + x.com + '</small>'; }
+      else if (M === 'diff') { val = stk([['df', x.diff]], 5); etich = (x.dk ? fmtH(x.diff) + ' / 5' : '–') + '<small>' + (x.dk ? DIFF[Math.round(x.diff)] || '' : 'nessun dato') + '</small>'; }
+      else if (M === 'prio') { val = stk([['pA', x.pa + x.da], ['pM', x.pm + x.dm], ['pB', x.pb + x.db]], max); etich = 'A ' + (x.pa + x.da) + ' · M ' + (x.pm + x.dm) + ' · B ' + (x.pb + x.db) + '<small>progetti + daily task</small>'; }
+      else { val = stk([['fo', x.over]], max); etich = x.over + (x.over === 1 ? ' giorno' : ' giorni') + '<small>su ' + x.gg + ' impegnati</small>'; }
+      return '<div class="bar-row wide"><span class="n" title="' + esc(x.n) + '">' + esc(x.n) + '</span>' + val + '<span class="p split">' + etich + '</span></div>';
+    }).join('') : '<span class="empty">Nessuna persona nei carichi per i filtri scelti.</span>';
+    // andamento: per giorno (settimana, mese), per settimana (trimestre), per mese (anno)
+    var cols = [], d;
+    if (CRU.per === 'w' || CRU.per === 'm') for (d = new Date(r.a); d <= r.b; d = addDays(d, 1)) cols.push({ a: iso(d), b: iso(d), lab: String(d.getDate()), we: !isWork(d), wd: isWork(d) ? 1 : 0 });
+    else if (CRU.per === 'q') for (d = mondayOf(r.a); d <= r.b; d = addDays(d, 7)) { var wdN = 0; for (var j = 0; j < 5; j++) { var dj = addDays(d, j); if (dj >= r.a && dj <= r.b) wdN++; } cols.push({ a: iso(d), b: iso(addDays(d, 6)), lab: fmtShort(d), wd: wdN }); }
+    else for (var mi = 0; mi < 12; mi++) cols.push({ a: iso(new Date(r.a.getFullYear(), mi, 1)), b: iso(new Date(r.a.getFullYear(), mi + 1, 0)), lab: MONTHS[mi], wd: wdays(r.a.getFullYear(), mi) });
+    cols.forEach(function (c) { c.p = 0; c.d = 0; righe.forEach(function (x) { Object.keys(x.o.perGiorno).forEach(function (dk2) { if (dk2 >= c.a && dk2 <= c.b) { c.p += x.o.perGiorno[dk2].p; c.d += x.o.perGiorno[dk2].d; } }); }); c.cap = c.wd * CAP * g.ppl.length; });
+    var tmax = Math.max.apply(null, [1].concat(cols.map(function (c) { return Math.max(c.p + c.d, c.cap); })));
+    $('cruTrend').innerHTML = cols.map(function (c) { return '<div class="cru-col' + (c.we ? ' we' : '') + '" title="' + esc(c.lab) + ': progetti ' + fmtH(c.p) + ' h · daily task ' + fmtH(c.d) + ' h · disponibili ' + fmtH(c.cap) + ' h">' + (c.p ? '<i class="p" style="height:' + (c.p / tmax * 100) + '%"></i>' : '') + (c.d ? '<i class="d" style="height:' + (c.d / tmax * 100) + '%"></i>' : '') + (c.cap ? '<span class="cap" style="bottom:' + (c.cap / tmax * 100) + '%"></span>' : '') + '</div>'; }).join('');
+    $('cruTrend').setAttribute('aria-label', 'Ore del team per ' + (CRU.per === 'q' ? 'settimana' : CRU.per === 'y' ? 'mese' : 'giorno') + ', progetti e daily task');
+    $('cruTlab').innerHTML = cols.map(function (c) { return '<span>' + esc(c.lab) + '</span>'; }).join('');
+    $('cruTsub').textContent = CRU.per === 'q' ? 'per settimana' : CRU.per === 'y' ? 'per mese' : 'per giorno';
+    // tabella
+    var C = [['n', 'Persona'], ['p', 'Ore progetti'], ['d', 'Ore daily task'], ['tot', 'Totale'], ['occ', 'Occupazione'], ['gg', 'Giorni impegnati'], ['over', 'Giorni > ' + CAP + ' h'], ['np', 'Progetti'], ['pa', 'Prog. alta'], ['dk', 'Daily task'], ['mail', 'Mail (tec / comm)'], ['diff', 'Difficoltà media']];
+    var tr = righe.slice().sort(function (a, b) { var va = a[CRU.sort], vb = b[CRU.sort]; return (typeof va === 'string' ? va.localeCompare(vb, 'it') : va - vb) * CRU.dir || a.n.localeCompare(b.n, 'it'); });
+    function c2(v, txt) { return '<td class="num' + (v ? '' : ' zero') + '">' + txt + '</td>'; }
+    $('cruTab').innerHTML = '<thead><tr>' + C.map(function (c) { return '<th data-s="' + c[0] + '"' + (CRU.sort === c[0] ? ' aria-sort="' + (CRU.dir > 0 ? 'ascending' : 'descending') + '"' : '') + '>' + c[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      (tr.length ? tr.map(function (x) { return '<tr><td><strong>' + esc(x.n) + '</strong></td>' + c2(x.p, fmtH(x.p) + ' h') + c2(x.d, fmtH(x.d) + ' h') + c2(x.tot, '<strong>' + fmtH(x.tot) + ' h</strong>') + c2(x.occ, occ(x.tot, g.cap)) + c2(x.gg, x.gg) + c2(x.over, x.over) + c2(x.np, x.np) + c2(x.pa, x.pa) + c2(x.dk, DSTAT ? x.dk : '–') + c2(x.mail, x.mail + ' (' + x.tec + ' / ' + x.com + ')') + c2(x.dk, x.dk ? fmtH(x.diff) : '–') + '</tr>'; }).join('')
+        + '<tr class="sum"><td><strong>Team</strong></td>' + c2(P, fmtH(P) + ' h') + c2(D, fmtH(D) + ' h') + c2(T, '<strong>' + fmtH(T) + ' h</strong>') + c2(T, occ(T, capT)) + c2(S('gg'), S('gg')) + c2(S('over'), S('over')) + c2(1, Object.keys(prjAll).length) + c2(S('pa'), S('pa')) + c2(dk, DSTAT ? dk : '–') + c2(S('mail'), S('mail') + ' (' + S('tec') + ' / ' + S('com') + ')') + c2(dk, dk ? fmtH(sd / dk) : '–') + '</tr>'
+        : '<tr><td colspan="' + C.length + '" class="empty">Nessuna persona nei carichi per i filtri scelti.</td></tr>') + '</tbody>';
+    CRU._tsv = [['Periodo: ' + r.lab]].concat([C.map(function (c) { return c[1]; })]).concat(tr.map(function (x) { return [x.n, fmtH(x.p), fmtH(x.d), fmtH(x.tot), Math.round(x.occ * 100) + '%', x.gg, x.over, x.np, x.pa, DSTAT ? x.dk : '', x.mail + ' (' + x.tec + '/' + x.com + ')', x.dk ? fmtH(x.diff) : '']; }));
+  }
+  $('cruPer').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-p]'); if (!b) return; CRU.per = b.dataset.p; cruSave(); renderCru(); });
+  $('cruMet').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-m]'); if (!b) return; CRU.met = b.dataset.m; cruSave(); renderCru(); });
+  $('cruPrev').addEventListener('click', function () { cruMove(-1); });
+  $('cruNext').addEventListener('click', function () { cruMove(1); });
+  $('cruNow').addEventListener('click', function () { CRU.ref = new Date(today.getFullYear(), today.getMonth(), today.getDate()); renderCru(); });
+  $('cruTab').addEventListener('click', function (ev) { var th = ev.target.closest('th[data-s]'); if (!th) return; var s2 = th.dataset.s; CRU.dir = CRU.sort === s2 ? -CRU.dir : (s2 === 'n' ? 1 : -1); CRU.sort = s2; cruSave(); renderCru(); });
+  $('cruCopy').addEventListener('click', function () {
+    var t = (CRU._tsv || []).map(function (r2) { return r2.join('\t'); }).join('\n');
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { $('cruMsg').textContent = 'Tabella copiata: incollala in Excel, Teams o in una mail.'; }).catch(function () { $('cruMsg').textContent = 'Copia non riuscita: seleziona la tabella e copiala a mano.'; });
+  });
   function renderTeam() {
     var h = '<thead><tr><th>Persona</th><th>Progetti</th><th>Ore progetti</th><th>Daily task (30 gg): mail</th><th>Tecniche / commerciali</th><th>Ore daily task</th><th></th></tr></thead><tbody>';
     var ppl = people(), da30 = iso(addDays(today, -29)), dd = {}, dore = (typeof DORE === 'object' && DORE) || {};
@@ -2601,9 +2843,10 @@ html { touch-action: pan-x pan-y; }
     }).join('') + '</tbody>';
     $('of-more').hidden = rows.length <= OF.limit;
   }
-  var PAGES = ['home', 'ins', 'map', 'prj', 'daily', 'team', 'admin', 'offerte', 'data'];
+  var PAGES = ['home', 'cru', 'ins', 'map', 'prj', 'daily', 'team', 'admin', 'offerte', 'data'];
   var TITLES = {
     home: ['Dashboard', 'Il mese in corso a colpo d\'occhio.'],
+    cru: ['Cruscotto', 'Carico del team in un\'unica pagina: ore di progetti e daily task, attività, difficoltà e priorità, per il periodo scelto.'],
     ins: ['Inserisci', 'Aggiungi un progetto: giorni lavorativi e ore al giorno.'],
     map: ['Mappa carichi', 'Chi è carico e chi ha spazio, giorno per giorno.'],
     prj: ['Progetti', 'Sposta le priorità, modifica o elimina i tuoi progetti.'],
@@ -2620,7 +2863,8 @@ html { touch-action: pan-x pan-y; }
     if (window.OBORegistro && id !== 'admin') OBORegistro.uso(id); // statistiche d'uso (Amministrazione)
     if (id === 'admin') { var pw = pwds(); $('pw-admin').value = pw.admin; $('pw-guest').value = pw.guest; $('pw-vis-f').hidden = !CLOUD; $('pw-visitor').value = pw.visitor || ''; $('pw-visitor').type = 'password'; $('pw-admin').type = 'password'; $('pw-guest').type = 'password'; $('pwShow').textContent = 'Mostra'; $('pwMsg').textContent = ''; $('admMsg').textContent = ''; renderAdm(); renderGpw(); }
     PAGES.forEach(function (p) { $('pg-' + p).hidden = p !== id; });
-    $('filtri').hidden = ['home', 'map', 'prj'].indexOf(id) < 0; // filtri solo dove si vedono carichi e progetti
+    if (id === 'cru') renderCru();
+    $('filtri').hidden = ['home', 'cru', 'map', 'prj'].indexOf(id) < 0; // filtri solo dove si vedono carichi e progetti
     Array.prototype.forEach.call(document.querySelectorAll('#nav button'), function (b) {
       if (b.dataset.go === id) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     });
@@ -2682,7 +2926,7 @@ html { touch-action: pan-x pan-y; }
     var b = e.target.closest('#acc-chart .acc-b'); if (b) { ACC.sel = b.dataset.d; accRender(); return; }
     var p = e.target.closest('#acc-per button'); if (p) { ACC.n = +p.dataset.n; accRender(); }
   });
-  function renderAll() { renderFiltri(); renderCar(); if (!$('pg-daily').hidden) { if (DT.per !== dChi()) dLoad(); else dRender(); } accRender(); renderAdm(); renderGpw(); renderTools(); if (typeof renderOutlook === 'function') renderOutlook(); renderSide(); renderMonth(); renderDash(); renderMap(); renderDetail(); renderList(); renderBoard(); renderTeam(); renderWho(); }
+  function renderAll() { renderFiltri(); renderCar(); if (!$('pg-daily').hidden) { if (DT.per !== dChi()) dLoad(); else dRender(); } accRender(); renderAdm(); renderGpw(); renderTools(); if (typeof renderOutlook === 'function') renderOutlook(); renderSide(); renderMonth(); renderDash(); renderMap(); renderDetail(); renderList(); renderBoard(); renderTeam(); renderCru(); renderWho(); }
   function setPrio(id, pr) {
     var p = projects.filter(function (x) { return x.id === id; })[0];
     if (!p || !canEdit(p) || PRIOS.indexOf(pr) < 0 || p.prio === pr) return;
@@ -2792,6 +3036,9 @@ html { touch-action: pan-x pan-y; }
   ['f-days', 'f-hpd'].forEach(function (id) { $(id).addEventListener('input', updateCalc); });
 
   $('prev').addEventListener('click', function () { weekStart = addDays(weekStart, -7); renderMap(); });
+  function setMapV(v) { MAPV = v; try { localStorage.setItem('mc-mapv', v); } catch (e) {} Array.prototype.forEach.call(document.querySelectorAll('#mapV button'), function (b) { b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'); }); renderMap(); }
+  $('mapV').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-v]'); if (b) setMapV(b.dataset.v); });
+  Array.prototype.forEach.call(document.querySelectorAll('#mapV button'), function (b) { b.setAttribute('aria-pressed', b.dataset.v === MAPV ? 'true' : 'false'); });
   $('next').addEventListener('click', function () { weekStart = addDays(weekStart, 7); renderMap(); });
   $('todayBtn').addEventListener('click', function () { weekStart = mondayOf(today); renderMap(); });
 
@@ -2823,6 +3070,10 @@ html { touch-action: pan-x pan-y; }
   /* calendario del mese */
   $('bvM').addEventListener('click', function () { setBarsView('mese'); });
   $('bvS').addEventListener('click', function () { setBarsView('storico'); });
+  $('bvW').addEventListener('click', function () { setBarsView('sett'); });
+  $('bwPrev').addEventListener('click', function () { barsWeek = addDays(barsWeek, -7); renderBars(); });
+  $('bwNext').addEventListener('click', function () { barsWeek = addDays(barsWeek, 7); renderBars(); });
+  $('bwNow').addEventListener('click', function () { barsWeek = mondayOf(today); renderBars(); });
   $('histN').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-n]'); if (!b) return; histN = +b.dataset.n; renderHist(); });
   $('calN').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-n]'); if (!b) return; calN = +b.dataset.n; try { localStorage.setItem(KEY + '-caln', String(calN)); } catch (e) {} renderMonth(); });
   $('kpis').addEventListener('click', function (ev) { var t = ev.target.closest('.kpi[data-k]'); if (t) pickKpi(t); });
@@ -3303,17 +3554,26 @@ html { touch-action: pan-x pan-y; }
     }).catch(function (e) { DT.items = []; DT.err = /app_daily|schema cache|HTTP 404/i.test((e && e.message) || '') ? 'Daily task non ancora attivo: l\'amministratore deve eseguire database/5-daily-task-e-persone.sql e 6-daily-tempo.sql in Supabase.' : errTxt(e); dRender(); });
   }
   /* ore di gestione dei daily task per persona e giorno (tutto il team, solo i totali): servono alla Mappa dei carichi e alla pagina Persone */
-  var DORE = {};
+  var DORE = {}, DSTAT = false;
   function doreSet(items) {
     var m = {};
-    items.forEach(function (x) { var k = x.person + '|' + x.day, o = m[k] || (m[k] = { ore: 0, n: 0, t: 0 }); o.ore += Number(x.ore) || 0; o.n += Number(x.n) || 0; o.t += x.t != null ? Number(x.t) || 0 : (x.kind === 'Tecnica' ? Number(x.n) || 0 : 0); });
+    items.forEach(function (x) {
+      var k = x.person + '|' + x.day, o = m[k] || (m[k] = { ore: 0, n: 0, t: 0 });
+      o.ore += Number(x.ore) || 0; o.n += Number(x.n) || 0; o.t += x.t != null ? Number(x.t) || 0 : (x.kind === 'Tecnica' ? Number(x.n) || 0 : 0);
+      // numero di attività, difficoltà e priorità: dal server (script 7) oppure dalle singole attività (uso locale)
+      if (x.k != null) { o.k = (o.k || 0) + Number(x.k); o.sd = (o.sd || 0) + Number(x.sd || 0); o.pa = (o.pa || 0) + Number(x.pa || 0); o.pm = (o.pm || 0) + Number(x.pm || 0); o.pb = (o.pb || 0) + Number(x.pb || 0); }
+      else if (x.diff != null) { o.k = (o.k || 0) + 1; o.sd = (o.sd || 0) + Number(x.diff); o.pa = (o.pa || 0) + (x.prio === 'Alta' ? 1 : 0); o.pm = (o.pm || 0) + (x.prio === 'Media' ? 1 : 0); o.pb = (o.pb || 0) + (x.prio === 'Bassa' ? 1 : 0); }
+    });
+    DSTAT = items.some(function (x) { return x.k != null || x.diff != null; });
     DORE = m;
   }
   function doreLoad() {
-    var a = iso(addDays(today, -120)), b = iso(addDays(today, 7));
+    var a = iso(addDays(today, -390)), b = iso(addDays(today, 7));
     if (!CLOUD) { doreSet(dLocal().filter(function (x) { return !x.annullata && x.day >= a && x.day <= b; })); renderAll(); return; }
     if (!token) return;
-    rpc('app_daily_ore', { token: token, from: a, to: b }).then(function (r) { doreSet((r && r.items) || []); renderAll(); }).catch(function () {}); // script 6 non ancora eseguito: la mappa resta com'era
+    rpc('app_daily_stat', { token: token, from: a, to: b }) // script 7: anche numero di attività, difficoltà e priorità
+      .catch(function () { return rpc('app_daily_ore', { token: token, from: a, to: b }); })
+      .then(function (r) { doreSet((r && r.items) || []); renderAll(); }).catch(function () {}); // script 6 non ancora eseguito: la mappa resta com'era
   }
   function dVisible() {
     var who = dMe();
@@ -3387,7 +3647,7 @@ html { touch-action: pan-x pan-y; }
     l.forEach(function (x) {
       var d = parse(x.day), pc = x.prio === 'Alta' ? 'a' : x.prio === 'Media' ? 'm' : 'b', own = canWrite && x.person === mine;
       g += '<tr><td>' + DOWS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + '</td>' + (isAdmin ? '<td>' + esc(x.person) + '</td>' : '') +
-        '<td>' + esc(x.kind) + '</td><td class="num">' + Number(x.n) + '</td><td class="num">' + (Number(x.ore) > 0 ? fmtH(Number(x.ore)) + ' h' : '–') + '</td><td class="dw">' + esc(x.what || '') + '</td><td><span class="pill ' + pc + '">' + esc(x.prio) + '</span></td><td>' + dBar(Number(x.diff)) + '</td>' +
+        '<td>' + esc(x.kind) + '</td><td class="num">' + Number(x.n) + '</td><td class="num">' + (Number(x.ore) > 0 ? fmtMin(Number(x.ore)) : '–') + '</td><td class="dw">' + esc(x.what || '') + '</td><td><span class="pill ' + pc + '">' + esc(x.prio) + '</span></td><td>' + dBar(Number(x.diff)) + '</td>' +
         '<td class="act">' + (own ? '<button type="button" class="small" data-dedit="' + esc(x.id) + '">Modifica</button> <button type="button" class="small" data-dann="' + esc(x.id) + '">Annulla</button>' : '') + '</td></tr>';
     });
     $('dList').innerHTML = g + '</tbody>';
@@ -3395,19 +3655,22 @@ html { touch-action: pan-x pan-y; }
   function dSetKind(k) { DT.kind = k; Array.prototype.forEach.call(document.querySelectorAll('#dKind button'), function (b) { b.setAttribute('aria-pressed', b.dataset.kind === k ? 'true' : 'false'); }); }
   function dSetDiff(v) { v = Math.max(1, Math.min(5, Number(v) || 3)); $('d-diff').value = v; $('d-diffLbl').textContent = DIFF[v]; $('d-diff').setAttribute('aria-valuetext', DIFF[v]); }
   function dReset() {
-    DT.edit = null; $('dForm').reset(); $('d-day').value = iso(today); dSetKind(''); dSetDiff(3);
+    DT.edit = null; $('dForm').reset(); $('d-day').value = iso(today); dSetKind(''); dSetDiff(3); dOreHint();
     $('dSubmit').textContent = 'Aggiungi attività'; $('dCancel').hidden = true;
   }
   $('dKind').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-kind]'); if (b) dSetKind(b.dataset.kind); });
   $('d-diff').addEventListener('input', function () { dSetDiff(this.value); });
+  function dOreHint() { var v = Number(String($('d-ore').value).replace(',', '.')); $('d-oreH').textContent = v > 0 ? '= ' + fmtMin(Math.round(v / 60 * 100) / 100) + (v > 1440 ? ' · al massimo 24 ore' : '') : 'Qualsiasi numero di minuti, es. 7, 25, 95'; }
+  $('d-ore').addEventListener('input', dOreHint);
   $('dForm').addEventListener('submit', function (ev) {
     ev.preventDefault();
     var m = $('dMsg');
     if (!dMe() || isVisitor) { m.textContent = 'Accedi per inserire le tue attività.'; return; }
     if (!DT.kind) { m.textContent = 'Scegli se le mail sono tecniche o commerciali.'; return; }
     if (!$('d-prio').value) { m.textContent = 'Scegli la priorità.'; $('d-prio').focus(); return; }
-    var it = { id: DT.edit || uid(), day: $('d-day').value, kind: DT.kind, n: Math.max(1, Math.min(500, Math.round(Number($('d-n').value)))), what: $('d-what').value.trim(), prio: $('d-prio').value, diff: Number($('d-diff').value), ore: Math.round(Number(String($('d-ore').value).replace(',', '.')) * 100) / 100 };
+    var it = { id: DT.edit || uid(), day: $('d-day').value, kind: DT.kind, n: Math.max(1, Math.min(500, Math.round(Number($('d-n').value)))), what: $('d-what').value.trim(), prio: $('d-prio').value, diff: Number($('d-diff').value), ore: Math.round(Math.max(0, Number(String($('d-ore').value).replace(',', '.'))) / 60 * 100) / 100 }; // minuti → ore (2 decimali bastano per ogni minuto)
     if (!(it.ore > 0)) { m.textContent = 'Indica il tempo di gestione.'; $('d-ore').focus(); return; }
+    if (it.ore > 24) { m.textContent = 'Il tempo di gestione può arrivare al massimo a 1440 minuti (24 ore).'; $('d-ore').focus(); return; }
     if (!it.day || !(it.n > 0) || !it.what) return;
     var job;
     if (!CLOUD) {
@@ -3429,7 +3692,7 @@ html { touch-action: pan-x pan-y; }
     var id = b.dataset.dedit || b.dataset.dann, x = DT.items.filter(function (y) { return y.id === id; })[0];
     if (!x || x.person !== dMe()) return;
     if (b.dataset.dedit) {
-      DT.edit = x.id; $('d-day').value = x.day; dSetKind(x.kind); $('d-n').value = x.n; $('d-what').value = x.what || ''; $('d-prio').value = x.prio; dSetDiff(x.diff); $('d-ore').value = Number(x.ore) > 0 ? x.ore : '';
+      DT.edit = x.id; $('d-day').value = x.day; dSetKind(x.kind); $('d-n').value = x.n; $('d-what').value = x.what || ''; $('d-prio').value = x.prio; dSetDiff(x.diff); $('d-ore').value = Number(x.ore) > 0 ? Math.round(Number(x.ore) * 60) : ''; dOreHint();
       $('dSubmit').textContent = 'Salva modifiche'; $('dCancel').hidden = false; $('dMsg').textContent = '';
       $('dForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
