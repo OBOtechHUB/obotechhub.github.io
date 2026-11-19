@@ -1121,6 +1121,7 @@ html { touch-action: pan-x pan-y; }
       <button type="button" data-go="map" data-tip="Mappa carichi" aria-label="Mappa carichi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span class="lab">Mappa</span></button>
       <button type="button" data-go="prj" data-tip="Progetti" aria-label="Progetti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span class="lab">Progetti</span><span class="bdg" id="bdgPrj">0</span></button>
       <button type="button" data-go="daily" data-tip="Daily task" aria-label="Daily task"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg><span class="lab">Daily task</span></button>
+      <button type="button" data-go="ric" id="navRic" data-tip="Richieste" aria-label="Richieste all'ufficio tecnico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg><span class="lab">Richieste</span></button>
       <button type="button" data-go="team" data-tip="Persone" aria-label="Persone"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.4c2.2.7 3.5 2.6 3.5 5.6"/></svg><span class="lab">Persone</span><span class="bdg" id="bdgTeam">0</span></button>
       <button type="button" data-go="admin" id="navAdmin" hidden data-tip="Admin" aria-label="Admin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span class="lab">Admin</span></button>
       <button type="button" data-go="offerte" id="navOfferte" hidden data-tip="Offerte" aria-label="Offerte"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lab">Offerte</span></button>
@@ -1506,6 +1507,20 @@ html { touch-action: pan-x pan-y; }
     <div class="scroll"><table class="list" id="dSum"></table></div>
     <h3 class="dh3">Dettaglio delle attività</h3>
     <div class="scroll"><table class="list" id="dList"></table></div>
+  </section>
+  </div>
+
+  <div class="page" id="pg-ric" hidden>
+  <section class="panel" aria-labelledby="h-ric">
+    <h2 id="h-ric">Richieste all'ufficio tecnico</h2>
+    <p class="hint">Le richieste si aprono in Progettazione LPS (pagina Richieste). Qui le metti in mappa: diventano un progetto con le ore stimate, a partire dal giorno scelto.</p>
+    <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+      <div class="field"><label for="ric-start">Inizio in mappa</label><input type="date" id="ric-start"></div>
+      <div class="field" id="ric-pf" hidden><label for="ric-person">Persona (Admin)</label><select id="ric-person"></select></div>
+      <button type="button" class="btn ghost" id="ric-reload">Aggiorna</button>
+    </div>
+    <p class="hint" id="ric-msg" role="status"></p>
+    <div class="scroll"><table class="list" id="ric-tbl"></table></div>
   </section>
   </div>
 
@@ -2216,7 +2231,7 @@ html { touch-action: pan-x pan-y; }
     $('teamAdd').disabled = !isAdmin; $('t-name').disabled = !isAdmin;
     $('t-name').placeholder = isAdmin ? 'Es. Mario Rossi' : 'Solo l\'admin aggiunge persone';
     $('loadCsv').disabled = !isAdmin;
-    $('navAdmin').hidden = !isAdmin; $('navOfferte').hidden = !(isAdmin || isVisitor); if (!(isAdmin || isVisitor)) ofClear();
+    $('navAdmin').hidden = !isAdmin; $('navRic').hidden = isVisitor; $('navOfferte').hidden = !(isAdmin || isVisitor); if (!(isAdmin || isVisitor)) ofClear();
     document.querySelector('#nav [data-go=ins]').hidden = isVisitor; document.querySelector('#nav [data-go=daily]').hidden = isVisitor; $('heroNew').hidden = isVisitor;
     if (typeof renderOutlook === 'function') renderOutlook();
   }
@@ -2843,13 +2858,14 @@ html { touch-action: pan-x pan-y; }
     }).join('') + '</tbody>';
     $('of-more').hidden = rows.length <= OF.limit;
   }
-  var PAGES = ['home', 'cru', 'ins', 'map', 'prj', 'daily', 'team', 'admin', 'offerte', 'data'];
+  var PAGES = ['home', 'cru', 'ins', 'map', 'prj', 'daily', 'ric', 'team', 'admin', 'offerte', 'data'];
   var TITLES = {
     home: ['Dashboard', 'Il mese in corso a colpo d\'occhio.'],
     cru: ['Cruscotto', 'Carico del team in un\'unica pagina: ore di progetti e daily task, attività, difficoltà e priorità, per il periodo scelto.'],
     ins: ['Inserisci', 'Aggiungi un progetto: giorni lavorativi e ore al giorno.'],
     map: ['Mappa carichi', 'Chi è carico e chi ha spazio, giorno per giorno.'],
     prj: ['Progetti', 'Sposta le priorità, modifica o elimina i tuoi progetti.'],
+    ric: ['Richieste', 'Richieste all\'ufficio tecnico aperte in Progettazione LPS: mettile in mappa con le ore stimate.'],
     daily: ['Daily task', 'Le mail tecniche e commerciali a cui hai risposto, giorno per giorno, e il report della settimana.'],
     team: ['Persone', 'Il team dell\'ufficio tecnico.'],
     admin: ['Admin', 'Cambia le password di accesso.'],
@@ -2857,8 +2873,9 @@ html { touch-action: pan-x pan-y; }
     data: ['Download', 'Scarica i progetti e gli appuntamenti per Outlook.']
   };
   function showPage(id) {
-    if (PAGES.indexOf(id) < 0 || (id === 'admin' && !isAdmin) || (id === 'offerte' && !(isAdmin || isVisitor)) || (isVisitor && (id === 'ins' || id === 'daily'))) id = 'home';
+    if (PAGES.indexOf(id) < 0 || (id === 'admin' && !isAdmin) || (id === 'offerte' && !(isAdmin || isVisitor)) || (isVisitor && (id === 'ins' || id === 'daily' || id === 'ric'))) id = 'home';
     if (id === 'daily') dOpen();
+    if (id === 'ric') ricOpen();
     if (id === 'offerte') ofOpen();
     if (window.OBORegistro && id !== 'admin') OBORegistro.uso(id); // statistiche d'uso (Amministrazione)
     if (id === 'admin') { var pw = pwds(); $('pw-admin').value = pw.admin; $('pw-guest').value = pw.guest; $('pw-vis-f').hidden = !CLOUD; $('pw-visitor').value = pw.visitor || ''; $('pw-visitor').type = 'password'; $('pw-admin').type = 'password'; $('pw-guest').type = 'password'; $('pwShow').textContent = 'Mostra'; $('pwMsg').textContent = ''; $('admMsg').textContent = ''; renderAdm(); renderGpw(); }
@@ -3542,6 +3559,43 @@ html { touch-action: pan-x pan-y; }
   }
   function dRangeIso() { var r = dRange(); return [iso(r[0]), iso(r[1])]; }
   function dMove(dir) { DT.week = DT.per2 === 'm' ? new Date(DT.week.getFullYear(), DT.week.getMonth() + dir, 1) : addDays(DT.week, 7 * dir); dLoad(); }
+  /* ===== Richieste all'ufficio tecnico (tabella condivisa con Progettazione LPS, supabase/richieste.sql) ===== */
+  var RIC = { items: null };
+  var RIC_TIPI = { 'progetto-lps': 'Progetto LPS', verifica: 'Verifica impianto', offerta: 'Offerta', consulenza: 'Consulenza tecnica', altro: 'Altro' };
+  var RIC_STATI = { nuova: 'Nuova', 'in-carico': 'Presa in carico', 'in-lavorazione': 'In lavorazione', completata: 'Completata', annullata: 'Annullata' };
+  function ricOpen() {
+    if (!$('ric-start').value) $('ric-start').value = accIso(new Date());
+    $('ric-pf').hidden = !isAdmin;
+    if (isAdmin) $('ric-person').innerHTML = people().filter(function (n) { return !isAdminName(n); }).map(function (n) { return '<option>' + esc(n) + '</option>'; }).join('');
+    ricLoad();
+  }
+  function ricLoad() {
+    if (!CLOUD || !token) { RIC.items = []; $('ric-msg').textContent = 'Le richieste sono disponibili con il database collegato e l\'accesso.'; ricRender(); return; }
+    rpc('app_richieste_list', { token: token }).then(function (j) { RIC.items = j.items || []; $('ric-msg').textContent = ''; ricRender(); })
+      .catch(function (e) { RIC.items = []; $('ric-msg').textContent = /app_richieste|schema cache|HTTP 404/i.test((e && e.message) || '') ? 'Richieste non ancora attive: l\'amministratore deve eseguire supabase/richieste.sql (repository appOBOtechHUB) in Supabase.' : errTxt(e); ricRender(); });
+  }
+  function ricRender() {
+    var it = RIC.items || [];
+    if (!it.length) { $('ric-tbl').innerHTML = '<tbody><tr><td class="empty">Nessuna richiesta.</td></tr></tbody>'; return; }
+    $('ric-tbl').innerHTML = '<thead><tr><th>Aperta</th><th>Cliente e comune</th><th>Tipo</th><th>Priorità</th><th>Scadenza</th><th class="num">Ore</th><th>Stato</th><th>Tecnico</th><th></th></tr></thead><tbody>' + it.map(function (r) {
+      var chiusa = r.stato === 'completata' || r.stato === 'annullata';
+      return '<tr><td>' + esc(r.creata || '') + '<div class="hint">' + esc(r.richiedente || '') + '</div></td><td><b>' + esc(r.cliente || '—') + '</b>' + (r.comune ? '<div>' + esc(r.comune) + '</div>' : '') + (r.descrizione ? '<div class="hint" style="max-width:320px;white-space:pre-line">' + esc(r.descrizione) + '</div>' : '') + '</td><td>' + esc(RIC_TIPI[r.tipo] || r.tipo) + '</td><td>' + esc(r.priorita) + '</td><td>' + esc(r.scadenza || '—') + '</td><td class="num">' + (r.ore == null ? '—' : esc(String(r.ore).replace('.', ','))) + '</td><td>' + esc(RIC_STATI[r.stato] || r.stato) + '</td><td>' + esc(r.tecnico || '—') + '</td><td>' +
+        (r.progetto_mappa ? '<span class="hint">In mappa</span>' : chiusa ? '' : '<button type="button" class="btn" data-ric="' + esc(r.id) + '">Metti in mappa</button>') + '</td></tr>';
+    }).join('') + '</tbody>';
+  }
+  function ricMetti(id) {
+    var p = { token: token, id: id, start: $('ric-start').value || accIso(new Date()) };
+    if (isAdmin) p.person = $('ric-person').value;
+    $('ric-msg').textContent = 'Inserimento in mappa…';
+    rpc('app_richieste_in_mappa', p).then(function (j) {
+      if (j && j.error) { $('ric-msg').textContent = j.error; return; }
+      $('ric-msg').textContent = 'Richiesta messa in mappa: la trovi tra i progetti con le ore stimate.';
+      return pull(true).then(ricLoad);
+    }).catch(function (e) { $('ric-msg').textContent = errTxt(e); });
+  }
+  $('ric-tbl').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-ric]'); if (b) ricMetti(b.dataset.ric); });
+  $('ric-reload').addEventListener('click', ricLoad);
+
   function dOpen() { if (!DT.edit && !$('d-day').value) dReset(); dLoad(); }
   function dLoad() {
     var r = dRangeIso(); DT.per = dChi();
