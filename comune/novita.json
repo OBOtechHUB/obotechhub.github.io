@@ -2,6 +2,21 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-19-hub-2",
+      "data": "2026-11-19",
+      "app": "tutte",
+      "titolo": "Cambio password ogni 90 giorni",
+      "voci": [
+        "La password di OBO Hub scade dopo 90 giorni dall'ultimo cambio: al primo accesso dopo la scadenza viene chiesta una nuova password, diversa da quella attuale",
+        "Vale per tutte le app (Hub, Mappa carichi, Prodotti, Torrette, Progettazione LPS); gli amministratori possono scegliere 60, 90, 180 giorni o nessuna scadenza"
+      ],
+      "titolo_en": "Password change every 90 days",
+      "voci_en": [
+        "OBO Hub passwords expire 90 days after the last change: at the first sign-in after expiry a new password is required",
+        "Applies to all apps; admins can choose 60, 90, 180 days or no expiry"
+      ]
+    },
+    {
       "id": "2026-11-19-hub-1",
       "data": "2026-11-19",
       "app": "hub",

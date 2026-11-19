@@ -716,9 +716,9 @@
     p.querySelector("#ind").addEventListener("click", () => { vista = "accedi"; void aggiorna(); });
   }
 
-  function schermataNuovaPassword(primoAccesso) {
-    const p = pannello(`<h2>${primoAccesso ? "Scegli la tua password" : "Nuova password"}</h2>
-      <p>${primoAccesso ? "Stai usando la password iniziale comune: per continuare scegline una personale." : "Scegli la nuova password."} Almeno 10 caratteri, con lettere e numeri.</p>
+  function schermataNuovaPassword(primoAccesso, scaduta) {
+    const p = pannello(`<h2>${scaduta ? "Password scaduta" : primoAccesso ? "Scegli la tua password" : "Nuova password"}</h2>
+      <p>${scaduta ? `Per sicurezza la password va cambiata ogni ${esc(String(scaduta))} giorni: scegline una nuova, diversa da quella attuale.` : primoAccesso ? "Stai usando la password iniziale comune: per continuare scegline una personale." : "Scegli la nuova password."} Almeno 10 caratteri, con lettere e numeri.</p>
       <form id="f"><label>Nuova password<input id="p1" type="password" autocomplete="new-password" required minlength="10"></label>
       <label>Ripeti la password<input id="p2" type="password" autocomplete="new-password" required></label>
       <button class="btn btn-primario">${svg("chiave")}Salva la password</button><div class="errore" role="alert"></div></form>`);
@@ -843,7 +843,10 @@
     if (profilo.stato !== "attivo") { avviso("Il tuo accesso è sospeso. Contatta l'amministratore."); azioni.append(iconaBarra(null, "Esci", "esci", esci)); return; }
     azioni.append(iconaBarra(null, "Esci", "esci", esci));
     if (verificati.length && aal?.currentLevel !== "aal2") { schermataVerifica(verificati[0].id); return; }
-    if (recupero || profilo.deve_cambiare_password) { schermataNuovaPassword(!recupero); return; }
+    let pw = null; // scadenza della password (supabase/scadenza-password.sql); se la funzione manca si va avanti come prima
+    try { const r = await supabase.rpc("stato_password"); if (!r.error) pw = r.data; } catch {}
+    if (!recupero && pw?.scaduta) { schermataNuovaPassword(false, pw.giorni || 90); return; }
+    if (recupero || profilo.deve_cambiare_password || pw?.da_cambiare) { schermataNuovaPassword(!recupero); return; }
     if (!verificati.length) { void schermataAttivaAuthenticator(); return; }
 
     // dentro: solo le proprie app
