@@ -75,7 +75,7 @@ async function accesso() {
 // ---------- dati ----------
 // prodotti: [numero, nome, descrizione, url, icona, attivo dal, prima vista, immagine]
 let PRODOTTI = [], CATEGORIE = [], NOTIZIE = [], PAGINE = [], NOVITA = { prodotti: [], notizie: [], giorni: 120 }, STATO = null, EVIDENZA = { prodotti: [], storico: [] };
-let NUOVI = new Set();
+let NUOVI = new Set(), DATA_NOVITA = new Map();
 const norm = (s) => String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[®™]/g, "");
 let INDICE = []; // testo normalizzato per prodotto
 
@@ -86,7 +86,15 @@ async function carica() {
   PRODOTTI = p ?? []; CATEGORIE = c ?? []; NOTIZIE = []; PAGINE = pg ?? []; NOVITA = nv ?? NOVITA; STATO = st; EVIDENZA = ev ?? EVIDENZA;
   // novità = solo i nuovi prodotti di OBO.global (in evidenza ora e in passato)
   const globali = [...(EVIDENZA.prodotti ?? []), ...(EVIDENZA.storico ?? [])];
-  NUOVI = new Set(globali.map((x) => x.codice));
+  // storico delle novità da tutto il catalogo: data di attivazione OBO (escluse le date dei caricamenti in blocco) o prima comparsa su obo.it
+  const conta = new Map(); for (const r of PRODOTTI) if (r[5]) conta.set(r[5], (conta.get(r[5]) || 0) + 1);
+  const inBlocco = new Set([...conta].filter(([, n]) => n > 300).map(([d]) => d));
+  DATA_NOVITA = new Map();
+  for (const r of PRODOTTI) { const d = [r[5] && !inBlocco.has(r[5]) ? r[5] : "", r[6] || ""].sort().pop(); if (d) DATA_NOVITA.set(r[0], d); }
+  for (const r of NOVITA.prodotti ?? []) { const d = r.length > 9 ? r[9] : r[8]; if (d && !DATA_NOVITA.has(r[0])) DATA_NOVITA.set(r[0], d); }
+  for (const x of globali) if (x.dal && !DATA_NOVITA.has(x.codice)) DATA_NOVITA.set(x.codice, x.dal);
+  const limiteNuovo = new Date(Date.now() - (NOVITA.giorni || 120) * 864e5).toISOString().slice(0, 10);
+  NUOVI = new Set([...globali.map((x) => x.codice), ...[...DATA_NOVITA].filter(([, d]) => d >= limiteNuovo).map(([c]) => c)]);
   // un nuovo prodotto di OBO.global senza pagina su obo.it entra lo stesso nella ricerca, con il link a OBO.global
   const presenti = new Set(PRODOTTI.map((r) => r[0])), aggiunti = new Set();
   for (const x of globali) if (!presenti.has(x.codice) && !aggiunti.has(x.codice)) {
@@ -145,14 +153,14 @@ function evidenzia(testo, q) {
 // ---------- schede ----------
 const url = (u) => (u?.startsWith("http") ? u : SITO + (u || ""));
 const dataIt = (d) => { if (!d) return ""; try { return new Date(d + "T12:00:00").toLocaleDateString(en() ? "en-GB" : "it-IT", { day: "numeric", month: "short", year: "numeric" }); } catch { return d; } };
-function rigaProdotto(r, q = "") {
+function rigaProdotto(r, q = "", dataNuovo = "") {
   const f = fotoDi(r);
   const img = f ? `<img src="${esc(f)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="noimg">${T("senza foto", "no photo")}</span>`;
   const nuovo = NUOVI.has(r[0]) ? `<span class="nuovo">${T("NUOVO", "NEW")}</span>` : "";
   const cat = NOMI_CAT.get(catDi(r));
   return `<a class="prodotto" href="${esc(url(r[3]))}" target="_blank" rel="noopener">${img}
     <span>${cat ? `<span class="cat">${esc(cat)}</span>` : ""}<h3>${evidenzia(r[1], q)}${nuovo}</h3>${r[2] ? `<p>${evidenzia(r[2], q)}</p>` : ""}</span>
-    <span class="art">${evidenzia(r[0], q)}<small>${T("art.", "item")}${r[5] ? ` · ${T("dal", "since")} ${dataIt(r[5])}` : ""}</small></span></a>`;
+    <span class="art">${evidenzia(r[0], q)}<small>${T("art.", "item")}${dataNuovo ? ` · ${T("nuovo dal", "new since")} ${dataIt(dataNuovo)}` : r[5] ? ` · ${T("dal", "since")} ${dataIt(r[5])}` : ""}</small></span></a>`;
 }
 function cartaProdotto(r) {
   // novita.json: come prodotti.json + data della novità in fondo (indice 9; 8 nei file vecchi)
@@ -222,7 +230,8 @@ function vistaRicerca(q) {
   if (!n.tutti) return h + `<p class="vuoto">${T("Nessun risultato. Prova con meno parole o con il numero d'articolo.", "No results. Try fewer words or the article number.")}</p>`;
   if (scheda === "tutti" || scheda === "prodotti") {
     const quanti = scheda === "tutti" ? 8 : mostra;
-    h += `<h2>${T("Prodotti", "Products")} <small>${prodotti.length}</small></h2>`;
+    ultimiTrovati = prodotti;
+    h += `<h2>${T("Prodotti", "Products")} <small>${prodotti.length}</small>${prodotti.length ? ` <button class="btn btn-piccolo" type="button" id="scaricaRicerca">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button>` : ""}</h2>`;
     if (scheda === "prodotti") h += `<div class="filtri"><label><input type="checkbox" id="soloNuovi" ${soloNuovi ? "checked" : ""}> ${T("Solo novità", "New only")}</label>
       ${famiglie.length ? `<label>${T("Famiglia", "Family")} <select id="filtroCat">${opzioni(famiglie, filtroCat, T(`Tutte (${trovati.length})`, `All (${trovati.length})`))}</select></label>` : ""}
       ${gruppi.length > 1 ? `<label>${T("Gruppo", "Group")} <select id="filtroSotto">${opzioni(gruppi, filtroSotto, T(`Tutti (${inFamiglia.length})`, `All (${inFamiglia.length})`))}</select></label>` : ""}
@@ -251,7 +260,7 @@ function tabellaCodici(codici) {
   const trovati = codici.filter((c) => per.has(c)).length;
   return `<h2>${T("Ricerca di più codici", "Multiple code search")} <small>${T(`${trovati} trovati su ${codici.length}`, `${trovati} found out of ${codici.length}`)}</small></h2>
     <table class="codici"><thead><tr><th>${T("Articolo", "Item")}</th><th>${T("Prodotto", "Product")}</th><th></th></tr></thead><tbody>${righe}</tbody></table>
-    <p class="altro"><button class="btn" id="copiaCodici">${T("Copia l'elenco (per Excel)", "Copy the list (for Excel)")}</button></p>`;
+    <p class="altro"><button class="btn" id="copiaCodici">${T("Copia l'elenco (per Excel)", "Copy the list (for Excel)")}</button> <button class="btn" id="scaricaCodici">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button></p>`;
 }
 
 function vistaCodici() {
@@ -261,15 +270,53 @@ function vistaCodici() {
     <p><button class="btn btn-primario" id="cercaCodici">${T("Cerca", "Search")}</button></p>`;
 }
 
+let periodoNovita = "365";
+const PERIODI = [["90", "Ultimi 3 mesi", "Last 3 months"], ["180", "Ultimi 6 mesi", "Last 6 months"], ["365", "Ultimo anno", "Last year"], ["730", "Ultimi 2 anni", "Last 2 years"], ["0", "Tutti", "All"]];
+/** Prodotti nuovi nel periodo scelto, dal più recente. */
+function nuoviNelPeriodo() {
+  const da = periodoNovita === "0" ? "" : new Date(Date.now() - Number(periodoNovita) * 864e5).toISOString().slice(0, 10);
+  const per = new Map(PRODOTTI.map((r) => [r[0], r]));
+  return [...DATA_NOVITA].filter(([c, d]) => d >= da && per.has(c)).sort((x, y) => y[1].localeCompare(x[1]) || x[0].localeCompare(y[0])).map(([c, d]) => [per.get(c), d]);
+}
+const MESI = { it: ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"], en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] };
+const meseDi = (d) => `${MESI[en() ? "en" : "it"][Number(d.slice(5, 7)) - 1]} ${d.slice(0, 4)}`;
 function vistaNovita() {
   const ev = EVIDENZA.prodotti ?? [], attuali = new Set(ev.map((x) => x.codice));
   const prima = (EVIDENZA.storico ?? []).filter((x) => !attuali.has(x.codice));
   let h = `<h2>${T("In evidenza su OBO.global", "Highlighted on OBO.global")} <small>${ev.length}</small></h2>`;
   h += ev.length ? `<div class="griglia">${ev.map(cartaEvidenza).join("")}</div>` : `<p class="vuoto">${T("I prodotti in evidenza si aggiornano ogni notte.", "Highlighted products are updated every night.")}</p>`;
   if (prima.length) h += `<h2>${T("In evidenza in precedenza", "Previously highlighted")} <small>${prima.length}</small></h2><div class="griglia">${prima.map(cartaEvidenza).join("")}</div>`;
-  h += `<p class="hint">${T("Sono i nuovi prodotti presentati su OBO.global, ognuno con la sua pagina italiana su obo.it quando c'è. Si aggiornano ogni notte; quelli usciti dalla vetrina restano qui sotto.", "New products presented on OBO.global, each with its Italian obo.it page when available. Updated every night; those no longer highlighted stay listed below.")}</p>`;
+  const nuovi = nuoviNelPeriodo();
+  h += `<h2>${T("Nuovi prodotti nel catalogo", "New products in the catalogue")} <small>${nuovi.length}</small></h2>
+    <div class="filtri"><label>${T("Periodo", "Period")} <select id="periodoNovita">${PERIODI.map(([v, i, e]) => `<option value="${v}" ${v === periodoNovita ? "selected" : ""}>${T(i, e)}</option>`).join("")}</select></label>
+    <button class="btn" type="button" id="scaricaNovita">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button></div>`;
+  if (!nuovi.length) h += `<p class="vuoto">${T("Nessun prodotto nuovo nel periodo scelto: prova un periodo più lungo.", "No new products in this period: try a longer one.")}</p>`;
+  let mese = "";
+  for (const [r, d] of nuovi.slice(0, mostraNovita)) {
+    const m = d.slice(0, 7);
+    if (m !== mese) { if (mese) h += "</div>"; mese = m; h += `<h3 class="mese">${esc(meseDi(d))} <small>${nuovi.filter(([, x]) => x.startsWith(m)).length}</small></h3><div class="lista">`; }
+    h += rigaProdotto(r, "", d);
+  }
+  if (mese) h += "</div>";
+  if (nuovi.length > mostraNovita) h += `<p class="altro"><button class="btn" data-altro-novita="1">${T("Mostra altri", "Show more")} (${nuovi.length - mostraNovita})</button></p>`;
+  h += `<p class="hint">${T("In evidenza: i nuovi prodotti presentati su OBO.global, ognuno con la sua pagina italiana su obo.it quando c'è. Nuovi nel catalogo: data di attivazione indicata da OBO oppure prima comparsa su obo.it (le date dei caricamenti in blocco del catalogo non contano). Si aggiornano ogni notte e lo storico resta.", "Highlighted: new products presented on OBO.global, each with its Italian obo.it page when available. New in the catalogue: activation date from OBO or first appearance on obo.it (bulk catalogue uploads excluded). Updated every night; history is kept.")}</p>`;
   return h;
 }
+let mostraNovita = 60;
+
+// ---------- download (CSV con ; e BOM: si apre direttamente in Excel) ----------
+const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>`;
+function scaricaProdotti(nome, righe) {
+  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const testa = en() ? ["Item", "Name", "Description", "Category", "Active since", "New since", "obo.it page", "Photo"] : ["Articolo", "Nome", "Descrizione", "Categoria", "Attivo dal", "Novità dal", "Pagina obo.it", "Foto"];
+  const descr = (t) => (/^Scopri di più su .* adesso!$/.test(t || "") ? "" : t || "");
+  const corpo = righe.map(([r, d]) => [r[0], r[1], descr(r[2]), NOMI_CAT.get(catDi(r)) || "", r[5] || "", d ?? DATA_NOVITA.get(r[0]) ?? "", url(r[3]), fotoDi(r)].map(q).join(";"));
+  const b = new Blob(["﻿" + [testa.map(q).join(";"), ...corpo].join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${nome}-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  window.OBORegistro?.uso("download");
+}
+let ultimiTrovati = [];
 
 function figli(u) { const liv = u.split("/").length; return CATEGORIE.filter((c) => c[0].startsWith(u) && c[0].split("/").length === liv + 1); }
 function ramo(u, prof = 0) {
@@ -282,8 +329,10 @@ function vistaHome() {
   const ev = EVIDENZA.prodotti ?? [];
   const radici = figli("/prodotti/");
   let h = "";
-  if (ev.length) h += `<h2>${T("Nuovi prodotti in evidenza", "New highlighted products")} <small>OBO.global</small></h2><div class="griglia">${ev.map(cartaEvidenza).join("")}</div><p class="altro"><button class="btn" data-vai="novita">${T("Tutti i nuovi prodotti", "All new products")}</button></p>`;
+  if (ev.length) h += `<h2>${T("Nuovi prodotti in evidenza", "New highlighted products")} <small>OBO.global</small></h2><div class="griglia">${ev.map(cartaEvidenza).join("")}</div>`;
+  h += `<p class="altro"><button class="btn" data-vai="novita">${T("Tutti i nuovi prodotti, anche quelli precedenti", "All new products, including earlier ones")}</button></p>`;
   h += `<h2>${T("Categorie", "Categories")} <small>${CATEGORIE.length}</small></h2>`;
+  if (PRODOTTI.length) h += `<p class="altro" style="text-align:left"><button class="btn" type="button" id="scaricaCatalogo">${ICONA_DOWNLOAD}${T(`Scarica il catalogo completo (Excel, ${PRODOTTI.length.toLocaleString("it-IT")} prodotti)`, `Download the full catalogue (Excel, ${PRODOTTI.length.toLocaleString("en-GB")} products)`)}</button></p>`;
   h += `<div class="radici">${radici.map((c) => `<button class="radice" data-radice="${esc(c[0])}" aria-pressed="${radiceAperta === c[0]}">${esc(c[1])}<small>${figli(c[0]).length} ${T("gruppi", "groups")}</small></button>`).join("")}</div>`;
   if (radiceAperta) h += `<div class="albero">${ramo(radiceAperta)}<p class="altro"><a class="btn" href="${esc(url(radiceAperta))}" target="_blank" rel="noopener">${T("Apri su obo.it", "Open on obo.it")} ↗</a></p></div>`;
   return h;
@@ -299,6 +348,11 @@ $("vista").addEventListener("click", (e) => {
   const t = e.target.closest("button"); if (!t) return;
   if (t.dataset.scheda) { scheda = t.dataset.scheda; mostra = 30; disegna(); }
   else if (t.dataset.altro) { if (scheda === "tutti") scheda = t.dataset.altro; else mostra += 30; disegna(); }
+  else if (t.dataset.altroNovita) { mostraNovita += 60; disegna(); }
+  else if (t.id === "scaricaNovita") scaricaProdotti(T("novita-prodotti-obo", "new-obo-products"), nuoviNelPeriodo());
+  else if (t.id === "scaricaRicerca") scaricaProdotti(T("prodotti-obo-ricerca", "obo-products-search"), ultimiTrovati.map((r) => [r]));
+  else if (t.id === "scaricaCatalogo") scaricaProdotti(T("catalogo-prodotti-obo", "obo-product-catalogue"), PRODOTTI.map((r) => [r]));
+  else if (t.id === "scaricaCodici") { const per = new Map(PRODOTTI.map((r) => [r[0], r])); scaricaProdotti(T("prodotti-obo-codici", "obo-products-codes"), (soloCodici(Q()) ?? []).map((c) => [per.get(c) ?? [c, T("non trovato su obo.it", "not found on obo.it"), "", "", "", "", "", "", ""]])); }
   else if (t.dataset.vai) { vista = t.dataset.vai; disegna(); salvaUrl(); scrollTo({ top: 0 }); }
   else if (t.dataset.radice) { radiceAperta = radiceAperta === t.dataset.radice ? null : t.dataset.radice; disegna(); }
   else if (t.id === "cercaCodici") { const c = $("elencoCodici").value.match(/\d{6,8}/g) ?? []; $("q").value = [...new Set(c)].join(", "); disegna(); salvaUrl(); }
@@ -310,6 +364,7 @@ $("vista").addEventListener("click", (e) => {
 });
 $("vista").addEventListener("change", (e) => {
   if (e.target.id === "soloNuovi") { soloNuovi = e.target.checked; disegna(); }
+  if (e.target.id === "periodoNovita") { periodoNovita = e.target.value; mostraNovita = 60; disegna(); }
   if (e.target.id === "ordine") { ordine = e.target.value; disegna(); }
   if (e.target.id === "filtroCat") { filtroCat = e.target.value; filtroSotto = ""; mostra = 30; disegna(); }
   if (e.target.id === "filtroSotto") { filtroSotto = e.target.value; mostra = 30; disegna(); }

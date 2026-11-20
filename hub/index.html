@@ -613,13 +613,19 @@
   async function novitaProdotti(mostra) {
     const box = $("novitaProdotti");
     if (!mostra) { box.classList.add("nascosto"); box.innerHTML = ""; return; }
-    let n = null; try { const r = await fetch("prodotti/dati/evidenza.json?v=" + Math.floor(Date.now() / 36e5)); if (r.ok) n = await r.json(); } catch {}
-    if (!n || !n.prodotti?.length) { box.classList.add("nascosto"); return; }
+    const leggiJ = async (f) => { try { const r = await fetch(`prodotti/dati/${f}.json?v=` + Math.floor(Date.now() / 36e5)); return r.ok ? await r.json() : null; } catch { return null; } };
+    const [n, nv] = await Promise.all([leggiJ("evidenza"), leggiJ("novita")]);
     const en = lingua === "en", T = (i, e) => (en ? e : i);
     const data = (d) => { try { return new Date(d + "T12:00:00").toLocaleDateString(en ? "en-GB" : "it-IT", { day: "numeric", month: "short" }); } catch { return d; } };
-    const carte = n.prodotti.slice(0, 10).map((p) => `<a class="np" href="${esc(en ? p.urlGlobal || p.url : p.url)}" target="_blank" rel="noopener"><span class="foto">${p.immagine ? `<img src="${esc(p.immagine)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta">${T("NUOVO", "NEW")}${p.dal ? " · " + esc(data(p.dal)) : ""}</span><b>${esc(en ? p.nomeEn || p.nome : p.nome)}</b><small>${T("art.", "item")} ${esc(p.codice)}</small></span></a>`);
-    box.innerHTML = `<div class="testa"><h2>${svg("stella").replace("<svg", '<svg width="22" height="22" style="color:var(--arancio);vertical-align:-3px"')} ${T("Nuovi prodotti OBO", "New OBO products")}</h2><a href="prodotti/?vista=novita">${T("Tutti i nuovi prodotti", "All new products")} →</a></div>
-      <p class="sotto">${T("In evidenza su OBO.global, con la pagina italiana di obo.it", "Highlighted on OBO.global")} · ${T("aggiornato ogni notte", "updated every night")}</p>
+    // prima i prodotti in evidenza su OBO.global, poi gli ultimi arrivati nel catalogo obo.it (novita.json)
+    const visti = new Set(), voci = [];
+    for (const p of n?.prodotti ?? []) if (!visti.has(p.codice)) { visti.add(p.codice); voci.push({ codice: p.codice, nome: en ? p.nomeEn || p.nome : p.nome, url: en ? p.urlGlobal || p.url : p.url, img: p.immagine, dal: p.dal, evidenza: true }); }
+    for (const r of nv?.prodotti ?? []) if (!visti.has(r[0])) { visti.add(r[0]); voci.push({ codice: r[0], nome: r[1], url: (r[3] || "").startsWith("http") ? r[3] : "https://www.obo.it" + (r[3] || ""), img: r[7] || r[4], dal: r.length > 9 ? r[9] : r[8] }); }
+    if (!voci.length) { box.classList.add("nascosto"); return; }
+    const carte = voci.slice(0, 12).map((p) => `<a class="np" href="${esc(p.url)}" target="_blank" rel="noopener"><span class="foto">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span><span class="corpo"><span class="etichetta">${p.evidenza ? T("IN EVIDENZA", "HIGHLIGHT") : T("NUOVO", "NEW")}${p.dal ? " · " + esc(data(p.dal)) : ""}</span><b>${esc(p.nome)}</b><small>${T("art.", "item")} ${esc(p.codice)}</small></span></a>`);
+    const tot = (nv?.prodottiNuovi ?? 0);
+    box.innerHTML = `<div class="testa"><h2>${svg("stella").replace("<svg", '<svg width="22" height="22" style="color:var(--arancio);vertical-align:-3px"')} ${T("Nuovi prodotti OBO", "New OBO products")}</h2><a href="prodotti/?vista=novita">${T("Tutti i nuovi prodotti e lo storico", "All new products and history")} →</a></div>
+      <p class="sotto">${T("In evidenza su OBO.global e ultimi arrivati su obo.it", "Highlighted on OBO.global and latest on obo.it")}${tot ? ` · ${T(`${tot} nuovi negli ultimi ${nv.giorni} giorni`, `${tot} new in the last ${nv.giorni} days`)}` : ""} · ${T("aggiornato ogni notte", "updated every night")}</p>
       <div class="strip">${carte.join("")}</div>`;
     box.classList.remove("nascosto");
   }
