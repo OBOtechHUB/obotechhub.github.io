@@ -2,6 +2,18 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-20-prodotti-1",
+      "data": "2026-11-20",
+      "app": "prodotti",
+      "titolo": "Novità prodotti con lo storico e download in Excel",
+      "voci": [
+        "Corretto: la sezione Novità e il riquadro \"Nuovi prodotti OBO\" della pagina iniziale ora si vedono",
+        "In Novità, oltre ai prodotti in evidenza su OBO.global, l'elenco dei nuovi prodotti del catalogo divisi per mese, con scelta del periodo (3 mesi, 6 mesi, 1 anno, 2 anni, tutti)",
+        "Pulsante \"Scarica Excel\" per le novità, per i risultati di una ricerca, per la ricerca di più codici e per il catalogo completo",
+        "Il riquadro della pagina iniziale mostra i prodotti in evidenza e gli ultimi arrivati su obo.it"
+      ]
+    },
+    {
       "id": "2026-11-19-hub-2",
       "data": "2026-11-19",
       "app": "tutte",
