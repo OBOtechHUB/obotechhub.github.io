@@ -42,17 +42,6 @@ export const APP = [
     abilitataSe: (sezioni) => sezioni.includes("app_prodotti"),
   },
   {
-    id: "staffaggi",
-    nome: "Staffaggi OBO",
-    nome_en: "OBO support systems",
-    descrizione: "Staffaggi con binari MS, mensole e passerelle OBO: configura il supporto, verifica i carichi e scarica distinta, offerta, relazione e tavole DXF/PDF.",
-    descrizione_en: "Supports with OBO MS rails, brackets and cable trays: configure the support, check the loads and download parts list, quote, report and DXF/PDF drawings.",
-    icona: "staffaggi",
-    url: "/appOBOtechHUB/staffaggi",
-    // In prova: per ora la vede solo l'amministratore. Quando sarà pronta: abilitataSe: (s) => s.includes("app_staffaggi")
-    soloAdmin: true,
-  },
-  {
     id: "torrette",
     nome: "Configuratore torrette",
     nome_en: "Service outlet configurator",
