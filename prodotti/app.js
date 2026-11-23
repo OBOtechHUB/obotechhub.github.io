@@ -167,13 +167,14 @@ function cartaProdotto(r) {
   // novita.json: come prodotti.json + data della novità in fondo (indice 9; 8 nei file vecchi)
   const data = r.length > 9 ? r[9] : r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
   return `<a class="carta" href="${esc(url(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
-    <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${data ? ` · ${dataIt(data)}` : ""}</span><h3>${esc(r[1])}</h3><p>${esc(r[2] || "")}</p><span class="art">${esc(r[0])}</span></span></a>`;
+    <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${data ? ` · ${dataIt(data)}` : ""}</span><h3>${esc(r[1])}</h3><p>${esc(senzaScopri(r[2]))}</p><span class="art">${esc(r[0])}</span></span></a>`;
 }
 /** Prodotto in evidenza su OBO.global, con la pagina italiana di obo.it. */
+const senzaScopri = (t) => String(t || "").replace(/Scopri di più su[\s\S]*?adesso!/g, "").replace(/\s+/g, " ").trim();
 function cartaEvidenza(x) {
   const en = T("", "en") === "en";
   return `<a class="carta" href="${esc((en && x.urlGlobal) || x.url)}" target="_blank" rel="noopener"><span class="foto">${x.immagine ? `<img src="${esc(x.immagine)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
-    <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${x.dal ? ` · ${T("in evidenza dal", "highlighted since")} ${dataIt(x.dal)}` : ""}</span><h3>${esc((en && x.nomeEn) || x.nome)}</h3><p>${esc((en ? x.descrizioneEn : x.descrizione) || x.descrizioneEn || "")}</p><span class="art">${esc(x.codice)}</span></span></a>`;
+    <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${x.dal ? ` · ${T("in evidenza dal", "highlighted since")} ${dataIt(x.dal)}` : ""}</span><h3>${esc((en && x.nomeEn) || x.nome)}</h3><p>${esc(senzaScopri((en ? x.descrizioneEn : x.descrizione) || x.descrizioneEn))}</p><span class="art">${esc(x.codice)}</span></span></a>`;
 }
 function cartaNotizia(n, q = "") {
   return `<a class="carta" href="${esc(url(n[0]))}" target="_blank" rel="noopener"><span class="foto copri">${n[3] ? `<img src="${esc(n[3])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
