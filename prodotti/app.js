@@ -256,7 +256,7 @@ function vistaRicerca(q) {
 function tabellaCodici(codici) {
   const per = new Map(PRODOTTI.map((r) => [r[0], r]));
   const righe = codici.map((c) => { const r = per.get(c); return r
-    ? `<tr><td class="art">${esc(c)}</td><td><a href="${esc(url(r[3]))}" target="_blank" rel="noopener">${esc(r[1])}</a>${NUOVI.has(c) ? `<span class="nuovo">${T("NUOVO", "NEW")}</span>` : ""}<br><small>${esc(r[2] || "")}</small></td><td>${fotoDi(r) ? `<img src="${esc(fotoDi(r))}" alt="" width="48" height="48" loading="lazy" referrerpolicy="no-referrer" style="object-fit:contain;background:#fff;border-radius:6px">` : ""}</td></tr>`
+    ? `<tr><td class="art">${esc(c)}</td><td><a href="${esc(url(r[3]))}" target="_blank" rel="noopener">${esc(r[1])}</a>${NUOVI.has(c) ? `<span class="nuovo">${T("NUOVO", "NEW")}</span>` : ""}<br><small>${esc(r[2] || "")}</small></td><td>${fotoDi(r) ? `<img src="${esc(fotoDi(r))}" alt="" width="36" height="36" loading="lazy" referrerpolicy="no-referrer" style="object-fit:contain;background:#fff;border-radius:6px">` : ""}</td></tr>`
     : `<tr><td class="art">${esc(c)}</td><td class="ko" colspan="2">${T("Non trovato su obo.it: codice errato o non più a catalogo in Italia.", "Not found on obo.it: wrong code or no longer in the Italian catalogue.")}</td></tr>`; }).join("");
   const trovati = codici.filter((c) => per.has(c)).length;
   return `<h2>${T("Ricerca di più codici", "Multiple code search")} <small>${T(`${trovati} trovati su ${codici.length}`, `${trovati} found out of ${codici.length}`)}</small></h2>
