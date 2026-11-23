@@ -2,6 +2,21 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-23-hub-1",
+      "data": "2026-11-23",
+      "app": "mappa",
+      "titolo": "Grafici con lo stesso stile in tutte le app",
+      "voci": [
+        "Mappa carichi: barre e colonne arancio OBO arrotondate che crescono con un'animazione, come nei grafici di Progettazione LPS; daily task in grigio-azzurro OBO, oltre le ore disponibili in rosso",
+        "OBO Hub, Prodotti e Torrette: pagine che compaiono con una dissolvenza morbida e schede delle app che entrano una dopo l'altra (spente se nel sistema è attivo \"riduci movimento\")"
+      ],
+      "titolo_en": "Same chart style in every app",
+      "voci_en": [
+        "Workload map: rounded OBO-orange bars and columns that grow with an animation, as in the LPS design charts; daily tasks in OBO blue-grey, over the available hours in red",
+        "OBO Hub, Products and Floor boxes: pages fade in smoothly and app tiles appear one after another (off when \"reduce motion\" is enabled)"
+      ]
+    },
+    {
       "id": "2026-11-20-prodotti-1",
       "data": "2026-11-20",
       "app": "prodotti",

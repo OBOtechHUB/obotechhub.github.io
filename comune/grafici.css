@@ -1,0 +1,79 @@
+/*
+ * Stile comune di grafici e animazioni per le app di OBO Hub senza compilazione
+ * (OBO Hub, Mappa carichi, Prodotti, Torrette, pagine comuni), uguale a Progettazione LPS
+ * (grafici Bklit UI + Motion): barre arancio OBO piene e arrotondate, griglia tratteggiata,
+ * crescita "a molla", fumetti chiari, dissolvenza delle pagine. Caricato da registro.js.
+ * Con "riduci movimento" del sistema le animazioni sono spente.
+ */
+:root {
+  --g-p: #F39B00;            /* progetti / valore principale (OBO Orange) */
+  --g-d: #7694A4;            /* daily task / seconda serie (OBO secondario) */
+  --g-over: #e5484d;         /* oltre il limite */
+  --g-p2: #F9C873;           /* arancio chiaro (priorità bassa) */
+  --g-s: #41525D;            /* secondario scuro (mail tecniche) */
+  --g-griglia: rgba(65, 82, 93, .22);
+  --g-molla: cubic-bezier(.22, 1.2, .36, 1);
+  --daily: var(--g-d);       /* Mappa carichi: daily task con lo stesso colore dei grafici */
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --g-griglia: rgba(197, 217, 222, .18); } }
+:root[data-theme="dark"] { --g-griglia: rgba(197, 217, 222, .18); }
+
+/* ---------- barre orizzontali (Mappa: Home, Persone, Cruscotto) ---------- */
+.bar-row .t {
+  height: 16px !important; border-radius: 999px !important; overflow: hidden;
+  background-color: transparent !important;
+  background-image: repeating-linear-gradient(90deg, var(--g-griglia) 0 1px, transparent 1px 20%) !important;
+  box-shadow: inset 0 0 0 1px var(--g-griglia);
+}
+.bar-row .f { border-radius: 999px; transform-origin: left center; }
+.bar-row .f:not([class*=" "]), .bar-row .f.fp, .bar-row .f.pM, .bar-row .f.df { background: var(--g-p) !important; }
+.bar-row .f.fd, .bar-row .f.mc { background: var(--g-d) !important; }
+.bar-row .f.mt { background: var(--g-s) !important; }
+.bar-row .f.pB { background: var(--g-p2) !important; }
+.bar-row .f.over, .bar-row .f.fo, .bar-row .f.pA { background: var(--g-over) !important; }
+/* barrette nelle tabelle */
+.mini i { background: var(--g-p) !important; } .mini i.ox { background: var(--g-over) !important; }
+.bar-row .t.stk .f { border-radius: 0; }
+.bar-row .t.stk .f:first-child { border-radius: 999px 0 0 999px; }
+.bar-row .t.stk .f:last-child { border-radius: 0 999px 999px 0; }
+.bar-row .t.stk .f:only-child { border-radius: 999px; }
+.bar-row .p { font-variant-numeric: tabular-nums; }
+/* legende con gli stessi colori */
+.sw-p { color: var(--g-p) !important; } .sw-d { color: var(--g-d) !important; }
+
+/* ---------- colonne verticali (Mappa: andamento del team nel Cruscotto) ---------- */
+.cru-trend { border-bottom: 0 !important; background-image: repeating-linear-gradient(0deg, var(--g-griglia) 0 1px, transparent 1px 25%); background-position: bottom; }
+.cru-col i { border-radius: 0 !important; }
+.cru-col i.p { background: var(--g-p) !important; } .cru-col i.d { background: var(--g-d) !important; }
+.cru-col i:first-of-type { border-radius: 0 0 7px 7px !important; }
+.cru-col i:last-of-type { border-radius: 7px 7px 0 0 !important; }
+.cru-col i:only-of-type { border-radius: 7px !important; }
+.cru-col .cap { border-top: 1.5px dashed var(--g-over) !important; opacity: .7; }
+
+/* ---------- grafici SVG (Mappa: Offerte, timeline) ---------- */
+.of-tl .ax { stroke: var(--g-griglia) !important; stroke-dasharray: 4 4; }
+.of-tl .bk rect:not(.hit) { rx: 4px; ry: 4px; }
+.of-cr .of-bar { border-radius: 999px; overflow: hidden; }
+
+/* ---------- fumetti come nei grafici di LPS ---------- */
+#of-tip { background: #fff !important; color: #282A31 !important; border: 1px solid rgba(65, 82, 93, .18); border-radius: 10px !important; box-shadow: 0 10px 30px rgba(40, 42, 49, .18) !important; }
+:root[data-theme="dark"] #of-tip { background: #282A31 !important; color: #E4EBED !important; border-color: rgba(197, 217, 222, .2); }
+
+/* ---------- animazioni ---------- */
+@keyframes g-cresci-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes g-cresci-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes g-entrata { from { opacity: 0; } to { opacity: 1; } }
+@keyframes g-sale { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .bar-row .f { animation: g-cresci-x .9s var(--g-molla) .1s both !important; }
+  .cru-col { transform-origin: bottom center; animation: g-cresci-y .8s var(--g-molla) both; }
+  .cru-col:nth-child(4n+2) { animation-delay: 30ms; } .cru-col:nth-child(4n+3) { animation-delay: 60ms; } .cru-col:nth-child(4n) { animation-delay: 90ms; }
+  .of-tl .bk rect:not(.hit) { transform-box: fill-box; transform-origin: bottom center; animation: g-cresci-y .8s var(--g-molla) both; }
+  /* dissolvenza delle pagine (come il cambio pagina di LPS) */
+  body > main, body > .pagina, body > .contenuto { animation: g-entrata .28s ease-out both; }
+  /* schede delle app di OBO Hub: entrata scalata */
+  .griglia > .app { animation: g-sale .45s var(--g-molla) both; }
+  .griglia > .app:nth-child(2) { animation-delay: 40ms; } .griglia > .app:nth-child(3) { animation-delay: 80ms; }
+  .griglia > .app:nth-child(4) { animation-delay: 120ms; } .griglia > .app:nth-child(5) { animation-delay: 160ms; }
+  .griglia > .app:nth-child(n+6) { animation-delay: 200ms; }
+}

@@ -1225,7 +1225,7 @@ html { touch-action: pan-x pan-y; }
     <div class="bars-hd" id="barsWk" hidden style="margin:6px 0 10px">
       <div class="bars-nav"><button type="button" id="bwPrev" aria-label="Settimana precedente">&larr;</button><span class="range" id="bwLabel"></span><button type="button" id="bwNext" aria-label="Settimana successiva">&rarr;</button><button type="button" id="bwNow">Questa settimana</button></div>
     </div>
-    <div class="legend" id="barsLeg" style="margin:0 0 10px"><span><i style="background:var(--heat)"></i>progetti</span><span><i style="background:var(--daily)"></i>daily task</span><span><i style="background:var(--over)"></i>oltre le ore disponibili</span></div>
+    <div class="legend" id="barsLeg" style="margin:0 0 10px"><span><i style="background:var(--g-p, var(--heat))"></i>progetti</span><span><i style="background:var(--g-d, var(--daily))"></i>daily task</span><span><i style="background:var(--g-over, var(--over))"></i>oltre le ore disponibili</span></div>
     <div class="bars" id="bars"></div>
     <div id="histBox" hidden>
       <div class="bars-hd">
@@ -1288,7 +1288,7 @@ html { touch-action: pan-x pan-y; }
     <div class="cru-ctl"><h2 id="h-cruT" style="margin:0">Andamento del team</h2><span class="sub" id="cruTsub" style="margin:0"></span></div>
     <div class="cru-trend" id="cruTrend" role="img"></div>
     <div class="cru-lab" id="cruTlab" aria-hidden="true"></div>
-    <div class="legend" style="margin-top:8px"><span><i style="background:var(--heat)"></i>progetti</span><span><i style="background:var(--daily)"></i>daily task</span><span><i style="border:1px dashed var(--muted);background:transparent"></i>ore disponibili del team</span></div>
+    <div class="legend" style="margin-top:8px"><span><i style="background:var(--g-p, var(--heat))"></i>progetti</span><span><i style="background:var(--g-d, var(--daily))"></i>daily task</span><span><i style="border:1px dashed var(--g-over, var(--muted));background:transparent"></i>ore disponibili del team</span></div>
   </section>
 
   <section class="panel" aria-labelledby="h-cruD">
@@ -2550,7 +2550,7 @@ html { touch-action: pan-x pan-y; }
     // confronto tra persone
     var M = CRU.met, leg = '', note = '', max = 0, val, parti, etich;
     var L = { ore: [['fp', 'progetti'], ['fd', 'daily task'], ['fo', 'oltre le ore disponibili']], occ: [['fp', 'occupazione'], ['fo', 'oltre il 100%']], prj: [['pA', 'priorità alta'], ['pM', 'media'], ['pB', 'bassa']], dt: [['pA', 'priorità alta'], ['pM', 'media'], ['pB', 'bassa']], mail: [['mt', 'tecniche'], ['mc', 'commerciali']], diff: [['df', 'difficoltà media (1 molto facile – 5 molto difficile)']], prio: [['pA', 'alta'], ['pM', 'media'], ['pB', 'bassa']], over: [['fo', 'giorni oltre ' + CAP + ' h']] };
-    $('cruLeg').innerHTML = (L[M] || []).map(function (x) { var c = { fp: 'var(--heat)', fd: 'var(--daily)', fo: 'var(--over)', pA: 'var(--over)', pM: 'var(--heat)', pB: 'color-mix(in srgb,var(--heat) 40%,var(--cell))', mt: 'var(--accent)', mc: 'color-mix(in srgb,var(--accent) 45%,var(--cell))', df: 'linear-gradient(90deg,var(--daily),var(--over))' }[x[0]]; return '<span><i style="background:' + c + '"></i>' + x[1] + '</span>'; }).join('');
+    $('cruLeg').innerHTML = (L[M] || []).map(function (x) { var c = { fp: 'var(--g-p, var(--heat))', fd: 'var(--g-d, var(--daily))', fo: 'var(--g-over, var(--over))', pA: 'var(--g-over, var(--over))', pM: 'var(--g-p, var(--heat))', pB: 'var(--g-p2, var(--heat))', mt: 'var(--g-s, var(--accent))', mc: 'var(--g-d, var(--accent))', df: 'var(--g-p, var(--daily))' }[x[0]]; return '<span><i style="background:' + c + '"></i>' + x[1] + '</span>'; }).join('');
     var key = { ore: 'tot', occ: 'occ', prj: 'np', dt: 'dk', mail: 'mail', diff: 'diff', prio: 'np', over: 'over' }[M];
     var ord = righe.slice().sort(function (a, b) { return (M === 'prio' ? (b.pa + b.pm + b.pb + b.da + b.dm + b.db) - (a.pa + a.pm + a.pb + a.da + a.dm + a.db) : b[key] - a[key]) || a.n.localeCompare(b.n, 'it'); });
     ord.forEach(function (x) { var v = M === 'ore' ? Math.max(x.tot, g.cap) : M === 'occ' ? Math.max(1, x.occ) : M === 'prio' ? x.pa + x.pm + x.pb + x.da + x.dm + x.db : M === 'diff' ? 5 : x[key]; if (v > max) max = v; });

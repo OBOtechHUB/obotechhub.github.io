@@ -64,6 +64,15 @@
   }
   // nessuna pagina deve scorrere di lato (le tabelle larghe scorrono dentro il loro riquadro)
   try {
+    // stile comune di grafici e animazioni (uguale a Progettazione LPS), accanto a questo script
+    try {
+      var css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = new URL("grafici.css", tag && tag.src ? tag.src : location.href).href;
+      // in fondo alla testa, dopo gli stili della pagina, così vale su quelli
+      var metti = function () { (document.head || document.documentElement).appendChild(css); };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", metti); else metti();
+    } catch (e) { /* senza stile comune l'app resta com'è */ }
     var blocco = document.createElement("style");
     blocco.textContent = "html,body{max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}@supports (overflow:clip){html,body{overflow-x:clip}}";
     (document.head || document.documentElement).appendChild(blocco);
