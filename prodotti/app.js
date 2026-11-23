@@ -308,9 +308,11 @@ let mostraNovita = 60;
 const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>`;
 function scaricaProdotti(nome, righe) {
   const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const testa = en() ? ["Item", "Name", "Description", "Category", "Active since", "New since", "obo.it page", "Photo"] : ["Articolo", "Nome", "Descrizione", "Categoria", "Attivo dal", "Novità dal", "Pagina obo.it", "Foto"];
+  const testa = en() ? ["Item", "Name", "Description", "Category", "Area", "Family", "Group", "Subgroup", "Active since", "New since", "obo.it page", "Photo"] : ["Articolo", "Nome", "Descrizione", "Categoria", "Settore", "Famiglia", "Gruppo", "Sottogruppo", "Attivo dal", "Novità dal", "Pagina obo.it", "Foto"];
+  // livelli della categoria di obo.it in colonne separate, per filtrare in Excel
+  const livelli = (c) => { const parti = (c || "").split("/").filter(Boolean).slice(1); return [1, 2, 3, 4].map((n) => (parti.length >= n ? NOMI_CAT.get(`/${["prodotti", ...parti.slice(0, n)].join("/")}/`) || parti[n - 1].replace(/-/g, " ") : "")); };
   const descr = (t) => (/^Scopri di più su .* adesso!$/.test(t || "") ? "" : t || "");
-  const corpo = righe.map(([r, d]) => [r[0], r[1], descr(r[2]), NOMI_CAT.get(catDi(r)) || "", r[5] || "", d ?? DATA_NOVITA.get(r[0]) ?? "", url(r[3]), fotoDi(r)].map(q).join(";"));
+  const corpo = righe.map(([r, d]) => [r[0], r[1], descr(r[2]), NOMI_CAT.get(catDi(r)) || "", ...livelli(catDi(r)), r[5] || "", d ?? DATA_NOVITA.get(r[0]) ?? "", url(r[3]), fotoDi(r)].map(q).join(";"));
   const b = new Blob(["﻿" + [testa.map(q).join(";"), ...corpo].join("\r\n")], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${nome}-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);

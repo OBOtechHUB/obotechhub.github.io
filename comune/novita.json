@@ -2,6 +2,19 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-23-prodotti-2",
+      "data": "2026-11-23",
+      "app": "prodotti",
+      "titolo": "Prodotti OBO: Excel con i livelli della categoria",
+      "voci": [
+        "Nel file Excel scaricato (novità, ricerca, codici, catalogo completo) ci sono 4 colonne nuove: Settore, Famiglia, Gruppo e Sottogruppo, per filtrare i prodotti per categoria di obo.it"
+      ],
+      "titolo_en": "OBO products: Excel with category levels",
+      "voci_en": [
+        "The downloaded Excel file (new items, search, codes, full catalogue) has 4 new columns: Area, Family, Group and Subgroup, to filter products by obo.it category"
+      ]
+    },
+    {
       "id": "2026-11-23-hub-1",
       "data": "2026-11-23",
       "app": "mappa",
