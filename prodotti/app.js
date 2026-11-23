@@ -260,7 +260,7 @@ function tabellaCodici(codici) {
   const trovati = codici.filter((c) => per.has(c)).length;
   return `<h2>${T("Ricerca di più codici", "Multiple code search")} <small>${T(`${trovati} trovati su ${codici.length}`, `${trovati} found out of ${codici.length}`)}</small></h2>
     <table class="codici"><thead><tr><th>${T("Articolo", "Item")}</th><th>${T("Prodotto", "Product")}</th><th></th></tr></thead><tbody>${righe}</tbody></table>
-    <p class="altro"><button class="btn" id="copiaCodici">${T("Copia l'elenco (per Excel)", "Copy the list (for Excel)")}</button> <button class="btn" id="scaricaCodici">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button></p>`;
+    <p class="altro"><button class="btn" id="copiaCodici">${T("Copia l'elenco (per Excel)", "Copy the list (for Excel)")}</button> <button class="btn" id="scaricaCodici">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button></p>${barraListino()}`;
 }
 
 function vistaCodici() {
@@ -290,7 +290,7 @@ function vistaNovita() {
   h += `<h2>${T("Nuovi prodotti nel catalogo", "New products in the catalogue")} <small>${nuovi.length}</small></h2>
     <div class="filtri"><label>${T("Periodo", "Period")} <select id="periodoNovita">${PERIODI.map(([v, i, e]) => `<option value="${v}" ${v === periodoNovita ? "selected" : ""}>${T(i, e)}</option>`).join("")}</select></label>
     <button class="btn" type="button" id="scaricaNovita">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button>
-    <button class="btn" type="button" id="scaricaSoloListino" title="${T("Articoli del listino METEL caricato in Amministrazione che non sono nel catalogo di obo.it", "Items in the METEL price list that are not in the obo.it catalogue")}">${ICONA_DOWNLOAD}${T("Nel listino ma non su obo.it", "In price list, not on obo.it")}</button></div>`;
+    <button class="btn" type="button" id="scaricaSoloListino" title="${T("Articoli del listino METEL caricato in Amministrazione che non sono nel catalogo di obo.it", "Items in the METEL price list that are not in the obo.it catalogue")}">${ICONA_DOWNLOAD}${T("Nel listino ma non su obo.it", "In price list, not on obo.it")}</button></div>${barraListino()}`;
   if (!nuovi.length) h += `<p class="vuoto">${T("Nessun prodotto nuovo nel periodo scelto: prova un periodo più lungo.", "No new products in this period: try a longer one.")}</p>`;
   let mese = "";
   for (const [r, d] of nuovi.slice(0, mostraNovita)) {
@@ -313,12 +313,34 @@ const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="no
  * Lo vedono solo gli utenti con account (regole del database): per i visitatori le colonne restano vuote.
  */
 let LISTINO = null;
+const CHIAVE_LISTINO = "obo-prodotti-listino"; // sul dispositivo: solo codice, famiglia e descrizione, niente prezzi
+function listinoSalvato() {
+  try { const x = JSON.parse(localStorage.getItem(CHIAVE_LISTINO) || "null"); if (x?.righe?.length) return { versione: x.versione, origine: "pc", righe: new Map(x.righe.map(([c, f, d]) => [c, { codice: c, famiglia_sconto: f, descrizione: d }])) }; } catch { /* niente */ }
+  return null;
+}
+/** Listino METEL scelto dal PC (xlsx o csv): letto nel browser, nessun dato inviato. */
+async function listinoDaFile(file) {
+  const XLSX = await import("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm");
+  const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
+  const tab = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: "" });
+  const n = (v) => String(v).toUpperCase().replace(/[^A-Z]/g, "");
+  const ih = tab.findIndex((r) => r.some((c) => n(c) === "CODICEARTICOLO"));
+  if (ih < 0) throw new Error(T("Il file non sembra un listino METEL: manca la colonna CODICE ARTICOLO.", "Not a METEL price list: CODICE ARTICOLO column missing."));
+  const h = tab[ih].map(n), ic = h.indexOf("CODICEARTICOLO"), id = h.indexOf("DESCRIZIONEPRODOTTO");
+  const ifam = h.indexOf("FAMIGLIASCONTO") >= 0 ? h.indexOf("FAMIGLIASCONTO") : h.indexOf("FAMIGLIASTATISTICA");
+  if (ifam < 0) throw new Error(T("Nel file manca la colonna FAMIGLIA SCONTO.", "FAMIGLIA SCONTO column missing."));
+  const righe = new Map();
+  for (const r of tab.slice(ih + 1)) { const c = String(r[ic] ?? "").trim(); if (c) righe.set(c, { codice: c, famiglia_sconto: String(r[ifam] ?? "").trim().padStart(4, "0"), descrizione: id >= 0 ? String(r[id] ?? "").trim() : "" }); }
+  const versione = (file.name.match(/20\d\d[-_ ]?\d/) || [file.name.replace(/\.[^.]+$/, "")])[0].replace(/_/g, "-");
+  try { localStorage.setItem(CHIAVE_LISTINO, JSON.stringify({ versione, righe: [...righe.values()].map((x) => [x.codice, x.famiglia_sconto, x.descrizione]) })); } catch { /* spazio pieno */ }
+  return (LISTINO = { versione, origine: "pc", righe });
+}
 async function caricaListino() {
-  if (LISTINO) return LISTINO;
+  if (LISTINO?.righe.size) return LISTINO;
   const vuoto = { versione: "", righe: new Map() };
   try {
     const { data: v } = await supabase.from("listino_versioni").select("versione").order("caricato_il", { ascending: false }).limit(1).maybeSingle();
-    if (!v?.versione) return (LISTINO = vuoto);
+    if (!v?.versione) return (LISTINO = listinoSalvato() ?? vuoto);
     const righe = new Map();
     for (let da = 0; da < 60000; da += 1000) {
       const { data, error } = await supabase.from("listino_obo").select("codice,descrizione,famiglia_sconto,stato").eq("versione", v.versione).order("codice").range(da, da + 999);
@@ -326,11 +348,19 @@ async function caricaListino() {
       for (const r of data) righe.set(String(r.codice), r);
       if (data.length < 1000) break;
     }
-    return (LISTINO = { versione: v.versione, righe });
-  } catch { return vuoto; }
+    return (LISTINO = righe.size ? { versione: v.versione, origine: "db", righe } : listinoSalvato() ?? vuoto);
+  } catch { return (LISTINO = listinoSalvato() ?? vuoto); }
 }
 // Strat ID 2 = ultime due cifre con uno 0 in fondo (indicazione di Marco): 0210 → 2 e 100, 0111 → 1 e 110
 const stratId = (f) => { const c = String(f || "").replace(/\D/g, ""); return c.length === 4 ? [String(Number(c.slice(0, 2))), `${Number(c.slice(2))}0`] : ["", ""]; };
+
+/** Riga che dice da dove vengono famiglia sconto e Strat ID nei download, con la scelta del file dal PC. */
+function barraListino() {
+  const l = LISTINO;
+  const stato = l?.righe.size ? T(`Famiglia sconto e Strat ID dal listino ${l.versione} (${l.righe.size.toLocaleString("it-IT")} articoli${l.origine === "pc" ? ", file del PC" : ""}).`, `Discount family and Strat ID from price list ${l.versione}${l.origine === "pc" ? " (file on this PC)" : ""}.`)
+    : T("Per avere famiglia sconto e Strat ID nei download scegli il file del listino METEL.", "To get discount family and Strat ID in downloads, choose the METEL price list file.");
+  return `<p class="nota-listino" style="font-size:.85rem;color:var(--tenue);margin:.4rem 0">${esc(stato)} <label class="btn btn-piccolo" style="cursor:pointer">${T("Scegli listino METEL dal PC", "Choose METEL price list")}<input type="file" id="fileListino" accept=".xlsx,.xls,.csv" hidden></label></p>`;
+}
 
 async function scaricaProdotti(nome, righe) {
   const lis = await caricaListino();
@@ -362,7 +392,7 @@ function vistaHome() {
   if (ev.length) h += `<h2>${T("Nuovi prodotti in evidenza", "New highlighted products")} <small>OBO.global</small></h2><div class="griglia">${ev.map(cartaEvidenza).join("")}</div>`;
   h += `<p class="altro"><button class="btn" data-vai="novita">${T("Tutti i nuovi prodotti, anche quelli precedenti", "All new products, including earlier ones")}</button></p>`;
   h += `<h2>${T("Categorie", "Categories")} <small>${CATEGORIE.length}</small></h2>`;
-  if (PRODOTTI.length) h += `<p class="altro" style="text-align:left"><button class="btn" type="button" id="scaricaCatalogo">${ICONA_DOWNLOAD}${T(`Scarica il catalogo completo (Excel, ${PRODOTTI.length.toLocaleString("it-IT")} prodotti)`, `Download the full catalogue (Excel, ${PRODOTTI.length.toLocaleString("en-GB")} products)`)}</button></p>`;
+  if (PRODOTTI.length) h += `<p class="altro" style="text-align:left"><button class="btn" type="button" id="scaricaCatalogo">${ICONA_DOWNLOAD}${T(`Scarica il catalogo completo (Excel, ${PRODOTTI.length.toLocaleString("it-IT")} prodotti)`, `Download the full catalogue (Excel, ${PRODOTTI.length.toLocaleString("en-GB")} products)`)}</button></p>${barraListino()}`;
   h += `<div class="radici">${radici.map((c) => `<button class="radice" data-radice="${esc(c[0])}" aria-pressed="${radiceAperta === c[0]}">${esc(c[1])}<small>${figli(c[0]).length} ${T("gruppi", "groups")}</small></button>`).join("")}</div>`;
   if (radiceAperta) h += `<div class="albero">${ramo(radiceAperta)}<p class="altro"><a class="btn" href="${esc(url(radiceAperta))}" target="_blank" rel="noopener">${T("Apri su obo.it", "Open on obo.it")} ↗</a></p></div>`;
   return h;
@@ -383,7 +413,7 @@ $("vista").addEventListener("click", (e) => {
   else if (t.id === "scaricaRicerca") scaricaProdotti(T("prodotti-obo-ricerca", "obo-products-search"), ultimiTrovati.map((r) => [r]));
   else if (t.id === "scaricaSoloListino") void (async () => {
     const lis = await caricaListino();
-    if (!lis.righe.size) { alert(T("Listino non disponibile: serve l'accesso con account e il listino METEL caricato in Amministrazione.", "Price list not available: you need an account and the METEL price list uploaded by the administrator.")); return; }
+    if (!lis.righe.size) { alert(T("Listino non disponibile: scegli il file del listino METEL dal PC (pulsante sotto i download).", "Price list not available: choose the METEL price list file from your PC.")); return; }
     const su = new Set(PRODOTTI.map((r) => r[0]));
     const mancanti = [...lis.righe.values()].filter((l) => !su.has(String(l.codice))).map((l) => [[String(l.codice), l.descrizione, "", "", "", "", "", "", ""]]);
     scaricaProdotti(T("listino-non-su-obo-it", "price-list-not-on-obo-it"), mancanti);
@@ -401,6 +431,9 @@ $("vista").addEventListener("click", (e) => {
 });
 $("vista").addEventListener("change", (e) => {
   if (e.target.id === "soloNuovi") { soloNuovi = e.target.checked; disegna(); }
+  if (e.target.id === "fileListino" && e.target.files?.[0]) {
+    listinoDaFile(e.target.files[0]).then(() => disegna(), (err) => alert(err.message));
+  }
   if (e.target.id === "periodoNovita") { periodoNovita = e.target.value; mostraNovita = 60; disegna(); }
   if (e.target.id === "ordine") { ordine = e.target.value; disegna(); }
   if (e.target.id === "filtroCat") { filtroCat = e.target.value; filtroSotto = ""; mostra = 30; disegna(); }
@@ -414,7 +447,7 @@ function salvaUrl() {
 (async () => {
   if (!(await accesso())) return;
   $("cancello").hidden = true; $("app").hidden = false;
-  void caricaListino(); // in sottofondo: pronto per i download con famiglia sconto e Strat ID
+  void caricaListino().then(() => disegna()); // in sottofondo: pronto per i download con famiglia sconto e Strat ID
   const p = new URLSearchParams(location.search);
   if (p.get("q")) $("q").value = p.get("q");
   if (["novita", "codici"].includes(p.get("vista"))) vista = p.get("vista");
