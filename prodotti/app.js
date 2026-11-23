@@ -317,7 +317,7 @@ const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="no
 let LISTINO = null;
 const CHIAVE_LISTINO = "obo-prodotti-listino"; // sul dispositivo: solo codice, famiglia e descrizione, niente prezzi
 function listinoSalvato() {
-  try { const x = JSON.parse(localStorage.getItem(CHIAVE_LISTINO) || "null"); if (x?.righe?.length) return { versione: x.versione, origine: "pc", righe: new Map(x.righe.map(([c, f, d, e]) => [c, { codice: c, famiglia_sconto: f, descrizione: d, etim: e || "" }])) }; } catch { /* niente */ }
+  try { const x = JSON.parse(localStorage.getItem(CHIAVE_LISTINO) || "null"); if (x?.righe?.length) return { versione: x.versione, origine: "pc", righe: new Map(x.righe.map(([c, f, d, e, ean, st, dv, um]) => [c, { codice: c, famiglia_sconto: f, descrizione: d, etim: e || "", ean: ean || "", stato: st || "", variato: dv || "", um: um || "" }])) }; } catch { /* niente */ }
   return null;
 }
 /** Listino METEL scelto dal PC (xlsx o csv): letto nel browser, nessun dato inviato. */
@@ -329,6 +329,8 @@ async function listinoDaFile(file) {
   if (ih < 0) throw new Error(T("Il file non sembra un listino METEL: non trovo la colonna del codice (CODICE PRODOTTO AZIENDA o CODICE ARTICOLO).", "Not a METEL price list: product code column not found."));
   const h = tab[ih].map(n);
   const ic = h.findIndex((x) => CODICE.includes(x)), id = h.indexOf("DESCRIZIONEPRODOTTO"), ie = h.indexOf("ETIM");
+  const iean = h.indexOf("CODICEEAN"), ist = h.indexOf("STATODELPRODOTTO"), idv = h.indexOf("DATAULTIMAVARIAZIONE"), ium = h.indexOf("UNITAMISURA");
+  const col = (r, i) => (i >= 0 ? String(r[i] ?? "").trim() : "");
   const ifam = h.indexOf("FAMIGLIASCONTO") >= 0 ? h.indexOf("FAMIGLIASCONTO") : h.indexOf("FAMIGLIASTATISTICA");
   if (ifam < 0) throw new Error(T("Nel file manca la colonna FAMIGLIA SCONTO.", "FAMIGLIA SCONTO column missing."));
   const righe = new Map();
@@ -336,11 +338,11 @@ async function listinoDaFile(file) {
     const c = String(r?.[ic] ?? "").trim().replace(/\.0+$/, "");
     if (!c) continue;
     const f = String(r[ifam] ?? "").replace(/\D/g, "");
-    righe.set(c, { codice: c, famiglia_sconto: f ? f.padStart(4, "0") : "", descrizione: id >= 0 ? String(r[id] ?? "").trim() : "", etim: ie >= 0 ? String(r[ie] ?? "").trim() : "" });
+    righe.set(c, { codice: c, famiglia_sconto: f ? f.padStart(4, "0") : "", descrizione: col(r, id), etim: col(r, ie), ean: col(r, iean).replace(/\.0+$/, ""), stato: col(r, ist), variato: col(r, idv), um: col(r, ium) });
   }
   if (!righe.size) throw new Error(T("Nel file non ci sono articoli.", "No items in the file."));
   const versione = (file.name.match(/20\d\d[-_ ]?\d/) || [file.name.replace(/\.[^.]+$/, "")])[0].replace(/_/g, "-");
-  try { localStorage.setItem(CHIAVE_LISTINO, JSON.stringify({ versione, righe: [...righe.values()].map((x) => [x.codice, x.famiglia_sconto, x.descrizione, x.etim]) })); } catch { /* spazio pieno */ }
+  try { localStorage.setItem(CHIAVE_LISTINO, JSON.stringify({ versione, righe: [...righe.values()].map((x) => [x.codice, x.famiglia_sconto, x.descrizione, x.etim, x.ean, x.stato, x.variato, x.um]) })); } catch { /* spazio pieno */ }
   return (LISTINO = { versione, origine: "pc", righe });
 }
 async function caricaListino() {
@@ -363,6 +365,23 @@ async function caricaListino() {
 }
 // Strat ID 2 = ultime due cifre con uno 0 in fondo (indicazione di Marco): 0210 → 2 e 100, 0111 → 1 e 110
 const stratId = (f) => { const c = String(f || "").replace(/\D/g, "").padStart(4, "0"); return /^\d{4}$/.test(c) && c !== "0000" ? [Number(c.slice(0, 2)), Number(`${Number(c.slice(2))}0`)] : ["", ""]; };
+
+/** Articoli del listino METEL che non sono nel catalogo di obo.it: solo le colonne del listino, ordinati per famiglia. */
+async function scaricaSoloListino() {
+  const lis = await caricaListino();
+  if (!lis.righe.size) { alert(T("Listino non disponibile: scegli il file del listino METEL dal PC (pulsante sotto i download).", "Price list not available: choose the METEL price list file from your PC.")); return; }
+  const su = new Set(PRODOTTI.map((r) => String(r[0])));
+  const data = (d) => (/^\d{8}$/.test(d || "") ? `${d.slice(6, 8)}/${d.slice(4, 6)}/${d.slice(0, 4)}` : d || "");
+  const righe = [...lis.righe.values()].filter((l) => !su.has(String(l.codice)))
+    .sort((a, b) => String(a.famiglia_sconto).localeCompare(String(b.famiglia_sconto)) || String(a.codice).localeCompare(String(b.codice)))
+    .map((l) => [String(l.codice), l.descrizione, l.ean || "", l.famiglia_sconto, ...stratId(l.famiglia_sconto), l.etim || "", l.um || "", l.stato || "", data(l.variato)]);
+  const testa = en() ? ["Item", "Description (price list)", "EAN", "Discount family", "Strat ID 1", "Strat ID 2", "ETIM", "Unit", "Status (price list)", "Last change"]
+    : ["Articolo", "Descrizione (listino)", "EAN", "Famiglia sconto", "Strat ID 1", "Strat ID 2", "ETIM", "Unità", "Stato (listino)", "Ultima variazione"];
+  const blob = scriviXlsx([{ nome: T("Nel listino non su obo.it", "In price list not on obo.it"), intestazione: testa, righe, larghezze: [11, 46, 15, 13, 9, 9, 11, 7, 9, 12] }]);
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${T("listino-non-su-obo-it", "price-list-not-on-obo-it")}-${lis.versione}-${new Date().toISOString().slice(0, 10)}.xlsx`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  window.OBORegistro?.uso("download");
+}
 
 /** Riga che dice da dove vengono famiglia sconto e Strat ID nei download, con la scelta del file dal PC. */
 function barraListino() {
@@ -426,13 +445,7 @@ $("vista").addEventListener("click", (e) => {
   else if (t.dataset.altroNovita) { mostraNovita += 60; disegna(); }
   else if (t.id === "scaricaNovita") scaricaProdotti(T("novita-prodotti-obo", "new-obo-products"), nuoviNelPeriodo());
   else if (t.id === "scaricaRicerca") scaricaProdotti(T("prodotti-obo-ricerca", "obo-products-search"), ultimiTrovati.map((r) => [r]));
-  else if (t.id === "scaricaSoloListino") void (async () => {
-    const lis = await caricaListino();
-    if (!lis.righe.size) { alert(T("Listino non disponibile: scegli il file del listino METEL dal PC (pulsante sotto i download).", "Price list not available: choose the METEL price list file from your PC.")); return; }
-    const su = new Set(PRODOTTI.map((r) => r[0]));
-    const mancanti = [...lis.righe.values()].filter((l) => !su.has(String(l.codice))).map((l) => [[String(l.codice), l.descrizione, "", "", "", "", "", "", ""]]);
-    scaricaProdotti(T("listino-non-su-obo-it", "price-list-not-on-obo-it"), mancanti);
-  })();
+  else if (t.id === "scaricaSoloListino") void scaricaSoloListino();
   else if (t.id === "scaricaCatalogo") scaricaProdotti(T("catalogo-prodotti-obo", "obo-product-catalogue"), PRODOTTI.map((r) => [r]));
   else if (t.id === "scaricaCodici") { const per = new Map(PRODOTTI.map((r) => [r[0], r])); scaricaProdotti(T("prodotti-obo-codici", "obo-products-codes"), (soloCodici(Q()) ?? []).map((c) => [per.get(c) ?? [c, T("non trovato su obo.it", "not found on obo.it"), "", "", "", "", "", "", ""]])); }
   else if (t.dataset.vai) { vista = t.dataset.vai; disegna(); salvaUrl(); scrollTo({ top: 0 }); }
