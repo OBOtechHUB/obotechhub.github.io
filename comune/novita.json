@@ -7,15 +7,17 @@
       "app": "prodotti",
       "titolo": "Prodotti OBO: Excel con categoria, famiglia di listino e Strat ID",
       "voci": [
-        "Nel file Excel scaricato (novità, ricerca, codici, catalogo completo) ci sono le colonne nuove Settore, Famiglia, Gruppo e Sottogruppo di obo.it",
-        "Anche Famiglia sconto del listino METEL, Strat ID 1 e Strat ID 2 (es. 0210 → 2 e 100) e se l'articolo è nel listino: dal listino caricato in Amministrazione oppure scegliendo il file METEL dal PC con \"Scegli listino METEL dal PC\" (resta salvato sul dispositivo)",
+        "I download sono ora veri file Excel (.xlsx) in stile OBO: intestazione colorata, prima riga bloccata, filtri già attivi, descrizioni pulite",
+        "Colonne nuove Settore, Famiglia, Gruppo e Sottogruppo di obo.it",
+        "Famiglia sconto del listino METEL, Strat ID 1 e Strat ID 2 (es. 0210 → 2 e 100, 1110 → 11 e 100), ETIM e se l'articolo è nel listino: scegli il file del listino con \"Scegli listino METEL dal PC\" (resta salvato sul dispositivo)",
         "Nuovo download \"Nel listino ma non su obo.it\" nella vista Novità, per vedere gli articoli da aggiungere"
       ],
       "titolo_en": "OBO products: Excel with category, price-list family and Strat ID",
       "voci_en": [
-        "The downloaded Excel file has new columns Area, Family, Group and Subgroup from obo.it",
-        "Also the METEL discount family, Strat ID 1 and Strat ID 2 (e.g. 0210 → 2 and 100) and whether the item is in the price list: from the list uploaded by the administrator or by choosing the METEL file on your PC (kept on the device)",
-        "New download \"In price list, not on obo.it\" in the New view, to see items to add"
+        "Downloads are now real Excel files (.xlsx) in OBO style: coloured header, frozen first row, filters on, clean descriptions",
+        "New columns Area, Family, Group and Subgroup from obo.it",
+        "METEL discount family, Strat ID 1 and Strat ID 2 (e.g. 0210 → 2 and 100, 1110 → 11 and 100), ETIM and whether the item is in the price list: choose the price list file with \"Choose METEL price list\" (kept on the device)",
+        "New download \"In price list, not on obo.it\" in the New view"
       ]
     },
     {

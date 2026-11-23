@@ -6,6 +6,7 @@
  * con in più la ricerca di più codici insieme.
  */
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
+import { leggiXlsx, leggiCsv, scriviXlsx } from "./xlsx.js";
 import { CONFIG } from "../config.js";
 
 const SITO = "https://www.obo.it";
@@ -305,7 +306,7 @@ function vistaNovita() {
 }
 let mostraNovita = 60;
 
-// ---------- download (CSV con ; e BOM: si apre direttamente in Excel) ----------
+// ---------- download (Excel .xlsx scritto nel browser, prodotti/xlsx.js) ----------
 const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>`;
 /*
  * Listino METEL caricato dall'amministratore (Supabase listino_obo, ultima versione): famiglia sconto/statistica
@@ -315,28 +316,36 @@ const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="no
 let LISTINO = null;
 const CHIAVE_LISTINO = "obo-prodotti-listino"; // sul dispositivo: solo codice, famiglia e descrizione, niente prezzi
 function listinoSalvato() {
-  try { const x = JSON.parse(localStorage.getItem(CHIAVE_LISTINO) || "null"); if (x?.righe?.length) return { versione: x.versione, origine: "pc", righe: new Map(x.righe.map(([c, f, d]) => [c, { codice: c, famiglia_sconto: f, descrizione: d }])) }; } catch { /* niente */ }
+  try { const x = JSON.parse(localStorage.getItem(CHIAVE_LISTINO) || "null"); if (x?.righe?.length) return { versione: x.versione, origine: "pc", righe: new Map(x.righe.map(([c, f, d, e]) => [c, { codice: c, famiglia_sconto: f, descrizione: d, etim: e || "" }])) }; } catch { /* niente */ }
   return null;
 }
 /** Listino METEL scelto dal PC (xlsx o csv): letto nel browser, nessun dato inviato. */
 async function listinoDaFile(file) {
-  const XLSX = await import("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm");
-  const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
-  const tab = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: "" });
+  const tab = /\.csv$/i.test(file.name) ? leggiCsv(await file.text()) : await leggiXlsx(await file.arrayBuffer());
   const n = (v) => String(v).toUpperCase().replace(/[^A-Z]/g, "");
-  const ih = tab.findIndex((r) => r.some((c) => n(c) === "CODICEARTICOLO"));
-  if (ih < 0) throw new Error(T("Il file non sembra un listino METEL: manca la colonna CODICE ARTICOLO.", "Not a METEL price list: CODICE ARTICOLO column missing."));
-  const h = tab[ih].map(n), ic = h.indexOf("CODICEARTICOLO"), id = h.indexOf("DESCRIZIONEPRODOTTO");
+  const CODICE = ["CODICEARTICOLO", "CODICEPRODOTTOAZIENDA", "CODICEPRODOTTO", "ARTICOLO", "CODICE"];
+  const ih = tab.slice(0, 30).findIndex((r) => r.some((c) => CODICE.includes(n(c))));
+  if (ih < 0) throw new Error(T("Il file non sembra un listino METEL: non trovo la colonna del codice (CODICE PRODOTTO AZIENDA o CODICE ARTICOLO).", "Not a METEL price list: product code column not found."));
+  const h = tab[ih].map(n);
+  const ic = h.findIndex((x) => CODICE.includes(x)), id = h.indexOf("DESCRIZIONEPRODOTTO"), ie = h.indexOf("ETIM");
   const ifam = h.indexOf("FAMIGLIASCONTO") >= 0 ? h.indexOf("FAMIGLIASCONTO") : h.indexOf("FAMIGLIASTATISTICA");
   if (ifam < 0) throw new Error(T("Nel file manca la colonna FAMIGLIA SCONTO.", "FAMIGLIA SCONTO column missing."));
   const righe = new Map();
-  for (const r of tab.slice(ih + 1)) { const c = String(r[ic] ?? "").trim(); if (c) righe.set(c, { codice: c, famiglia_sconto: String(r[ifam] ?? "").trim().padStart(4, "0"), descrizione: id >= 0 ? String(r[id] ?? "").trim() : "" }); }
+  for (const r of tab.slice(ih + 1)) {
+    const c = String(r?.[ic] ?? "").trim().replace(/\.0+$/, "");
+    if (!c) continue;
+    const f = String(r[ifam] ?? "").replace(/\D/g, "");
+    righe.set(c, { codice: c, famiglia_sconto: f ? f.padStart(4, "0") : "", descrizione: id >= 0 ? String(r[id] ?? "").trim() : "", etim: ie >= 0 ? String(r[ie] ?? "").trim() : "" });
+  }
+  if (!righe.size) throw new Error(T("Nel file non ci sono articoli.", "No items in the file."));
   const versione = (file.name.match(/20\d\d[-_ ]?\d/) || [file.name.replace(/\.[^.]+$/, "")])[0].replace(/_/g, "-");
-  try { localStorage.setItem(CHIAVE_LISTINO, JSON.stringify({ versione, righe: [...righe.values()].map((x) => [x.codice, x.famiglia_sconto, x.descrizione]) })); } catch { /* spazio pieno */ }
+  try { localStorage.setItem(CHIAVE_LISTINO, JSON.stringify({ versione, righe: [...righe.values()].map((x) => [x.codice, x.famiglia_sconto, x.descrizione, x.etim]) })); } catch { /* spazio pieno */ }
   return (LISTINO = { versione, origine: "pc", righe });
 }
 async function caricaListino() {
   if (LISTINO?.righe.size) return LISTINO;
+  // il listino scelto dal PC ha la precedenza (di solito è il più recente)
+  const pc = listinoSalvato(); if (pc) return (LISTINO = pc);
   const vuoto = { versione: "", righe: new Map() };
   try {
     const { data: v } = await supabase.from("listino_versioni").select("versione").order("caricato_il", { ascending: false }).limit(1).maybeSingle();
@@ -352,27 +361,32 @@ async function caricaListino() {
   } catch { return (LISTINO = listinoSalvato() ?? vuoto); }
 }
 // Strat ID 2 = ultime due cifre con uno 0 in fondo (indicazione di Marco): 0210 → 2 e 100, 0111 → 1 e 110
-const stratId = (f) => { const c = String(f || "").replace(/\D/g, ""); return c.length === 4 ? [String(Number(c.slice(0, 2))), `${Number(c.slice(2))}0`] : ["", ""]; };
+const stratId = (f) => { const c = String(f || "").replace(/\D/g, "").padStart(4, "0"); return /^\d{4}$/.test(c) && c !== "0000" ? [Number(c.slice(0, 2)), Number(`${Number(c.slice(2))}0`)] : ["", ""]; };
 
 /** Riga che dice da dove vengono famiglia sconto e Strat ID nei download, con la scelta del file dal PC. */
 function barraListino() {
   const l = LISTINO;
   const stato = l?.righe.size ? T(`Famiglia sconto e Strat ID dal listino ${l.versione} (${l.righe.size.toLocaleString("it-IT")} articoli${l.origine === "pc" ? ", file del PC" : ""}).`, `Discount family and Strat ID from price list ${l.versione}${l.origine === "pc" ? " (file on this PC)" : ""}.`)
     : T("Per avere famiglia sconto e Strat ID nei download scegli il file del listino METEL.", "To get discount family and Strat ID in downloads, choose the METEL price list file.");
-  return `<p class="nota-listino" style="font-size:.85rem;color:var(--tenue);margin:.4rem 0">${esc(stato)} <label class="btn btn-piccolo" style="cursor:pointer">${T("Scegli listino METEL dal PC", "Choose METEL price list")}<input type="file" id="fileListino" accept=".xlsx,.xls,.csv" hidden></label></p>`;
+  return `<p class="nota-listino" style="font-size:.85rem;color:var(--tenue);margin:.4rem 0">${esc(stato)} <label class="btn btn-piccolo" style="cursor:pointer">${T("Scegli listino METEL dal PC", "Choose METEL price list")}<input type="file" id="fileListino" accept=".xlsx,.csv" hidden></label></p>`;
 }
 
 async function scaricaProdotti(nome, righe) {
   const lis = await caricaListino();
-  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const testa = en() ? ["Item", "Name", "Description", "Category", "Area", "Family", "Group", "Subgroup", "Active since", "New since", "Discount family (price list)", "Strat ID 1", "Strat ID 2", `In price list ${lis.versione}`, "obo.it page", "Photo"] : ["Articolo", "Nome", "Descrizione", "Categoria", "Settore", "Famiglia", "Gruppo", "Sottogruppo", "Attivo dal", "Novità dal", "Famiglia sconto (listino)", "Strat ID 1", "Strat ID 2", `Nel listino ${lis.versione}`, "Pagina obo.it", "Foto"];
-  const daListino = (cod) => { const l = lis.righe.get(String(cod)); return l ? [l.famiglia_sconto, ...stratId(l.famiglia_sconto), T("sì", "yes")] : ["", "", "", lis.versione ? T("no", "no") : ""]; };
+  const conEtim = [...lis.righe.values()].some((l) => l.etim);
+  const testa = en()
+    ? ["Item", "Name", "Description", "Category", "Area", "Family", "Group", "Subgroup", "Active since", "New since", "Discount family (price list)", "Strat ID 1", "Strat ID 2", ...(conEtim ? ["ETIM"] : []), `In price list ${lis.versione}`.trim(), "obo.it page"]
+    : ["Articolo", "Nome", "Descrizione", "Categoria", "Settore", "Famiglia", "Gruppo", "Sottogruppo", "Attivo dal", "Novità dal", "Famiglia sconto (listino)", "Strat ID 1", "Strat ID 2", ...(conEtim ? ["ETIM"] : []), `Nel listino ${lis.versione}`.trim(), "Pagina obo.it"];
+  const daListino = (cod) => { const l = lis.righe.get(String(cod)); return l ? [l.famiglia_sconto, ...stratId(l.famiglia_sconto), ...(conEtim ? [l.etim || ""] : []), T("sì", "yes")] : ["", "", "", ...(conEtim ? [""] : []), lis.righe.size ? T("no", "no") : ""]; };
   // livelli della categoria di obo.it in colonne separate, per filtrare in Excel
   const livelli = (c) => { const parti = (c || "").split("/").filter(Boolean).slice(1); return [1, 2, 3, 4].map((n) => (parti.length >= n ? NOMI_CAT.get(`/${["prodotti", ...parti.slice(0, n)].join("/")}/`) || parti[n - 1].replace(/-/g, " ") : "")); };
-  const descr = (t) => (/^Scopri di più su .* adesso!$/.test(t || "") ? "" : t || "");
-  const corpo = righe.map(([r, d]) => [r[0], r[1], descr(r[2]), NOMI_CAT.get(catDi(r)) || "", ...livelli(catDi(r)), r[5] || "", d ?? DATA_NOVITA.get(r[0]) ?? "", ...daListino(r[0]), r[3] ? url(r[3]) : "", fotoDi(r)].map(q).join(";"));
-  const b = new Blob(["﻿" + [testa.map(q).join(";"), ...corpo].join("\r\n")], { type: "text/csv;charset=utf-8" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${nome}-${new Date().toISOString().slice(0, 10)}.csv`;
+  // testo pulito: niente "Scopri di più su … adesso!" e niente a capo
+  const pulisci = (t) => String(t || "").replace(/Scopri di più su[\s\S]*?adesso!/g, "").replace(/\s+/g, " ").replace(/•/g, " • ").replace(/\s+/g, " ").trim();
+  const data = (d) => (d ? d.split("-").reverse().join("/") : "");
+  const corpo = righe.map(([r, d]) => [String(r[0]), pulisci(r[1]), pulisci(r[2]), NOMI_CAT.get(catDi(r)) || "", ...livelli(catDi(r)), data(r[5]), data(d ?? DATA_NOVITA.get(r[0])), ...daListino(r[0]), r[3] ? url(r[3]) : ""]);
+  const larghezze = [11, 34, 60, 28, 20, 24, 24, 26, 11, 11, 13, 9, 9, ...(conEtim ? [11] : []), 10, 46];
+  const blob = scriviXlsx([{ nome: T("Prodotti OBO", "OBO products"), intestazione: testa, righe: corpo, larghezze, link: [testa.length - 1] }]);
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${nome}-${new Date().toISOString().slice(0, 10)}.xlsx`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   window.OBORegistro?.uso("download");
 }
