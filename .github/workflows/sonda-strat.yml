@@ -1,0 +1,13 @@
+name: Sonda strat ID
+on: { push: { branches: [sonda-strat] } }
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          UA="Mozilla/5.0 (OBO Hub; ufficio tecnico)"
+          for u in "https://www.obo.it/it-it/prodotti/limitatore-sovratensione-v20-1-npe-280-ip20-280-1-n-pe-5095251.html" "https://www.obo-bettermann.com/en-xi/products/surge-protection/v20-1-npe-280-5095251.html"; do
+            echo "=== $u"; curl -sL -A "$UA" "$u" -o p.html -w "%{http_code} %{size_download}\n"
+            grep -oiE ".{0,120}(strat|etim|eclass|warengruppe|productgroup|product_group|prodh|item_category|sap).{0,160}" p.html | head -40
+            echo "--- json-ld/datalayer"; grep -oE '"@type"[^}]{0,300}' p.html | head -5; grep -oE 'dataLayer.{0,600}' p.html | head -5
+          done
