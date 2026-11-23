@@ -309,7 +309,7 @@ let mostraNovita = 60;
 const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>`;
 /*
  * Listino METEL caricato dall'amministratore (Supabase listino_obo, ultima versione): famiglia sconto/statistica
- * (4 cifre, es. 0210) da cui Strat ID 1 = prime due cifre (2) e Strat ID 2 = ultime due (10).
+ * (4 cifre, es. 0210) da cui Strat ID 1 = prime due cifre (2) e Strat ID 2 = ultime due con uno 0 in fondo (100).
  * Lo vedono solo gli utenti con account (regole del database): per i visitatori le colonne restano vuote.
  */
 let LISTINO = null;
@@ -329,7 +329,8 @@ async function caricaListino() {
     return (LISTINO = { versione: v.versione, righe });
   } catch { return vuoto; }
 }
-const stratId = (f) => { const c = String(f || "").replace(/\D/g, ""); return c.length === 4 ? [String(Number(c.slice(0, 2))), String(Number(c.slice(2)))] : ["", ""]; };
+// Strat ID 2 = ultime due cifre con uno 0 in fondo (indicazione di Marco): 0210 → 2 e 100, 0111 → 1 e 110
+const stratId = (f) => { const c = String(f || "").replace(/\D/g, ""); return c.length === 4 ? [String(Number(c.slice(0, 2))), `${Number(c.slice(2))}0`] : ["", ""]; };
 
 async function scaricaProdotti(nome, righe) {
   const lis = await caricaListino();
