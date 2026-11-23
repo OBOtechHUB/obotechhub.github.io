@@ -5,13 +5,17 @@
       "id": "2026-11-23-prodotti-2",
       "data": "2026-11-23",
       "app": "prodotti",
-      "titolo": "Prodotti OBO: Excel con i livelli della categoria",
+      "titolo": "Prodotti OBO: Excel con categoria, famiglia di listino e Strat ID",
       "voci": [
-        "Nel file Excel scaricato (novità, ricerca, codici, catalogo completo) ci sono 4 colonne nuove: Settore, Famiglia, Gruppo e Sottogruppo, per filtrare i prodotti per categoria di obo.it"
+        "Nel file Excel scaricato (novità, ricerca, codici, catalogo completo) ci sono le colonne nuove Settore, Famiglia, Gruppo e Sottogruppo di obo.it",
+        "Per chi ha l'account anche Famiglia sconto del listino METEL, Strat ID 1 e Strat ID 2 (es. 0210 → 2 e 10) e se l'articolo è nel listino",
+        "Nuovo download \"Nel listino ma non su obo.it\" nella vista Novità, per vedere gli articoli da aggiungere"
       ],
-      "titolo_en": "OBO products: Excel with category levels",
+      "titolo_en": "OBO products: Excel with category, price-list family and Strat ID",
       "voci_en": [
-        "The downloaded Excel file (new items, search, codes, full catalogue) has 4 new columns: Area, Family, Group and Subgroup, to filter products by obo.it category"
+        "The downloaded Excel file has new columns Area, Family, Group and Subgroup from obo.it",
+        "With an account also the METEL discount family, Strat ID 1 and Strat ID 2 (e.g. 0210 → 2 and 10) and whether the item is in the price list",
+        "New download \"In price list, not on obo.it\" in the New view, to see items to add"
       ]
     },
     {

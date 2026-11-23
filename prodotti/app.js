@@ -289,7 +289,8 @@ function vistaNovita() {
   const nuovi = nuoviNelPeriodo();
   h += `<h2>${T("Nuovi prodotti nel catalogo", "New products in the catalogue")} <small>${nuovi.length}</small></h2>
     <div class="filtri"><label>${T("Periodo", "Period")} <select id="periodoNovita">${PERIODI.map(([v, i, e]) => `<option value="${v}" ${v === periodoNovita ? "selected" : ""}>${T(i, e)}</option>`).join("")}</select></label>
-    <button class="btn" type="button" id="scaricaNovita">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button></div>`;
+    <button class="btn" type="button" id="scaricaNovita">${ICONA_DOWNLOAD}${T("Scarica Excel", "Download Excel")}</button>
+    <button class="btn" type="button" id="scaricaSoloListino" title="${T("Articoli del listino METEL caricato in Amministrazione che non sono nel catalogo di obo.it", "Items in the METEL price list that are not in the obo.it catalogue")}">${ICONA_DOWNLOAD}${T("Nel listino ma non su obo.it", "In price list, not on obo.it")}</button></div>`;
   if (!nuovi.length) h += `<p class="vuoto">${T("Nessun prodotto nuovo nel periodo scelto: prova un periodo più lungo.", "No new products in this period: try a longer one.")}</p>`;
   let mese = "";
   for (const [r, d] of nuovi.slice(0, mostraNovita)) {
@@ -306,13 +307,39 @@ let mostraNovita = 60;
 
 // ---------- download (CSV con ; e BOM: si apre direttamente in Excel) ----------
 const ICONA_DOWNLOAD = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>`;
-function scaricaProdotti(nome, righe) {
+/*
+ * Listino METEL caricato dall'amministratore (Supabase listino_obo, ultima versione): famiglia sconto/statistica
+ * (4 cifre, es. 0210) da cui Strat ID 1 = prime due cifre (2) e Strat ID 2 = ultime due (10).
+ * Lo vedono solo gli utenti con account (regole del database): per i visitatori le colonne restano vuote.
+ */
+let LISTINO = null;
+async function caricaListino() {
+  if (LISTINO) return LISTINO;
+  const vuoto = { versione: "", righe: new Map() };
+  try {
+    const { data: v } = await supabase.from("listino_versioni").select("versione").order("caricato_il", { ascending: false }).limit(1).maybeSingle();
+    if (!v?.versione) return (LISTINO = vuoto);
+    const righe = new Map();
+    for (let da = 0; da < 60000; da += 1000) {
+      const { data, error } = await supabase.from("listino_obo").select("codice,descrizione,famiglia_sconto,stato").eq("versione", v.versione).order("codice").range(da, da + 999);
+      if (error || !data) break;
+      for (const r of data) righe.set(String(r.codice), r);
+      if (data.length < 1000) break;
+    }
+    return (LISTINO = { versione: v.versione, righe });
+  } catch { return vuoto; }
+}
+const stratId = (f) => { const c = String(f || "").replace(/\D/g, ""); return c.length === 4 ? [String(Number(c.slice(0, 2))), String(Number(c.slice(2)))] : ["", ""]; };
+
+async function scaricaProdotti(nome, righe) {
+  const lis = await caricaListino();
   const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const testa = en() ? ["Item", "Name", "Description", "Category", "Area", "Family", "Group", "Subgroup", "Active since", "New since", "obo.it page", "Photo"] : ["Articolo", "Nome", "Descrizione", "Categoria", "Settore", "Famiglia", "Gruppo", "Sottogruppo", "Attivo dal", "Novità dal", "Pagina obo.it", "Foto"];
+  const testa = en() ? ["Item", "Name", "Description", "Category", "Area", "Family", "Group", "Subgroup", "Active since", "New since", "Discount family (price list)", "Strat ID 1", "Strat ID 2", `In price list ${lis.versione}`, "obo.it page", "Photo"] : ["Articolo", "Nome", "Descrizione", "Categoria", "Settore", "Famiglia", "Gruppo", "Sottogruppo", "Attivo dal", "Novità dal", "Famiglia sconto (listino)", "Strat ID 1", "Strat ID 2", `Nel listino ${lis.versione}`, "Pagina obo.it", "Foto"];
+  const daListino = (cod) => { const l = lis.righe.get(String(cod)); return l ? [l.famiglia_sconto, ...stratId(l.famiglia_sconto), T("sì", "yes")] : ["", "", "", lis.versione ? T("no", "no") : ""]; };
   // livelli della categoria di obo.it in colonne separate, per filtrare in Excel
   const livelli = (c) => { const parti = (c || "").split("/").filter(Boolean).slice(1); return [1, 2, 3, 4].map((n) => (parti.length >= n ? NOMI_CAT.get(`/${["prodotti", ...parti.slice(0, n)].join("/")}/`) || parti[n - 1].replace(/-/g, " ") : "")); };
   const descr = (t) => (/^Scopri di più su .* adesso!$/.test(t || "") ? "" : t || "");
-  const corpo = righe.map(([r, d]) => [r[0], r[1], descr(r[2]), NOMI_CAT.get(catDi(r)) || "", ...livelli(catDi(r)), r[5] || "", d ?? DATA_NOVITA.get(r[0]) ?? "", url(r[3]), fotoDi(r)].map(q).join(";"));
+  const corpo = righe.map(([r, d]) => [r[0], r[1], descr(r[2]), NOMI_CAT.get(catDi(r)) || "", ...livelli(catDi(r)), r[5] || "", d ?? DATA_NOVITA.get(r[0]) ?? "", ...daListino(r[0]), r[3] ? url(r[3]) : "", fotoDi(r)].map(q).join(";"));
   const b = new Blob(["﻿" + [testa.map(q).join(";"), ...corpo].join("\r\n")], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${nome}-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
@@ -353,6 +380,13 @@ $("vista").addEventListener("click", (e) => {
   else if (t.dataset.altroNovita) { mostraNovita += 60; disegna(); }
   else if (t.id === "scaricaNovita") scaricaProdotti(T("novita-prodotti-obo", "new-obo-products"), nuoviNelPeriodo());
   else if (t.id === "scaricaRicerca") scaricaProdotti(T("prodotti-obo-ricerca", "obo-products-search"), ultimiTrovati.map((r) => [r]));
+  else if (t.id === "scaricaSoloListino") void (async () => {
+    const lis = await caricaListino();
+    if (!lis.righe.size) { alert(T("Listino non disponibile: serve l'accesso con account e il listino METEL caricato in Amministrazione.", "Price list not available: you need an account and the METEL price list uploaded by the administrator.")); return; }
+    const su = new Set(PRODOTTI.map((r) => r[0]));
+    const mancanti = [...lis.righe.values()].filter((l) => !su.has(String(l.codice))).map((l) => [[String(l.codice), l.descrizione, "", "", "", "", "", "", ""]]);
+    scaricaProdotti(T("listino-non-su-obo-it", "price-list-not-on-obo-it"), mancanti);
+  })();
   else if (t.id === "scaricaCatalogo") scaricaProdotti(T("catalogo-prodotti-obo", "obo-product-catalogue"), PRODOTTI.map((r) => [r]));
   else if (t.id === "scaricaCodici") { const per = new Map(PRODOTTI.map((r) => [r[0], r])); scaricaProdotti(T("prodotti-obo-codici", "obo-products-codes"), (soloCodici(Q()) ?? []).map((c) => [per.get(c) ?? [c, T("non trovato su obo.it", "not found on obo.it"), "", "", "", "", "", "", ""]])); }
   else if (t.dataset.vai) { vista = t.dataset.vai; disegna(); salvaUrl(); scrollTo({ top: 0 }); }
@@ -379,6 +413,7 @@ function salvaUrl() {
 (async () => {
   if (!(await accesso())) return;
   $("cancello").hidden = true; $("app").hidden = false;
+  void caricaListino(); // in sottofondo: pronto per i download con famiglia sconto e Strat ID
   const p = new URLSearchParams(location.search);
   if (p.get("q")) $("q").value = p.get("q");
   if (["novita", "codici"].includes(p.get("vista"))) vista = p.get("vista");
