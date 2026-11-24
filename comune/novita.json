@@ -2,6 +2,17 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-hub-11",
+      "data": "2026-11-24",
+      "app": "hub",
+      "titolo": "Introduzione di OBO Hub: rete di connessioni e poi sparisce",
+      "voci": [
+        "Il primo capitolo («Un unico posto») è ora la rete di punti collegati con gli impulsi arancioni, che si raccoglie nell'icona di OBO Hub; poi le altre scene come prima",
+        "Quando l'hai scorsa fino in fondo (o premi «Vai alle app» / «Salta l'introduzione») l'introduzione sparisce e la pagina riparte dalle app",
+        "Ricompare alla prossima apertura dell'app"
+      ]
+    },
+    {
       "id": "2026-11-24-hub-10",
       "data": "2026-11-24",
       "app": "hub",

@@ -39,7 +39,15 @@
     '</div><div class="azioni-intro"><button type="button" class="pri" data-vai>' + (en ? "Go to the apps" : "Vai alle app") + '</button><button type="button" data-vai>' + (en ? "Skip intro" : "Salta l'introduzione") + '</button></div><div class="barra-p" aria-hidden="true"><i></i></div></div>';
   eroe.parentNode.insertBefore(sez, eroe);
   eroe.style.scrollMarginTop = "56px";
-  sez.querySelectorAll("[data-vai]").forEach(function (b) { b.onclick = function () { eroe.scrollIntoView({ behavior: "smooth" }); }; });
+  // dopo averla vista (scorsa fino in fondo o saltata) sparisce: la pagina riparte dalle app; ricompare alla prossima apertura dell'app
+  var tolta = false;
+  function togli(scorri2) {
+    if (tolta) return; tolta = true;
+    var h = sez.getBoundingClientRect().height, y = scrollY;
+    sez.remove(); removeEventListener("scroll", scorri); cancelAnimationFrame(raf); visibile = false;
+    if (scorri2) scrollTo(0, 0); else scrollTo(0, Math.max(0, y - h));
+  }
+  sez.querySelectorAll("[data-vai]").forEach(function (b) { b.onclick = function () { togli(true); }; });
   var caps = sez.querySelectorAll(".cap div"), barra = sez.querySelector(".barra-p i"), azioni = sez.querySelector(".azioni-intro");
   var cv = sez.querySelector("canvas"), ctx = cv.getContext("2d"), dpr = Math.min(window.devicePixelRatio || 1, 1.5), W = 1, H = 1, p = 0, visibile = true, raf = 0;
   function misura() { var r = cv.getBoundingClientRect(); W = cv.width = Math.max(1, Math.round(r.width * dpr)); H = cv.height = Math.max(1, Math.round(r.height * dpr)); }
@@ -50,11 +58,15 @@
     var R = [[0, .24], [.26, .5], [.52, .76], [.78, 1.01]];
     caps.forEach(function (c, i) { var o = Math.min(tra(R[i][0], R[i][0] + .04), 1 - tra(R[i][1] - .04, R[i][1])); if (i === 3) o = tra(.78, .82); c.style.opacity = o; c.style.transform = "translateY(" + (1 - o) * 24 + "px)"; });
     barra.style.height = (p * 100) + "%"; azioni.style.opacity = String(.4 + .6 * tra(.85, 1));
+    if (p >= 0.995 && sez.getBoundingClientRect().bottom <= innerHeight + 4) setTimeout(function () { if (p >= 0.995) togli(false); }, 350); // scorsa fino in fondo: via
   }
   addEventListener("scroll", scorri, { passive: true }); scorri();
   if ("IntersectionObserver" in window) new IntersectionObserver(function (v) { visibile = v[0].isIntersecting; if (visibile && !raf) raf = requestAnimationFrame(disegna); }).observe(sez);
 
   // particelle che formano l'icona (4 quadrati) e le app intorno
+  var NR = 70, nodi = [], impulsi = [];
+  (function () { var Q = [[-0.47, -0.47], [0.07, -0.47], [-0.47, 0.07], [0.07, 0.07]], L = 0.4; for (var i = 0; i < NR; i++) { var q = Q[i % 4], s = ((Math.floor(i / 4) / Math.ceil(NR / 4)) * 4), lato = Math.floor(s), u = s - lato; nodi.push({ x: Math.random(), y: Math.random(), vx: (Math.random() - .5) * .0007, vy: (Math.random() - .5) * .0007, f: Math.random() * 6.283,
+    tx: lato === 0 ? q[0] + u * L : lato === 1 ? q[0] + L : lato === 2 ? q[0] + L - u * L : q[0], ty: lato === 0 ? q[1] : lato === 1 ? q[1] + u * L : lato === 2 ? q[1] + L : q[1] + L - u * L }); } })();
   var N = 900, part = [];
   for (var i = 0; i < N; i++) { var a = Math.random() * 6.283, r = 0.6 + Math.random() * 1.6; part.push({ sx: Math.cos(a) * r, sy: Math.sin(a) * r * 0.7, tx: 0, ty: 0, f: Math.random() * 6.283, c: Math.random() < 0.7 }); }
   // bersaglio: contorno dei 4 quadrati arrotondati dell'icona OBO Hub (unità ±0.5)
@@ -91,15 +103,22 @@
     ctx.strokeStyle = "rgba(118,148,164,.12)"; ctx.lineWidth = dpr; var oriz = H * .78;
     for (var gx = -10; gx <= 10; gx++) { ctx.beginPath(); ctx.moveTo(cx + gx * W * .02, oriz); ctx.lineTo(cx + gx * W * .2, H); ctx.stroke(); }
     for (var gy = 0; gy < 8; gy++) { var yy = oriz + Math.pow(gy / 8, 2) * (H - oriz) + ((t * 18 * dpr) % ((H - oriz) / 8)); ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(W, yy); ctx.stroke(); }
-    // 01 particelle → icona
-    var forma = tra(.0, .14), apri = tra(.3, .5);
-    for (var i = 0; i < N; i++) {
-      var pp = part[i], wob = Math.sin(t * 1.5 + pp.f) * .02 * (1 - forma);
-      var x = pp.sx + (pp.tx - pp.sx) * forma + wob, y = pp.sy + (pp.ty - pp.sy) * forma + Math.cos(t * 1.2 + pp.f) * .02 * (1 - forma);
-      x *= 1 + apri * 0.8; y *= 1 + apri * 0.8;
-      ctx.fillStyle = pp.c ? "rgba(243,155,0," + (0.55 + 0.45 * forma) * (1 - apri * .7) + ")" : "rgba(220,228,233," + (0.4 * (1 - apri)) + ")";
-      ctx.fillRect(cx + x * U, cy + y * U, 1.6 * dpr, 1.6 * dpr);
+    // 01 rete di connessioni (punti collegati con impulsi arancio) che poi si raccoglie nell'icona di OBO Hub
+    var forma = tra(.12, .26), apri = tra(.3, .5), rete = 1 - forma;
+    var PN = [], dmax = Math.min(W, H) * .2;
+    for (var i = 0; i < NR; i++) {
+      var n = nodi[i]; n.x = (n.x + n.vx + 1) % 1; n.y = (n.y + n.vy + 1) % 1;
+      var x0 = n.x * W, y0 = n.y * H, tx = cx + n.tx * U * (1 + apri * .8), ty = cy + n.ty * U * (1 + apri * .8);
+      PN.push([x0 + (tx - x0) * forma, y0 + (ty - y0) * forma, n]);
     }
+    if (rete > 0.02) {
+      for (var a1 = 0; a1 < NR; a1++) for (var b1 = a1 + 1; b1 < NR; b1++) {
+        var dx = PN[a1][0] - PN[b1][0], dy = PN[a1][1] - PN[b1][1], dd = Math.sqrt(dx * dx + dy * dy);
+        if (dd < dmax) { ctx.strokeStyle = (a1 % 3 ? "rgba(118,148,164," : "rgba(243,155,0,") + ((1 - dd / dmax) * .45 * rete) + ")"; ctx.lineWidth = dpr; ctx.beginPath(); ctx.moveTo(PN[a1][0], PN[a1][1]); ctx.lineTo(PN[b1][0], PN[b1][1]); ctx.stroke(); if (Math.random() < .0015) impulsi.push({ a: a1, b: b1, t: t }); }
+      }
+      for (var k1 = impulsi.length - 1; k1 >= 0; k1--) { var im = impulsi[k1], e1 = (t - im.t) / .9; if (e1 > 1) { impulsi.splice(k1, 1); continue; } var A1 = PN[im.a], B1 = PN[im.b], px1 = A1[0] + (B1[0] - A1[0]) * e1, py1 = A1[1] + (B1[1] - A1[1]) * e1, g1 = ctx.createRadialGradient(px1, py1, 0, px1, py1, 12 * dpr); g1.addColorStop(0, "rgba(255,214,140," + .95 * rete + ")"); g1.addColorStop(1, "rgba(243,155,0,0)"); ctx.fillStyle = g1; ctx.fillRect(px1 - 12 * dpr, py1 - 12 * dpr, 24 * dpr, 24 * dpr); }
+    }
+    for (var j1 = 0; j1 < NR; j1++) { var q1 = PN[j1], sz = (1.6 + Math.sin(t * 2 + q1[2].f)) * dpr * 1.6 * (1 - apri * .6); ctx.fillStyle = j1 % 3 ? "rgba(220,228,233," + (.8 * (1 - apri)) + ")" : "rgba(243,155,0," + (1 - apri * .7) + ")"; ctx.beginPath(); ctx.arc(q1[0], q1[1], Math.max(.5, sz), 0, 6.283); ctx.fill(); }
     // contorno pieno dell'icona quando le particelle l'hanno formata
     if (forma > .8 && apri < 1) { ctx.strokeStyle = "rgba(243,155,0," + ((forma - .8) * 5 * (1 - apri)) + ")"; ctx.lineWidth = 2.5 * dpr; ctx.shadowColor = "#f39b00"; ctx.shadowBlur = 18 * dpr;
       [[-0.47, -0.47], [0.07, -0.47], [-0.47, 0.07], [0.07, 0.07]].forEach(function (q) { var k2 = 1 + apri * .8; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(cx + q[0] * k2 * U, cy + q[1] * k2 * U, .4 * k2 * U, .4 * k2 * U, .06 * U); else ctx.rect(cx + q[0] * k2 * U, cy + q[1] * k2 * U, .4 * k2 * U, .4 * k2 * U); ctx.stroke(); }); ctx.shadowBlur = 0; }
