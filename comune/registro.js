@@ -74,7 +74,7 @@
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", metti); else metti();
       // stile futuristico comune (fasce con aurora, schede di vetro, comparsa allo scorrimento)
       var fx = document.createElement("link"); fx.rel = "stylesheet"; fx.href = new URL("futuro.css", tag && tag.src ? tag.src : location.href).href;
-      var mettiFx = function () { (document.head || document.documentElement).appendChild(fx); var js = document.createElement("script"); js.src = new URL("futuro.js", tag && tag.src ? tag.src : location.href).href; js.defer = true; document.head.appendChild(js); };
+      var mettiFx = function () { (document.head || document.documentElement).appendChild(fx); var js = document.createElement("script"); js.src = new URL("futuro.js", tag && tag.src ? tag.src : location.href).href; js.defer = true; document.head.appendChild(js); var ci = document.createElement("script"); ci.src = new URL("cinema.js", tag && tag.src ? tag.src : location.href).href; ci.defer = true; document.head.appendChild(ci); };
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mettiFx); else mettiFx();
     } catch (e) { /* senza stile comune l'app resta com'è */ }
     var blocco = document.createElement("style");
