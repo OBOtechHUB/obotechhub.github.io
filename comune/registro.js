@@ -74,9 +74,11 @@
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", metti); else metti();
       // stile futuristico comune (fasce con aurora, schede di vetro, comparsa allo scorrimento)
       var fx = document.createElement("link"); fx.rel = "stylesheet"; fx.href = new URL("futuro.css", tag && tag.src ? tag.src : location.href).href;
-      var mettiFx = function () { (document.head || document.documentElement).appendChild(fx); var js = document.createElement("script"); js.src = new URL("futuro.js", tag && tag.src ? tag.src : location.href).href; js.defer = true; document.head.appendChild(js); var ci = document.createElement("script"); ci.src = new URL("cinema.js", tag && tag.src ? tag.src : location.href).href; ci.defer = true; document.head.appendChild(ci); };
+      var mettiFx = function () { (document.head || document.documentElement).appendChild(fx); var js = document.createElement("script"); js.src = new URL("futuro.js", tag && tag.src ? tag.src : location.href).href; js.defer = true; document.head.appendChild(js); };
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mettiFx); else mettiFx();
     } catch (e) { /* senza stile comune l'app resta com'è */ }
+    // sigla d'apertura di 2-3 secondi (una volta per sessione per app), poi sparisce
+    try { var sg = document.createElement("script"); sg.src = new URL("splash.js", tag && tag.src ? tag.src : location.href).href; sg.setAttribute("data-sigla", (tag && tag.getAttribute("data-app")) || "hub"); (document.head || document.documentElement).appendChild(sg); } catch (e) {}
     var blocco = document.createElement("style");
     blocco.textContent = "html,body{max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}@supports (overflow:clip){html,body{overflow-x:clip}}";
     (document.head || document.documentElement).appendChild(blocco);

@@ -2,6 +2,17 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-hub-9",
+      "data": "2026-11-24",
+      "app": "tutte",
+      "titolo": "Sigla d'apertura di 2-3 secondi",
+      "voci": [
+        "All'apertura di ogni app una sigla breve a tutto schermo, poi sparisce: tempesta e fulmine sull'asta (Progettazione LPS), particelle che formano l'icona (OBO Hub), app che confluiscono nel progetto (Progetti), raffica di vento sul telaio (Zavorra WRR), anelli dal pavimento (Torrette), calendario che si accende (Mappa carichi), griglia di prodotti (Prodotti)",
+        "Una volta per sessione per ogni app; un tocco o un tasto la chiudono subito",
+        "Tolte le introduzioni lunghe da scorrere e le animazioni dentro le fasce delle pagine"
+      ]
+    },
+    {
       "id": "2026-11-24-hub-8",
       "data": "2026-11-24",
       "app": "hub",
