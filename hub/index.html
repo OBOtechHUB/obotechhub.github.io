@@ -813,7 +813,7 @@
         if (mio !== giro) return;
         if (ok?.ok) {
           $("sottotitolo").textContent = "Visitatore · sola consultazione";
-          azioni.append(iconaBarra(null, "Esci", "esci", () => { supabase.rpc("app_logout", { p: { token: v.token } }).then(() => {}, () => {}); togliVisitatore(); try { localStorage.removeItem("obo-nome"); } catch {} vista = "visitatore"; void aggiorna(); }));
+          azioni.append(iconaBarra("novita.html", lingua === "en" ? "News" : "Novità", "stella"), iconaBarra(null, "Esci", "esci", () => { supabase.rpc("app_logout", { p: { token: v.token } }).then(() => {}, () => {}); togliVisitatore(); try { localStorage.removeItem("obo-nome"); } catch {} vista = "visitatore"; void aggiorna(); }));
           const ora = new Date().getHours(), primo = String(ok.name || v.name || "").trim().split(/\s+/)[0];
           const saluto = lingua === "en" ? (ora < 12 ? "Good morning" : ora < 18 ? "Good afternoon" : "Good evening") : (ora < 13 ? "Buongiorno" : ora < 18 ? "Buon pomeriggio" : "Buonasera");
           $("titolo").textContent = saluto + (primo ? ", " + primo : "");
@@ -825,7 +825,7 @@
         togliVisitatore();
       }
       $("sottotitolo").textContent = "Accesso riservato";
-      azioni.append(iconaBarra(null, "Richiedi", "richiedi", () => { vista = "richiedi"; void aggiorna(); }), iconaBarra(null, "Accedi", "accedi", () => { vista = "accedi"; void aggiorna(); }));
+      azioni.append(iconaBarra("novita.html", lingua === "en" ? "News" : "Novità", "stella"), iconaBarra(null, "Richiedi", "richiedi", () => { vista = "richiedi"; void aggiorna(); }), iconaBarra(null, "Accedi", "accedi", () => { vista = "accedi"; void aggiorna(); }));
       if (vista === "richiedi") schermataRichiesta();
       else if (vista === "recupero") schermataRecupero();
       else if (vista === "accedi") schermataAccedi();
@@ -852,7 +852,7 @@
 
     if (!profilo) { avviso("Il tuo account non è ancora stato approvato dall'amministratore."); azioni.append(iconaBarra(null, "Esci", "esci", esci)); return; }
     if (profilo.stato !== "attivo") { avviso("Il tuo accesso è sospeso. Contatta l'amministratore."); azioni.append(iconaBarra(null, "Esci", "esci", esci)); return; }
-    azioni.append(iconaBarra(null, "Esci", "esci", esci));
+    azioni.append(iconaBarra("novita.html", lingua === "en" ? "News" : "Novità", "stella"), iconaBarra(null, "Esci", "esci", esci));
     if (verificati.length && aal?.currentLevel !== "aal2") { schermataVerifica(verificati[0].id); return; }
     let pw = null; // scadenza della password (supabase/scadenza-password.sql); se la funzione manca si va avanti come prima
     try { const r = await supabase.rpc("stato_password"); if (!r.error) pw = r.data; } catch {}
