@@ -1,0 +1,62 @@
+/* OBO Hub · stile futuristico comune a tutte le app (caricato da registro.js; in LPS è in styles.css).
+   Fasce "cinema" con aurora arancio e griglia, schede di vetro con luce che segue il puntatore, comparsa
+   allo scorrimento, barra di avanzamento della pagina, pulsanti con riflesso. Si spegne con "riduci movimento". */
+:root { --fx-arancio: 243 155 0; --fx-vetro: rgba(255,255,255,.62); --fx-bordo-vetro: rgba(65,82,93,.16); }
+:root[data-theme="dark"], :root[data-tema="scuro"] { --fx-vetro: rgba(36,42,47,.6); --fx-bordo-vetro: rgba(255,255,255,.08); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]):not([data-tema="chiaro"]) { --fx-vetro: rgba(36,42,47,.6); --fx-bordo-vetro: rgba(255,255,255,.08); } }
+
+/* fasce scure in cima alle pagine: aurora arancio che si muove piano e griglia tecnica */
+.eroe, .fx-eroe, .hero { position: relative; isolation: isolate; overflow: hidden; }
+.eroe::before, .fx-eroe::before, .hero::before {
+  content: ""; position: absolute; inset: -40% -10%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(40% 60% at 15% 30%, rgb(var(--fx-arancio) / .38), transparent 70%),
+    radial-gradient(35% 55% at 85% 70%, rgb(118 148 164 / .45), transparent 70%),
+    radial-gradient(30% 40% at 60% 10%, rgb(var(--fx-arancio) / .18), transparent 70%);
+  filter: blur(18px); animation: fx-aurora 18s ease-in-out infinite alternate;
+}
+.eroe::after, .fx-eroe::after, .hero::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .22;
+  background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px);
+  background-size: 36px 36px; -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+  animation: fx-griglia 30s linear infinite;
+}
+.eroe h1, .fx-eroe h1 { letter-spacing: -.01em; text-shadow: 0 2px 24px rgb(var(--fx-arancio) / .25); }
+@keyframes fx-aurora { 0% { transform: translate3d(-4%, -2%, 0) rotate(0deg) scale(1); } 50% { transform: translate3d(3%, 2%, 0) rotate(6deg) scale(1.08); } 100% { transform: translate3d(-2%, 3%, 0) rotate(-4deg) scale(1.02); } }
+@keyframes fx-griglia { to { background-position: 36px 36px, 36px 36px; } }
+
+/* schede di vetro: luce che segue il puntatore e bordo che si accende */
+.fx-scheda { position: relative; transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s; will-change: transform; }
+.fx-scheda::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(280px circle at var(--fx-x, 50%) var(--fx-y, 0%), rgb(var(--fx-arancio) / .14), transparent 60%);
+}
+.fx-scheda:hover { transform: translateY(-3px); box-shadow: 0 14px 34px -14px rgb(var(--fx-arancio) / .45), 0 0 0 1px rgb(var(--fx-arancio) / .55); }
+.fx-scheda:hover::after { opacity: 1; }
+
+/* comparsa allo scorrimento */
+.fx-in { opacity: 0; transform: translate3d(0, 22px, 0) scale(.985); filter: blur(5px); }
+.fx-in.fx-vis { opacity: 1; transform: none; filter: none; transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1), filter .7s; transition-delay: var(--fx-ritardo, 0ms); }
+
+/* barra di avanzamento della pagina */
+#fx-progresso { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 9999; pointer-events: none; transform-origin: 0 50%; transform: scaleX(var(--fx-p, 0));
+  background: linear-gradient(90deg, rgb(var(--fx-arancio)), #ffd27a, rgb(var(--fx-arancio))); box-shadow: 0 0 10px rgb(var(--fx-arancio) / .7); }
+
+/* pulsanti principali con riflesso */
+.btn-primario, .btn.primary, .fx-riflesso { position: relative; overflow: hidden; }
+.btn-primario::after, .btn.primary::after, .fx-riflesso::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform: skewX(-18deg); transition: left .6s ease;
+}
+.btn-primario:hover::after, .btn.primary:hover::after, .fx-riflesso:hover::after { left: 130%; }
+
+/* barra in alto in vetro */
+header.barra { -webkit-backdrop-filter: saturate(160%) blur(12px); backdrop-filter: saturate(160%) blur(12px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .eroe::before, .eroe::after, .fx-eroe::before, .fx-eroe::after { animation: none !important; }
+  .fx-in { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .fx-scheda, .fx-scheda:hover { transform: none !important; transition: none !important; }
+  #fx-progresso { display: none; }
+}
+@media print { .eroe::before, .eroe::after, #fx-progresso { display: none !important; } .fx-in { opacity: 1 !important; transform: none !important; filter: none !important; } }

@@ -2,6 +2,18 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-hub-7",
+      "data": "2026-11-24",
+      "app": "tutte",
+      "titolo": "Grafica futuristica in tutte le app",
+      "voci": [
+        "Fasce in cima alle pagine con aurora arancio in movimento e griglia tecnica (OBO Hub, Progetti, Novità, Prodotti, Torrette, Zavorra WRR, Mappa carichi, Progettazione LPS)",
+        "Schede di vetro con luce che segue il puntatore e bordo arancio che si accende",
+        "Contenuti che compaiono allo scorrimento, barra di avanzamento della pagina, pulsanti principali con riflesso, barra in alto trasparente",
+        "Si spegne da solo con «riduci movimento» del sistema e in stampa"
+      ]
+    },
+    {
       "id": "2026-11-24-hub-6",
       "data": "2026-11-24",
       "app": "hub",
