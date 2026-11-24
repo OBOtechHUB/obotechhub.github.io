@@ -39,6 +39,7 @@ main.contenitore { padding-top: 18px; padding-bottom: 48px; }
 .zwrr .seg button { flex: 1; border: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 600; padding: 7px 14px; cursor: pointer; }
 .zwrr .seg button + button { border-left: 1px solid var(--line); }
 .zwrr .seg button[aria-pressed=true] { background: var(--arancio); color: #fff; }
+.zwrr .seg button:disabled { color: var(--muted); cursor: not-allowed; font-weight: 400; font-size: .9em; }
 .zwrr .hint { font-size: calc(13px * var(--zoom, 1)); color: var(--muted); }
 .zwrr p { margin: 0; }
 .zwrr .dev-table, .zwrr .wind-table, .zwrr .arch-table { overflow-x: auto; }

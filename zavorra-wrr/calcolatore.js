@@ -10,6 +10,8 @@ import { createStorage } from './storage.js';
 
 const SOURCE_URL = 'https://www.obo-bettermann.com/out/media/01-100_MA_Magic_PV_Mount_Wechselrichterrahmen_EN_2026-07-28.pdf';
 const LS_KEY = 'wrr-zavorra-v3';
+/** telai a 45°: in arrivo, non ancora a catalogo; mettere true quando escono */
+const PITCH_45_DISPONIBILE = false;
 const CHECKS = [
   'Carico neve (zona, quota, accumuli contro la tettoia)',
   'Velocità del vento di progetto ricavata per il sito (zona, quota, categoria di esposizione, altezza edificio)',
@@ -55,7 +57,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
             <span class="hint" style="font-weight:500">Inclinazione (tabella OBO)</span>
             <div class="seg" role="group" aria-label="Inclinazione">
               <button type="button" id="${u}-p30" data-pitch="30">30°</button>
-              <button type="button" id="${u}-p45" data-pitch="45">45°</button>
+              <button type="button" id="${u}-p45" data-pitch="45" disabled title="Telai a 45° in arrivo: non ancora disponibili come prodotti">45° · in arrivo</button>
             </div>
           </div>
         </div>
@@ -311,10 +313,11 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
   q('frame').value = state.frame;
   q('wind').value = state.wind;
   q('mode').value = state.calcMode;
-  const setPitch = (p) => { state.pitch = p; ['p30', 'p45'].forEach((n) => q(n).setAttribute('aria-pressed', String(+q(n).dataset.pitch === p))); };
+  // i telai a 45° non sono ancora prodotti (coming soon, Marco 24/11/2026): si calcola solo a 30°
+  const setPitch = (p) => { p = PITCH_45_DISPONIBILE ? p : 30; state.pitch = p; ['p30', 'p45'].forEach((n) => q(n).setAttribute('aria-pressed', String(+q(n).dataset.pitch === p))); };
   setPitch(state.pitch);
   q('p30').onclick = () => { setPitch(30); update(); };
-  q('p45').onclick = () => { setPitch(45); update(); };
+  q('p45').onclick = () => { if (PITCH_45_DISPONIBILE) { setPitch(45); update(); } };
   q('frame').onchange = (e) => setFrame(e.target.value);
   q('wind').oninput = (e) => { state.wind = parseFloat(e.target.value) || 0; update(); };
   q('mode').onchange = (e) => { state.calcMode = e.target.value; update(); };
