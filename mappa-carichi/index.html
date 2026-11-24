@@ -1069,6 +1069,29 @@ select, select option, select optgroup { background-color: var(--surface); color
 :root[data-theme="dark"] select { color-scheme: dark; } :root[data-theme="dark"] select option { background: #242a2f !important; color: #eef1f3 !important; }
 html { touch-action: pan-x pan-y; }
 .nota-crm { display: block; margin-top: 6px; padding: 6px 10px; border-left: 3px solid #f39b00; border-radius: 6px; background: var(--today); color: var(--fg); font-size: calc(13px * var(--zoom, 1)); line-height: 1.4; }
+
+/* ===== Barra compatta come Progettazione LPS (24/11): OBO Hub in evidenza, poche sezioni, il resto nel Menu ===== */
+.nav { overflow: visible; position: static; }
+.nav a.hubnav { background: #f39b00; color: #fff !important; border-radius: 12px; min-width: 64px; margin-right: 6px; box-shadow: 0 4px 12px -6px rgba(243,155,0,.8); }
+.nav a.hubnav:hover { background: #d98a00; color: #fff !important; }
+.nav a.hubnav svg { stroke: #fff; }
+body.visitatore .nav a.hubnav { display: flex !important; }
+.navmenu { position: absolute; top: calc(100% + 6px); right: max(16px, calc(50% - 570px)); z-index: 80; min-width: 260px; max-height: calc(100vh - 100px); overflow-y: auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 10px; border: .8px solid var(--scheda); border-radius: 14px; background: var(--surface); box-shadow: 0 18px 40px -16px rgba(0,0,0,.45); }
+.navmenu[hidden] { display: none; }
+.nav .navmenu button { flex-direction: row; justify-content: flex-start; gap: 10px; height: 44px; min-width: 0; width: 100%; padding: 0 12px; border-radius: 10px; }
+.nav .navmenu button[hidden] { display: none; }
+.nav .navmenu button svg { width: 21px; height: 21px; flex: none; }
+.nav .navmenu button .lab { font-size: 14px; }
+.nav .navmenu button:hover { background: var(--today, rgba(243,155,0,.08)); }
+.nav .navmenu button[aria-current="page"]::after { left: 0; right: auto; top: 10px; bottom: 10px; width: 3px; height: auto; }
+.nav .navmenu .bdg { position: static; margin-left: auto; }
+.nav button.navmore[aria-expanded="true"] { color: #f39b00; }
+.nav:has(.navmenu button[aria-current="page"]) > .navmore { color: #f39b00; }
+.rmark .mark { display: none; }
+@media (max-width: 860px) { .rmark { display: none; } }
+@media (prefers-reduced-motion: no-preference) { .navmenu:not([hidden]) { animation: tbPop .35s var(--spring) both; } }
+@media (max-width: 520px) { .navmenu { left: 8px; right: 8px; min-width: 0; } .nav a.hubnav { min-width: 52px; margin-right: 2px; } }
 </style>
 </head>
 <body>
@@ -1115,18 +1138,21 @@ html { touch-action: pan-x pan-y; }
   <aside class="rail" aria-label="Menu">
     <div class="rmark" aria-hidden="true"><span class="mark"></span></div>
     <nav class="nav" id="nav" aria-label="Sezioni">
-      <a class="hubnav" href="../" aria-label="Torna a OBO Hub"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="lab">OBO Hub</span></a>
+      <a class="hubnav" href="../" aria-label="Torna alla pagina iniziale di OBO Hub" title="Torna a OBO Hub"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="lab">OBO Hub</span></a>
       <button type="button" data-go="home" data-tip="Dashboard" aria-label="Dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="lab">Home</span></button>
-      <button type="button" data-go="cru" data-tip="Cruscotto" aria-label="Cruscotto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M9.3 20V5M14.6 20v-6M20 20V8"/></svg><span class="lab">Cruscotto</span></button>
       <button type="button" data-go="ins" data-tip="Inserisci" aria-label="Inserisci"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span class="lab">Inserisci</span></button>
       <button type="button" data-go="map" data-tip="Mappa carichi" aria-label="Mappa carichi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span class="lab">Mappa</span></button>
       <button type="button" data-go="prj" data-tip="Progetti" aria-label="Progetti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span class="lab">Progetti</span><span class="bdg" id="bdgPrj">0</span></button>
+      <button type="button" class="navmore" id="navMenuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="navMenu" aria-label="Menu: altre sezioni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="lab">Menu</span></button>
+      <div class="navmenu" id="navMenu" role="menu" aria-label="Altre sezioni" hidden>
+      <button type="button" data-go="cru" data-tip="Cruscotto" aria-label="Cruscotto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M9.3 20V5M14.6 20v-6M20 20V8"/></svg><span class="lab">Cruscotto</span></button>
       <button type="button" data-go="daily" data-tip="Daily task" aria-label="Daily task"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg><span class="lab">Daily task</span></button>
       <button type="button" data-go="ric" id="navRic" data-tip="Richieste" aria-label="Richieste all'ufficio tecnico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg><span class="lab">Richieste</span></button>
       <button type="button" data-go="team" data-tip="Persone" aria-label="Persone"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.4c2.2.7 3.5 2.6 3.5 5.6"/></svg><span class="lab">Persone</span><span class="bdg" id="bdgTeam">0</span></button>
       <button type="button" data-go="admin" id="navAdmin" hidden data-tip="Admin" aria-label="Admin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span class="lab">Admin</span></button>
       <button type="button" data-go="offerte" id="navOfferte" hidden data-tip="Offerte" aria-label="Offerte"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lab">Offerte</span></button>
       <button type="button" data-go="data" data-tip="Download" aria-label="Download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg><span class="lab">Download</span></button>
+      </div>
     </nav>
   </aside>
   <main class="main">
@@ -2896,7 +2922,7 @@ html { touch-action: pan-x pan-y; }
   }
   function renderSide() {
     $('av').textContent = isAdmin ? initials(adminName) : isVisitor ? initials(visName) : me ? initials(me) : '?';
-    $('pName').textContent = isAdmin ? adminName : isVisitor ? visName : me || 'Ospite'; $('pNameFull').textContent = $('pName').textContent;
+    $('pName').textContent = (window.oboNome || String)(isAdmin ? adminName : isVisitor ? visName : me || 'Ospite'); $('pNameFull').textContent = $('pName').textContent;
     $('pRole').textContent = isAdmin ? 'Admin · gestisce tutto' : isVisitor ? 'Visitatore · sola consultazione' : me ? 'Gestisce i propri progetti' : 'Accesso non effettuato';
     $('bdgPrj').textContent = projects.length; $('bdgTeam').textContent = people().length;
   }
@@ -3535,7 +3561,11 @@ html { touch-action: pan-x pan-y; }
   window.__ol = { buildEvents: buildEvents, buildIcs: buildIcs, olOptions: olOptions };
 
   /* menu laterale, ricerca, persone */
-  $('nav').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-go]'); if (b) showPage(b.dataset.go); });
+  $('nav').addEventListener('click', function (ev) { var b = ev.target.closest('button[data-go]'); if (b) { showPage(b.dataset.go); apriMenuNav(false); } });
+  function apriMenuNav(si) { $('navMenu').hidden = !si; $('navMenuBtn').setAttribute('aria-expanded', si ? 'true' : 'false'); }
+  $('navMenuBtn').addEventListener('click', function (ev) { ev.stopPropagation(); apriMenuNav($('navMenu').hidden); });
+  document.addEventListener('click', function (ev) { if (!$('navMenu').hidden && !ev.target.closest('#navMenu')) apriMenuNav(false); });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && !$('navMenu').hidden) { apriMenuNav(false); $('navMenuBtn').focus(); } });
   var tb = $('topbar');
   function closePops() {
     $('themePop').hidden = true; $('mePop').hidden = true;

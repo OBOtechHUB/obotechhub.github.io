@@ -216,7 +216,7 @@
       try { if (lingua === "en") localStorage.setItem("obo-lingua", "en"); else localStorage.removeItem("obo-lingua"); } catch (e) {}
       location.reload(); // ridisegna anche calendari e grafici nella nuova lingua
     });
-    nav.appendChild(b); aggiornaPulsante();
+    (document.getElementById("navMenu") || nav).appendChild(b); aggiornaPulsante();
   }
   // dimensione del testo − / + (condivisa con OBO Hub e Progettazione LPS)
   var PASSI = [0.85, 0.9, 1, 1.1, 1.2, 1.3, 1.45];
