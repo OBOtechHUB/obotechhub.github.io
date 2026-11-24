@@ -2,6 +2,16 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-hub-2",
+      "data": "2026-11-24",
+      "app": "prodotti",
+      "titolo": "Nomi delle persone uniformi",
+      "voci": [
+        "In OBO Hub e nella Mappa carichi i nomi delle persone si vedono con il COGNOME tutto maiuscolo e il Nome con solo l'iniziale maiuscola (es. Marco LO VETERE); anche il saluto usa il nome scritto correttamente",
+        "Cambia solo come i nomi si vedono: persone, progetti e dati salvati restano com'erano"
+      ]
+    },
+    {
       "id": "2026-11-23-prodotti-2",
       "data": "2026-11-23",
       "app": "prodotti",

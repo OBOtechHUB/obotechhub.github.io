@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <script src="../registro.js" data-app="mappa"></script>
+<script src="../nomi.js"></script>
 <script src="../benvenuto.js" data-app="Mappa carichi"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <link rel="manifest" href="manifest.webmanifest">
@@ -1751,6 +1752,8 @@ html { touch-action: pan-x pan-y; }
     if (w === 6) d.setDate(d.getDate() + 2); else if (w === 0) d.setDate(d.getDate() + 1); else d.setDate(d.getDate() - (w - 1));
     return d;
   }
+  /* nomi delle persone: COGNOME maiuscolo, Nome con l'iniziale maiuscola (../nomi.js); solo come si vedono */
+  function nm(s) { return esc(window.oboNome ? window.oboNome(s) : s); }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function fmtShort(d) { return d.getDate() + ' ' + MONTHS[d.getMonth()]; }
   function fmtH(h) { return (Math.round(h * 10) / 10).toString().replace('.', ','); }
@@ -2061,7 +2064,7 @@ html { touch-action: pan-x pan-y; }
     if (FLT.prj && !projects.some(function (p) { return p.id === FLT.prj; })) FLT.prj = '';
     var aperto = $('fPersD').open;
     $('fPers').innerHTML = '<div class="fall"><button type="button" class="small" data-fall="1">Mostra tutte</button></div>' + ppl.map(function (n) {
-      return '<label><input type="checkbox" value="' + esc(n) + '"' + (FLT.persone.indexOf(n) >= 0 ? ' checked' : '') + '> ' + esc(n) + '</label>';
+      return '<label><input type="checkbox" value="' + esc(n) + '"' + (FLT.persone.indexOf(n) >= 0 ? ' checked' : '') + '> ' + nm(n) + '</label>';
     }).join('');
     $('fPersD').open = aperto;
     $('fPersLbl').textContent = !FLT.persone.length ? 'Tutte' : FLT.persone.length === 1 ? FLT.persone[0] : FLT.persone.length + ' scelte';
@@ -2080,7 +2083,7 @@ html { touch-action: pan-x pan-y; }
     var el = $('carList'); if (!el) return;
     el.innerHTML = '<thead><tr><th>Persona</th><th>Ruolo</th><th>Compare nei carichi</th></tr></thead><tbody>' + people().map(function (n) {
       var si = inCarichi(n);
-      return '<tr><td>' + esc(n) + '</td><td>' + (isAdminName(n) ? 'Admin' : 'Guest') + '</td><td><span class="seg2" role="group" aria-label="' + esc(n) + ' nei carichi"><button type="button" data-car="' + esc(n) + '" data-si="1" aria-pressed="' + si + '">Sì</button><button type="button" data-car="' + esc(n) + '" data-si="0" aria-pressed="' + !si + '">No</button></span></td></tr>';
+      return '<tr><td>' + nm(n) + '</td><td>' + (isAdminName(n) ? 'Admin' : 'Guest') + '</td><td><span class="seg2" role="group" aria-label="' + nm(n) + ' nei carichi"><button type="button" data-car="' + esc(n) + '" data-si="1" aria-pressed="' + si + '">Sì</button><button type="button" data-car="' + esc(n) + '" data-si="0" aria-pressed="' + !si + '">No</button></span></td></tr>';
     }).join('') + '</tbody>';
   }
   function people() {
@@ -2110,7 +2113,7 @@ html { touch-action: pan-x pan-y; }
     if (!ppl.length) h += '<tr><td class="who">&nbsp;</td><td colspan="' + (days.length + 1) + '" style="padding:18px;text-align:left" class="empty">Nessun progetto. Inserisci il primo impegno nel modulo sopra.</td></tr>';
     ppl.forEach(function (p) {
       var tot = 0, totD = 0, totP = 0;
-      h += '<tr><td class="who" title="' + esc(p) + '">' + esc(p) + '</td>';
+      h += '<tr><td class="who" title="' + nm(p) + '">' + nm(p) + '</td>';
       days.forEach(function (d, i) {
         var k = p + '|' + iso(d), e = L[k], sp = split(e, iso(d));
         var hrs = MAPV === 'prj' ? sp.p : MAPV === 'daily' ? sp.d : sp.t;
@@ -2137,7 +2140,7 @@ html { touch-action: pan-x pan-y; }
     var el = $('detail');
     if (!selected) { el.innerHTML = '<span class="empty">Nessuna cella selezionata.</span>'; return; }
     var e = loads()[selected.p + '|' + selected.d], d = parse(selected.d);
-    var head = '<strong>' + esc(selected.p) + '</strong>, ' + fmtShort(d) + ': ';
+    var head = '<strong>' + nm(selected.p) + '</strong>, ' + fmtShort(d) + ': ';
     if (!e) { el.innerHTML = head + 'libero, ' + CAP + ' h disponibili.'; return; }
     var free = CAP - e.h, sp = split(e, selected.d);
     head += fmtH(e.h) + ' h su ' + CAP + (free < 0 ? ' (sovraccarico di ' + fmtH(-free) + ' h)' : ' (' + fmtH(free) + ' h liberi)') + ' · <span class="sw-p">progetti ' + fmtH(sp.p) + ' h</span> · <span class="sw-d">daily task ' + fmtH(sp.d) + ' h</span>';
@@ -2150,7 +2153,7 @@ html { touch-action: pan-x pan-y; }
     if (!rows.length) h += '<tr><td colspan="8" class="empty">Nessun progetto inserito.</td></tr>';
     rows.forEach(function (p) {
       var pc = p.prio === 'Alta' ? 'a' : p.prio === 'Media' ? 'm' : 'b';
-      h += '<tr><td>' + esc(p.person) + '</td><td class="idc">' + (p.crm ? esc(p.crm) : '<span class="empty">–</span>') + '</td><td>' + esc(p.name) + '</td><td><span class="pill ' + pc + '">' + esc(p.prio) + '</span></td>' +
+      h += '<tr><td>' + nm(p.person) + '</td><td class="idc">' + (p.crm ? esc(p.crm) : '<span class="empty">–</span>') + '</td><td>' + esc(p.name) + '</td><td><span class="pill ' + pc + '">' + esc(p.prio) + '</span></td>' +
         '<td class="num">' + fmtShort(nextWork(parse(p.start))) + ' → ' + fmtShort(endDate(p)) + '</td>' +
         '<td class="num">' + schedCell(p) + '</td><td class="num">' + fmtH(totalH(p)) + ' h</td>' +
         '<td class="act"><button type="button" class="small" data-edit="' + p.id + '"' + (canEdit(p) ? '' : ' disabled') + '>Modifica</button><button type="button" class="small danger" data-del="' + p.id + '"' + (canEdit(p) ? '' : ' disabled title="Solo chi lo ha creato o l\'admin"') + '>Elimina</button></td></tr>';
@@ -2169,10 +2172,10 @@ html { touch-action: pan-x pan-y; }
         var ok = canEdit(p), i = PRIOS.indexOf(pr);
         h += '<div class="card k-' + pr + '" data-id="' + p.id + '" draggable="' + (ok ? 'true' : 'false') + '">' +
           '<div class="t">' + crmTag(p) + esc(p.name) + '</div>' +
-          '<div class="m">' + esc(p.person) + ' · ' + fmtShort(nextWork(parse(p.start))) + ' → ' + fmtShort(endDate(p)) + ' · ' + (p.dates ? p.days + ' g scelti · ' + fmtH(totalH(p)) + ' h' : p.days + ' g × ' + fmtH(Number(p.hpd)) + ' h') + '</div>' +
+          '<div class="m">' + nm(p.person) + ' · ' + fmtShort(nextWork(parse(p.start))) + ' → ' + fmtShort(endDate(p)) + ' · ' + (p.dates ? p.days + ' g scelti · ' + fmtH(totalH(p)) + ' h' : p.days + ' g × ' + fmtH(Number(p.hpd)) + ' h') + '</div>' +
           '<div class="mv">' + (ok
             ? '<button type="button" class="small" data-mv="-1" data-id="' + p.id + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="Alza priorità">&uarr; Alza</button><button type="button" class="small" data-mv="1" data-id="' + p.id + '"' + (i === 2 ? ' disabled' : '') + ' aria-label="Abbassa priorità">&darr; Abbassa</button>'
-            : '<span class="lock">Solo ' + esc(p.person) + ' o l\'admin può spostarlo</span>') + '</div></div>';
+            : '<span class="lock">Solo ' + nm(p.person) + ' o l\'admin può spostarlo</span>') + '</div></div>';
       });
       h += '</div>';
     });
@@ -2180,7 +2183,7 @@ html { touch-action: pan-x pan-y; }
   }
   function fillPersonSelect() {
     var f = $('f-person'), prev = f.value, list = isAdmin ? people() : (me ? [me] : []);
-    f.innerHTML = (list.length ? list.map(function (n) { return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join('') : '<option value="">Nessuna persona disponibile</option>') + (isAdmin ? '<option value="__new">+ Nuova persona…</option>' : '');
+    f.innerHTML = (list.length ? list.map(function (n) { return '<option value="' + esc(n) + '">' + nm(n) + '</option>'; }).join('') : '<option value="">Nessuna persona disponibile</option>') + (isAdmin ? '<option value="__new">+ Nuova persona…</option>' : '');
     if (list.indexOf(prev) >= 0) f.value = prev;
     if (!isAdmin) $('newPersonRow').hidden = true;
     f.disabled = !isAdmin;
@@ -2189,11 +2192,11 @@ html { touch-action: pan-x pan-y; }
   var gateInit = false;
   function fillGate() {
     var g = $('me-name'), a = $('admin-name'), lastG = '', lastA = '';
-    var prevA = a.value; a.innerHTML = ADMINS.map(function (n) { return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join(''); if (ADMINS.indexOf(prevA) >= 0) a.value = prevA;
+    var prevA = a.value; a.innerHTML = ADMINS.map(function (n) { return '<option value="' + esc(n) + '">' + nm(n) + '</option>'; }).join(''); if (ADMINS.indexOf(prevA) >= 0) a.value = prevA;
     try { lastG = localStorage.getItem(KEY + '-lastg') || ''; lastA = localStorage.getItem(KEY + '-lasta') || ''; } catch (e) {}
     var sel = $('me-sel'), list = people().filter(function (n) { return !isAdminName(n); });
     var cur = sel.value || g.value.trim();
-    sel.innerHTML = '<option value="">Scegli il tuo nome</option>' + list.map(function (n) { return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join('') + (CLOUD ? '<option value="__altro">Altro nome…</option>' : '');
+    sel.innerHTML = '<option value="">Scegli il tuo nome</option>' + list.map(function (n) { return '<option value="' + esc(n) + '">' + nm(n) + '</option>'; }).join('') + (CLOUD ? '<option value="__altro">Altro nome…</option>' : '');
     if (cur !== '__altro' && list.indexOf(cur) < 0) cur = list.indexOf(lastG) >= 0 ? lastG : '';
     sel.value = cur;
     if (cur !== '__altro') g.value = cur;
@@ -2210,9 +2213,9 @@ html { touch-action: pan-x pan-y; }
   function renderWho() {
     fillGate();
     var t;
-    if (isAdmin) t = '<b>' + esc(adminName) + '</b> (Admin): puoi creare, modificare ed eliminare tutti i progetti e aggiungere le persone.';
-    else if (me) t = 'Guest: <b>' + esc(me) + '</b>. Puoi creare progetti e impegni e modificarli o eliminarli solo se li hai creati tu.';
-    else if (isVisitor) t = 'Visitatore: <b>' + esc(visName) + '</b>. Puoi vedere tutto (anche Offerte e Download), ma non inserire né modificare nulla.';
+    if (isAdmin) t = '<b>' + nm(adminName) + '</b> (Admin): puoi creare, modificare ed eliminare tutti i progetti e aggiungere le persone.';
+    else if (me) t = 'Guest: <b>' + nm(me) + '</b>. Puoi creare progetti e impegni e modificarli o eliminarli solo se li hai creati tu.';
+    else if (isVisitor) t = 'Visitatore: <b>' + nm(visName) + '</b>. Puoi vedere tutto (anche Offerte e Download), ma non inserire né modificare nulla.';
     else t = 'Sola lettura. Entra come Guest con il tuo nome (aggiunto dall\'admin) oppure come Admin.';
     $('whoState').innerHTML = t;
     var logged = isAdmin || !!me || isVisitor;
@@ -2288,7 +2291,7 @@ html { touch-action: pan-x pan-y; }
       if (!inM) { h += '<div class="' + cls + '"><span class="dn">' + d.getDate() + '</span></div>'; continue; }
       var list = by[k] || [], chips = '';
       list.slice(0, 3).forEach(function (e) {
-        chips += '<div class="chip' + (e.h > CAP ? ' over' : '') + '" style="--cc:' + pcol(e.p) + '" title="' + esc(e.p) + ' · ' + fmtH(e.h) + ' h"><span class="nm"><span class="full">' + esc(e.p) + '</span><span class="ini">' + esc(sg(e.p)) + '</span></span><span class="hh">' + fmtH(e.h) + 'h</span></div>';
+        chips += '<div class="chip' + (e.h > CAP ? ' over' : '') + '" style="--cc:' + pcol(e.p) + '" title="' + nm(e.p) + ' · ' + fmtH(e.h) + ' h"><span class="nm"><span class="full">' + nm(e.p) + '</span><span class="ini">' + esc(sg(e.p)) + '</span></span><span class="hh">' + fmtH(e.h) + 'h</span></div>';
       });
       if (list.length > 3) chips += '<div class="more">+' + (list.length - 3) + ' altre</div>';
       h += '<button type="button" class="' + cls + '" data-d="' + k + '" aria-pressed="' + (monthSel === k ? 'true' : 'false') + '" aria-label="' + d.getDate() + ' ' + MONTHS_FULL[d.getMonth()] + ', ' + list.length + ' persone impegnate"><span class="dn">' + d.getDate() + '</span>' + chips + '</button>';
@@ -2303,7 +2306,7 @@ html { touch-action: pan-x pan-y; }
       h += '<button type="button" class="wday' + (k === iso(today) ? ' today' : '') + '" data-d="' + k + '" aria-pressed="' + (monthSel === k ? 'true' : 'false') + '" aria-label="' + WDL[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS_FULL[d.getMonth()] + ', ' + list.length + ' persone impegnate"><div class="wdh"><span class="wdn">' + WDL[d.getDay()] + '</span><span class="wdd">' + d.getDate() + '</span></div>';
       if (!list.length) h += '<div class="wfree">Nessuno impegnato</div>';
       list.forEach(function (e) {
-        h += '<div class="wp' + (e.h > CAP ? ' over' : '') + '" style="--cc:' + pcol(e.p) + '" title="' + esc(e.p) + '"><div class="r1"><span class="sg">' + esc(sg(e.p)) + '</span><span class="nm">' + esc(e.p) + '</span><span class="hh">' + fmtH(e.h) + ' h</span></div>' +
+        h += '<div class="wp' + (e.h > CAP ? ' over' : '') + '" style="--cc:' + pcol(e.p) + '" title="' + nm(e.p) + '"><div class="r1"><span class="sg">' + esc(sg(e.p)) + '</span><span class="nm">' + nm(e.p) + '</span><span class="hh">' + fmtH(e.h) + ' h</span></div>' +
           e.items.map(function (x) { return '<div class="pj">' + (x.crm ? esc(x.crm) + ' · ' : '') + esc(x.name) + '</div>'; }).join('') + '</div>';
       });
       h += '</button>';
@@ -2313,7 +2316,7 @@ html { touch-action: pan-x pan-y; }
   function renderLegend() {
     var ppl = carichi();
     $('calLegend').innerHTML = '<span><i class="lgo"></i>bordo rosso: giorno oltre ' + CAP + ' h</span>' +
-      ppl.map(function (n) { return '<span class="lgp"><b class="sg" style="--cc:' + pcol(n) + '">' + esc(sg(n)) + '</b>' + esc(n) + '</span>'; }).join('') +
+      ppl.map(function (n) { return '<span class="lgp"><b class="sg" style="--cc:' + pcol(n) + '">' + esc(sg(n)) + '</b>' + nm(n) + '</span>'; }).join('') +
       '<span class="note">Ogni sigla è una persona impegnata quel giorno, con le ore. A sinistra il numero della settimana. Tocca un giorno per i dettagli.</span>';
   }
   function renderMonth() {
@@ -2345,7 +2348,7 @@ html { touch-action: pan-x pan-y; }
     var list2 = by[monthSel] || [], sd = parse(monthSel);
     if (!list2.length) { el.innerHTML = '<strong>' + fmtShort(sd) + '</strong>: nessuno impegnato.'; return; }
     el.innerHTML = '<strong>' + fmtShort(sd) + '</strong>: ' + list2.length + (list2.length === 1 ? ' persona impegnata' : ' persone impegnate') + '<ul>' + list2.map(function (e) {
-      return '<li><strong>' + esc(sg(e.p)) + ' · ' + esc(e.p) + '</strong> · ' + fmtH(e.h) + ' h' + (e.h > CAP ? ' (oltre ' + CAP + ' h)' : '') + ': ' + e.items.map(function (x) { return (x.crm ? '[' + esc(x.crm) + '] ' : '') + esc(x.name); }).join(', ') + '</li>';
+      return '<li><strong>' + esc(sg(e.p)) + ' · ' + nm(e.p) + '</strong> · ' + fmtH(e.h) + ' h' + (e.h > CAP ? ' (oltre ' + CAP + ' h)' : '') + ': ' + e.items.map(function (x) { return (x.crm ? '[' + esc(x.crm) + '] ' : '') + esc(x.name); }).join(', ') + '</li>';
     }).join('') + '</ul>';
   }
   var kpiSel = -1, dash = null;
@@ -2362,20 +2365,20 @@ html { touch-action: pan-x pan-y; }
       title = 'Persone impegnate in ' + mn;
       var act = ppl.filter(function (n) { return dash.per[n]; }), idle = ppl.filter(function (n) { return !dash.per[n]; });
       h = '<div class="scroll"><table class="list"><thead><tr><th>Persona</th><th>Progetti</th><th>Giorni impegnati</th><th>Ore</th><th>Occupazione</th><th></th></tr></thead><tbody>' +
-        (act.length ? act.map(function (n) { return '<tr><td>' + esc(n) + '</td><td class="num">' + Object.keys(dash.ppj[n] || {}).length + '</td><td class="num">' + dash.dpp[n] + '</td><td class="num">' + fmtH(dash.per[n]) + ' h</td><td class="num">' + occ(dash.per[n], dash.cap) + '</td><td><button type="button" class="small" data-kp="' + encodeURIComponent(n) + '">Vedi progetti</button></td></tr>'; }).join('') : '<tr><td colspan="6" class="empty">Nessuno impegnato in questo mese.</td></tr>') +
+        (act.length ? act.map(function (n) { return '<tr><td>' + nm(n) + '</td><td class="num">' + Object.keys(dash.ppj[n] || {}).length + '</td><td class="num">' + dash.dpp[n] + '</td><td class="num">' + fmtH(dash.per[n]) + ' h</td><td class="num">' + occ(dash.per[n], dash.cap) + '</td><td><button type="button" class="small" data-kp="' + encodeURIComponent(n) + '">Vedi progetti</button></td></tr>'; }).join('') : '<tr><td colspan="6" class="empty">Nessuno impegnato in questo mese.</td></tr>') +
         '</tbody></table></div>' + (idle.length ? '<p class="note">Senza impegni nel mese: ' + idle.map(esc).join(', ') + '.</p>' : '');
     } else if (kpiSel === 1) {
       title = 'Progetti attivi in ' + mn;
       rows = Object.keys(dash.projH).map(function (k) { return dash.projH[k]; }).sort(function (a, b) { return b.h - a.h || a.p.name.localeCompare(b.p.name, 'it'); });
       h = '<div class="scroll"><table class="list"><thead><tr><th>ID CRM</th><th>Progetto</th><th>Persona</th><th>Priorità</th><th>Giorni</th><th>Ore nel mese</th></tr></thead><tbody>' +
-        (rows.length ? rows.map(function (r) { return '<tr><td class="num">' + esc(r.p.crm || '–') + '</td><td>' + esc(r.p.name) + '</td><td>' + esc(r.p.person) + '</td><td>' + esc(r.p.prio) + '</td><td class="num">' + r.days + '</td><td class="num">' + fmtH(r.h) + ' h</td></tr>'; }).join('') : '<tr><td colspan="6" class="empty">Nessun progetto attivo in questo mese.</td></tr>') + '</tbody></table></div>';
+        (rows.length ? rows.map(function (r) { return '<tr><td class="num">' + esc(r.p.crm || '–') + '</td><td>' + esc(r.p.name) + '</td><td>' + nm(r.p.person) + '</td><td>' + esc(r.p.prio) + '</td><td class="num">' + r.days + '</td><td class="num">' + fmtH(r.h) + ' h</td></tr>'; }).join('') : '<tr><td colspan="6" class="empty">Nessun progetto attivo in questo mese.</td></tr>') + '</tbody></table></div>';
     } else if (kpiSel === 2) {
       title = 'Ore pianificate in ' + mn;
       var pc = { Alta: 0, Media: 0, Bassa: 0 };
       Object.keys(dash.projH).forEach(function (k) { var o = dash.projH[k]; pc[o.p.prio] = (pc[o.p.prio] || 0) + o.h; });
       var per1 = dash.ppl.length ? dash.cap : 0;
       h = '<div class="scroll"><table class="list"><thead><tr><th>Persona</th><th>Ore pianificate</th><th>Ore disponibili</th><th>Ore libere</th><th>Occupazione</th></tr></thead><tbody>' +
-        ppl.map(function (n) { var hh = dash.per[n] || 0, fr = per1 - hh; return '<tr><td>' + esc(n) + '</td><td class="num">' + fmtH(hh) + ' h</td><td class="num">' + fmtH(per1) + ' h</td><td class="num' + (fr < 0 ? ' neg' : '') + '">' + (fr < 0 ? '−' + fmtH(-fr) + ' (oltre)' : fmtH(fr) + ' h') + '</td><td class="num">' + occ(hh, per1) + '</td></tr>'; }).join('') +
+        ppl.map(function (n) { var hh = dash.per[n] || 0, fr = per1 - hh; return '<tr><td>' + nm(n) + '</td><td class="num">' + fmtH(hh) + ' h</td><td class="num">' + fmtH(per1) + ' h</td><td class="num' + (fr < 0 ? ' neg' : '') + '">' + (fr < 0 ? '−' + fmtH(-fr) + ' (oltre)' : fmtH(fr) + ' h') + '</td><td class="num">' + occ(hh, per1) + '</td></tr>'; }).join('') +
         '<tr><td><strong>Team</strong></td><td class="num"><strong>' + fmtH(dash.hours) + ' h</strong></td><td class="num"><strong>' + fmtH(per1 * dash.ppl.length) + ' h</strong></td><td class="num"><strong>' + fmtH(per1 * dash.ppl.length - dash.hours) + ' h</strong></td><td class="num">' + occ(dash.hours, per1 * dash.ppl.length) + '</td></tr></tbody></table></div>' +
         '<p class="note">Per priorità: Alta ' + fmtH(pc.Alta || 0) + ' h · Media ' + fmtH(pc.Media || 0) + ' h · Bassa ' + fmtH(pc.Bassa || 0) + ' h. Ore disponibili = giorni feriali del mese × ' + CAP + ' h.</p>';
     } else {
@@ -2429,12 +2432,12 @@ html { touch-action: pan-x pan-y; }
     if (!ppl.length) h += '<tr><td class="who" colspan="' + (ms.length + 5) + '">Nessuna persona ancora.</td></tr>';
     ppl.forEach(function (n) {
       var pm = per[n] || {}, t = tot(n), peak = null;
-      h += '<tr><td class="who" title="' + esc(n) + '">' + esc(n) + '</td>';
+      h += '<tr><td class="who" title="' + nm(n) + '">' + nm(n) + '</td>';
       ms.forEach(function (x) {
         var hh = pm[x.ym] || 0, pc = x.cap ? hh / x.cap : 0, od = (ovr[n] || {})[x.ym] || 0;
         if (hh && (!peak || pc > peak.pc)) peak = { pc: pc, x: x, h: hh };
         if (!hh) h += '<td class="hz" title="Nessun impegno">&ndash;</td>';
-        else h += '<td class="hc ' + cls(pc) + (x.ym === nowYm ? ' cur' : '') + '" title="' + esc(n) + ', ' + MONTHS_FULL[x.m] + ' ' + x.y + ': ' + fmtH(hh) + ' h su ' + fmtH(x.cap) + ' h disponibili' + (od ? ', ' + od + ' giorni oltre ' + CAP + ' h' : '') + '"><b>' + fmtH(hh) + ' h</b><small>' + Math.round(pc * 100) + '%</small>' + (od ? '<span class="flag">!' + od + '</span>' : '') + '</td>';
+        else h += '<td class="hc ' + cls(pc) + (x.ym === nowYm ? ' cur' : '') + '" title="' + nm(n) + ', ' + MONTHS_FULL[x.m] + ' ' + x.y + ': ' + fmtH(hh) + ' h su ' + fmtH(x.cap) + ' h disponibili' + (od ? ', ' + od + ' giorni oltre ' + CAP + ' h' : '') + '"><b>' + fmtH(hh) + ' h</b><small>' + Math.round(pc * 100) + '%</small>' + (od ? '<span class="flag">!' + od + '</span>' : '') + '</td>';
       });
       var a = ms[ms.length - 1], b = ms[ms.length - 2], pa = a.cap ? (pm[a.ym] || 0) / a.cap : 0, pb = b && b.cap ? (pm[b.ym] || 0) / b.cap : 0, d = Math.round((pa - pb) * 100);
       var tr = !b || (!pm[a.ym] && !pm[b.ym]) ? '&ndash;' : d > 0 ? '<span class="up">&#9650; +' + d + ' pt</span>' : d < 0 ? '<span class="dn">&#9660; ' + d + ' pt</span>' : '= stabile';
@@ -2497,7 +2500,7 @@ html { touch-action: pan-x pan-y; }
     var rows = g.ppl.slice().sort(function (x, y) { return (per[y].p + per[y].d) - (per[x].p + per[x].d) || x.localeCompare(y, 'it'); });
     $('bars').innerHTML = rows.length ? rows.map(function (n) {
       var o = per[n], h = o.p + o.d, pct = g.cap ? h / g.cap : 0;
-      return '<div class="bar-row wide"><span class="n" title="' + esc(n) + '">' + esc(n) + '</span>' + barraPD(o, g.cap) + '<span class="p split">' + fmtH(h) + ' h · ' + Math.round(pct * 100) + '%<small><span class="sw-p">P ' + fmtH(o.p) + '</span> · <span class="sw-d">D ' + fmtH(o.d) + '</span></small></span></div>';
+      return '<div class="bar-row wide"><span class="n" title="' + nm(n) + '">' + nm(n) + '</span>' + barraPD(o, g.cap) + '<span class="p split">' + fmtH(h) + ' h · ' + Math.round(pct * 100) + '%<small><span class="sw-p">P ' + fmtH(o.p) + '</span> · <span class="sw-d">D ' + fmtH(o.d) + '</span></small></span></div>';
     }).join('') : '<span class="empty">Nessuna persona ancora. Inserisci un progetto o aggiungi il team dalla sezione Persone.</span>';
   }
   // ---------- Cruscotto: pagina unica di condivisione del carico ----------
@@ -2568,7 +2571,7 @@ html { touch-action: pan-x pan-y; }
       else if (M === 'diff') { val = stk([['df', x.diff]], 5); etich = (x.dk ? fmtH(x.diff) + ' / 5' : '–') + '<small>' + (x.dk ? DIFF[Math.round(x.diff)] || '' : 'nessun dato') + '</small>'; }
       else if (M === 'prio') { val = stk([['pA', x.pa + x.da], ['pM', x.pm + x.dm], ['pB', x.pb + x.db]], max); etich = 'A ' + (x.pa + x.da) + ' · M ' + (x.pm + x.dm) + ' · B ' + (x.pb + x.db) + '<small>progetti + daily task</small>'; }
       else { val = stk([['fo', x.over]], max); etich = x.over + (x.over === 1 ? ' giorno' : ' giorni') + '<small>su ' + x.gg + ' impegnati</small>'; }
-      return '<div class="bar-row wide"><span class="n" title="' + esc(x.n) + '">' + esc(x.n) + '</span>' + val + '<span class="p split">' + etich + '</span></div>';
+      return '<div class="bar-row wide"><span class="n" title="' + nm(x.n) + '">' + nm(x.n) + '</span>' + val + '<span class="p split">' + etich + '</span></div>';
     }).join('') : '<span class="empty">Nessuna persona nei carichi per i filtri scelti.</span>';
     // andamento: per giorno (settimana, mese), per settimana (trimestre), per mese (anno)
     var cols = [], d;
@@ -2586,7 +2589,7 @@ html { touch-action: pan-x pan-y; }
     var tr = righe.slice().sort(function (a, b) { var va = a[CRU.sort], vb = b[CRU.sort]; return (typeof va === 'string' ? va.localeCompare(vb, 'it') : va - vb) * CRU.dir || a.n.localeCompare(b.n, 'it'); });
     function c2(v, txt) { return '<td class="num' + (v ? '' : ' zero') + '">' + txt + '</td>'; }
     $('cruTab').innerHTML = '<thead><tr>' + C.map(function (c) { return '<th data-s="' + c[0] + '"' + (CRU.sort === c[0] ? ' aria-sort="' + (CRU.dir > 0 ? 'ascending' : 'descending') + '"' : '') + '>' + c[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
-      (tr.length ? tr.map(function (x) { return '<tr><td><strong>' + esc(x.n) + '</strong></td>' + c2(x.p, fmtH(x.p) + ' h') + c2(x.d, fmtH(x.d) + ' h') + c2(x.tot, '<strong>' + fmtH(x.tot) + ' h</strong>') + c2(x.occ, occ(x.tot, g.cap)) + c2(x.gg, x.gg) + c2(x.over, x.over) + c2(x.np, x.np) + c2(x.pa, x.pa) + c2(x.dk, DSTAT ? x.dk : '–') + c2(x.mail, x.mail + ' (' + x.tec + ' / ' + x.com + ')') + c2(x.dk, x.dk ? fmtH(x.diff) : '–') + '</tr>'; }).join('')
+      (tr.length ? tr.map(function (x) { return '<tr><td><strong>' + nm(x.n) + '</strong></td>' + c2(x.p, fmtH(x.p) + ' h') + c2(x.d, fmtH(x.d) + ' h') + c2(x.tot, '<strong>' + fmtH(x.tot) + ' h</strong>') + c2(x.occ, occ(x.tot, g.cap)) + c2(x.gg, x.gg) + c2(x.over, x.over) + c2(x.np, x.np) + c2(x.pa, x.pa) + c2(x.dk, DSTAT ? x.dk : '–') + c2(x.mail, x.mail + ' (' + x.tec + ' / ' + x.com + ')') + c2(x.dk, x.dk ? fmtH(x.diff) : '–') + '</tr>'; }).join('')
         + '<tr class="sum"><td><strong>Team</strong></td>' + c2(P, fmtH(P) + ' h') + c2(D, fmtH(D) + ' h') + c2(T, '<strong>' + fmtH(T) + ' h</strong>') + c2(T, occ(T, capT)) + c2(S('gg'), S('gg')) + c2(S('over'), S('over')) + c2(1, Object.keys(prjAll).length) + c2(S('pa'), S('pa')) + c2(dk, DSTAT ? dk : '–') + c2(S('mail'), S('mail') + ' (' + S('tec') + ' / ' + S('com') + ')') + c2(dk, dk ? fmtH(sd / dk) : '–') + '</tr>'
         : '<tr><td colspan="' + C.length + '" class="empty">Nessuna persona nei carichi per i filtri scelti.</td></tr>') + '</tbody>';
     CRU._tsv = [['Periodo: ' + r.lab]].concat([C.map(function (c) { return c[1]; })]).concat(tr.map(function (x) { return [x.n, fmtH(x.p), fmtH(x.d), fmtH(x.tot), Math.round(x.occ * 100) + '%', x.gg, x.over, x.np, x.pa, DSTAT ? x.dk : '', x.mail + ' (' + x.tec + '/' + x.com + ')', x.dk ? fmtH(x.diff) : '']; }));
@@ -2609,7 +2612,7 @@ html { touch-action: pan-x pan-y; }
     ppl.forEach(function (n) {
       var mine = projects.filter(function (p) { return p.person === n; }), tot = 0;
       mine.forEach(function (p) { tot += totalH(p); });
-      h += '<tr><td><strong>' + esc(n) + '</strong>' + (n === me ? ' <span class="pill m">tu</span>' : '') + (isAdminName(n) ? ' <span class="pill a">Admin</span>' : '') + '</td><td class="num">' + mine.length + '</td><td class="num">' + fmtH(tot) + ' h</td>' +
+      h += '<tr><td><strong>' + nm(n) + '</strong>' + (n === me ? ' <span class="pill m">tu</span>' : '') + (isAdminName(n) ? ' <span class="pill a">Admin</span>' : '') + '</td><td class="num">' + mine.length + '</td><td class="num">' + fmtH(tot) + ' h</td>' +
         (function (o) { return o ? '<td class="num">' + o.n + '</td><td class="num">' + o.t + ' / ' + (o.n - o.t) + '</td><td class="num">' + fmtH(o.ore) + ' h</td>' : '<td class="num">–</td><td class="num">–</td><td class="num">–</td>'; })(dd[n]) +
         '<td class="act"><button type="button" class="small danger" data-tdel="' + encodeURIComponent(n) + '"' + (isAdmin && !isAdminName(n) ? '' : ' disabled') + '>Rimuovi</button></td></tr>';
     });
@@ -2937,7 +2940,7 @@ html { touch-action: pan-x pan-y; }
     }).join('');
     var sel = by[ACC.sel] || [], sd = new Date(ACC.sel + 'T12:00:00'), tm = function (x) { return new Date(x).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }); };
     $('acc-det').innerHTML = '<strong>' + WD[sd.getDay()] + ' ' + ACC.sel.slice(8) + '/' + ACC.sel.slice(5, 7) + '</strong> · ' + (sel.length ? sel.length + (sel.length === 1 ? ' accesso' : ' accessi') : 'nessun accesso') +
-      sel.map(function (x) { return '<div class="acc-li"><span>' + esc(x.n) + '</span><small>' + tm(x.f) + (tm(x.l) !== tm(x.f) ? '–' + tm(x.l) : '') + (x.c ? ' · ' + x.c + (x.c === 1 ? ' accesso con password' : ' accessi con password') : ' · sessione ripresa') + '</small></div>'; }).join('');
+      sel.map(function (x) { return '<div class="acc-li"><span>' + nm(x.n) + '</span><small>' + tm(x.f) + (tm(x.l) !== tm(x.f) ? '–' + tm(x.l) : '') + (x.c ? ' · ' + x.c + (x.c === 1 ? ' accesso con password' : ' accessi con password') : ' · sessione ripresa') + '</small></div>'; }).join('');
   }
   document.addEventListener('click', function (e) {
     var b = e.target.closest('#acc-chart .acc-b'); if (b) { ACC.sel = b.dataset.d; accRender(); return; }
@@ -3185,7 +3188,7 @@ html { touch-action: pan-x pan-y; }
     var h = '<thead><tr><th>Admin</th><th></th></tr></thead><tbody>';
     ADMINS.forEach(function (n) {
       var off = n === adminName || ADMINS.length <= 1;
-      h += '<tr><td><strong>' + esc(n) + '</strong>' + (n === adminName ? ' <span class="pill m">tu</span>' : '') + '</td><td class="act"><button type="button" class="small danger" data-adel="' + encodeURIComponent(n) + '"' + (off ? ' disabled' : '') + '>Rimuovi Admin</button></td></tr>';
+      h += '<tr><td><strong>' + nm(n) + '</strong>' + (n === adminName ? ' <span class="pill m">tu</span>' : '') + '</td><td class="act"><button type="button" class="small danger" data-adel="' + encodeURIComponent(n) + '"' + (off ? ' disabled' : '') + '>Rimuovi Admin</button></td></tr>';
     });
     t.innerHTML = h + '</tbody>';
   }
@@ -3216,7 +3219,7 @@ html { touch-action: pan-x pan-y; }
     if (!ppl.length) h += '<tr><td colspan="4" class="empty">Nessun Guest registrato.</td></tr>';
     ppl.forEach(function (n) {
       var e = encodeURIComponent(n), has = !!o[n];
-      h += '<tr><td><strong>' + esc(n) + '</strong></td><td>' + (has ? 'Impostata' : 'Da impostare al primo accesso') + '</td><td>' +
+      h += '<tr><td><strong>' + nm(n) + '</strong></td><td>' + (has ? 'Impostata' : 'Da impostare al primo accesso') + '</td><td>' +
         (has ? '<code class="gpv" data-v="' + esc(o[n]) + '">••••••</code> <button type="button" class="small" data-gshow="' + e + '">Mostra</button>' : '—') +
         '</td><td class="act"><button type="button" class="small danger" data-greset="' + e + '"' + (has ? '' : ' disabled') + '>Reimposta</button></td></tr>';
     });
@@ -3483,11 +3486,11 @@ html { touch-action: pan-x pan-y; }
     if (isAdmin || isVisitor) {
       $('dlSub').textContent = 'Scegli le persone da includere: tutte oppure solo alcune. La scelta vale per i progetti e per gli appuntamenti.';
       who.innerHTML = '<div class="lab">Persone da includere</div><div class="dlchips">' + list.map(function (n) {
-        return '<label class="chk"><input type="checkbox" data-p="' + encodeURIComponent(n) + '"' + (dlOff[n] ? '' : ' checked') + '>' + esc(n) + '</label>';
+        return '<label class="chk"><input type="checkbox" data-p="' + encodeURIComponent(n) + '"' + (dlOff[n] ? '' : ' checked') + '>' + nm(n) + '</label>';
       }).join('') + '</div><div class="dlact"><button type="button" class="small" id="dlAll">Seleziona tutte</button><button type="button" class="small" id="dlNone">Nessuna</button></div>';
     } else {
       $('dlSub').textContent = 'Puoi scaricare solo i tuoi progetti e i tuoi appuntamenti.';
-      who.innerHTML = '<div class="lab">Includi solo</div><div class="dlchips"><span class="chk"><b>' + esc(me || '—') + '</b></span></div>';
+      who.innerHTML = '<div class="lab">Includi solo</div><div class="dlchips"><span class="chk"><b>' + nm(me || '—') + '</b></span></div>';
     }
     if (!olTouched) {
       var first = new Date(today.getFullYear(), today.getMonth(), 1), last = null;
@@ -3566,7 +3569,7 @@ html { touch-action: pan-x pan-y; }
   function ricOpen() {
     if (!$('ric-start').value) $('ric-start').value = accIso(new Date());
     $('ric-pf').hidden = !isAdmin;
-    if (isAdmin) $('ric-person').innerHTML = people().filter(function (n) { return !isAdminName(n); }).map(function (n) { return '<option>' + esc(n) + '</option>'; }).join('');
+    if (isAdmin) $('ric-person').innerHTML = people().filter(function (n) { return !isAdminName(n); }).map(function (n) { return '<option>' + nm(n) + '</option>'; }).join('');
     ricLoad();
   }
   function ricLoad() {
@@ -3579,7 +3582,7 @@ html { touch-action: pan-x pan-y; }
     if (!it.length) { $('ric-tbl').innerHTML = '<tbody><tr><td class="empty">Nessuna richiesta.</td></tr></tbody>'; return; }
     $('ric-tbl').innerHTML = '<thead><tr><th>Aperta</th><th>Cliente e comune</th><th>Tipo</th><th>Priorità</th><th>Scadenza</th><th class="num">Ore</th><th>Stato</th><th>Tecnico</th><th></th></tr></thead><tbody>' + it.map(function (r) {
       var chiusa = r.stato === 'completata' || r.stato === 'annullata';
-      return '<tr><td>' + esc(r.creata || '') + '<div class="hint">' + esc(r.richiedente || '') + '</div></td><td><b>' + esc(r.cliente || '—') + '</b>' + (r.comune ? '<div>' + esc(r.comune) + '</div>' : '') + (r.descrizione ? '<div class="hint" style="max-width:320px;white-space:pre-line">' + esc(r.descrizione) + '</div>' : '') + '</td><td>' + esc(RIC_TIPI[r.tipo] || r.tipo) + '</td><td>' + esc(r.priorita) + '</td><td>' + esc(r.scadenza || '—') + '</td><td class="num">' + (r.ore == null ? '—' : esc(String(r.ore).replace('.', ','))) + '</td><td>' + esc(RIC_STATI[r.stato] || r.stato) + '</td><td>' + esc(r.tecnico || '—') + '</td><td>' +
+      return '<tr><td>' + esc(r.creata || '') + '<div class="hint">' + nm(r.richiedente || '') + '</div></td><td><b>' + esc(r.cliente || '—') + '</b>' + (r.comune ? '<div>' + esc(r.comune) + '</div>' : '') + (r.descrizione ? '<div class="hint" style="max-width:320px;white-space:pre-line">' + esc(r.descrizione) + '</div>' : '') + '</td><td>' + esc(RIC_TIPI[r.tipo] || r.tipo) + '</td><td>' + esc(r.priorita) + '</td><td>' + esc(r.scadenza || '—') + '</td><td class="num">' + (r.ore == null ? '—' : esc(String(r.ore).replace('.', ','))) + '</td><td>' + esc(RIC_STATI[r.stato] || r.stato) + '</td><td>' + nm(r.tecnico || '—') + '</td><td>' +
         (r.progetto_mappa ? '<span class="hint">In mappa</span>' : chiusa ? '' : '<button type="button" class="btn" data-ric="' + esc(r.id) + '">Metti in mappa</button>') + '</td></tr>';
     }).join('') + '</tbody>';
   }
@@ -3651,10 +3654,10 @@ html { touch-action: pan-x pan-y; }
     if (!order.length) h += '<tr><td class="who">&nbsp;</td><td colspan="' + (days.length + 1) + '" class="empty" style="padding:18px;text-align:left">Nessuna attività in questo periodo.</td></tr>';
     order.forEach(function (n) {
       var tot = 0;
-      h += '<tr><td class="who" title="' + esc(n) + '">' + esc(n) + '</td>';
+      h += '<tr><td class="who" title="' + nm(n) + '">' + nm(n) + '</td>';
       days.forEach(function (d) {
         var o = by[n + '|' + iso(d)], hrs = o ? o.h : 0, st = dCellStyle(hrs); tot += hrs;
-        var lab = esc(n) + ', ' + fmtShort(d) + ': ' + (o ? fmtH(hrs) + ' h, ' + o.n + ' mail (' + o.t + ' tecniche, ' + o.c + ' commerciali)' : 'nessuna attività');
+        var lab = nm(n) + ', ' + fmtShort(d) + ': ' + (o ? fmtH(hrs) + ' h, ' + o.n + ' mail (' + o.t + ' tecniche, ' + o.c + ' commerciali)' : 'nessuna attività');
         h += '<td class="c' + (d.getDay() === 1 ? ' mon' : '') + (iso(d) === iso(today) ? ' today' : '') + '"><span class="' + st.cls + '" style="' + st.style + '" title="' + lab + '" aria-label="' + lab + '">' + (o ? (hrs ? fmtH(hrs) : '') + '<span class="mn">' + o.n + '✉</span>' : '') + '</span></td>';
       });
       h += '<td class="tot">' + fmtH(tot) + ' h</td></tr>';
@@ -3674,7 +3677,7 @@ html { touch-action: pan-x pan-y; }
     $('dWhoF').hidden = !isAdmin;
     if (isAdmin) {
       if (DT.who && ppl.indexOf(DT.who) < 0) ppl.push(DT.who);
-      $('dWho').innerHTML = '<option value="">Tutte le persone</option>' + ppl.map(function (n) { return '<option value="' + esc(n) + '"' + (n === DT.who ? ' selected' : '') + '>' + esc(n) + '</option>'; }).join('');
+      $('dWho').innerHTML = '<option value="">Tutte le persone</option>' + ppl.map(function (n) { return '<option value="' + esc(n) + '"' + (n === DT.who ? ' selected' : '') + '>' + nm(n) + '</option>'; }).join('');
     }
     var its = dVisible();
     $('dNote').textContent = DT.err || (isAdmin ? 'Vedi le attività di tutto il team. Modifichi solo le tue.' : 'Vedi solo le tue attività. Il report di tutti lo vede l\'amministratore.');
@@ -3689,7 +3692,7 @@ html { touch-action: pan-x pan-y; }
     dGrid(its, order);
     var tot = { t: 0, c: 0, a: 0, A: 0, M: 0, B: 0, d: 0, o: 0, ot: 0, oc: 0 };
     function stack(o) { if (!o.o) return '–'; var pt = Math.round(100 * o.ot / o.o); return '<span class="dstack" aria-hidden="true"><i class="tt" style="width:' + pt + '%"></i><i class="cc" style="width:' + (100 - pt) + '%"></i></span>' + fmtH(o.ot) + ' / ' + fmtH(o.oc) + ' h'; }
-    function row(n, o, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + esc(n) + '</td><td class="num">' + o.t + '</td><td class="num">' + o.c + '</td><td class="num"><b>' + (o.t + o.c) + '</b></td><td class="num"><b>' + fmtH(o.o) + ' h</b></td><td>' + stack(o) + '</td><td class="num">' + o.a + '</td><td class="num">' + o.A + ' / ' + o.M + ' / ' + o.B + '</td><td>' + (o.a ? dBar(Math.round(o.d / o.a)) + ' <span class="hint">(' + fmtH(o.d / o.a) + ')</span>' : '–') + '</td></tr>'; }
+    function row(n, o, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + nm(n) + '</td><td class="num">' + o.t + '</td><td class="num">' + o.c + '</td><td class="num"><b>' + (o.t + o.c) + '</b></td><td class="num"><b>' + fmtH(o.o) + ' h</b></td><td>' + stack(o) + '</td><td class="num">' + o.a + '</td><td class="num">' + o.A + ' / ' + o.M + ' / ' + o.B + '</td><td>' + (o.a ? dBar(Math.round(o.d / o.a)) + ' <span class="hint">(' + fmtH(o.d / o.a) + ')</span>' : '–') + '</td></tr>'; }
     var h = '<thead><tr><th>Persona</th><th>Mail tecniche</th><th>Mail commerciali</th><th>Totale mail</th><th>Ore di gestione</th><th>Ore tecniche / commerciali <span class="hint">(arancio / grigio)</span></th><th>Attività</th><th>Priorità alta / media / bassa</th><th>Difficoltà media</th></tr></thead><tbody>';
     if (!order.length) h += '<tr><td colspan="9" class="empty">Nessuna attività in questo periodo.</td></tr>';
     order.forEach(function (n) { var o = by[n]; Object.keys(tot).forEach(function (k) { tot[k] += o[k]; }); h += row(n, o); });
@@ -3700,7 +3703,7 @@ html { touch-action: pan-x pan-y; }
     if (!l.length) g += '<tr><td colspan="' + (isAdmin ? 9 : 8) + '" class="empty">Nessuna attività in questo periodo.</td></tr>';
     l.forEach(function (x) {
       var d = parse(x.day), pc = x.prio === 'Alta' ? 'a' : x.prio === 'Media' ? 'm' : 'b', own = canWrite && x.person === mine;
-      g += '<tr><td>' + DOWS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + '</td>' + (isAdmin ? '<td>' + esc(x.person) + '</td>' : '') +
+      g += '<tr><td>' + DOWS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + '</td>' + (isAdmin ? '<td>' + nm(x.person) + '</td>' : '') +
         '<td>' + esc(x.kind) + '</td><td class="num">' + Number(x.n) + '</td><td class="num">' + (Number(x.ore) > 0 ? fmtMin(Number(x.ore)) : '–') + '</td><td class="dw">' + esc(x.what || '') + '</td><td><span class="pill ' + pc + '">' + esc(x.prio) + '</span></td><td>' + dBar(Number(x.diff)) + '</td>' +
         '<td class="act">' + (own ? '<button type="button" class="small" data-dedit="' + esc(x.id) + '">Modifica</button> <button type="button" class="small" data-dann="' + esc(x.id) + '">Annulla</button>' : '') + '</td></tr>';
     });

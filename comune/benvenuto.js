@@ -27,6 +27,7 @@
     var n = "";
     try { n = (localStorage.getItem("obo-nome") || "").trim().split(/\s+/)[0] || ""; } catch (e) {}
     if (!n) n = nomeDallaSessione();
+    if (n) n = n.charAt(0).toLocaleUpperCase("it-IT") + n.slice(1).toLocaleLowerCase("it-IT"); // nome: solo l'iniziale maiuscola
     try { if (n) localStorage.setItem("obo-nome", n); } catch (e) {}
     return n;
   }

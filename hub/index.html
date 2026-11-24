@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <script src="registro.js" data-app="hub" data-uso="no"></script>
+<script src="nomi.js"></script>
 <script src="benvenuto.js" data-app="OBO Hub"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>OBO Hub</title>
@@ -865,7 +866,7 @@
     // nome da salutare: nome del profilo, poi persona della Mappa, poi nome del profilo utente, poi dall'email (cognome.nome@…)
     const maiuscola = (x) => x ? x.charAt(0).toUpperCase() + x.slice(1).toLowerCase() : "";
     const validi = [profilo.nome, profilo.mappa_persona, session.user.user_metadata?.nome_visualizzato].map((x) => (x || "").trim()).filter((x) => x && !/^amministratore$/i.test(x));
-    let primo = validi.length ? validi[0].split(/\s+/)[0] : "";
+    let primo = validi.length ? (window.oboSoloNome ? window.oboSoloNome(validi[0], session.user.email).split(" ")[0] : validi[0].split(/\s+/)[0]) : "";
     if (!primo) { const parti = (session.user.email || "").split("@")[0].split(/[._-]/).filter(Boolean); primo = maiuscola(parti.length > 1 ? parti[parti.length - 1] : parti[0] || ""); }
     try { if (primo) localStorage.setItem("obo-nome", primo); } catch {} // per il saluto dell'animazione di apertura in tutte le app
     const nome1 = primo ? " " + primo : "";
