@@ -81,6 +81,8 @@ const TELAI = [
   { k: "F1500", codice: "5904015", nome: "WRR F1500 · telaio inverter indipendente", url: "/it-it/prodotti/telaio-inverter-indipendente-5904015.html" },
   { k: "D1000", codice: "5904026", nome: "WRR D1000 · telaio inverter bilaterale", url: "/it-it/prodotti/telaio-inverter-indipendente-bilaterale-5904026.html" },
   { k: "D1500", codice: "5904029", nome: "WRR D1500 · telaio inverter bilaterale", url: "/it-it/prodotti/telaio-inverter-indipendente-bilaterale-5904029.html" },
+  { k: "W1000", codice: "5904005", nome: "WRR W1000 · telaio inverter a parete", url: "/it-it/prodotti/telaio-inverter-per-installazione-a-parete-5904005.html" },
+  { k: "W1500", codice: "5904007", nome: "WRR W1500 · telaio inverter a parete", url: "/it-it/prodotti/telaio-inverter-per-installazione-a-parete-5904007.html" },
 ];
 function scegliTelaio(k) {
   const sel = document.querySelector('#zavorra select[id$="-frame"]'); if (!sel) return;

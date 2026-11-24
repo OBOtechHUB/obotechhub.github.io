@@ -11,7 +11,7 @@ import { CONFIG } from "../config.js";
 
 const SITO = "https://www.obo.it";
 /** Telai inverter WRR (Magic PV Mount): dalla scheda si apre l'app Zavorra telai inverter WRR. */
-const WRR = ["5904013", "5904015", "5904026", "5904029"];
+const WRR = ["5904013", "5904015", "5904026", "5904029", "5904005", "5904007"];
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const leggi = (k) => { try { return localStorage.getItem(k); } catch { return null; } };

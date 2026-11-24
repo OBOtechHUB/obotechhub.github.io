@@ -35,7 +35,13 @@ export const FRAMES = {
   F1000: { name: 'WRR F1000', code: '5904013', w: 1000, double: false },
   D1500: { name: 'WRR D1500', code: '5904029', w: 1500, double: true },
   D1000: { name: 'WRR D1000', code: '5904026', w: 1000, double: true },
+  // telai a parete (obo.it 5904005 / 5904007, 1082 / 1582 × 1501 × 468 mm): fissati al muro, non si zavorrano
+  W1000: { name: 'WRR W1000', code: '5904005', w: 1000, double: false, wall: true, h: 1501 },
+  W1500: { name: 'WRR W1500', code: '5904007', w: 1500, double: false, wall: true, h: 1501 },
 };
+/** pressione cinetica del vento (kN/m²) = ½ · 1,25 kg/m³ · v² (stessi valori della colonna "Pressione" delle tabelle OBO) */
+export const pressioneVento = (kmh) => 0.625 * (kmh / 3.6) ** 2 / 1000;
+const famiglia = (fr) => (fr.wall ? 'W' : fr.double ? 'D' : 'F');
 
 // Metodo di calcolo -> [scelta colonna area, scelta riga vento]
 export const MODES = {
@@ -124,8 +130,12 @@ export function compute(state, windOverride) {
       ...out,
       errCode: 'width',
       err: `Telaio ${fr.name} non idoneo: apparecchiatura larga ${fmt(maxW)} mm, telaio ${fmt(fr.w)} mm.`,
-      suggest: maxW <= 1500 && fr.w < 1500 ? (fr.double ? 'D1500' : 'F1500') : null,
+      suggest: maxW <= 1500 && fr.w < 1500 ? famiglia(fr) + '1500' : null,
     };
+  if (fr.wall) {
+    const q = pressioneVento(wind);
+    return { ...out, wall: true, errCode: 'wall', err: null, q, force: q * area / 10000, total: 0, table: null, paren: false, used: [], raw: 0, perSide: null };
+  }
   if (cp.kind === 'out')
     return { ...out, errCode: 'area', err: `Area frontale ${fmt(area)} cm² oltre la tabella OBO (max 11.500 cm²): calcolo non possibile con il metodo del manuale.` };
   if (rp.kind === 'out')
@@ -144,8 +154,9 @@ export function windTable(state) {
     return {
       kmh: s,
       pressure: PRESS[i],
-      table: r.err ? null : r.table,
-      ballast: r.err ? null : Math.ceil(r.total),
+      table: r.err || r.wall ? null : r.table,
+      ballast: r.err ? null : r.wall ? 0 : Math.ceil(r.total),
+      force: r.wall ? r.force : null,
       perSide: r.err || !r.fr.double ? null : Math.ceil(r.perSide),
       verify: !r.err && r.paren,
     };
@@ -157,8 +168,8 @@ export function frameFit(r) {
   if (!r.devs.length) return null;
   const fr = r.fr;
   const side = (fr.w - r.maxW) / 2;
-  const big = fr.double ? 'D1500' : 'F1500';
-  const small = fr.double ? 'D1000' : 'F1000';
+  const big = famiglia(fr) + '1500';
+  const small = famiglia(fr) + '1000';
   const msgs = [];
   let level = 'ok', switchTo = null;
   if (r.maxW > fr.w) {
@@ -183,11 +194,12 @@ export function frameFit(r) {
     level = 'crit';
     msgs.push(`✕ Area frontale troppo grande per le tabelle OBO: ${fmt(r.area)} cm², massimo 11.500 cm²${fr.double ? ' per lato' : ''}.`);
   }
-  if (r.maxH >= FRAME_HEIGHT) {
+  const H = fr.h || FRAME_HEIGHT;
+  if (r.maxH >= H) {
     level = 'crit';
-    msgs.push(`✕ Troppo alta: l'apparecchiatura più alta misura ${fmt(r.maxH)} mm, il telaio è alto 1.554 mm in tutto.`);
+    msgs.push(`✕ Troppo alta: l'apparecchiatura più alta misura ${fmt(r.maxH)} mm, il telaio è alto ${fmt(H)} mm in tutto.`);
   }
-  return { level, msgs, switchTo, note: `Altezza: apparecchiatura più alta ${fmt(r.maxH)} mm. Il telaio è alto 1.554 mm compresi piedi e tettoia; l'altezza utile sotto la tettoia non è dichiarata da OBO, quindi va verificata.` };
+  return { level, msgs, switchTo, note: `Altezza: apparecchiatura più alta ${fmt(r.maxH)} mm. Il telaio è alto ${fmt(H)} mm${fr.wall ? '' : ' compresi piedi e tettoia'}; l'altezza utile ${fr.wall ? 'del telaio' : 'sotto la tettoia'} non è dichiarata da OBO, quindi va verificata.` };
 }
 
 /** Testo pronto da incollare nella mail al cliente. */
@@ -197,6 +209,12 @@ export function emailText(state) {
     .filter((d) => d.q > 0)
     .map((d) => `${d.q} × ${d.d || 'apparecchiatura'} (${fmt(d.w)}×${fmt(d.h)} mm, ${fmt(d.kg, 1)} kg)`)
     .join(', ');
+  if (fr.wall) {
+    const l = [`Il calcolo considera: ${devs}; telaio a parete ${fr.name} (${fr.code}): non si zavorra, va fissato alla parete.`, '', 'km/h\tPressione kN/m²\tSpinta del vento sulle apparecchiature kN'];
+    for (const row of windTable(state)) l.push(`${row.kmh}\t${fmt(row.pressure, 2)}\t${row.force == null ? '–' : fmt(row.force, 2)}`);
+    l.push('', 'Spinta = pressione cinetica × area frontale, senza coefficienti di forza e di esposizione: indicativa, per scegliere tasselli e verificare la parete con il costruttore del fissaggio. Eventuali carichi da neve da valutare.');
+    return l.join('\n');
+  }
   const lines = [`Il calcolo considera: ${devs}; telaio ${fr.name} (${fr.code}); inclinazione ${state.pitch}°.`, ''];
   lines.push(fr.double ? 'km/h\tKg zavorra totale\tKg per lato' : 'km/h\tKg zavorra');
   let anyP = false;

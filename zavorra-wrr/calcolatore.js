@@ -39,7 +39,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
 <div class="wrap">
   <header>
     <h1>${esc(title)}</h1>
-    <p>Calcolo della zavorra per i telai autoportanti OBO Magic PV Mount WRR F e WRR D, secondo il metodo del cap. 11 delle istruzioni di montaggio (07/2026).</p>
+    <p>Calcolo della zavorra per i telai autoportanti OBO Magic PV Mount WRR F e WRR D (i telai a parete WRR W non si zavorrano: spinta del vento per i tasselli), secondo il metodo del cap. 11 delle istruzioni di montaggio (07/2026).</p>
   </header>
   <div class="grid">
     <div class="col">
@@ -48,7 +48,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         <div class="row">
           <label class="f" for="${u}-frame">Telaio
             <select id="${u}-frame">
-              ${Object.entries(FRAMES).map(([k, f]) => `<option value="${k}">${f.name} · ${f.code} · ${f.double ? 'bifacciale' : 'monofacciale'}</option>`).join('')}
+              ${Object.entries(FRAMES).map(([k, f]) => `<option value="${k}">${f.name} · ${f.code} · ${f.wall ? 'a parete' : f.double ? 'bifacciale' : 'monofacciale'}</option>`).join('')}
             </select>
           </label>
           <div class="f" style="display:grid;gap:4px">
@@ -138,25 +138,30 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       </section>
 
       ${storage ? `
-      <section class="panel">
-        <h2>5 · Archivio calcoli</h2>
+      <section class="panel" id="${u}-progettoBox">
+        <h2>5 · Progetto (salvataggio automatico)</h2>
         <div id="${u}-login" hidden>
-          <p class="hint" style="margin-bottom:8px">Entra in OBO Hub con il tuo account per salvare i calcoli e ritrovarli su qualsiasi dispositivo.</p>
+          <p class="hint" style="margin-bottom:8px">Entra in OBO Hub con il tuo account per salvare i calcoli nei progetti e ritrovarli su qualsiasi dispositivo.</p>
           <p><a class="btn primary" href="../">Vai a OBO Hub</a></p>
         </div>
         <div id="${u}-arch" hidden style="display:grid;gap:12px">
-          <form class="row" id="${u}-saveForm">
+          <p class="callout" id="${u}-aperto"></p>
+          <form class="row" id="${u}-saveForm" onsubmit="return false">
+            <label class="f" for="${u}-codice">Numero progetto CRM<input id="${u}-codice" maxlength="100" placeholder="Es. P-2026-0142"></label>
+            <label class="f" for="${u}-progetto">Nome / riferimento<input id="${u}-progetto" maxlength="160"></label>
             <label class="f" for="${u}-cliente">Cliente<input id="${u}-cliente" maxlength="120"></label>
-            <label class="f" for="${u}-progetto">Progetto / riferimento<input id="${u}-progetto" maxlength="160"></label>
+            <label class="f" for="${u}-lps">Progetto LPS collegato<select id="${u}-lps"><option value="">— nessuno —</option></select></label>
           </form>
           <div class="tools">
-            <button type="button" class="btn primary" id="${u}-save">Salva calcolo</button>
+            <button type="button" class="btn primary" id="${u}-save">Salva nel progetto</button>
+            <button type="button" class="btn" id="${u}-nuovo">Nuovo calcolo</button>
             <span class="hint" id="${u}-saveMsg" role="status"></span>
             <span class="hint" style="margin-left:auto"><span id="${u}-who"></span></span>
           </div>
+          <label class="f" for="${u}-cerca" style="max-width:340px">Cerca nei calcoli<input id="${u}-cerca" type="search" placeholder="codice, nome, cliente, telaio"></label>
           <div class="arch-table">
             <table>
-              <thead><tr><th class="l">Data</th><th class="l">Cliente / progetto</th><th class="l">Telaio</th><th>Vento</th><th>Zavorra</th><th><span class="sr">Azioni</span></th></tr></thead>
+              <thead><tr><th class="l">Aggiornato</th><th class="l">Progetto</th><th class="l">Telaio</th><th>Vento</th><th>Zavorra</th><th><span class="sr">Azioni</span></th></tr></thead>
               <tbody id="${u}-archBody"></tbody>
             </table>
           </div>
@@ -171,6 +176,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
   function renderDevs() {
     const fr = FRAMES[state.frame];
     root.querySelectorAll('[data-side]').forEach((e) => (e.hidden = !fr.double));
+    const inc = q('p30')?.closest('.f'); if (inc) inc.hidden = !!fr.wall; // a parete l'inclinazione non conta
     const body = q('devs');
     body.innerHTML = '';
     state.devs.forEach((d, i) => {
@@ -213,8 +219,10 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
 
   // ---------- aggiornamento ----------
   let last = null;
+  let autoSalva = () => {};
   function update() {
     save();
+    autoSalva();
     const fr = FRAMES[state.frame];
     root.querySelectorAll('[data-area]').forEach((el, i) => { const d = state.devs[i]; el.textContent = fmt(d.w * d.h / 100 * d.q); });
     const r = compute(state);
@@ -224,13 +232,13 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     const steps = q('steps');
     steps.innerHTML = '';
     const add = (k, v) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; steps.append(dt, dd); };
-    add('Telaio', `${fr.name} (${fr.code}), largh. ${fmt(fr.w)} mm, ${fr.double ? 'bifacciale' : 'monofacciale'}`);
-    add('Tabella OBO', `Tab. ${TABNO[r.tab]} · telaio ${fmt(fr.w)} mm · ${state.pitch}° · ${MODE_LABELS[state.calcMode]}`);
+    add('Telaio', `${fr.name} (${fr.code}), largh. ${fmt(fr.w)} mm, ${fr.wall ? 'a parete' : fr.double ? 'bifacciale' : 'monofacciale'}`);
+    if (!fr.wall) add('Tabella OBO', `Tab. ${TABNO[r.tab]} · telaio ${fmt(fr.w)} mm · ${state.pitch}° · ${MODE_LABELS[state.calcMode]}`);
     add('Area frontale', fr.double ? `lato A ${fmt(r.sideArea.A)} cm² · lato B ${fmt(r.sideArea.B)} cm² → usata ${fmt(r.area)} cm²` : `${fmt(r.area)} cm²`);
     add('Peso apparecchiature', `${fmt(r.weight, 1)} kg`);
 
     const alerts = [];
-    q('resBox').classList.toggle('bad', !!r.err && r.errCode !== 'empty');
+    q('resBox').classList.toggle('bad', !!r.err && r.errCode !== 'empty' && !r.wall);
     const bn = q('banner');
     bn.hidden = true;
     if (r.errCode === 'width' || r.errCode === 'area') {
@@ -239,7 +247,14 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         ? (r.suggest ? `Telaio non conforme: usa il ${FRAMES[r.suggest].name} (${FRAMES[r.suggest].code}), vedi step 1.` : 'Nessun telaio WRR adatto alla larghezza dell\'apparecchiatura: contatta l\'ufficio tecnico OBO.')
         : `Non calcolabile con le tabelle OBO: area frontale ${fmt(r.area)} cm² oltre il massimo (11.500 cm²).`;
     }
-    if (r.err) {
+    if (r.wall) {
+      add('Pressione del vento', `${fmt(r.q, 2)} kN/m² a ${fmt(state.wind)} km/h`);
+      add('Spinta sulle apparecchiature', `${fmt(r.q, 2)} × ${fmt(r.area / 10000, 2)} m² = ${fmt(r.force, 2)} kN (≈ ${fmt(r.force * 102)} kg)`);
+      q('resLbl').textContent = 'Telaio a parete';
+      q('resBig').innerHTML = '0 <small>kg di zavorra</small>';
+      q('resSub').textContent = 'si fissa alla parete con tasselli adatti al supporto';
+      alerts.push(['warn', `Spinta indicativa del vento ${fmt(r.force, 2)} kN più il peso (telaio + ${fmt(r.weight, 1)} kg di apparecchiature): scegli tasselli e verifica la parete con il costruttore del fissaggio. Le istruzioni OBO non danno tabelle di zavorra per i telai a parete.`]);
+    } else if (r.err) {
       q('resBig').textContent = r.errCode === 'width' ? 'Telaio non idoneo' : r.errCode === 'empty' ? '–' : 'Non calcolabile';
       q('resSub').textContent = '';
       q('resLbl').textContent = 'Zavorra totale';
@@ -275,7 +290,8 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
 
     // tabella vento
     const hint = q('windHint');
-    if (r.err) hint.textContent = 'Correggi i dati sopra per ottenere la tabella.';
+    if (r.wall) hint.textContent = 'Telaio a parete: nessuna zavorra. Per ogni velocità la colonna «Zavorra» indica la spinta indicativa del vento sulle apparecchiature (kN).';
+    else if (r.err) hint.textContent = 'Correggi i dati sopra per ottenere la tabella.';
     else if (r.rp.kind === 'single') {
       const rowV = SPEEDS[r.rp.i];
       hint.innerHTML = `<strong>Prendi la riga evidenziata e sottolineata (${rowV} km/h):</strong> è quella che corrisponde al vento di progetto inserito (${fmt(state.wind)} km/h).` + (state.wind > SPEEDS[0] && state.wind !== rowV ? ' Il valore inserito cade tra due righe: si usa la riga superiore, a favore di sicurezza.' : '');
@@ -284,9 +300,9 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     wb.innerHTML = '';
     windTable(state).forEach((row, i) => {
       const tr = document.createElement('tr');
-      if (!r.err && r.rp.kind === 'single' && r.rp.i === i) tr.className = 'cur';
+      if (!r.err && !r.wall && r.rp.kind === 'single' && r.rp.i === i) tr.className = 'cur';
       const star = row.verify ? ' <span class="flag">*</span>' : '';
-      tr.innerHTML = `<td>${row.kmh}</td><td>${fmt(PRESS[i], 2)}</td><td>${row.table == null ? '–' : fmt(row.table) + (row.verify ? ' *' : '')}</td><td>${row.ballast == null ? '–' : fmt(row.ballast) + star}</td><td ${fr.double ? '' : 'hidden'}>${row.perSide == null ? '–' : fmt(row.perSide) + star}</td>`;
+      tr.innerHTML = `<td>${row.kmh}</td><td>${fmt(PRESS[i], 2)}</td><td>${row.table == null ? '–' : fmt(row.table) + (row.verify ? ' *' : '')}</td><td>${row.force != null ? fmt(row.force, 2) + ' kN' : row.ballast == null ? '–' : fmt(row.ballast) + star}</td><td ${fr.double ? '' : 'hidden'}>${row.perSide == null ? '–' : fmt(row.perSide) + star}</td>`;
       wb.appendChild(tr);
     });
   }
@@ -311,48 +327,90 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     try { navigator.clipboard.writeText(txt).then(() => (msg.textContent = 'Tabella copiata.'), fallback); } catch { fallback(); }
   };
 
-  // ---------- archivio Supabase ----------
+  // ---------- progetto: apertura, salvataggio automatico, collegamento a Progettazione LPS ----------
   if (storage) {
-    const showUser = async (user) => {
-      q('login').hidden = !!user;
-      q('arch').hidden = !user;
-      if (user) { q('who').textContent = (window.oboNome ? window.oboNome(user.user_metadata?.nome_visualizzato || '', user.email) : '') || user.email; await refreshList(); }
+    const LS_APERTO = 'wrr-zavorra-aperto';
+    let utente = null, aperto = null, righe = [], lps = [], timer = null, inSalvataggio = false;
+    try { aperto = localStorage.getItem(LS_APERTO) || null; } catch { /* ignora */ }
+    const ricordaAperto = (id) => { aperto = id; try { id ? localStorage.setItem(LS_APERTO, id) : localStorage.removeItem(LS_APERTO); } catch { /* ignora */ } };
+    const nomeLps = (id) => { const p = lps.find((x) => x.id === id); return p ? [p.codice, p.nome].filter(Boolean).join(' · ') + (p.condiviso ? ' (condiviso)' : '') : ''; };
+    const mostraAperto = (testo) => {
+      const r = righe.find((x) => x.id === aperto);
+      q('aperto').innerHTML = aperto
+        ? `<strong>Calcolo aperto:</strong> ${esc([q('codice').value, q('progetto').value].filter(Boolean).join(' · ') || 'senza nome')}${q('lps').value ? ` · collegato a LPS ${esc(nomeLps(q('lps').value))}` : ''} — ${esc(testo || (r ? 'salvato il ' + new Date(r.aggiornato_il || r.created_at).toLocaleString('it-IT') : 'salvato'))}. Le modifiche si salvano da sole.`
+        : '<strong>Calcolo nuovo, non ancora salvato.</strong> Scrivi numero CRM e nome (o collega un progetto LPS) e premi «Salva nel progetto»: da lì in poi si salva da solo.';
     };
-    const refreshList = async () => {
-      const body = q('archBody');
+    const campi = () => ({ id: aperto, codice: q('codice').value.trim(), progetto: q('progetto').value.trim(), cliente: q('cliente').value.trim(), progettoLps: q('lps').value || null });
+    async function salva(auto) {
+      if (!utente || inSalvataggio) return;
+      inSalvataggio = true;
+      const msg = q('saveMsg');
       try {
-        const rows = await storage.list();
-        body.innerHTML = rows.length ? '' : '<tr><td class="l" colspan="6"><span class="hint">Nessun calcolo salvato.</span></td></tr>';
-        rows.forEach((row) => {
-          const tr = document.createElement('tr');
-          const d = new Date(row.created_at).toLocaleDateString('it-IT');
-          const kg = row.risultato_kg == null ? '–' : `${fmt(row.risultato_kg)} kg${row.da_verificare ? ' *' : ''}`;
-          tr.innerHTML = `<td class="l">${d}</td><td class="l">${esc([row.cliente, row.progetto].filter(Boolean).join(' · ') || '—')}</td><td class="l">${esc(FRAMES[row.telaio]?.name || row.telaio)} · ${row.inclinazione}°</td><td>${fmt(row.vento)} km/h</td><td>${kg}</td><td style="white-space:nowrap"><button type="button" class="btn" data-open>Apri</button></td>`;
-          tr.querySelector('[data-open]').onclick = () => {
-            if (row.stato) { state = { ...defaultState(), ...structuredClone(row.stato) }; save(); }
-            q('frame').value = state.frame; q('wind').value = state.wind; q('mode').value = state.calcMode; setPitch(state.pitch);
-            q('cliente').value = row.cliente || ''; q('progetto').value = row.progetto || '';
-            renderDevs(); update(); root.scrollIntoView({ behavior: 'smooth' });
-          };
-          body.appendChild(tr);
-        });
-      } catch (e) {
-        body.innerHTML = `<tr><td class="l" colspan="6"><span class="hint">Errore nel caricamento: ${esc(e.message)}</span></td></tr>`;
+        const id = await storage.save({ ...campi(), state, result: last, table: windTable(state) });
+        ricordaAperto(id);
+        msg.textContent = auto ? '' : 'Salvato nel progetto.';
+        mostraAperto('salvato alle ' + new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }));
+        if (!auto) await elenca();
+      } catch (e) { msg.textContent = 'Salvataggio non riuscito: ' + e.message; }
+      finally { inSalvataggio = false; }
+    }
+    autoSalva = () => { if (!aperto || !utente) return; clearTimeout(timer); timer = setTimeout(() => salva(true), 1500); };
+    function carica(row) {
+      if (row.stato) { state = { ...defaultState(), ...structuredClone(row.stato) }; save(); }
+      if (!FRAMES[state.frame]) state.frame = 'F1500';
+      q('frame').value = state.frame; q('wind').value = state.wind; q('mode').value = state.calcMode; setPitch(state.pitch);
+      q('cliente').value = row.cliente || ''; q('progetto').value = row.progetto || ''; q('codice').value = row.codice_crm || '';
+      q('lps').value = row.progetto_lps && lps.some((p) => p.id === row.progetto_lps) ? row.progetto_lps : '';
+      ricordaAperto(row.id);
+      renderDevs(); update(); mostraAperto();
+    }
+    function disegnaElenco() {
+      const body = q('archBody'), f = q('cerca').value.trim().toLowerCase();
+      const vis = righe.filter((r) => !f || [r.codice_crm, r.progetto, r.cliente, FRAMES[r.telaio]?.name, nomeLps(r.progetto_lps)].join(' ').toLowerCase().includes(f));
+      body.innerHTML = vis.length ? '' : `<tr><td class="l" colspan="6"><span class="hint">${righe.length ? 'Nessun calcolo trovato.' : 'Nessun calcolo salvato.'}</span></td></tr>`;
+      vis.forEach((row) => {
+        const tr = document.createElement('tr');
+        if (row.id === aperto) tr.className = 'cur';
+        const d = new Date(row.aggiornato_il || row.created_at).toLocaleDateString('it-IT');
+        const kg = row.risultato_kg == null ? '–' : `${fmt(row.risultato_kg)} kg${row.da_verificare ? ' *' : ''}`;
+        const nome = [row.codice_crm, row.progetto].filter(Boolean).join(' · ') || '—';
+        const sotto = [row.cliente, row.progetto_lps ? 'LPS ' + (nomeLps(row.progetto_lps) || 'collegato') : ''].filter(Boolean).join(' · ');
+        tr.innerHTML = `<td class="l">${d}</td><td class="l">${esc(nome)}${sotto ? `<br><span class="hint">${esc(sotto)}</span>` : ''}</td><td class="l">${esc(FRAMES[row.telaio]?.name || row.telaio)}${FRAMES[row.telaio]?.wall ? '' : ' · ' + row.inclinazione + '°'}</td><td>${fmt(row.vento)} km/h</td><td>${FRAMES[row.telaio]?.wall ? 'a parete' : kg}</td><td style="white-space:nowrap"><button type="button" class="btn" data-open>${row.id === aperto ? 'Aperto' : 'Apri'}</button></td>`;
+        tr.querySelector('[data-open]').onclick = () => { carica(row); disegnaElenco(); root.scrollIntoView({ behavior: 'smooth' }); };
+        body.appendChild(tr);
+      });
+    }
+    async function elenca() {
+      try { righe = await storage.list(); disegnaElenco(); }
+      catch (e) { q('archBody').innerHTML = `<tr><td class="l" colspan="6"><span class="hint">Errore nel caricamento: ${esc(e.message)}</span></td></tr>`; }
+      if (!storage.completo) q('saveMsg').textContent = 'Collegamento ai progetti non ancora attivo: eseguire il SQL 17 (zavorra-progetti.sql). Intanto «Salva» crea un nuovo calcolo.';
+    }
+    const showUser = async (user) => {
+      utente = user;
+      q('login').hidden = !!user; q('arch').hidden = !user;
+      if (!user) return;
+      q('who').textContent = (window.oboNome ? window.oboNome(user.user_metadata?.nome_visualizzato || '', user.email) : '') || user.email;
+      try { lps = await storage.progettiLps(); } catch { lps = []; }
+      q('lps').innerHTML = '<option value="">— nessuno —</option>' + lps.map((p) => `<option value="${esc(p.id)}">${esc([p.codice, p.nome].filter(Boolean).join(' · ') || 'senza nome')}${p.condiviso ? ' (condiviso)' : ''}</option>`).join('');
+      await elenca();
+      // apertura: ?calcolo=<id>, ?progetto=<id progetto LPS>, altrimenti l'ultimo calcolo aperto su questo dispositivo
+      const par = new URLSearchParams(location.search), daUrl = par.get('calcolo'), daLps = par.get('progetto');
+      const riga = righe.find((r) => r.id === daUrl) || (daLps && righe.find((r) => r.progetto_lps === daLps)) || (!daLps && righe.find((r) => r.id === aperto));
+      if (riga) carica(riga);
+      else {
+        ricordaAperto(null);
+        if (daLps && lps.some((p) => p.id === daLps)) { const p = lps.find((x) => x.id === daLps); q('lps').value = daLps; q('codice').value = p.codice || ''; q('progetto').value = p.nome || ''; }
+        mostraAperto();
       }
     };
-    q('save').onclick = async () => {
-      const msg = q('saveMsg');
-      const btn = q('save');
-      btn.disabled = true;
-      try {
-        await storage.save({ cliente: q('cliente').value.trim(), progetto: q('progetto').value.trim(), state, result: last, table: windTable(state) });
-        msg.textContent = 'Calcolo salvato.';
-        await refreshList();
-      } catch (e) { msg.textContent = 'Errore nel salvataggio: ' + e.message; }
-      finally { btn.disabled = false; }
-    };
+    q('save').onclick = () => salva(false);
+    q('nuovo').onclick = () => { ricordaAperto(null); ['codice', 'progetto', 'cliente'].forEach((n) => (q(n).value = '')); q('lps').value = ''; q('saveMsg').textContent = ''; mostraAperto(); disegnaElenco(); };
+    q('lps').onchange = () => { const p = lps.find((x) => x.id === q('lps').value); if (p) { if (!q('codice').value) q('codice').value = p.codice || ''; if (!q('progetto').value) q('progetto').value = p.nome || ''; } mostraAperto(); autoSalva(); };
+    ['codice', 'progetto', 'cliente'].forEach((n) => q(n).addEventListener('input', () => autoSalva()));
+    q('cerca').oninput = disegnaElenco;
     storage.getUser().then(showUser);
-    cleanups.push(storage.onAuthChange(showUser));
+    cleanups.push(storage.onAuthChange((u2) => { if ((u2?.id || null) !== (utente?.id || null)) showUser(u2); }));
+    addEventListener('pagehide', () => { if (timer) { clearTimeout(timer); salva(true); } });
   }
 
   renderDevs();

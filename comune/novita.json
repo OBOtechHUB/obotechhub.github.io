@@ -2,6 +2,18 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-zavorra-2",
+      "data": "2026-11-24",
+      "app": "zavorra",
+      "titolo": "Zavorra WRR: 6 telai e calcoli nei progetti",
+      "voci": [
+        "Aggiunti i telai a parete WRR W1000 (5904005) e WRR W1500 (5904007): non si zavorrano, l'app dà la spinta del vento sulle apparecchiature per scegliere i tasselli",
+        "Ogni calcolo è un progetto: numero CRM, nome, cliente e collegamento a un progetto di Progettazione LPS (anche condiviso)",
+        "Il calcolo aperto si salva da solo e si riapre dove l'avevi lasciato, su qualsiasi dispositivo; ogni versione precedente resta nello storico",
+        "Ricerca nei calcoli salvati; dalla sezione Prodotti anche i telai a parete aprono il calcolatore"
+      ]
+    },
+    {
       "id": "2026-11-24-zavorra-1",
       "data": "2026-11-24",
       "app": "tutte",
