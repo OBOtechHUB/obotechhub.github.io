@@ -31,6 +31,13 @@
   .lista button[aria-pressed="true"] { border-color: var(--arancio); background: var(--scelto, #fff4e0); box-shadow: inset 0 0 0 1px var(--arancio); }
   .lista small, .nota { color: var(--tenue); font-size: 13px; }
   .lista small { display: block; }
+  .filtri { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .filtri button { border: 1px solid var(--bordo); background: var(--carta); color: var(--testo); border-radius: 999px; padding: 4px 10px; font: 600 13px var(--font, inherit); cursor: pointer; }
+  .filtri button[aria-pressed="true"] { background: var(--arancio); border-color: var(--arancio); color: #fff; }
+  .filtri button small { font-weight: 400; opacity: .85; }
+  .app-mini { display: inline-flex; gap: 6px; margin-top: 3px; }
+  .app-mini span { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; color: var(--tenue); }
+  .app-mini svg { width: 14px; height: 14px; color: var(--arancio); }
   .tag { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: #fff4e0; color: #9a5b00; }
   .app { border-top: 1px solid var(--bordo); padding: 14px 0; }
   .app:first-of-type { border-top: 0; }
@@ -58,6 +65,7 @@
     <section class="riquadro" aria-labelledby="h-elenco">
       <h2 id="h-elenco">I progetti</h2>
       <label><span>Cerca</span><input id="cerca" type="search" placeholder="CRM, nome, comune"></label>
+      <div class="filtri" id="filtri" role="group" aria-label="Filtra per app"></div>
       <ul class="lista" id="lista"></ul>
       <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:600">+ Nuovo progetto</summary>
         <form class="campi" id="nuovo" style="margin-top:8px">
@@ -93,7 +101,9 @@ const icona = (k) => `<svg class="icona" viewBox="0 0 24 24" fill="none" stroke=
 const mancaSql = (e) => /does not exist|schema cache|Could not find|column/i.test(e?.message || "");
 
 const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
-let utente = null, progetti = [], scelto = new URLSearchParams(location.search).get("id");
+let utente = null, progetti = [], scelto = new URLSearchParams(location.search).get("id"), filtro = "tutte";
+const FILTRI = [["tutte", "Tutte"], ["lps", "Progettazione LPS"], ["zavorra", "Zavorra WRR"], ["torrette", "Torrette"], ["condivisi", "Condivisi con me"]];
+const mini = (k, n) => `<span title="${k === "lps" ? "Progettazione LPS" : k === "zavorra" ? "Calcoli zavorra WRR" : "Configurazioni torrette"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${SVG[k]}</svg>${n === true ? "" : n}</span>`;
 
 function fuori(msg) { $("cancelloMsg").textContent = msg; $("cancelloBtn").hidden = false; }
 (async () => {
@@ -115,14 +125,33 @@ async function carica() {
   ]);
   progetti = (miei.data || []).map((p) => ({ ...p, condiviso: "" }));
   for (const p of cond.error ? [] : cond.data || []) if (!progetti.some((x) => x.id === p.id)) progetti.push({ id: p.id, codice: p.codice, nome: p.nome, comune: p.comune, data_modifica: p.data_modifica, condiviso: p.proprietario_nome || p.proprietario_email || "collega" });
+  // quali app hanno lavorato in ogni progetto (per i filtri e le icone nell'elenco)
+  const ids = progetti.map((p) => p.id);
+  if (ids.length) {
+    const [lps, zav, sol] = await Promise.all([
+      supabase.from("progetti").select("id, versione:dati->>versione").in("id", ids),
+      supabase.from("calcoli_zavorra").select("progetto_lps").in("progetto_lps", ids),
+      supabase.from("progetti_soluzioni").select("progetto, app").in("progetto", ids).eq("archiviata", false),
+    ]);
+    const conta = (righe, campo, filtro) => { const m = {}; for (const r of righe || []) if (!filtro || filtro(r)) m[r[campo]] = (m[r[campo]] || 0) + 1; return m; };
+    const zc = conta(zav.data, "progetto_lps"), tc = conta(sol.data, "progetto", (r) => r.app === "torrette");
+    const lv = new Set((lps.data || []).filter((r) => r.versione).map((r) => r.id));
+    for (const p of progetti) { p.lps = lv.has(p.id); p.zavorra = zc[p.id] || 0; p.torrette = tc[p.id] || 0; }
+  }
+  disegnaFiltri();
   elenco();
   if (scelto && progetti.some((p) => p.id === scelto)) dettaglio(scelto);
 }
+const passa = (p, k) => k === "tutte" || (k === "condivisi" ? !!p.condiviso : !!p[k]);
+function disegnaFiltri() {
+  $("filtri").innerHTML = FILTRI.map(([k, t]) => `<button type="button" data-f="${k}" aria-pressed="${k === filtro}">${t} <small>${progetti.filter((p) => passa(p, k)).length}</small></button>`).join("");
+}
+$("filtri").onclick = (e) => { const b = e.target.closest("button[data-f]"); if (!b) return; filtro = b.dataset.f; disegnaFiltri(); elenco(); };
 function elenco() {
   const f = $("cerca").value.trim().toLowerCase();
-  const vis = progetti.filter((p) => !f || [p.codice, p.nome, p.comune].join(" ").toLowerCase().includes(f));
-  $("lista").innerHTML = vis.length ? vis.map((p) => `<li><button type="button" data-id="${esc(p.id)}" aria-pressed="${p.id === scelto}"><b>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || "Senza nome")}</b><small>${esc(p.comune || "Comune non indicato")} · ${data(p.data_modifica)}${p.condiviso ? ` · <span class="tag">condiviso da ${esc(p.condiviso)}</span>` : ""}</small></button></li>`).join("")
-    : `<li class="nota">${progetti.length ? "Nessun progetto trovato." : "Non hai ancora progetti: creane uno qui sotto."}</li>`;
+  const vis = progetti.filter((p) => passa(p, filtro) && (!f || [p.codice, p.nome, p.comune].join(" ").toLowerCase().includes(f)));
+  $("lista").innerHTML = vis.length ? vis.map((p) => `<li><button type="button" data-id="${esc(p.id)}" aria-pressed="${p.id === scelto}"><b>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || "Senza nome")}</b><small>${esc(p.comune || "Comune non indicato")} · ${data(p.data_modifica)}${p.condiviso ? ` · <span class="tag">condiviso da ${esc(p.condiviso)}</span>` : ""}</small>${p.lps || p.zavorra || p.torrette ? `<span class="app-mini">${p.lps ? mini("lps", true) : ""}${p.zavorra ? mini("zavorra", p.zavorra) : ""}${p.torrette ? mini("torrette", p.torrette) : ""}</span>` : ""}</button></li>`).join("")
+    : `<li class="nota">${progetti.length ? "Nessun progetto per questo filtro." : "Non hai ancora progetti: creane uno qui sotto."}</li>`;
 }
 $("cerca").oninput = elenco;
 $("lista").onclick = (e) => { const b = e.target.closest("button[data-id]"); if (b) dettaglio(b.dataset.id); };

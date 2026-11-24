@@ -11,7 +11,8 @@
         "Per ogni progetto: apri in Progettazione LPS, calcoli della zavorra WRR, configurazioni delle torrette e carichi della Mappa con lo stesso CRM; da qui si crea anche un calcolo o una configurazione nuovi",
         "Configuratore torrette: la configurazione si salva da sola nel progetto scelto (prima restava solo nel browser)",
         "Zavorra WRR: il calcolo si collega al progetto unico; «Tutti i progetti» porta alla pagina del progetto",
-        "I progetti condivisi con i colleghi mostrano a tutti le stesse soluzioni"
+        "I progetti condivisi con i colleghi mostrano a tutti le stesse soluzioni",
+        "Progetti: filtri per app (Progettazione LPS, Zavorra WRR, Torrette, Condivisi con me) con il numero di progetti, e icone delle soluzioni su ogni progetto dell'elenco"
       ]
     },
     {
