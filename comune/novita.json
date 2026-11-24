@@ -2,6 +2,17 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-hub-6",
+      "data": "2026-11-24",
+      "app": "hub",
+      "titolo": "Progetti: anche quelli dei colleghi, in sola lettura",
+      "voci": [
+        "Nella pagina Progetti si vedono anche i progetti dei colleghi non condivisi con te, in sola lettura (soluzioni, calcoli zavorra, torrette, carichi della Mappa)",
+        "Di base sono filtrati solo i tuoi: filtri «I miei», «Condivisi con me», «Dei colleghi», «Tutti», insieme ai filtri per app",
+        "Su un progetto di un collega «Chiedi la condivisione» prepara la mail al proprietario"
+      ]
+    },
+    {
       "id": "2026-11-24-hub-5",
       "data": "2026-11-24",
       "app": "hub",

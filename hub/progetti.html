@@ -38,6 +38,7 @@
   .app-mini { display: inline-flex; gap: 6px; margin-top: 3px; }
   .app-mini span { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; color: var(--tenue); }
   .app-mini svg { width: 14px; height: 14px; color: var(--arancio); }
+  .tag.lettura { background: var(--grigio); color: var(--tenue); }
   .tag { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: #fff4e0; color: #9a5b00; }
   .app { border-top: 1px solid var(--bordo); padding: 14px 0; }
   .app:first-of-type { border-top: 0; }
@@ -57,7 +58,7 @@
 </div></header>
 <section class="eroe"><div class="contenitore">
   <h1>Progetti</h1>
-  <p>Un solo progetto, con il numero CRM, per tutte le app: dentro trovi le soluzioni di Progettazione LPS, i calcoli della zavorra WRR, le configurazioni delle torrette e i carichi della Mappa con lo stesso CRM. Lo vedono anche i colleghi con cui lo condividi.</p>
+  <p>Un solo progetto, con il numero CRM, per tutte le app: dentro trovi le soluzioni di Progettazione LPS, i calcoli della zavorra WRR, le configurazioni delle torrette e i carichi della Mappa con lo stesso CRM. Vedi anche i progetti dei colleghi in sola lettura; ci lavora chi ha il progetto o chi lo ha avuto in condivisione.</p>
 </div></section>
 <main class="contenitore">
   <div id="cancello"><p id="cancelloMsg">Carico…</p><p><a class="btn btn-primario" id="cancelloBtn" href="./" hidden>Vai a OBO Hub</a></p></div>
@@ -65,7 +66,9 @@
     <section class="riquadro" aria-labelledby="h-elenco">
       <h2 id="h-elenco">I progetti</h2>
       <label><span>Cerca</span><input id="cerca" type="search" placeholder="CRM, nome, comune"></label>
+      <div class="filtri" id="filtriChi" role="group" aria-label="Di chi sono i progetti"></div>
       <div class="filtri" id="filtri" role="group" aria-label="Filtra per app"></div>
+      <p class="nota" id="notaElenco" style="margin:8px 0 0"></p>
       <ul class="lista" id="lista"></ul>
       <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:600">+ Nuovo progetto</summary>
         <form class="campi" id="nuovo" style="margin-top:8px">
@@ -101,8 +104,9 @@ const icona = (k) => `<svg class="icona" viewBox="0 0 24 24" fill="none" stroke=
 const mancaSql = (e) => /does not exist|schema cache|Could not find|column/i.test(e?.message || "");
 
 const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
-let utente = null, progetti = [], scelto = new URLSearchParams(location.search).get("id"), filtro = "tutte";
-const FILTRI = [["tutte", "Tutte"], ["lps", "Progettazione LPS"], ["zavorra", "Zavorra WRR"], ["torrette", "Torrette"], ["condivisi", "Condivisi con me"]];
+let utente = null, progetti = [], scelto = new URLSearchParams(location.search).get("id"), filtro = "tutte", chi = "miei", tutti = true;
+const CHI = [["miei", "I miei"], ["condivisi", "Condivisi con me"], ["colleghi", "Dei colleghi"], ["tutti", "Tutti"]];
+const FILTRI = [["tutte", "Tutte le app"], ["lps", "Progettazione LPS"], ["zavorra", "Zavorra WRR"], ["torrette", "Torrette"]];
 const mini = (k, n) => `<span title="${k === "lps" ? "Progettazione LPS" : k === "zavorra" ? "Calcoli zavorra WRR" : "Configurazioni torrette"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${SVG[k]}</svg>${n === true ? "" : n}</span>`;
 
 function fuori(msg) { $("cancelloMsg").textContent = msg; $("cancelloBtn").hidden = false; }
@@ -119,11 +123,25 @@ function fuori(msg) { $("cancelloMsg").textContent = msg; $("cancelloBtn").hidde
 })();
 
 async function carica() {
+  const tp = await supabase.rpc("tutti_i_progetti");
+  if (!tp.error) {
+    tutti = true;
+    progetti = (tp.data || []).map((p) => ({ id: p.id, codice: p.codice, nome: p.nome, comune: p.comune, data_modifica: p.data_modifica, mio: p.mio,
+      condiviso: !p.mio && p.condiviso ? (p.proprietario_nome || p.proprietario_email || "collega") : "", lettura: !p.mio && !p.condiviso,
+      proprietario: p.proprietario_nome || p.proprietario_email || "collega", email: p.proprietario_email, lps: p.lps, zavorra: p.zavorra, torrette: p.torrette }));
+    $("notaElenco").textContent = "I progetti dei colleghi si vedono in sola lettura: per lavorarci chiedi al proprietario di condividerli.";
+    { const ps = progetti.find((p) => p.id === scelto); if (ps && !ps.mio) chi = ps.condiviso ? "condivisi" : "colleghi"; }
+    disegnaFiltri(); elenco();
+    if (scelto && progetti.some((p) => p.id === scelto)) dettaglio(scelto);
+    return;
+  }
+  tutti = false;
+  $("notaElenco").textContent = /does not exist|schema cache|Could not find/i.test(tp.error.message) ? "Per vedere anche i progetti dei colleghi (sola lettura) va eseguito in Supabase il SQL 19." : "";
   const [miei, cond] = await Promise.all([
     supabase.from("progetti").select("id, codice, nome, comune, data_modifica").eq("utente", utente.id).order("data_modifica", { ascending: false }).limit(500),
     supabase.rpc("progetti_condivisi_con_me"),
   ]);
-  progetti = (miei.data || []).map((p) => ({ ...p, condiviso: "" }));
+  progetti = (miei.data || []).map((p) => ({ ...p, condiviso: "", mio: true }));
   for (const p of cond.error ? [] : cond.data || []) if (!progetti.some((x) => x.id === p.id)) progetti.push({ id: p.id, codice: p.codice, nome: p.nome, comune: p.comune, data_modifica: p.data_modifica, condiviso: p.proprietario_nome || p.proprietario_email || "collega" });
   // quali app hanno lavorato in ogni progetto (per i filtri e le icone nell'elenco)
   const ids = progetti.map((p) => p.id);
@@ -142,19 +160,40 @@ async function carica() {
   elenco();
   if (scelto && progetti.some((p) => p.id === scelto)) dettaglio(scelto);
 }
-const passa = (p, k) => k === "tutte" || (k === "condivisi" ? !!p.condiviso : !!p[k]);
+const passaChi = (p, k) => k === "tutti" || (k === "miei" ? !!p.mio : k === "condivisi" ? !!p.condiviso : !!p.lettura);
+const passa = (p, k) => k === "tutte" || !!p[k];
 function disegnaFiltri() {
-  $("filtri").innerHTML = FILTRI.map(([k, t]) => `<button type="button" data-f="${k}" aria-pressed="${k === filtro}">${t} <small>${progetti.filter((p) => passa(p, k)).length}</small></button>`).join("");
+  $("filtriChi").innerHTML = CHI.filter(([k]) => tutti || k !== "colleghi").map(([k, t]) => `<button type="button" data-c="${k}" aria-pressed="${k === chi}">${t} <small>${progetti.filter((p) => passaChi(p, k)).length}</small></button>`).join("");
+  $("filtri").innerHTML = FILTRI.map(([k, t]) => `<button type="button" data-f="${k}" aria-pressed="${k === filtro}">${t} <small>${progetti.filter((p) => passaChi(p, chi) && passa(p, k)).length}</small></button>`).join("");
 }
 $("filtri").onclick = (e) => { const b = e.target.closest("button[data-f]"); if (!b) return; filtro = b.dataset.f; disegnaFiltri(); elenco(); };
+$("filtriChi").onclick = (e) => { const b = e.target.closest("button[data-c]"); if (!b) return; chi = b.dataset.c; disegnaFiltri(); elenco(); };
 function elenco() {
   const f = $("cerca").value.trim().toLowerCase();
-  const vis = progetti.filter((p) => passa(p, filtro) && (!f || [p.codice, p.nome, p.comune].join(" ").toLowerCase().includes(f)));
-  $("lista").innerHTML = vis.length ? vis.map((p) => `<li><button type="button" data-id="${esc(p.id)}" aria-pressed="${p.id === scelto}"><b>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || "Senza nome")}</b><small>${esc(p.comune || "Comune non indicato")} · ${data(p.data_modifica)}${p.condiviso ? ` · <span class="tag">condiviso da ${esc(p.condiviso)}</span>` : ""}</small>${p.lps || p.zavorra || p.torrette ? `<span class="app-mini">${p.lps ? mini("lps", true) : ""}${p.zavorra ? mini("zavorra", p.zavorra) : ""}${p.torrette ? mini("torrette", p.torrette) : ""}</span>` : ""}</button></li>`).join("")
+  const vis = progetti.filter((p) => passaChi(p, chi) && passa(p, filtro) && (!f || [p.codice, p.nome, p.comune].join(" ").toLowerCase().includes(f)));
+  $("lista").innerHTML = vis.length ? vis.map((p) => `<li><button type="button" data-id="${esc(p.id)}" aria-pressed="${p.id === scelto}"><b>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || "Senza nome")}</b><small>${esc(p.comune || "Comune non indicato")} · ${data(p.data_modifica)}${p.condiviso ? ` · <span class="tag">condiviso da ${esc(p.condiviso)}</span>` : ""}${p.lettura ? ` · <span class="tag lettura">di ${esc(p.proprietario)} · sola lettura</span>` : ""}</small>${p.lps || p.zavorra || p.torrette ? `<span class="app-mini">${p.lps ? mini("lps", true) : ""}${p.zavorra ? mini("zavorra", p.zavorra) : ""}${p.torrette ? mini("torrette", p.torrette) : ""}</span>` : ""}</button></li>`).join("")
     : `<li class="nota">${progetti.length ? "Nessun progetto per questo filtro." : "Non hai ancora progetti: creane uno qui sotto."}</li>`;
 }
 $("cerca").oninput = elenco;
 $("lista").onclick = (e) => { const b = e.target.closest("button[data-id]"); if (b) dettaglio(b.dataset.id); };
+
+async function dettaglioLettura(p, box) {
+  const id = p.id;
+  box.innerHTML = `<h2>${esc([p.codice, p.nome].filter(Boolean).join(" · "))}</h2><p class="nota">Carico…</p>`;
+  const [sol, car] = await Promise.all([supabase.rpc("soluzioni_progetto", { p_progetto: id }), supabase.rpc("carichi_progetto", { p_progetto: id })]);
+  if (scelto !== id) return;
+  const righe = sol.data || [], gruppo = (app) => righe.filter((r) => r.app === app);
+  const elencoApp = (app) => gruppo(app).length ? `<ul>${gruppo(app).map((r) => `<li><span><b>${esc(r.nome)}</b></span><span class="nota">${r.dettaglio ? esc(r.dettaglio) + " · " : ""}${data(r.aggiornata_il)}</span></li>`).join("")}</ul>` : `<p class="nota" style="margin:4px 0 0">Nessuna.</p>`;
+  const oggetto = encodeURIComponent(`Condivisione progetto ${[p.codice, p.nome].filter(Boolean).join(" · ")}`);
+  const corpo = encodeURIComponent(`Ciao, puoi condividere con me il progetto ${[p.codice, p.nome].filter(Boolean).join(" · ")}? (Progettazione LPS → Progetti → Condividi)`);
+  box.innerHTML = `<h2>${esc([p.codice, p.nome].filter(Boolean).join(" · "))}</h2>
+    <p class="nota" style="margin-top:-4px">${esc(p.comune || "Comune non indicato")} · di ${esc(p.proprietario)} · aggiornato il ${data(p.data_modifica)}</p>
+    <p class="avviso"><b>Sola lettura.</b> Il progetto è di ${esc(p.proprietario)}: per aprirlo e lavorarci chiedi di condividerlo con te.${p.email ? ` <a href="mailto:${esc(p.email)}?subject=${oggetto}&body=${corpo}">Chiedi la condivisione</a>` : ""}</p>
+    <div class="app"><h3>${icona("lps")}Progettazione LPS</h3><p class="nota" style="margin:4px 0 0">${p.lps ? "Progetto LPS presente." : "Ancora nessun dato LPS."}</p></div>
+    <div class="app"><h3>${icona("zavorra")}Zavorra telai inverter WRR <span class="nota">(${gruppo("zavorra").length})</span></h3>${elencoApp("zavorra")}</div>
+    <div class="app"><h3>${icona("torrette")}Configuratore torrette <span class="nota">(${gruppo("torrette").length})</span></h3>${elencoApp("torrette")}</div>
+    <div class="app"><h3>${icona("mappa")}Mappa carichi ufficio tecnico</h3>${(car.data || []).length ? `<ul>${car.data.map((c) => `<li><span><b>${esc(c.nome)}</b> · ${esc(c.persona)}</span><span class="nota">${esc(c.priorita)} · dal ${esc(c.inizio || "–")} · ${fmt(c.giorni)} gg × ${fmt(c.ore_giorno)} h</span></li>`).join("")}</ul>` : `<p class="nota" style="margin:4px 0 0">${p.codice ? `Nessun carico in Mappa con il CRM ${esc(p.codice)}.` : "Senza numero CRM la Mappa non si collega."}</p>`}</div>`;
+}
 
 $("nuovo").onsubmit = async (e) => {
   e.preventDefault();
@@ -172,6 +211,7 @@ async function dettaglio(id) {
   history.replaceState(null, "", "?id=" + encodeURIComponent(id));
   const p = progetti.find((x) => x.id === id); if (!p) return;
   const box = $("dettaglio");
+  if (p.lettura) return dettaglioLettura(p, box);
   box.innerHTML = `<h2>${esc([p.codice, p.nome].filter(Boolean).join(" · "))}</h2><p class="nota" style="margin-top:-4px">${esc(p.comune || "Comune non indicato")}${p.condiviso ? ` · condiviso da ${esc(p.condiviso)}` : ""} · aggiornato il ${data(p.data_modifica)}</p><p class="nota">Carico le soluzioni…</p>`;
   const [zav, sol, car] = await Promise.all([
     supabase.from("calcoli_zavorra").select("id, progetto, cliente, telaio, vento, risultato_kg, aggiornato_il, created_at").eq("progetto_lps", id).order("aggiornato_il", { ascending: false }),
