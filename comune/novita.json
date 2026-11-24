@@ -2,6 +2,19 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-zavorra-1",
+      "data": "2026-11-24",
+      "app": "tutte",
+      "titolo": "Nuova app: Zavorra telai inverter WRR",
+      "voci": [
+        "Calcolo della zavorra dei telai OBO Magic PV Mount WRR F1000, F1500, D1000, D1500 (cap. 11 e tabelle 5–8 delle istruzioni OBO): vento, apparecchiature, controllo del telaio, tabella per tutte le velocità e testo per email",
+        "Stessa barra, colori e accesso delle altre app di OBO Hub; i quattro telai con foto e link a obo.it",
+        "Nella sezione Prodotti OBO le schede dei telai WRR hanno «Calcola la zavorra», che apre l'app con il telaio già scelto",
+        "Archivio dei calcoli con il tuo account (serve il SQL 14 zavorra-wrr.sql); i calcoli salvati non si cancellano",
+        "Si abilita per persona: Amministrazione → Utenti → Cambia sezioni → Zavorra telai inverter WRR"
+      ]
+    },
+    {
       "id": "2026-11-24-hub-4",
       "data": "2026-11-24",
       "app": "tutte",

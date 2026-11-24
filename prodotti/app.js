@@ -10,6 +10,8 @@ import { leggiXlsx, leggiCsv, scriviXlsx } from "./xlsx.js";
 import { CONFIG } from "../config.js";
 
 const SITO = "https://www.obo.it";
+/** Telai inverter WRR (Magic PV Mount): dalla scheda si apre l'app Zavorra telai inverter WRR. */
+const WRR = ["5904013", "5904015", "5904026", "5904029"];
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const leggi = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -160,15 +162,17 @@ function rigaProdotto(r, q = "", dataNuovo = "") {
   const nuovo = NUOVI.has(r[0]) ? `<span class="nuovo">${T("NUOVO", "NEW")}</span>` : "";
   const cat = NOMI_CAT.get(catDi(r));
   return `<a class="prodotto" href="${esc(url(r[3]))}" target="_blank" rel="noopener">${img}
-    <span>${cat ? `<span class="cat">${esc(cat)}</span>` : ""}<h3>${evidenzia(r[1], q)}${nuovo}</h3>${r[2] ? `<p>${evidenzia(r[2], q)}</p>` : ""}</span>
+    <span>${cat ? `<span class="cat">${esc(cat)}</span>` : ""}<h3>${evidenzia(r[1], q)}${nuovo}</h3>${r[2] ? `<p>${evidenzia(r[2], q)}</p>` : ""}${WRR.includes(r[0]) ? `<span class="zavlink" role="link" tabindex="0" data-zav="${esc(r[0])}">${T("Calcola la zavorra", "Calculate ballast")} →</span>` : ""}</span>
     <span class="art">${evidenzia(r[0], q)}<small>${T("art.", "item")}${dataNuovo ? ` · ${T("nuovo dal", "new since")} ${dataIt(dataNuovo)}` : r[5] ? ` · ${T("dal", "since")} ${dataIt(r[5])}` : ""}</small></span></a>`;
 }
 function cartaProdotto(r) {
   // novita.json: come prodotti.json + data della novità in fondo (indice 9; 8 nei file vecchi)
   const data = r.length > 9 ? r[9] : r.length > 8 ? r[8] : r[7], img = (r.length > 8 ? r[7] : "") || r[4];
   return `<a class="carta" href="${esc(url(r[3]))}" target="_blank" rel="noopener"><span class="foto">${img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
-    <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${data ? ` · ${dataIt(data)}` : ""}</span><h3>${esc(r[1])}</h3><p>${esc(senzaScopri(r[2]))}</p><span class="art">${esc(r[0])}</span></span></a>`;
+    <span class="corpo"><span class="data">${T("NUOVO", "NEW")}${data ? ` · ${dataIt(data)}` : ""}</span><h3>${esc(r[1])}</h3><p>${esc(senzaScopri(r[2]))}</p><span class="art">${esc(r[0])}</span>${WRR.includes(r[0]) ? `<span class="zavlink" role="link" tabindex="0" data-zav="${esc(r[0])}">${T("Calcola la zavorra", "Calculate ballast")} →</span>` : ""}</span></a>`;
 }
+document.addEventListener("click", (e) => { const z = e.target.closest?.("[data-zav]"); if (!z) return; e.preventDefault(); e.stopPropagation(); location.href = `../zavorra-wrr/?codice=${z.dataset.zav}`; }, true);
+document.addEventListener("keydown", (e) => { const z = e.target.closest?.("[data-zav]"); if (z && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.href = `../zavorra-wrr/?codice=${z.dataset.zav}`; } });
 /** Prodotto in evidenza su OBO.global, con la pagina italiana di obo.it. */
 const senzaScopri = (t) => String(t || "").replace(/Scopri di più su[\s\S]*?adesso!/g, "").replace(/\s+/g, " ").trim();
 function cartaEvidenza(x) {

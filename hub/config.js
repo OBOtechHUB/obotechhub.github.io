@@ -53,6 +53,17 @@ export const APP = [
     soloAdmin: true,
   },
   {
+    id: "zavorra",
+    nome: "Zavorra telai inverter WRR",
+    nome_en: "WRR inverter frame ballast",
+    descrizione: "Zavorra dei telai OBO Magic PV Mount WRR F e WRR D (tabelle delle istruzioni OBO): vento, apparecchi, controllo del telaio e archivio dei calcoli.",
+    descrizione_en: "Ballast for OBO Magic PV Mount WRR F and WRR D frames (OBO tables): wind, devices, frame check and calculation archive.",
+    icona: "zavorra",
+    url: "zavorra-wrr/",
+    // si abilita per persona (Amministrazione → Utenti → Cambia sezioni → Zavorra telai inverter WRR)
+    abilitataSe: (sezioni) => sezioni.includes("app_zavorra"),
+  },
+  {
     id: "manutenzione",
     nome: "Manutenzione app",
     nome_en: "App maintenance",
