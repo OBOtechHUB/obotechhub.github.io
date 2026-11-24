@@ -152,12 +152,13 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
             <label class="f" for="${u}-codice">Numero progetto CRM<input id="${u}-codice" maxlength="100" placeholder="Es. P-2026-0142"></label>
             <label class="f" for="${u}-progetto">Nome / riferimento<input id="${u}-progetto" maxlength="160"></label>
             <label class="f" for="${u}-cliente">Cliente<input id="${u}-cliente" maxlength="120"></label>
-            <label class="f" for="${u}-lps">Progetto LPS collegato<select id="${u}-lps"><option value="">— nessuno —</option></select></label>
+            <label class="f" for="${u}-lps">Progetto (unico per tutte le app)<select id="${u}-lps"><option value="">— nessuno —</option></select></label>
           </form>
           <div class="tools">
             <button type="button" class="btn primary" id="${u}-save">Salva nel progetto</button>
             <button type="button" class="btn" id="${u}-nuovo">Nuovo calcolo</button>
             <span class="hint" id="${u}-saveMsg" role="status"></span>
+            <a class="btn" href="../progetti.html" id="${u}-vaiProgetti">Tutti i progetti</a>
             <span class="hint" style="margin-left:auto"><span id="${u}-who"></span></span>
           </div>
           <label class="f" for="${u}-cerca" style="max-width:340px">Cerca nei calcoli<input id="${u}-cerca" type="search" placeholder="codice, nome, cliente, telaio"></label>
@@ -365,6 +366,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       q('cliente').value = row.cliente || ''; q('progetto').value = row.progetto || ''; q('codice').value = row.codice_crm || '';
       q('lps').value = row.progetto_lps && lps.some((p) => p.id === row.progetto_lps) ? row.progetto_lps : '';
       ricordaAperto(row.id);
+      q('vaiProgetti').href = '../progetti.html' + (q('lps').value ? '?id=' + encodeURIComponent(q('lps').value) : '');
       renderDevs(); update(); mostraAperto();
     }
     function disegnaElenco() {
@@ -397,8 +399,8 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       q('lps').innerHTML = '<option value="">— nessuno —</option>' + lps.map((p) => `<option value="${esc(p.id)}">${esc([p.codice, p.nome].filter(Boolean).join(' · ') || 'senza nome')}${p.condiviso ? ' (condiviso)' : ''}</option>`).join('');
       await elenca();
       // apertura: ?calcolo=<id>, ?progetto=<id progetto LPS>, altrimenti l'ultimo calcolo aperto su questo dispositivo
-      const par = new URLSearchParams(location.search), daUrl = par.get('calcolo'), daLps = par.get('progetto');
-      const riga = righe.find((r) => r.id === daUrl) || (daLps && righe.find((r) => r.progetto_lps === daLps)) || (!daLps && righe.find((r) => r.id === aperto));
+      const par = new URLSearchParams(location.search), daUrl = par.get('calcolo'), daLps = par.get('progetto'), nuovo = par.has('nuovo');
+      const riga = righe.find((r) => r.id === daUrl) || (!nuovo && daLps && righe.find((r) => r.progetto_lps === daLps)) || (!daLps && righe.find((r) => r.id === aperto));
       if (riga) carica(riga);
       else {
         ricordaAperto(null);
@@ -408,6 +410,8 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     };
     q('save').onclick = () => salva(false);
     q('nuovo').onclick = () => { ricordaAperto(null); ['codice', 'progetto', 'cliente'].forEach((n) => (q(n).value = '')); q('lps').value = ''; q('saveMsg').textContent = ''; mostraAperto(); disegnaElenco(); };
+    const aggLink = () => { const v = q('lps').value; q('vaiProgetti').href = '../progetti.html' + (v ? '?id=' + encodeURIComponent(v) : ''); };
+    q('lps').addEventListener('change', aggLink);
     q('lps').onchange = () => { const p = lps.find((x) => x.id === q('lps').value); if (p) { if (!q('codice').value) q('codice').value = p.codice || ''; if (!q('progetto').value) q('progetto').value = p.nome || ''; } mostraAperto(); autoSalva(); };
     ['codice', 'progetto', 'cliente'].forEach((n) => q(n).addEventListener('input', () => autoSalva()));
     q('cerca').oninput = disegnaElenco;

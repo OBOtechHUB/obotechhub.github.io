@@ -3,7 +3,7 @@
  *   1 Progetto  →  2 Pavimento  →  3 Torretta  →  4 Apparecchi  →  5 Riepilogo
  * Le torrette configurate diventano "torrette tipo" del progetto, riusabili in tutte le stanze compatibili.
  * Nel Riepilogo l'edificio si divide in unità (piani, aree) e stanze; ogni stanza ha il suo pavimento e le sue torrette.
- * Il progetto resta salvato in questo browser.
+ * La configurazione si salva nel progetto unico di OBO Hub (tabella progetti_soluzioni, SQL 18) e in questo browser.
  */
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 import { CONFIG } from "../config.js";
@@ -67,7 +67,7 @@ function fuori(msg) { $("cancelloMsg").textContent = msg; $("cancelloBtn").hidde
     ]);
     if (aal?.nextLevel === "aal2" && aal?.currentLevel !== "aal2") return fuori(T("Completa l'accesso con Authenticator da OBO Hub.", "Complete the Authenticator sign-in from OBO Hub."));
     if (!profilo || profilo.ruolo !== "admin") return fuori(T("Non hai accesso a questa app.", "You don't have access to this app."));
-    $("cancello").hidden = true; $("app").hidden = false; disegna();
+    $("cancello").hidden = true; $("app").hidden = false; await avviaCloud(session.user); disegna();
   } catch { fuori(T("Accesso non riuscito: riprova da OBO Hub.", "Sign-in failed: try again from OBO Hub.")); }
 })();
 
@@ -75,7 +75,46 @@ function fuori(msg) { $("cancelloMsg").textContent = msg; $("cancelloBtn").hidde
 const CHIAVE = "obo-torrette-progetto";
 let P; try { P = JSON.parse(leggi(CHIAVE) || "null"); } catch { P = null; }
 if (!P || !Array.isArray(P.tipi)) P = { nome: "", crm: "", tipi: [], unita: [] };
-const salva = () => scrivi(CHIAVE, JSON.stringify(P));
+const salva = () => { scrivi(CHIAVE, JSON.stringify(P)); salvaCloud(); };
+
+// ---------- progetto unico di OBO Hub: la configurazione è una "soluzione" del progetto ----------
+const CHIAVE_SOL = "obo-torrette-soluzione";
+const C = { progetti: [], sol: leggi(CHIAVE_SOL), stato: "", timer: null, attivo: false };
+async function avviaCloud(user) {
+  C.attivo = true;
+  const [miei, cond] = await Promise.all([
+    supabase.from("progetti").select("id, codice, nome, comune").eq("utente", user.id).order("data_modifica", { ascending: false }).limit(500),
+    supabase.rpc("progetti_condivisi_con_me"),
+  ]);
+  C.progetti = (miei.data || []).map((p) => ({ ...p, condiviso: false }));
+  for (const p of cond.error ? [] : cond.data || []) if (!C.progetti.some((x) => x.id === p.id)) C.progetti.push({ id: p.id, codice: p.codice, nome: p.nome, comune: p.comune, condiviso: true });
+  const par = new URLSearchParams(location.search), daSol = par.get("soluzione"), daProg = par.get("progetto");
+  const idSol = daSol || (!daProg ? C.sol : null);
+  if (idSol) {
+    const { data, error } = await supabase.from("progetti_soluzioni").select("id, progetto, nome, dati").eq("id", idSol).maybeSingle();
+    if (data?.dati && Array.isArray(data.dati.tipi)) { P = { unita: [], ...data.dati, progettoId: data.progetto }; C.sol = data.id; scrivi(CHIAVE_SOL, data.id); scrivi(CHIAVE, JSON.stringify(P)); C.stato = T("Configurazione aperta dal progetto.", "Configuration opened from the project."); }
+    else if (error && /does not exist|schema cache/i.test(error.message)) C.stato = T("Salvataggio nei progetti non ancora attivo: eseguire il SQL 18.", "Project saving not active yet: run SQL 18.");
+    else if (daSol) C.stato = T("Configurazione non disponibile.", "Configuration not available.");
+  } else if (daProg) {
+    const pr = C.progetti.find((x) => x.id === daProg);
+    P = { nome: pr?.nome || "", crm: pr?.codice || "", tipi: [], unita: [], progettoId: pr ? pr.id : null };
+    C.sol = null; scrivi(CHIAVE_SOL, null); scrivi(CHIAVE, JSON.stringify(P));
+    C.stato = T("Nuova configurazione nel progetto: si salva da sola.", "New configuration in the project: it saves automatically.");
+  }
+  if (daSol || daProg) history.replaceState(null, "", location.pathname);
+}
+function salvaCloud() {
+  if (!C.attivo || !P.progettoId) return;
+  clearTimeout(C.timer);
+  C.timer = setTimeout(async () => {
+    const riga = { app: "torrette", progetto: P.progettoId, nome: (P.nome || T("Torrette", "Outlets")).slice(0, 200), dati: P };
+    const q = C.sol ? supabase.from("progetti_soluzioni").update(riga).eq("id", C.sol) : supabase.from("progetti_soluzioni").insert(riga);
+    const { data, error } = await q.select("id").single();
+    if (error) C.stato = /does not exist|schema cache/i.test(error.message) ? T("Salvataggio nei progetti non ancora attivo: eseguire il SQL 18.", "Project saving not active yet: run SQL 18.") : T("Salvataggio nel progetto non riuscito: ", "Saving to the project failed: ") + error.message;
+    else { C.sol = data.id; scrivi(CHIAVE_SOL, data.id); C.stato = T("Salvato nel progetto alle ", "Saved to the project at ") + new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }); }
+    const el = document.getElementById("statoCloud"); if (el) el.textContent = C.stato;
+  }, 1200);
+}
 
 const famiglia = (id) => FAMIGLIE.find((f) => f.id === id);
 const modello = (fid, mid) => famiglia(fid)?.modelli.find((m) => m.id === mid);
@@ -138,7 +177,14 @@ function passi(n) {
 
 // 1 · Progetto
 function vistaProgetto() {
+  const pr = C.progetti.find((x) => x.id === P.progettoId);
   return `<div class="campi">
+      <label>${T("Progetto (unico per tutte le app)", "Project (one for all apps)")}<select data-progetto>
+        <option value="">${T("— scegli il progetto —", "— choose the project —")}</option>
+        ${C.progetti.map((p) => `<option value="${esc(p.id)}" ${p.id === P.progettoId ? "selected" : ""}>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || "—")}${p.condiviso ? T(" (condiviso)", " (shared)") : ""}</option>`).join("")}
+      </select>
+        <span class="crm" id="statoCloud">${esc(C.stato || (P.progettoId ? T("Le modifiche si salvano da sole nel progetto.", "Changes save automatically to the project.") : T("Scegli il progetto per salvare la configurazione (si ritrova da qualsiasi dispositivo).", "Choose the project to save the configuration (available on any device).")))}</span>
+        <span class="crm"><a href="../progetti.html${pr ? "?id=" + encodeURIComponent(pr.id) : ""}">${T("Tutti i progetti e le soluzioni", "All projects and solutions")}</a> · <button type="button" class="btn btn-bordo" style="padding:2px 10px;font-size:13px" data-azione="nuova-config">${T("Nuova configurazione", "New configuration")}</button></span></label>
       <label>${T("Nome progetto", "Project name")}<input type="text" data-p="nome" value="${esc(P.nome)}" placeholder="${T("Es. Uffici via Roma", "E.g. Via Roma offices")}"></label>
       <label>${T("Numero progetto CRM", "CRM project number")}<input type="text" data-p="crm" value="${esc(P.crm)}" placeholder="${T("Es. P-2026-0142", "E.g. P-2026-0142")}">
         <span class="crm">${T("Attenzione: indica l'ID progetto identico al CRM.", "Note: enter the project ID exactly as in the CRM.")}</span></label>
@@ -303,6 +349,7 @@ $("vista").addEventListener("click", (e) => {
   else if (d.togliStanza) { const [u, s] = trovaStanza(d.togliStanza); u.stanze = u.stanze.filter((x) => x !== s); }
   else if (d.togliRiga) { const [uid, sid, i] = d.togliRiga.split("|"); const [, s] = trovaStanza(uid + "|" + sid); s.righe.splice(Number(i), 1); }
   else if (d.azione === "excel") return scaricaExcel();
+  else if (d.azione === "nuova-config") { const pid = P.progettoId, pr = C.progetti.find((x) => x.id === pid); P = { nome: pr?.nome || "", crm: pr?.codice || "", tipi: [], unita: [], progettoId: pid || null }; C.sol = null; scrivi(CHIAVE_SOL, null); C.stato = T("Nuova configurazione.", "New configuration."); V.passo = 1; V.bozza = null; }
   else if (d.azione === "stampa") return window.print();
   else return;
   salva(); disegna();
@@ -315,6 +362,12 @@ $("vista").addEventListener("change", (e) => {
   else if (d.qta) { const [uid, sid, i] = d.qta.split("|"); const [, s] = trovaStanza(uid + "|" + sid); s.righe[Number(i)].qta = Math.max(0, Math.min(999, Math.round(Number(v) || 0))); }
   else if (e.target.id === "altezza") { V.bozza.altezza = Math.max(0, Number(v) || 0); const m = V.bozza.modello && modello(V.bozza.famiglia, V.bozza.modello); if (m && incompatibile(m, V.bozza.pavimento, V.bozza.altezza)) V.bozza.modello = null; }
   else if (e.target.id === "modulo") V.bozza.modulo = v;
+  else if ("progetto" in d) {
+    const pr = C.progetti.find((x) => x.id === v);
+    if (C.sol && P.progettoId && v !== P.progettoId) C.sol = null; // in un altro progetto diventa una nuova soluzione
+    P.progettoId = v || null; if (pr) { if (!P.nome) P.nome = pr.nome || ""; if (!P.crm) P.crm = pr.codice || ""; }
+    C.stato = "";
+  }
   else return;
   salva(); disegna();
 });

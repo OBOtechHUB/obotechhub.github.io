@@ -2,6 +2,19 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-24-hub-5",
+      "data": "2026-11-24",
+      "app": "hub",
+      "titolo": "Progetto unico per tutte le app",
+      "voci": [
+        "Nuova app «Progetti» in OBO Hub: un solo progetto con il numero CRM contiene le soluzioni di tutte le app",
+        "Per ogni progetto: apri in Progettazione LPS, calcoli della zavorra WRR, configurazioni delle torrette e carichi della Mappa con lo stesso CRM; da qui si crea anche un calcolo o una configurazione nuovi",
+        "Configuratore torrette: la configurazione si salva da sola nel progetto scelto (prima restava solo nel browser)",
+        "Zavorra WRR: il calcolo si collega al progetto unico; «Tutti i progetti» porta alla pagina del progetto",
+        "I progetti condivisi con i colleghi mostrano a tutti le stesse soluzioni"
+      ]
+    },
+    {
       "id": "2026-11-24-zavorra-2",
       "data": "2026-11-24",
       "app": "zavorra",

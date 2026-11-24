@@ -11,6 +11,17 @@ export const CONFIG = {
 // abilitataSe: riceve le sezioni abilitate all'utente (Admin → Utenti → Cambia sezioni).
 export const APP = [
   {
+    id: "progetti",
+    nome: "Progetti",
+    nome_en: "Projects",
+    descrizione: "Un solo progetto con il numero CRM per tutte le app: LPS, zavorra WRR, torrette e carichi della Mappa, condiviso con i colleghi.",
+    descrizione_en: "One project with the CRM number for all apps: LPS, WRR ballast, service outlets and workload map, shared with colleagues.",
+    icona: "cartella",
+    url: "progetti.html",
+    visitatori: false,
+    abilitataSe: () => true,
+  },
+  {
     id: "lps",
     nome: "Progettazione LPS",
     nome_en: "LPS Design",

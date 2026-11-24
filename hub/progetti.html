@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Progetti · OBO Hub</title>
+<meta name="description" content="Un solo progetto per tutte le app di OBO Hub: LPS, zavorra WRR, torrette e carichi della Mappa con lo stesso numero CRM.">
+<link rel="icon" href="favicon-32.png">
+<link rel="stylesheet" href="obo.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: calc(16px * var(--zoom, 1))/1.5 var(--font, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif); color: var(--testo); background: var(--sfondo); }
+  .contenitore { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  .eroe { background: var(--ardesia); color: #fff; padding: 18px 0 20px; }
+  .eroe h1 { margin: 4px 0 0; font-size: clamp(22px, 3vw, 28px); }
+  .eroe p { margin: 6px 0 0; font-size: 15px; opacity: .9; max-width: 760px; }
+  main { padding: 24px 16px 56px !important; }
+  .griglia { display: grid; gap: 20px; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); align-items: start; }
+  @media (max-width: 860px) { .griglia { grid-template-columns: minmax(0, 1fr); } }
+  .riquadro { border: .8px solid var(--bordo); border-radius: 12px; padding: 16px; background: var(--carta); min-width: 0; }
+  h2 { font-size: 18px; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--arancio); }
+  h3 { font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px; }
+  label span { display: block; font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  input { width: 100%; padding: 8px 10px; border: 1px solid var(--bordo); border-radius: 8px; background: var(--carta); color: var(--testo); font: inherit; }
+  .campi { display: grid; gap: 8px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--bordo); background: var(--carta); color: var(--testo); font: 600 14px var(--font, inherit); cursor: pointer; text-decoration: none; }
+  .btn:hover { border-color: var(--arancio); }
+  .btn-primario { background: var(--arancio); border-color: var(--arancio); color: #fff; }
+  .lista { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; max-height: 60vh; overflow: auto; }
+  .lista button { width: 100%; text-align: left; border: .8px solid var(--bordo); border-radius: 10px; padding: 8px 10px; background: var(--carta); color: inherit; font: inherit; cursor: pointer; }
+  .lista button[aria-pressed="true"] { border-color: var(--arancio); background: var(--scelto, #fff4e0); box-shadow: inset 0 0 0 1px var(--arancio); }
+  .lista small, .nota { color: var(--tenue); font-size: 13px; }
+  .lista small { display: block; }
+  .tag { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: #fff4e0; color: #9a5b00; }
+  .app { border-top: 1px solid var(--bordo); padding: 14px 0; }
+  .app:first-of-type { border-top: 0; }
+  .app ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .app li { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; border: .8px solid var(--bordo); border-radius: 10px; padding: 8px 10px; }
+  .app li a { color: inherit; font-weight: 600; }
+  .azioni-app { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .icona { width: 22px; height: 22px; color: var(--arancio); flex: none; }
+  .avviso { border-left: 4px solid var(--arancio); background: var(--grigio); padding: 8px 12px; border-radius: 8px; font-size: 14px; margin: 8px 0 0; }
+  #cancello { padding: 40px 0; text-align: center; }
+</style>
+</head>
+<body>
+<header class="barra"><div class="contenitore">
+  <a class="marchio" href="./"><img src="icona-192.png" alt=""><span><b>Progetti</b><small>← OBO Hub</small></span></a>
+  <div class="azioni"><a class="ib hubtorna" href="./" title="Torna a OBO Hub" aria-label="Torna alla pagina iniziale di OBO Hub"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><small>OBO Hub</small></a></div>
+</div></header>
+<section class="eroe"><div class="contenitore">
+  <h1>Progetti</h1>
+  <p>Un solo progetto, con il numero CRM, per tutte le app: dentro trovi le soluzioni di Progettazione LPS, i calcoli della zavorra WRR, le configurazioni delle torrette e i carichi della Mappa con lo stesso CRM. Lo vedono anche i colleghi con cui lo condividi.</p>
+</div></section>
+<main class="contenitore">
+  <div id="cancello"><p id="cancelloMsg">Carico…</p><p><a class="btn btn-primario" id="cancelloBtn" href="./" hidden>Vai a OBO Hub</a></p></div>
+  <div class="griglia" id="app" hidden>
+    <section class="riquadro" aria-labelledby="h-elenco">
+      <h2 id="h-elenco">I progetti</h2>
+      <label><span>Cerca</span><input id="cerca" type="search" placeholder="CRM, nome, comune"></label>
+      <ul class="lista" id="lista"></ul>
+      <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:600">+ Nuovo progetto</summary>
+        <form class="campi" id="nuovo" style="margin-top:8px">
+          <label><span>Numero progetto CRM</span><input id="nCrm" maxlength="100" placeholder="Es. P-2026-0142" required></label>
+          <label><span>Nome progetto</span><input id="nNome" maxlength="200" required></label>
+          <label><span>Comune</span><input id="nComune" maxlength="200"></label>
+          <p class="nota" style="margin:0">Indica l'ID progetto identico a quello del CRM (stesse lettere, numeri e trattini).</p>
+          <button class="btn btn-primario" type="submit">Crea progetto</button>
+          <span class="nota" id="nEsito" role="status"></span>
+        </form>
+      </details>
+    </section>
+    <section class="riquadro" id="dettaglio" aria-live="polite"><p class="nota">Scegli un progetto a sinistra o creane uno nuovo.</p></section>
+  </div>
+</main>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
+import { CONFIG } from "./config.js";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const leggi = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+{ const t = leggi("obo-tema"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; const z = leggi("obo-zoom"); if (z) document.documentElement.style.setProperty("--zoom", z); }
+const data = (d) => (d ? new Date(d).toLocaleDateString("it-IT") : "");
+const fmt = (n) => Number(n).toLocaleString("it-IT");
+const SVG = {
+  lps: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  zavorra: '<path d="M4 20h16"/><rect x="6" y="15" width="12" height="5" rx="1"/><path d="M8 15V8l4-4 4 4v7"/><path d="M10 11h4"/>',
+  torrette: '<circle cx="12" cy="13" r="8"/><circle cx="12" cy="13" r="4"/><path d="M12 9v8M8 13h8M12 2v3"/>',
+  mappa: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h8"/>',
+};
+const icona = (k) => `<svg class="icona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${SVG[k]}</svg>`;
+const mancaSql = (e) => /does not exist|schema cache|Could not find|column/i.test(e?.message || "");
+
+const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
+let utente = null, progetti = [], scelto = new URLSearchParams(location.search).get("id");
+
+function fuori(msg) { $("cancelloMsg").textContent = msg; $("cancelloBtn").hidden = false; }
+(async () => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return fuori("Entra da OBO Hub per vedere i tuoi progetti. I visitatori non salvano progetti.");
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal?.nextLevel === "aal2" && aal?.currentLevel !== "aal2") return fuori("Completa l'accesso con Authenticator da OBO Hub.");
+    utente = session.user;
+    $("cancello").hidden = true; $("app").hidden = false;
+    await carica();
+  } catch { fuori("Accesso non riuscito: riprova da OBO Hub."); }
+})();
+
+async function carica() {
+  const [miei, cond] = await Promise.all([
+    supabase.from("progetti").select("id, codice, nome, comune, data_modifica").eq("utente", utente.id).order("data_modifica", { ascending: false }).limit(500),
+    supabase.rpc("progetti_condivisi_con_me"),
+  ]);
+  progetti = (miei.data || []).map((p) => ({ ...p, condiviso: "" }));
+  for (const p of cond.error ? [] : cond.data || []) if (!progetti.some((x) => x.id === p.id)) progetti.push({ id: p.id, codice: p.codice, nome: p.nome, comune: p.comune, data_modifica: p.data_modifica, condiviso: p.proprietario_nome || p.proprietario_email || "collega" });
+  elenco();
+  if (scelto && progetti.some((p) => p.id === scelto)) dettaglio(scelto);
+}
+function elenco() {
+  const f = $("cerca").value.trim().toLowerCase();
+  const vis = progetti.filter((p) => !f || [p.codice, p.nome, p.comune].join(" ").toLowerCase().includes(f));
+  $("lista").innerHTML = vis.length ? vis.map((p) => `<li><button type="button" data-id="${esc(p.id)}" aria-pressed="${p.id === scelto}"><b>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || "Senza nome")}</b><small>${esc(p.comune || "Comune non indicato")} · ${data(p.data_modifica)}${p.condiviso ? ` · <span class="tag">condiviso da ${esc(p.condiviso)}</span>` : ""}</small></button></li>`).join("")
+    : `<li class="nota">${progetti.length ? "Nessun progetto trovato." : "Non hai ancora progetti: creane uno qui sotto."}</li>`;
+}
+$("cerca").oninput = elenco;
+$("lista").onclick = (e) => { const b = e.target.closest("button[data-id]"); if (b) dettaglio(b.dataset.id); };
+
+$("nuovo").onsubmit = async (e) => {
+  e.preventDefault();
+  const codice = $("nCrm").value.trim(), nome = $("nNome").value.trim(), comune = $("nComune").value.trim();
+  if (!codice || !nome) return;
+  $("nEsito").textContent = "Creo il progetto…";
+  const { data: p, error } = await supabase.from("progetti").insert({ codice, nome, comune, dati: {} }).select("id").single();
+  if (error) { $("nEsito").textContent = "Progetto non creato: " + error.message; return; }
+  $("nEsito").textContent = "Progetto creato."; e.target.reset();
+  scelto = p.id; await carica(); dettaglio(p.id);
+};
+
+async function dettaglio(id) {
+  scelto = id; elenco();
+  history.replaceState(null, "", "?id=" + encodeURIComponent(id));
+  const p = progetti.find((x) => x.id === id); if (!p) return;
+  const box = $("dettaglio");
+  box.innerHTML = `<h2>${esc([p.codice, p.nome].filter(Boolean).join(" · "))}</h2><p class="nota" style="margin-top:-4px">${esc(p.comune || "Comune non indicato")}${p.condiviso ? ` · condiviso da ${esc(p.condiviso)}` : ""} · aggiornato il ${data(p.data_modifica)}</p><p class="nota">Carico le soluzioni…</p>`;
+  const [zav, sol, car] = await Promise.all([
+    supabase.from("calcoli_zavorra").select("id, progetto, cliente, telaio, vento, risultato_kg, aggiornato_il, created_at").eq("progetto_lps", id).order("aggiornato_il", { ascending: false }),
+    supabase.from("progetti_soluzioni").select("id, app, nome, aggiornata_il, archiviata").eq("progetto", id).eq("archiviata", false).order("aggiornata_il", { ascending: false }),
+    supabase.rpc("carichi_progetto", { p_progetto: id }),
+  ]);
+  if (scelto !== id) return;
+  const sql = (r, n) => (r.error ? `<p class="avviso">${mancaSql(r.error) ? `Da attivare: eseguire in Supabase il SQL ${n}.` : esc(r.error.message)}</p>` : "");
+  const torrette = (sol.data || []).filter((s) => s.app === "torrette");
+  const enc = encodeURIComponent(id);
+  box.innerHTML = `<h2>${esc([p.codice, p.nome].filter(Boolean).join(" · "))}</h2>
+    <p class="nota" style="margin-top:-4px">${esc(p.comune || "Comune non indicato")}${p.condiviso ? ` · condiviso da ${esc(p.condiviso)}` : ""} · aggiornato il ${data(p.data_modifica)}</p>
+    <div class="app"><h3>${icona("lps")}Progettazione LPS</h3>
+      <p class="nota" style="margin:4px 0 0">Edificio, rischio, captazione, calate, terra, SPD, vento, computo, relazione, sopralluogo e documentazione. Da qui si condivide il progetto con i colleghi o si passa a un'altra persona.</p>
+      <div class="azioni-app"><a class="btn btn-primario" href="${CONFIG.lps}progetti?apri=${enc}">Apri in Progettazione LPS</a><a class="btn" href="${CONFIG.lps}sopralluogo">Sopralluogo</a></div></div>
+    <div class="app"><h3>${icona("zavorra")}Zavorra telai inverter WRR <span class="nota">(${(zav.data || []).length})</span></h3>${sql(zav, 17)}
+      ${(zav.data || []).length ? `<ul>${zav.data.map((z) => `<li><a href="zavorra-wrr/?calcolo=${encodeURIComponent(z.id)}">${esc(z.progetto || "Calcolo zavorra")}</a><span class="nota">${esc(z.telaio)} · ${fmt(z.vento)} km/h · ${/^W/.test(z.telaio) ? "a parete" : z.risultato_kg == null ? "–" : fmt(z.risultato_kg) + " kg"} · ${data(z.aggiornato_il || z.created_at)}</span></li>`).join("")}</ul>` : `<p class="nota" style="margin:4px 0 0">Nessun calcolo in questo progetto.</p>`}
+      <div class="azioni-app"><a class="btn" href="zavorra-wrr/?progetto=${enc}&nuovo=1">+ Nuovo calcolo zavorra</a></div></div>
+    <div class="app"><h3>${icona("torrette")}Configuratore torrette <span class="nota">(${torrette.length})</span></h3>${sql(sol, 18)}
+      ${torrette.length ? `<ul>${torrette.map((s) => `<li><a href="torrette/?soluzione=${encodeURIComponent(s.id)}">${esc(s.nome || "Configurazione torrette")}</a><span class="nota">${data(s.aggiornata_il)}</span></li>`).join("")}</ul>` : `<p class="nota" style="margin:4px 0 0">Nessuna configurazione in questo progetto.</p>`}
+      <div class="azioni-app"><a class="btn" href="torrette/?progetto=${enc}">+ Nuova configurazione torrette</a></div></div>
+    <div class="app"><h3>${icona("mappa")}Mappa carichi ufficio tecnico</h3>${car.error && !mancaSql(car.error) ? sql(car, 18) : ""}
+      ${car.error && mancaSql(car.error) ? `<p class="avviso">Da attivare: eseguire in Supabase il SQL 18.</p>` : (car.data || []).length ? `<ul>${car.data.map((c) => `<li><span><b>${esc(c.nome)}</b> · ${esc(c.persona)}</span><span class="nota">${esc(c.priorita)} · dal ${esc(c.inizio || "–")} · ${fmt(c.giorni)} gg × ${fmt(c.ore_giorno)} h</span></li>`).join("")}</ul>` : `<p class="nota" style="margin:4px 0 0">${p.codice ? `Nessun carico in Mappa con il CRM ${esc(p.codice)}.` : "Il progetto non ha numero CRM: senza CRM la Mappa non si collega."}</p>`}
+      <div class="azioni-app"><a class="btn" href="mappa-carichi/">Apri la Mappa carichi</a></div></div>`;
+}
+</script>
+<script src="testo.js"></script>
+<script src="piede.js"></script>
+</body>
+</html>
