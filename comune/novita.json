@@ -4,7 +4,7 @@
     {
       "id": "2026-11-24-hub-2",
       "data": "2026-11-24",
-      "app": "prodotti",
+      "app": "tutte",
       "titolo": "Nomi delle persone uniformi",
       "voci": [
         "In OBO Hub e nella Mappa carichi i nomi delle persone si vedono con il COGNOME tutto maiuscolo e il Nome con solo l'iniziale maiuscola (es. Marco LO VETERE); anche il saluto usa il nome scritto correttamente",
