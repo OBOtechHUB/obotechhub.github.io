@@ -1072,9 +1072,10 @@ html { touch-action: pan-x pan-y; }
 
 /* ===== Barra compatta come Progettazione LPS (24/11): OBO Hub in evidenza, poche sezioni, il resto nel Menu ===== */
 .nav { overflow: visible; position: static; }
-.nav a.hubnav { background: #f39b00; color: #fff !important; border-radius: 12px; min-width: 64px; margin-right: 6px; box-shadow: 0 4px 12px -6px rgba(243,155,0,.8); }
-.nav a.hubnav:hover { background: #d98a00; color: #fff !important; }
-.nav a.hubnav svg { stroke: #fff; }
+.nav a.hubnav { background: transparent; color: #f39b00 !important; min-width: 64px; margin-right: 6px; }
+.nav a.hubnav:hover { color: #d98a00 !important; }
+.nav a.hubnav svg { stroke: #f39b00; stroke-width: 2; }
+.nav a.hubnav .lab { color: #f39b00; font-weight: 700; }
 body.visitatore .nav a.hubnav { display: flex !important; }
 .navmenu { position: absolute; top: calc(100% + 6px); right: max(16px, calc(50% - 570px)); z-index: 80; min-width: 260px; max-height: calc(100vh - 100px); overflow-y: auto;
   display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 10px; border: .8px solid var(--scheda); border-radius: 14px; background: var(--surface); box-shadow: 0 18px 40px -16px rgba(0,0,0,.45); }

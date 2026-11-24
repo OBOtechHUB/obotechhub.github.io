@@ -78,9 +78,9 @@
   .griglia > .app:nth-child(n+6) { animation-delay: 200ms; }
 }
 
-/* ===== Icona OBO Hub sempre in evidenza nella barra in alto, per tornare alla pagina iniziale (24/11) ===== */
-a.ib.hubtorna, .azioni a.hubtorna { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 60px; min-height: 48px; padding: 4px 10px;
-  border-radius: 12px; background: #f39b00 !important; color: #fff !important; text-decoration: none; box-shadow: 0 4px 12px -6px rgba(243,155,0,.8); margin-right: 4px; }
-a.ib.hubtorna small { color: #fff !important; font-weight: 600; font-size: 11px; }
-a.ib.hubtorna:hover { background: #d98a00 !important; }
-a.ib.hubtorna svg { stroke: #fff; }
+/* ===== Icona OBO Hub sempre in evidenza nella barra in alto, per tornare alla pagina iniziale (24/11): linee arancioni, senza riquadro ===== */
+a.ib.hubtorna, .azioni a.hubtorna { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 56px; padding: 4px 8px;
+  background: transparent !important; color: #f39b00 !important; text-decoration: none; margin-right: 4px; }
+a.ib.hubtorna small { color: #f39b00 !important; font-weight: 700; font-size: 11px; }
+a.ib.hubtorna:hover, a.ib.hubtorna:hover small { color: #d98a00 !important; }
+a.ib.hubtorna svg { stroke: currentColor; stroke-width: 2.2; }
