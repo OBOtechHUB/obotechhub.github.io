@@ -2850,9 +2850,10 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     var m = msg || $('of-impmsg'); if (!file) return;
     if (!window.CrmImport) { m.textContent = 'Lettura del file non disponibile: ricarica la pagina.'; return; }
     m.textContent = 'Leggo il file…';
-    file.arrayBuffer().then(function (buf) { return CrmImport.leggiXlsx(buf, 'Closed Activities'); }).then(function (righe) {
-      var r = CrmImport.conversazioni(righe), tutte = r.righe, blocchi = [], i;
-      if (!tutte.length) throw new Error('nel file non ci sono attività da importare');
+    file.arrayBuffer().then(function (buf) { return CrmImport.leggiXlsx(buf, 'Closed Activities'); }).catch(function (e) { e.file = true; throw e; }).then(function (righe) {
+      var r; try { r = CrmImport.conversazioni(righe); } catch (e) { e.file = true; throw e; }
+      var tutte = r.righe, blocchi = [], i;
+      if (!tutte.length) { var e0 = new Error('nel file non ci sono attività da importare'); e0.file = true; throw e0; }
       for (i = 0; i < tutte.length; i += 1500) blocchi.push(tutte.slice(i, i + 1500));
       var tot = { nuove: 0, aggiornate: 0 }, k = 0;
       m.textContent = r.attivita + ' email in ' + tutte.length + ' conversazioni: invio al database…';
@@ -2871,7 +2872,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
         OF.data = null; OF.all = null; HCRM = null; CRM.all = null; CRM.loading = false; ofLoad(); if (!$('pg-crm').hidden) crmLoad();
       });
     }).catch(function (e) {
-      var t = errTxt(e); m.textContent = /app_offerte_importa|function|does not exist|404/i.test(String(e && (e.message || e))) ? 'Prima esegui in Supabase l\'SQL 8-offerte-crm.sql, poi riprova.' : 'Importazione non riuscita: ' + t;
+      var t = errTxt(e); m.textContent = /app_offerte_importa|function|does not exist|404/i.test(String(e && (e.message || e))) ? 'Prima esegui in Supabase l\'SQL 8-offerte-crm.sql, poi riprova.' : 'Importazione non riuscita: ' + (e && e.file ? 'il file non è un export «Closed Activities» del CRM leggibile (' + (e.message || 'formato non riconosciuto') + ').' : t);
     });
   }
   function ofOpen() {
