@@ -5,7 +5,8 @@
 --  - quelle del CRM si aggiungono (una riga per conversazione, chiave crm_id);
 --  - se una conversazione arriva di nuovo, si aggiornano solo persone, ultimo giorno, numero di email e stato
 --    (da IN VALUTAZIONE a EVASE), e la versione precedente va nello storico.
--- Importazione: solo Admin, dalla sezione Offerte → «Importa export CRM (.xlsx)».
+-- Importazione: solo Admin, dalla sezione Offerte → «Importa export CRM (.xlsx)». Le stesse attività alimentano
+-- il «Report CRM» (una riga per email, tabella app_crm_attivita, mai cancellata).
 -- ATTENZIONE: non rieseguire più il vecchio script 2-offerte.sql, perché svuota la tabella prima di ricaricarla.
 -- =====================================================================
 
@@ -90,5 +91,57 @@ end $$;
 revoke all on function public.app_offerte(jsonb), public.app_offerte_importa(jsonb) from public;
 grant execute on function public.app_offerte(jsonb), public.app_offerte_importa(jsonb) to anon, authenticated;
 
+-- ---------------------------------------------------------------------
+-- Report attività CRM: una riga per attività (email/task) dell'export, mai cancellata
+-- ---------------------------------------------------------------------
+create table if not exists public.app_crm_attivita (
+  id           text primary key,             -- (Do Not Modify) Activity del CRM
+  quando       timestamp not null,
+  persona      text not null default '',     -- cognome del responsabile
+  owner        text not null default '',     -- "Cognome, Nome" come nel CRM
+  oggetto      text not null default '',
+  tipo         text not null default 'Nuova', -- Risposta, Inoltro, Nuova, Task
+  tema         text not null default 'Oggetto generico',
+  pratica      text not null default '',     -- oggetto normalizzato (conversazione)
+  regarding    text not null default '',
+  importato_at timestamptz not null default now()
+);
+create index if not exists app_crm_attivita_quando_idx on public.app_crm_attivita (quando);
+alter table public.app_crm_attivita enable row level security;
+revoke all on public.app_crm_attivita from anon, authenticated;
+
+create or replace function public.app_crm_attivita_importa(p jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare s public.app_sessions; n int;
+begin
+  s := public._sess(p->>'token');
+  if s.role <> 'admin' then raise exception 'NON_AUTORIZZATO'; end if;
+  if jsonb_typeof(p->'righe') <> 'array' or jsonb_array_length(p->'righe') > 5000 then raise exception 'DATI_NON_VALIDI'; end if;
+  insert into public.app_crm_attivita (id, quando, persona, owner, oggetto, tipo, tema, pratica, regarding)
+  select left(r->>'id', 60), (r->>'quando')::timestamp, left(coalesce(r->>'persona', ''), 80), left(coalesce(r->>'owner', ''), 120), left(coalesce(r->>'oggetto', ''), 500),
+    case when r->>'tipo' in ('Risposta', 'Inoltro', 'Nuova', 'Task') then r->>'tipo' else 'Nuova' end, left(coalesce(r->>'tema', 'Oggetto generico'), 80),
+    left(coalesce(r->>'pratica', ''), 300), left(coalesce(r->>'regarding', ''), 300)
+  from jsonb_array_elements(p->'righe') r
+  where coalesce(r->>'id', '') <> '' and coalesce(r->>'quando', '') ~ '^\d{4}-\d{2}-\d{2}'
+  on conflict (id) do nothing;
+  get diagnostics n = row_count;
+  return jsonb_build_object('nuove', n);
+end $$;
+
+create or replace function public.app_crm_attivita(p jsonb default '{}') returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare s public.app_sessions;
+begin
+  s := public._sess(p->>'token');
+  if s.role not in ('admin', 'visitor') then raise exception 'NON_AUTORIZZATO'; end if;
+  return jsonb_build_object('items', (
+    select coalesce(jsonb_agg(jsonb_build_array(to_char(quando, 'YYYY-MM-DD HH24:MI'), persona, owner, oggetto, tipo, tema, pratica, regarding) order by quando desc), '[]'::jsonb)
+    from public.app_crm_attivita));
+end $$;
+
+revoke all on function public.app_crm_attivita(jsonb), public.app_crm_attivita_importa(jsonb) from public;
+grant execute on function public.app_crm_attivita(jsonb), public.app_crm_attivita_importa(jsonb) to anon, authenticated;
+
 -- controllo
 select fonte, count(*) from public.app_offerte group by fonte;
+select count(*) as attivita_crm from public.app_crm_attivita;
