@@ -14,8 +14,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Database di Progettazione LPS e OBO Hub
         run: |
-          URL=$(grep -o 'https://[a-z0-9]*\.supabase\.co' config.js | head -1)
-          KEY=$(grep -o 'sb_publishable_[A-Za-z0-9_-]*' config.js | head -1)
+          URL=$(grep -rho 'https://[a-z0-9]*\.supabase\.co' comune hub | head -1)
+          KEY=$(grep -rho 'sb_publishable_[A-Za-z0-9_-]*' comune hub | head -1)
           curl -fsS "$URL/auth/v1/health" -H "apikey: $KEY" > /dev/null && echo "LPS raggiungibile"
       - name: Database della Mappa carichi
         env:
