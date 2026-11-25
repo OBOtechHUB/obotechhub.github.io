@@ -1,74 +1,6 @@
 {
-  "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
+  "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json). Le novità solo grafiche (animazioni, sigle, aspetto) non si mostrano: restano conservate in 'grafica_non_mostrata'.",
   "aggiornamenti": [
-    {
-      "id": "2026-11-25-hub-12",
-      "data": "2026-11-25",
-      "app": "hub",
-      "titolo": "La sigla d'apertura compare ogni volta che riapri l'app",
-      "voci": [
-        "La sigla di 2-3 secondi (per OBO Hub le particelle che formano l'icona e «Building Connections») ora parte ogni volta che apri l'app, non più solo la prima volta",
-        "Riparte anche quando riprendi l'app dallo sfondo dopo almeno 15 secondi",
-        "Non ricompare quando passi da una pagina all'altra della stessa app; un tocco la chiude subito"
-      ]
-    },
-    {
-      "id": "2026-11-24-hub-11",
-      "data": "2026-11-24",
-      "app": "hub",
-      "titolo": "Introduzione di OBO Hub: rete di connessioni e poi sparisce",
-      "voci": [
-        "Il primo capitolo («Un unico posto») è ora la rete di punti collegati con gli impulsi arancioni, che si raccoglie nell'icona di OBO Hub; poi le altre scene come prima",
-        "Quando l'hai scorsa fino in fondo (o premi «Vai alle app» / «Salta l'introduzione») l'introduzione sparisce e la pagina riparte dalle app",
-        "Ricompare alla prossima apertura dell'app"
-      ]
-    },
-    {
-      "id": "2026-11-24-hub-10",
-      "data": "2026-11-24",
-      "app": "hub",
-      "titolo": "Tornata l'introduzione di OBO Hub, con le tue app",
-      "voci": [
-        "Nella pagina iniziale di OBO Hub torna l'introduzione da scorrere (particelle → icona → app → un solo progetto), dopo la sigla di 2-3 secondi",
-        "Le app nel cerchio sono quelle che vedi tu, con la loro icona e il loro nome (ognuno ha le sue); prima dell'accesso compaiono app generiche",
-        "Una volta per sessione, poi «Rivedi l'introduzione»; «Vai alle app» e «Salta l'introduzione» portano subito alle app"
-      ]
-    },
-    {
-      "id": "2026-11-24-hub-9",
-      "data": "2026-11-24",
-      "app": "tutte",
-      "titolo": "Sigla d'apertura di 2-3 secondi",
-      "voci": [
-        "All'apertura di ogni app una sigla breve a tutto schermo, poi sparisce: tempesta e fulmine sull'asta (Progettazione LPS), particelle che formano l'icona (OBO Hub), app che confluiscono nel progetto (Progetti), raffica di vento sul telaio (Zavorra WRR), anelli dal pavimento (Torrette), calendario che si accende (Mappa carichi), griglia di prodotti (Prodotti)",
-        "Una volta per sessione per ogni app; un tocco o un tasto la chiudono subito",
-        "Tolte le introduzioni lunghe da scorrere e le animazioni dentro le fasce delle pagine"
-      ]
-    },
-    {
-      "id": "2026-11-24-hub-8",
-      "data": "2026-11-24",
-      "app": "hub",
-      "titolo": "Introduzione cinematografica di OBO Hub",
-      "voci": [
-        "Nella pagina iniziale, scorrendo: le particelle formano l'icona di OBO Hub, l'icona si apre nelle app dell'ufficio tecnico, le app si collegano a un unico progetto e la telecamera entra nel progetto fino alle app",
-        "Quattro capitoli con titoli grandi; «Vai alle app» e «Salta l'introduzione» portano subito alle app",
-        "Si vede una volta per sessione; poi nella fascia in alto c'è «Rivedi l'introduzione». Spenta con «riduci movimento»"
-      ]
-    },
-    {
-      "id": "2026-11-24-hub-7",
-      "data": "2026-11-24",
-      "app": "tutte",
-      "titolo": "Grafica futuristica in tutte le app",
-      "voci": [
-        "Fasce in cima alle pagine con aurora arancio in movimento e griglia tecnica (OBO Hub, Progetti, Novità, Prodotti, Torrette, Zavorra WRR, Mappa carichi, Progettazione LPS)",
-        "Fasce «cinema» animate e mosse dallo scorrimento, una scena per app: connessioni che si accendono (OBO Hub, Progetti, Novità), griglia di prodotti (Prodotti), linee di vento sui telai (Zavorra WRR), anelli dal pavimento (Torrette), calendario come mappa di calore (Mappa carichi)",
-        "Schede di vetro con luce che segue il puntatore e bordo arancio che si accende",
-        "Contenuti che compaiono allo scorrimento, barra di avanzamento della pagina, pulsanti principali con riflesso, barra in alto trasparente",
-        "Si spegne da solo con «riduci movimento» del sistema e in stampa"
-      ]
-    },
     {
       "id": "2026-11-24-hub-6",
       "data": "2026-11-24",
@@ -130,17 +62,6 @@
       ]
     },
     {
-      "id": "2026-11-24-hub-3",
-      "data": "2026-11-24",
-      "app": "tutte",
-      "titolo": "Barra in alto più compatta, OBO Hub sempre in evidenza",
-      "voci": [
-        "Mappa carichi: nella barra restano OBO Hub, Home, Inserisci, Mappa, Progetti e Menu; Cruscotto, Daily task, Richieste, Persone, Admin, Offerte, Download e lingua sono nel Menu",
-        "In tutte le app (Mappa carichi, Prodotti, Torrette, Novità, Privacy, Condizioni, Progettazione LPS) il pulsante arancione «OBO Hub» riporta sempre alla pagina iniziale",
-        "Il nome nel profilo della Mappa usa il COGNOME maiuscolo"
-      ]
-    },
-    {
       "id": "2026-11-24-hub-2",
       "data": "2026-11-24",
       "app": "tutte",
@@ -167,21 +88,6 @@
         "New columns Area, Family, Group and Subgroup from obo.it",
         "METEL discount family, Strat ID 1 and Strat ID 2 (e.g. 0210 → 2 and 100, 1110 → 11 and 100), ETIM and whether the item is in the price list: choose the price list file with \"Choose METEL price list\" (kept on the device)",
         "New download \"In price list, not on obo.it\" in the New view"
-      ]
-    },
-    {
-      "id": "2026-11-23-hub-1",
-      "data": "2026-11-23",
-      "app": "mappa",
-      "titolo": "Grafici con lo stesso stile in tutte le app",
-      "voci": [
-        "Mappa carichi: barre e colonne arancio OBO arrotondate che crescono con un'animazione, come nei grafici di Progettazione LPS; daily task in grigio-azzurro OBO, oltre le ore disponibili in rosso",
-        "OBO Hub, Prodotti e Torrette: pagine che compaiono con una dissolvenza morbida e schede delle app che entrano una dopo l'altra (spente se nel sistema è attivo \"riduci movimento\")"
-      ],
-      "titolo_en": "Same chart style in every app",
-      "voci_en": [
-        "Workload map: rounded OBO-orange bars and columns that grow with an animation, as in the LPS design charts; daily tasks in OBO blue-grey, over the available hours in red",
-        "OBO Hub, Products and Floor boxes: pages fade in smoothly and app tiles appear one after another (off when \"reduce motion\" is enabled)"
       ]
     },
     {
@@ -296,34 +202,6 @@
         "New Daily tasks entry: record every day how many and which technical or commercial emails you handled, with priority and difficulty",
         "Weekly report downloadable as CSV",
         "\"+ New project\" opens empty: you choose period, dates and hours"
-      ]
-    },
-    {
-      "id": "2026-11-16-tutte-1",
-      "data": "2026-11-16",
-      "app": "tutte",
-      "titolo": "Saluto all'apertura",
-      "voci": [
-        "Quando torni nelle app dopo almeno 30 minuti compare un'animazione con il saluto e il tuo nome"
-      ],
-      "titolo_en": "Greeting on opening",
-      "voci_en": [
-        "When you come back to the apps after at least 30 minutes an animation greets you by name"
-      ]
-    },
-    {
-      "id": "2026-11-11-tutte-1",
-      "data": "2026-11-11",
-      "app": "tutte",
-      "titolo": "Pagine ferme di lato e testo regolabile in alto",
-      "voci": [
-        "Su telefono e tablet le pagine non scorrono più di lato: si muovono solo su e giù",
-        "Pulsanti A− e A+ in alto anche nelle pagine Novità, Privacy e Condizioni d'uso; in Progettazione LPS c'è il pulsante \"Testo\" nella barra"
-      ],
-      "titolo_en": "Pages locked sideways and text size at the top",
-      "voci_en": [
-        "On phones and tablets pages no longer move sideways: only up and down",
-        "A− and A+ buttons at the top also on What's new, Privacy and Terms of use; in LPS Design there is the \"Text\" button in the bar"
       ]
     },
     {
@@ -458,6 +336,130 @@
       "voci_en": [
         "Text size, theme and language in the \"Display\" menu, same as OBO Hub",
         "\"Sign out\" returns to the OBO Hub sign-in screen"
+      ]
+    }
+  ],
+  "grafica_non_mostrata": [
+    {
+      "id": "2026-11-25-hub-12",
+      "data": "2026-11-25",
+      "app": "hub",
+      "titolo": "La sigla d'apertura compare ogni volta che riapri l'app",
+      "voci": [
+        "La sigla di 2-3 secondi (per OBO Hub le particelle che formano l'icona e «Building Connections») ora parte ogni volta che apri l'app, non più solo la prima volta",
+        "Riparte anche quando riprendi l'app dallo sfondo dopo almeno 15 secondi",
+        "Non ricompare quando passi da una pagina all'altra della stessa app; un tocco la chiude subito"
+      ]
+    },
+    {
+      "id": "2026-11-24-hub-11",
+      "data": "2026-11-24",
+      "app": "hub",
+      "titolo": "Introduzione di OBO Hub: rete di connessioni e poi sparisce",
+      "voci": [
+        "Il primo capitolo («Un unico posto») è ora la rete di punti collegati con gli impulsi arancioni, che si raccoglie nell'icona di OBO Hub; poi le altre scene come prima",
+        "Quando l'hai scorsa fino in fondo (o premi «Vai alle app» / «Salta l'introduzione») l'introduzione sparisce e la pagina riparte dalle app",
+        "Ricompare alla prossima apertura dell'app"
+      ]
+    },
+    {
+      "id": "2026-11-24-hub-10",
+      "data": "2026-11-24",
+      "app": "hub",
+      "titolo": "Tornata l'introduzione di OBO Hub, con le tue app",
+      "voci": [
+        "Nella pagina iniziale di OBO Hub torna l'introduzione da scorrere (particelle → icona → app → un solo progetto), dopo la sigla di 2-3 secondi",
+        "Le app nel cerchio sono quelle che vedi tu, con la loro icona e il loro nome (ognuno ha le sue); prima dell'accesso compaiono app generiche",
+        "Una volta per sessione, poi «Rivedi l'introduzione»; «Vai alle app» e «Salta l'introduzione» portano subito alle app"
+      ]
+    },
+    {
+      "id": "2026-11-24-hub-9",
+      "data": "2026-11-24",
+      "app": "tutte",
+      "titolo": "Sigla d'apertura di 2-3 secondi",
+      "voci": [
+        "All'apertura di ogni app una sigla breve a tutto schermo, poi sparisce: tempesta e fulmine sull'asta (Progettazione LPS), particelle che formano l'icona (OBO Hub), app che confluiscono nel progetto (Progetti), raffica di vento sul telaio (Zavorra WRR), anelli dal pavimento (Torrette), calendario che si accende (Mappa carichi), griglia di prodotti (Prodotti)",
+        "Una volta per sessione per ogni app; un tocco o un tasto la chiudono subito",
+        "Tolte le introduzioni lunghe da scorrere e le animazioni dentro le fasce delle pagine"
+      ]
+    },
+    {
+      "id": "2026-11-24-hub-8",
+      "data": "2026-11-24",
+      "app": "hub",
+      "titolo": "Introduzione cinematografica di OBO Hub",
+      "voci": [
+        "Nella pagina iniziale, scorrendo: le particelle formano l'icona di OBO Hub, l'icona si apre nelle app dell'ufficio tecnico, le app si collegano a un unico progetto e la telecamera entra nel progetto fino alle app",
+        "Quattro capitoli con titoli grandi; «Vai alle app» e «Salta l'introduzione» portano subito alle app",
+        "Si vede una volta per sessione; poi nella fascia in alto c'è «Rivedi l'introduzione». Spenta con «riduci movimento»"
+      ]
+    },
+    {
+      "id": "2026-11-24-hub-7",
+      "data": "2026-11-24",
+      "app": "tutte",
+      "titolo": "Grafica futuristica in tutte le app",
+      "voci": [
+        "Fasce in cima alle pagine con aurora arancio in movimento e griglia tecnica (OBO Hub, Progetti, Novità, Prodotti, Torrette, Zavorra WRR, Mappa carichi, Progettazione LPS)",
+        "Fasce «cinema» animate e mosse dallo scorrimento, una scena per app: connessioni che si accendono (OBO Hub, Progetti, Novità), griglia di prodotti (Prodotti), linee di vento sui telai (Zavorra WRR), anelli dal pavimento (Torrette), calendario come mappa di calore (Mappa carichi)",
+        "Schede di vetro con luce che segue il puntatore e bordo arancio che si accende",
+        "Contenuti che compaiono allo scorrimento, barra di avanzamento della pagina, pulsanti principali con riflesso, barra in alto trasparente",
+        "Si spegne da solo con «riduci movimento» del sistema e in stampa"
+      ]
+    },
+    {
+      "id": "2026-11-24-hub-3",
+      "data": "2026-11-24",
+      "app": "tutte",
+      "titolo": "Barra in alto più compatta, OBO Hub sempre in evidenza",
+      "voci": [
+        "Mappa carichi: nella barra restano OBO Hub, Home, Inserisci, Mappa, Progetti e Menu; Cruscotto, Daily task, Richieste, Persone, Admin, Offerte, Download e lingua sono nel Menu",
+        "In tutte le app (Mappa carichi, Prodotti, Torrette, Novità, Privacy, Condizioni, Progettazione LPS) il pulsante arancione «OBO Hub» riporta sempre alla pagina iniziale",
+        "Il nome nel profilo della Mappa usa il COGNOME maiuscolo"
+      ]
+    },
+    {
+      "id": "2026-11-23-hub-1",
+      "data": "2026-11-23",
+      "app": "mappa",
+      "titolo": "Grafici con lo stesso stile in tutte le app",
+      "voci": [
+        "Mappa carichi: barre e colonne arancio OBO arrotondate che crescono con un'animazione, come nei grafici di Progettazione LPS; daily task in grigio-azzurro OBO, oltre le ore disponibili in rosso",
+        "OBO Hub, Prodotti e Torrette: pagine che compaiono con una dissolvenza morbida e schede delle app che entrano una dopo l'altra (spente se nel sistema è attivo \"riduci movimento\")"
+      ],
+      "titolo_en": "Same chart style in every app",
+      "voci_en": [
+        "Workload map: rounded OBO-orange bars and columns that grow with an animation, as in the LPS design charts; daily tasks in OBO blue-grey, over the available hours in red",
+        "OBO Hub, Products and Floor boxes: pages fade in smoothly and app tiles appear one after another (off when \"reduce motion\" is enabled)"
+      ]
+    },
+    {
+      "id": "2026-11-16-tutte-1",
+      "data": "2026-11-16",
+      "app": "tutte",
+      "titolo": "Saluto all'apertura",
+      "voci": [
+        "Quando torni nelle app dopo almeno 30 minuti compare un'animazione con il saluto e il tuo nome"
+      ],
+      "titolo_en": "Greeting on opening",
+      "voci_en": [
+        "When you come back to the apps after at least 30 minutes an animation greets you by name"
+      ]
+    },
+    {
+      "id": "2026-11-11-tutte-1",
+      "data": "2026-11-11",
+      "app": "tutte",
+      "titolo": "Pagine ferme di lato e testo regolabile in alto",
+      "voci": [
+        "Su telefono e tablet le pagine non scorrono più di lato: si muovono solo su e giù",
+        "Pulsanti A− e A+ in alto anche nelle pagine Novità, Privacy e Condizioni d'uso; in Progettazione LPS c'è il pulsante \"Testo\" nella barra"
+      ],
+      "titolo_en": "Pages locked sideways and text size at the top",
+      "voci_en": [
+        "On phones and tablets pages no longer move sideways: only up and down",
+        "A− and A+ buttons at the top also on What's new, Privacy and Terms of use; in LPS Design there is the \"Text\" button in the bar"
       ]
     }
   ]
