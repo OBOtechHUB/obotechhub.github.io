@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <script src="../registro.js" data-app="mappa"></script>
 <script src="../nomi.js"></script>
+<script src="crm-import.js"></script>
 <script src="../benvenuto.js" data-app="Mappa carichi"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <link rel="manifest" href="manifest.webmanifest">
@@ -1647,6 +1648,11 @@ body.visitatore .nav a.hubnav { display: flex !important; }
   </div>
 
   <div class="page" id="pg-offerte" hidden>
+    <section class="panel" id="of-imp" hidden aria-labelledby="h-ofimp" style="margin-bottom:20px">
+      <h3 id="h-ofimp" style="margin-top:0">Aggiorna con l'export del CRM</h3>
+      <p class="of-note" style="margin-top:0">Carica il file Excel «Closed Activities» esportato dal CRM (attività chiuse: email e task). Le email vengono raggruppate per conversazione; persona, tipo (offerta, tecnico, dichiarazione), macro famiglia e stato si ricavano da proprietario e oggetto. Le conversazioni già presenti si aggiornano, nessun dato viene cancellato. Serve una volta l'SQL «8-offerte-crm.sql».</p>
+      <div class="row" style="align-items:center;gap:10px"><label class="primary" style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:#f39b00;color:#fff;font-weight:600">Importa export CRM (.xlsx)<input type="file" id="of-file" accept=".xlsx" hidden></label><span class="hint" id="of-impmsg" role="status"></span></div>
+    </section>
     <p class="empty" id="of-msg" role="status"></p>
     <div id="of-app" hidden style="display:flex;flex-direction:column;gap:20px">
       <div class="of-chips" id="of-tabs" role="group" aria-label="Tipo di conversazioni"></div>
@@ -2676,8 +2682,31 @@ body.visitatore .nav a.hubnav { display: flex !important; }
   function ofCol(g) { return 'var(' + OF_COL[g] + ')'; }
   function ofM(m) { return m ? OF_MM[+m.slice(5) - 1] + ' ' + m.slice(2, 4) : ''; }
   function ofClear() { if (!OF) return; OF.data = null; OF.all = null; if ($('of-app')) { $('of-app').hidden = true; ['of-kpis', 'of-people', 'of-stato', 'of-months', 'of-heat', 'of-tbl'].forEach(function (k) { $(k).innerHTML = ''; }); } }
+  function ofImporta(file) {
+    var m = $('of-impmsg'); if (!file) return;
+    if (!window.CrmImport) { m.textContent = 'Lettura del file non disponibile: ricarica la pagina.'; return; }
+    m.textContent = 'Leggo il file…';
+    file.arrayBuffer().then(function (buf) { return CrmImport.leggiXlsx(buf, 'Closed Activities'); }).then(function (righe) {
+      var r = CrmImport.conversazioni(righe), tutte = r.righe, blocchi = [], i;
+      if (!tutte.length) throw new Error('nel file non ci sono attività da importare');
+      for (i = 0; i < tutte.length; i += 1500) blocchi.push(tutte.slice(i, i + 1500));
+      var tot = { nuove: 0, aggiornate: 0 }, k = 0;
+      m.textContent = r.attivita + ' email in ' + tutte.length + ' conversazioni: invio al database…';
+      function prossimo() {
+        if (k >= blocchi.length) return Promise.resolve();
+        return rpc('app_offerte_importa', { token: token, righe: blocchi[k++] }).then(function (x) { tot.nuove += (x && x.nuove) || 0; tot.aggiornate += (x && x.aggiornate) || 0; return prossimo(); });
+      }
+      return prossimo().then(function () {
+        m.textContent = 'Fatto: ' + tot.nuove + ' conversazioni nuove, ' + tot.aggiornate + ' aggiornate (' + r.attivita + ' email' + (r.saltate ? ', ' + r.saltate + ' senza oggetto o annullate non considerate' : '') + ').';
+        OF.data = null; OF.all = null; ofLoad();
+      });
+    }).catch(function (e) {
+      var t = errTxt(e); m.textContent = /app_offerte_importa|function|does not exist|404/i.test(String(e && (e.message || e))) ? 'Prima esegui in Supabase l\'SQL 8-offerte-crm.sql, poi riprova.' : 'Importazione non riuscita: ' + t;
+    });
+  }
   function ofOpen() {
     if (!(isAdmin || isVisitor)) return;
+    if ($('of-imp')) { $('of-imp').hidden = !(isAdmin && CLOUD); if (!$('of-file').dataset.ok) { $('of-file').dataset.ok = '1'; $('of-file').addEventListener('change', function () { var f = this.files && this.files[0]; this.value = ''; ofImporta(f); }); } }
     if (!CLOUD) { $('of-app').hidden = true; $('of-msg').hidden = false; $('of-msg').textContent = 'La sezione Offerte è disponibile solo con il database collegato.'; return; }
     if (OF.data) { ofRender(); return; }
     ofLoad();
