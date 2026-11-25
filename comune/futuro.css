@@ -25,17 +25,12 @@
 @keyframes fx-aurora { 0% { transform: translate3d(-4%, -2%, 0) rotate(0deg) scale(1); } 50% { transform: translate3d(3%, 2%, 0) rotate(6deg) scale(1.08); } 100% { transform: translate3d(-2%, 3%, 0) rotate(-4deg) scale(1.02); } }
 @keyframes fx-griglia { to { background-position: 36px 36px, 36px 36px; } }
 
-/* schede di vetro: luce che segue il puntatore e bordo che si accende */
+/* schede di vetro: bordo che si accende (luce del puntatore tolta il 25/11 su richiesta di Marco) */
 .fx-scheda { position: relative; transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s; }
 /* menu a tendina aperti dentro una scheda (filtri, scelte): la scheda va sopra quelle successive, non viene coperta */
 .fx-scheda:focus-within, .fx-scheda:has(details[open]), .fx-scheda:has([aria-expanded="true"]) { z-index: 40; }
 .fx-scheda:has(details[open]):hover, .fx-scheda:focus-within:hover { transform: none; }
-.fx-scheda::after {
-  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
-  background: radial-gradient(280px circle at var(--fx-x, 50%) var(--fx-y, 0%), rgb(var(--fx-arancio) / .14), transparent 60%);
-}
 .fx-scheda:hover { transform: translateY(-3px); box-shadow: 0 14px 34px -14px rgb(var(--fx-arancio) / .45), 0 0 0 1px rgb(var(--fx-arancio) / .55); }
-.fx-scheda:hover::after { opacity: 1; }
 
 /* comparsa allo scorrimento */
 .fx-in { opacity: 0; transform: translate3d(0, 22px, 0) scale(.985); filter: blur(5px); }

@@ -1,5 +1,5 @@
 /* OBO Hub · effetti dello stile futuristico (caricato da registro.js): comparsa allo scorrimento,
-   luce delle schede che segue il puntatore, barra di avanzamento. Nulla cambia i dati; spento con
+   barra di avanzamento. Nulla cambia i dati; spento con
    "riduci movimento", in stampa e con ?nofx nell'indirizzo. */
 (function () {
   if (window.__oboFx) return; window.__oboFx = true;
@@ -21,11 +21,6 @@
   var osserva = "IntersectionObserver" in window ? new IntersectionObserver(function (voci) {
     voci.forEach(function (v) { if (v.isIntersecting) { v.target.classList.add("fx-vis"); osserva.unobserve(v.target); } });
   }, { rootMargin: "0px 0px -6% 0px", threshold: 0.06 }) : { observe: function (el) { el.classList.add("fx-vis"); }, unobserve: function () {} };
-  // luce che segue il puntatore
-  document.addEventListener("pointermove", function (e) {
-    var el = e.target && e.target.closest && e.target.closest(".fx-scheda"); if (!el) return;
-    var r = el.getBoundingClientRect(); el.style.setProperty("--fx-x", (e.clientX - r.left) + "px"); el.style.setProperty("--fx-y", (e.clientY - r.top) + "px");
-  }, { passive: true });
   // barra di avanzamento
   var barra = document.createElement("div"); barra.id = "fx-progresso"; barra.setAttribute("aria-hidden", "true");
   function avanzamento() { var h = document.documentElement.scrollHeight - innerHeight; barra.style.setProperty("--fx-p", h > 40 ? String(Math.min(1, scrollY / h)) : "0"); }
