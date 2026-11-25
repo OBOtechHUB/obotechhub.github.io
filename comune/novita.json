@@ -2,6 +2,17 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json).",
   "aggiornamenti": [
     {
+      "id": "2026-11-25-hub-12",
+      "data": "2026-11-25",
+      "app": "hub",
+      "titolo": "La sigla d'apertura compare ogni volta che riapri l'app",
+      "voci": [
+        "La sigla di 2-3 secondi (per OBO Hub le particelle che formano l'icona e «Building Connections») ora parte ogni volta che apri l'app, non più solo la prima volta",
+        "Riparte anche quando riprendi l'app dallo sfondo dopo almeno 15 secondi",
+        "Non ricompare quando passi da una pagina all'altra della stessa app; un tocco la chiude subito"
+      ]
+    },
+    {
       "id": "2026-11-24-hub-11",
       "data": "2026-11-24",
       "app": "hub",

@@ -1,4 +1,5 @@
-/* OBO Hub · sigla d'apertura di 2-3 secondi, a tutto schermo, poi sparisce (una volta per sessione per app).
+/* OBO Hub · sigla d'apertura di 2-3 secondi, a tutto schermo, poi sparisce. Compare OGNI volta che si apre l'app
+   e ogni volta che la si riprende dallo sfondo dopo almeno 15 secondi; non ricompare passando da una pagina all'altra della stessa app.
    Una scena per app, disegnata dal codice: Progettazione LPS = tempesta e fulmine che colpisce l'asta;
    OBO Hub = particelle che formano l'icona; Progetti = app che confluiscono nella cartella; Zavorra WRR = raffica
    di vento sul telaio; Torrette = anelli dal pavimento; Mappa carichi = calendario che si accende; Prodotti = griglia.
@@ -12,13 +13,22 @@
   if (/progetti\.html/.test(location.pathname)) app = "progetti";
   if (/novita\.html|privacy|condizioni/.test(location.pathname)) return;
   var chiave = "obo-sigla-" + app;
-  try { if (sessionStorage.getItem(chiave) && !/[?&]sigla\b/.test(q)) return; sessionStorage.setItem(chiave, "1"); } catch (e) {}
+  // pagina lasciata da pochi secondi nella stessa app (cambio pagina o ricarica): niente sigla
+  var appena = false; try { appena = Date.now() - Number(sessionStorage.getItem(chiave) || 0) < 8000; } catch (e) {}
+  function segna() { try { sessionStorage.setItem(chiave, String(Date.now())); } catch (e) {} }
+  addEventListener("pagehide", segna);
+  var nascostaDa = 0;
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") { nascostaDa = Date.now(); segna(); return; }
+    if (nascostaDa && Date.now() - nascostaDa > 15000) setTimeout(avvia, 60); // app ripresa dallo sfondo
+    nascostaDa = 0;
+  });
   var TITOLI = { lps: ["Progettazione LPS", "CEI EN IEC 62305"], hub: ["OBO Hub", "Building Connections"], progetti: ["Progetti", "Un solo progetto, tutte le soluzioni"],
     zavorra: ["Zavorra telai WRR", "Magic PV Mount"], torrette: ["Configuratore torrette", "Sistemi sottopavimento"], mappa: ["Mappa carichi", "Ufficio tecnico"], prodotti: ["Prodotti OBO", "Catalogo"] };
   var tit = TITOLI[app] || TITOLI.hub, DURATA = 2600;
 
   function avvia() {
-    if (document.getElementById("obo-bv")) return; // c'è già il saluto di benvenuto
+    if (document.getElementById("obo-bv") || document.getElementById("obo-sigla")) return; // c'è già il saluto di benvenuto o la sigla
     var d = document.createElement("div"); d.id = "obo-sigla"; d.setAttribute("aria-hidden", "true");
     d.style.cssText = "position:fixed;inset:0;z-index:2147483647;background:#0d1215;cursor:pointer;opacity:1;transition:opacity .45s ease";
     var cv = document.createElement("canvas"); cv.style.cssText = "position:absolute;inset:0;width:100%;height:100%";
@@ -103,6 +113,6 @@
     raf = requestAnimationFrame(frame);
   }
   // dopo il saluto di benvenuto, se c'è (lo crea subito al caricamento)
-  function quando() { setTimeout(avvia, 60); }
+  function quando() { if (!appena || /[?&]sigla\b/.test(q)) setTimeout(avvia, 60); }
   if (document.body) quando(); else document.addEventListener("DOMContentLoaded", quando);
 })();
