@@ -218,8 +218,12 @@ textarea { font-family: var(--font-mono); font-size: calc(12px * var(--zoom, 1))
 .status { font-size: calc(12px * var(--zoom, 1)); color: var(--muted); min-height: 18px; }
 /* pagine e navigazione */
 .page[hidden] { display: none !important; }
-.crmn { display: block; font-size: calc(11px * var(--zoom, 1)); font-weight: 600; color: var(--accent); white-space: nowrap; }
-td.hz .crmn, td.hcrm .crmn { margin-top: 0; }
+.crmn { display: block; margin-top: 3px; font-size: calc(11px * var(--zoom, 1)); font-weight: 600; color: var(--muted, #9aa7ae); white-space: nowrap; }
+td.hcrm { text-align: center; }
+td.hcrm .crmv { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-width: 74px; padding: 6px 8px; border-radius: 10px; border: 1px dashed var(--line); line-height: 1.15; }
+td.hcrm .crmv b { font-size: calc(14px * var(--zoom, 1)); color: var(--fg); }
+td.hcrm .crmv small { font-size: calc(11px * var(--zoom, 1)); color: var(--muted, #9aa7ae); }
+.lg-crm { display: inline-block; padding: 0 6px; border: 1px dashed var(--line); border-radius: 6px; font-weight: 600; }
 .page { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .nav { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); }
 .nav button { border: 0; border-bottom: 3px solid transparent; border-radius: 0; background: transparent; padding: 8px 12px; font-weight: 500; color: var(--muted); margin-bottom: -1px; }
@@ -1278,7 +1282,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
         <span><i class="lg hi"></i>pieno, 90-100%</span>
         <span><i class="lg ox"></i>oltre il 100%</span>
         <span><b class="flag">!2</b> giorni oltre 8 h in quel mese</span>
-        <span id="histCrmLeg" hidden><b class="crmn">&#9993; 12</b> conversazioni del CRM (email gestite) in quel mese</span>
+        <span id="histCrmLeg" hidden><b class="lg-crm">12 conv.</b> conversazioni del CRM (email gestite) nel mese</span>
         <span><b class="up">&#9650;</b><b class="dn">&#9660;</b> variazione in punti % rispetto al mese prima</span>
         <span>Nella cella: ore e % di occupazione. Il riquadro blu è il mese in corso. L'ultimo mese segue il calendario qui sopra.</span>
       </div>
@@ -2491,8 +2495,8 @@ body.visitatore .nav a.hubnav { display: flex !important; }
       ms.forEach(function (x) {
         var hh = pm[x.ym] || 0, pc = x.cap ? hh / x.cap : 0, od = (ovr[n] || {})[x.ym] || 0;
         if (hh && (!peak || pc > peak.pc)) peak = { pc: pc, x: x, h: hh };
-        var cv = crmDi(n, x), cvTxt = cv ? '<span class="crmn" title="' + cv + ' conversazioni del CRM">&#9993; ' + cv + '</span>' : '';
-        if (!hh) h += cv ? '<td class="hz hcrm" title="' + nm(n) + ', ' + MONTHS_FULL[x.m] + ' ' + x.y + ': nessun progetto, ' + cv + ' conversazioni del CRM">' + cvTxt + '</td>' : '<td class="hz" title="Nessun impegno">&ndash;</td>';
+        var cv = crmDi(n, x), cvTxt = cv ? '<span class="crmn" title="' + cv + ' conversazioni del CRM">' + cv + ' conv. CRM</span>' : '';
+        if (!hh) h += cv ? '<td class="hcrm" title="' + nm(n) + ', ' + MONTHS_FULL[x.m] + ' ' + x.y + ': nessun progetto, ' + cv + ' conversazioni del CRM"><span class="crmv"><b>' + cv + '</b><small>conv. CRM</small></span></td>' : '<td class="hz" title="Nessun impegno">&ndash;</td>';
         else h += '<td class="hc ' + cls(pc) + (x.ym === nowYm ? ' cur' : '') + '" title="' + nm(n) + ', ' + MONTHS_FULL[x.m] + ' ' + x.y + ': ' + fmtH(hh) + ' h su ' + fmtH(x.cap) + ' h disponibili' + (od ? ', ' + od + ' giorni oltre ' + CAP + ' h' : '') + (cv ? ', ' + cv + ' conversazioni del CRM' : '') + '"><b>' + fmtH(hh) + ' h</b><small>' + Math.round(pc * 100) + '%</small>' + (od ? '<span class="flag">!' + od + '</span>' : '') + cvTxt + '</td>';
       });
       var a = ms[ms.length - 1], b = ms[ms.length - 2], pa = a.cap ? (pm[a.ym] || 0) / a.cap : 0, pb = b && b.cap ? (pm[b.ym] || 0) / b.cap : 0, d = Math.round((pa - pb) * 100);
@@ -2504,8 +2508,8 @@ body.visitatore .nav a.hubnav { display: flex !important; }
       h += '<tr class="sum"><td class="who">Team</td>' + ms.map(function (x) {
         var s2 = ppl.reduce(function (a2, n) { return a2 + ((per[n] || {})[x.ym] || 0); }, 0); gt += s2;
         var pc = x.cap && ppl.length ? s2 / (x.cap * ppl.length) : 0;
-        var c2 = ppl.reduce(function (a2, n) { return a2 + crmDi(n, x); }, 0), c2t = c2 ? '<span class="crmn">&#9993; ' + c2 + '</span>' : '';
-        return '<td>' + (s2 ? fmtH(s2) + ' h<br><small class="hint">' + Math.round(pc * 100) + '%</small>' + c2t : c2t || '&ndash;') + '</td>';
+        var c2 = ppl.reduce(function (a2, n) { return a2 + crmDi(n, x); }, 0), c2t = c2 ? '<span class="crmn">' + c2 + ' conv. CRM</span>' : '';
+        return s2 ? '<td>' + fmtH(s2) + ' h<br><small class="hint">' + Math.round(pc * 100) + '%</small>' + c2t + '</td>' : c2 ? '<td class="hcrm"><span class="crmv"><b>' + c2 + '</b><small>conv. CRM</small></span></td>' : '<td>&ndash;</td>';
       }).join('') + '<td class="tot">' + fmtH(gt) + ' h</td><td class="avg">' + (capAll && ppl.length ? Math.round(gt / (capAll * ppl.length) * 100) : 0) + '%</td><td></td><td></td></tr>';
     }
     $('histT').innerHTML = h + '</tbody>';
