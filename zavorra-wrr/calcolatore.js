@@ -9,6 +9,17 @@ import {
 import { createStorage } from './storage.js';
 import { documento, paginaHTML, docxBlob } from './relazione.js';
 
+/** SVG → PNG (per il Word), larghezza in px dell'immagine nel documento */
+function svgPng(v, larghezzaPx) {
+  return new Promise((ok, ko) => {
+    const img = new Image(), k = 2.2, w = larghezzaPx, h = Math.round(larghezzaPx * v.h / v.w);
+    img.onload = () => { const c = document.createElement('canvas'); c.width = w * k; c.height = h * k; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob((b) => (b ? b.arrayBuffer().then((a) => ok({ bytes: new Uint8Array(a), w, h, titolo: v.titolo })) : ko(new Error('immagine non creata'))), 'image/png'); };
+    img.onerror = () => ko(new Error('disegno non leggibile'));
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(v.svg);
+  });
+}
+
 const SOURCE_URL = 'https://www.obo-bettermann.com/out/media/01-100_MA_Magic_PV_Mount_Wechselrichterrahmen_EN_2026-07-28.pdf';
 const LS_KEY = 'wrr-zavorra-v3';
 /** telai a 45°: in arrivo, non ancora a catalogo; mettere true quando escono */
@@ -378,7 +389,9 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         const dv = new DataView(bytes.buffer), lw = dv.getUint32(16), lh = dv.getUint32(20), h = 46;
         logo = { bytes, w: Math.round(lw * h / lh), h };
       } catch { /* senza logo */ }
-      const blob = docxBlob(documento(datiRelazione()), logo);
+      const doc = documento(datiRelazione()), dis = doc.blocchi.find((b) => b.t === 'disegno');
+      const viste = dis ? await Promise.all(dis.viste.map((v) => svgPng(v, dis.viste.length > 1 ? 260 : 380))) : [];
+      const blob = docxBlob(doc, logo, viste);
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nomeFile('docx'); document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
       msg.textContent = 'File Word scaricato.';

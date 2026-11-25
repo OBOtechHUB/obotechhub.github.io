@@ -10,6 +10,7 @@
         "Nuova sezione «Relazione per il cliente»: cliente, impianto, luogo, numero progetto e note",
         "«Apri relazione» crea il documento OBO da stampare o salvare in PDF; «Scarica Word» lo scarica in .docx da modificare",
         "La relazione contiene telaio, apparecchiature, metodo, risultato, zavorra per tutte le velocità del vento e le verifiche a cura del progettista",
+        "Le apparecchiature montate sul telaio sono elencate numerate con pesi e aree totali e disegnate in scala sotto la tettoia (lato A e lato B per i telai bifacciali)",
         "I dati della relazione si salvano insieme al calcolo nel progetto"
       ],
       "titolo_en": "WRR ballast: report for the customer",
@@ -17,6 +18,7 @@
         "New «Customer report» section: customer, installation, place, project number and notes",
         "«Open report» creates the OBO document to print or save as PDF; «Download Word» saves it as .docx",
         "The report includes frame, devices, method, result, ballast for every wind speed and the checks left to the designer",
+        "Devices mounted on the frame are listed with numbers, total weights and areas, and drawn to scale under the canopy (side A and B for double-sided frames)",
         "Report data is saved with the calculation in the project"
       ]
     },
