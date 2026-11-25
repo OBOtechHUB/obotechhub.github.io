@@ -1722,6 +1722,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     </div>
   </div>
   <div class="page" id="pg-crm" hidden>
+    <section class="panel" id="crm-imp" hidden style="margin-bottom:20px"><div class="row" style="align-items:center;gap:10px;flex-wrap:wrap"><label style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:#f39b00;color:#fff;font-weight:600">Importa export CRM (.xlsx)<input type="file" id="crm-file" accept=".xlsx" hidden></label><span class="hint" id="crm-impmsg" role="status">File «Closed Activities» del CRM: aggiorna insieme Report CRM, Offerte e Storico, senza doppioni e senza cancellare nulla.</span></div></section>
     <p class="empty" id="crm-msg" role="status"></p>
     <div id="crm-app" class="crm-app" hidden>
       <section class="panel">
@@ -2755,6 +2756,8 @@ body.visitatore .nav a.hubnav { display: flex !important; }
   function crmCol(p) { return 'var(' + (CRM_COL[p] || '--of-aa') + ')'; }
   function crmOpen() {
     if (!(isAdmin || isVisitor)) return;
+    $('crm-imp').hidden = !(isAdmin && CLOUD);
+    if (!$('crm-file').dataset.ok) { $('crm-file').dataset.ok = '1'; $('crm-file').addEventListener('change', function () { var f = this.files && this.files[0]; this.value = ''; ofImporta(f, $('crm-impmsg')); }); }
     if (!CLOUD) { $('crm-app').hidden = true; $('crm-msg').hidden = false; $('crm-msg').textContent = 'Il report CRM è disponibile solo con il database collegato.'; return; }
     if (CRM.all) { crmRender(); return; }
     crmLoad();
@@ -2765,7 +2768,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     rpc('app_crm_attivita', { token: token }).then(function (r) {
       CRM.loading = false;
       CRM.all = (r.items || []).map(function (x) { return { q: x[0], d: x[0].slice(0, 10), p: x[1] || '—', o: x[2], s: x[3], t: x[4], tm: x[5], pr: x[6], rg: x[7] }; });
-      if (!CRM.all.length) { $('crm-msg').textContent = isAdmin ? 'Nessuna attività ancora: importa l\'export «Closed Activities» del CRM nella sezione Offerte (serve una volta l\'SQL 8-offerte-crm.sql).' : 'Nessuna attività del CRM ancora.'; return; }
+      if (!CRM.all.length) { $('crm-msg').textContent = isAdmin ? 'Nessuna attività ancora: importa l\'export «Closed Activities» del CRM con il pulsante qui sopra.' : 'Nessuna attività del CRM ancora.'; return; }
       var ds = CRM.all.map(function (x) { return x.d; }).sort(); CRM.min = ds[0]; CRM.max = ds[ds.length - 1];
       if (!CRM.da) CRM.da = CRM.min; if (!CRM.a) CRM.a = CRM.max;
       crmWire(); crmRender();
@@ -2843,8 +2846,8 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     $('crm-dati').innerHTML = '<thead><tr><th>Data</th><th>Ora</th><th>Responsabile</th><th>Oggetto</th><th>Tipo</th><th>Tema</th><th>Progetto CRM</th></tr></thead><tbody>' + V.slice(0, CRM.limit).map(function (x) { return '<tr><td class="num">' + crmFmtD(x.d) + '</td><td class="num">' + esc(x.q.slice(11)) + '</td><td>' + esc(x.p) + '</td><td>' + esc(x.s) + '</td><td>' + esc(x.t) + '</td><td>' + esc(x.tm) + '</td><td>' + esc(x.rg || '') + '</td></tr>'; }).join('') + '</tbody>';
     $('crm-more').hidden = V.length <= CRM.limit;
   }
-  function ofImporta(file) {
-    var m = $('of-impmsg'); if (!file) return;
+  function ofImporta(file, msg) {
+    var m = msg || $('of-impmsg'); if (!file) return;
     if (!window.CrmImport) { m.textContent = 'Lettura del file non disponibile: ricarica la pagina.'; return; }
     m.textContent = 'Leggo il file…';
     file.arrayBuffer().then(function (buf) { return CrmImport.leggiXlsx(buf, 'Closed Activities'); }).then(function (righe) {
@@ -2865,7 +2868,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
       }
       return prossimo().then(attivitaSucc).then(function () {
         m.textContent = 'Fatto: ' + tot.nuove + ' conversazioni nuove, ' + tot.aggiornate + ' aggiornate; ' + nuoveAtt + ' attività nuove nel Report CRM (' + r.attivita + ' email' + (r.saltate ? ', ' + r.saltate + ' senza oggetto o annullate non considerate nelle conversazioni' : '') + ').';
-        OF.data = null; OF.all = null; HCRM = null; CRM.all = null; ofLoad();
+        OF.data = null; OF.all = null; HCRM = null; CRM.all = null; CRM.loading = false; ofLoad(); if (!$('pg-crm').hidden) crmLoad();
       });
     }).catch(function (e) {
       var t = errTxt(e); m.textContent = /app_offerte_importa|function|does not exist|404/i.test(String(e && (e.message || e))) ? 'Prima esegui in Supabase l\'SQL 8-offerte-crm.sql, poi riprova.' : 'Importazione non riuscita: ' + t;
