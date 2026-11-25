@@ -26,7 +26,10 @@
 @keyframes fx-griglia { to { background-position: 36px 36px, 36px 36px; } }
 
 /* schede di vetro: luce che segue il puntatore e bordo che si accende */
-.fx-scheda { position: relative; transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s; will-change: transform; }
+.fx-scheda { position: relative; transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s; }
+/* menu a tendina aperti dentro una scheda (filtri, scelte): la scheda va sopra quelle successive, non viene coperta */
+.fx-scheda:focus-within, .fx-scheda:has(details[open]), .fx-scheda:has([aria-expanded="true"]) { z-index: 40; }
+.fx-scheda:has(details[open]):hover, .fx-scheda:focus-within:hover { transform: none; }
 .fx-scheda::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
   background: radial-gradient(280px circle at var(--fx-x, 50%) var(--fx-y, 0%), rgb(var(--fx-arancio) / .14), transparent 60%);
