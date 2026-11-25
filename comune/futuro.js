@@ -6,7 +6,7 @@
   var ridotto = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (ridotto || /[?&]nofx\b/.test(location.search) || (navigator.webdriver && !/[?&]fx\b/.test(location.search))) return;
   var SCHEDE = ".app,.riquadro,.panel,.telaio,.np,.card,.scheda,.kpi,.stat,.box,section.panel,.lista button,.app-card,.tile";
-  var COMPARSA = SCHEDE + ",main h2,.zwrr section.panel,table";
+  var COMPARSA = SCHEDE.replace(",.np", "") + ",main h2,.zwrr section.panel,table"; // le schede nei caroselli orizzontali (.np) non hanno la comparsa
   function prepara(radice) {
     var vh = innerHeight;
     (radice.querySelectorAll ? radice : document).querySelectorAll(SCHEDE).forEach(function (el) { el.classList.add("fx-scheda"); });
