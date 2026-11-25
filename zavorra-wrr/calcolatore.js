@@ -7,6 +7,7 @@ import {
   defaultState, compute, windTable, frameFit, emailText,
 } from './calc.js';
 import { createStorage } from './storage.js';
+import { documento, paginaHTML, docxBlob } from './relazione.js';
 
 const SOURCE_URL = 'https://www.obo-bettermann.com/out/media/01-100_MA_Magic_PV_Mount_Wechselrichterrahmen_EN_2026-07-28.pdf';
 const LS_KEY = 'wrr-zavorra-v3';
@@ -137,6 +138,25 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           <span class="hint" id="${u}-copyMsg" role="status"></span>
         </div>
         <textarea class="copy" id="${u}-copyFallback" hidden></textarea>
+      </section>
+
+      <section class="panel">
+        <h2>Relazione per il cliente</h2>
+        <p class="hint">Documento OBO con dati, metodo, risultato, tabella per tutte le velocità e verifiche a cura del progettista: da stampare, salvare in PDF o scaricare in Word da mandare al cliente.</p>
+        <div class="row">
+          <label class="f" for="${u}-rCliente">Cliente<input id="${u}-rCliente" maxlength="120" placeholder="Ragione sociale"></label>
+          <label class="f" for="${u}-rRif">Impianto / riferimento<input id="${u}-rRif" maxlength="160" placeholder="Es. FV 200 kWp copertura capannone"></label>
+        </div>
+        <div class="row">
+          <label class="f" for="${u}-rLuogo">Luogo<input id="${u}-rLuogo" maxlength="120" placeholder="Comune (provincia)"></label>
+          <label class="f" for="${u}-rCodice">Numero progetto / offerta<input id="${u}-rCodice" maxlength="100"></label>
+        </div>
+        <label class="f" for="${u}-rNote">Note aggiuntive (facoltative)<textarea id="${u}-rNote" rows="2" maxlength="800" style="width:100%;font:inherit"></textarea></label>
+        <div class="tools">
+          <button type="button" class="btn primary" id="${u}-rApri">Apri relazione (stampa o PDF)</button>
+          <button type="button" class="btn" id="${u}-rWord">Scarica Word</button>
+          <span class="hint" id="${u}-rMsg" role="status"></span>
+        </div>
       </section>
 
       ${storage ? `
@@ -331,6 +351,41 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     try { navigator.clipboard.writeText(txt).then(() => (msg.textContent = 'Tabella copiata.'), fallback); } catch { fallback(); }
   };
 
+  // ---------- relazione per il cliente ----------
+  const REL = { rCliente: 'cliente', rRif: 'riferimento', rLuogo: 'luogo', rCodice: 'codice', rNote: 'note' };
+  const mostraRel = () => { const rel = state.rel || {}; Object.entries(REL).forEach(([id, k]) => { q(id).value = rel[k] || ''; }); };
+  Object.entries(REL).forEach(([id, k]) => q(id).addEventListener('input', () => { state.rel = { ...(state.rel || {}), [k]: q(id).value }; update(); }));
+  const datiRelazione = () => {
+    const rel = state.rel || {}, val = (id) => (q(id) ? q(id).value.trim() : '');
+    return { state, cliente: rel.cliente || val('cliente'), riferimento: rel.riferimento || '', progetto: val('progetto'), luogo: rel.luogo || '', codice: rel.codice || val('codice'),
+      note: rel.note || '', autore: (q('who') && q('who').textContent) || '', data: new Date() };
+  };
+  const nomeFile = (est) => `Relazione_zavorra_${FRAMES[state.frame].name.replace(/\s+/g, '')}_${(datiRelazione().codice || datiRelazione().cliente || 'OBO').replace(/[^\w-]+/g, '_').slice(0, 40)}_${new Date().toISOString().slice(0, 10)}.${est}`;
+  const LOGO = new URL('logo-obo.png', import.meta.url).href;
+  q('rApri').onclick = () => {
+    const doc = documento(datiRelazione());
+    const w = window.open('', '_blank');
+    if (!w) { q('rMsg').textContent = 'Il browser ha bloccato la nuova finestra: consenti i popup per OBO Hub.'; return; }
+    w.document.open(); w.document.write(paginaHTML(doc, LOGO)); w.document.close();
+    q('rMsg').textContent = '';
+  };
+  q('rWord').onclick = async () => {
+    const msg = q('rMsg'); msg.textContent = 'Preparo il file Word…';
+    try {
+      let logo = null;
+      try {
+        const bytes = new Uint8Array(await (await fetch(LOGO)).arrayBuffer());
+        const dv = new DataView(bytes.buffer), lw = dv.getUint32(16), lh = dv.getUint32(20), h = 46;
+        logo = { bytes, w: Math.round(lw * h / lh), h };
+      } catch { /* senza logo */ }
+      const blob = docxBlob(documento(datiRelazione()), logo);
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nomeFile('docx'); document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      msg.textContent = 'File Word scaricato.';
+    } catch (e) { msg.textContent = 'Non riuscito: ' + e.message; }
+  };
+  mostraRel();
+
   // ---------- progetto: apertura, salvataggio automatico, collegamento a Progettazione LPS ----------
   if (storage) {
     const LS_APERTO = 'wrr-zavorra-aperto';
@@ -367,7 +422,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       q('lps').value = row.progetto_lps && lps.some((p) => p.id === row.progetto_lps) ? row.progetto_lps : '';
       ricordaAperto(row.id);
       q('vaiProgetti').href = '../progetti.html' + (q('lps').value ? '?id=' + encodeURIComponent(q('lps').value) : '');
-      renderDevs(); update(); mostraAperto();
+      mostraRel(); renderDevs(); update(); mostraAperto();
     }
     function disegnaElenco() {
       const body = q('archBody'), f = q('cerca').value.trim().toLowerCase();

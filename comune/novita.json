@@ -2,6 +2,25 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json). Le novità solo grafiche (animazioni, sigle, aspetto) non si mostrano: restano conservate in 'grafica_non_mostrata'.",
   "aggiornamenti": [
     {
+      "id": "2026-11-25-zavorra-3",
+      "data": "2026-11-25",
+      "app": "zavorra",
+      "titolo": "Zavorra WRR: relazione da mandare al cliente",
+      "voci": [
+        "Nuova sezione «Relazione per il cliente»: cliente, impianto, luogo, numero progetto e note",
+        "«Apri relazione» crea il documento OBO da stampare o salvare in PDF; «Scarica Word» lo scarica in .docx da modificare",
+        "La relazione contiene telaio, apparecchiature, metodo, risultato, zavorra per tutte le velocità del vento e le verifiche a cura del progettista",
+        "I dati della relazione si salvano insieme al calcolo nel progetto"
+      ],
+      "titolo_en": "WRR ballast: report for the customer",
+      "voci_en": [
+        "New «Customer report» section: customer, installation, place, project number and notes",
+        "«Open report» creates the OBO document to print or save as PDF; «Download Word» saves it as .docx",
+        "The report includes frame, devices, method, result, ballast for every wind speed and the checks left to the designer",
+        "Report data is saved with the calculation in the project"
+      ]
+    },
+    {
       "id": "2026-11-24-hub-6",
       "data": "2026-11-24",
       "app": "hub",
