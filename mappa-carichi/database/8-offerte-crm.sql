@@ -40,13 +40,13 @@ create table if not exists public.app_offerte_storico (
 alter table public.app_offerte_storico enable row level security;
 revoke all on public.app_offerte_storico from anon, authenticated;
 
--- lettura (Admin e Visitatori), con il progetto CRM collegato e il numero di email
+-- lettura (tutti gli utenti collegati), con il progetto CRM collegato e il numero di email
 create or replace function public.app_offerte(p jsonb default '{}') returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare s public.app_sessions;
 begin
   s := public._sess(p->>'token');
-  if s.role not in ('admin', 'visitor') then raise exception 'NON_AUTORIZZATO'; end if;
+  -- lettura per tutti gli utenti collegati (SQL 9, 26/11/2026); _sess blocca le sessioni non valide
   return jsonb_build_object('items', (
     select coalesce(jsonb_agg(jsonb_build_object('o', oggetto, 's', stato, 'f', famiglia, 'p', to_jsonb(persone), 'm', mese, 'w', giorno, 't', tipo,
       'r', nullif(regarding, ''), 'n', attivita, 'c', fonte) order by id), '[]'::jsonb)
@@ -133,7 +133,7 @@ language plpgsql security definer set search_path = public as $$
 declare s public.app_sessions;
 begin
   s := public._sess(p->>'token');
-  if s.role not in ('admin', 'visitor') then raise exception 'NON_AUTORIZZATO'; end if;
+  -- lettura per tutti gli utenti collegati (SQL 9, 26/11/2026); _sess blocca le sessioni non valide
   return jsonb_build_object('items', (
     select coalesce(jsonb_agg(jsonb_build_array(to_char(quando, 'YYYY-MM-DD HH24:MI'), persona, owner, oggetto, tipo, tema, pratica, regarding) order by quando desc), '[]'::jsonb)
     from public.app_crm_attivita));
