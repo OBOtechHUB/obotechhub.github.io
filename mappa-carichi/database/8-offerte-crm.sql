@@ -59,7 +59,7 @@ language plpgsql security definer set search_path = public as $$
 declare s public.app_sessions; r jsonb; nuove int := 0; aggiornate int := 0; vecchia public.app_offerte; g date;
 begin
   s := public._sess(p->>'token');
-  if s.role <> 'admin' then raise exception 'NON_AUTORIZZATO'; end if;
+  if s.role not in ('admin', 'guest') then raise exception 'NON_AUTORIZZATO'; end if; -- admin e colleghi (SQL 11), non i visitatori
   if jsonb_typeof(p->'righe') <> 'array' or jsonb_array_length(p->'righe') > 20000 then raise exception 'DATI_NON_VALIDI'; end if;
   for r in select * from jsonb_array_elements(p->'righe') loop
     if coalesce(r->>'crm_id', '') !~ '^crm-[a-z0-9]{1,20}$' or coalesce(trim(r->>'oggetto'), '') = '' then continue; end if;
@@ -115,7 +115,7 @@ language plpgsql security definer set search_path = public as $$
 declare s public.app_sessions; n int;
 begin
   s := public._sess(p->>'token');
-  if s.role <> 'admin' then raise exception 'NON_AUTORIZZATO'; end if;
+  if s.role not in ('admin', 'guest') then raise exception 'NON_AUTORIZZATO'; end if; -- admin e colleghi (SQL 11), non i visitatori
   if jsonb_typeof(p->'righe') <> 'array' or jsonb_array_length(p->'righe') > 5000 then raise exception 'DATI_NON_VALIDI'; end if;
   insert into public.app_crm_attivita (id, quando, persona, owner, oggetto, tipo, tema, pratica, regarding)
   select left(r->>'id', 60), (r->>'quando')::timestamp, left(coalesce(r->>'persona', ''), 80), left(coalesce(r->>'owner', ''), 120), left(coalesce(r->>'oggetto', ''), 500),

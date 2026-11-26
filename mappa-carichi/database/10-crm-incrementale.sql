@@ -21,7 +21,7 @@ language plpgsql security definer set search_path = public as $$
 declare s public.app_sessions; inviate int; uniche int; nuove int := 0; completate int := 0; toccate text[];
 begin
   s := public._sess(p->>'token');
-  if s.role <> 'admin' then raise exception 'NON_AUTORIZZATO'; end if;
+  if s.role not in ('admin', 'guest') then raise exception 'NON_AUTORIZZATO'; end if; -- admin e colleghi (SQL 11), non i visitatori
   if jsonb_typeof(p->'righe') <> 'array' or jsonb_array_length(p->'righe') > 5000 then raise exception 'DATI_NON_VALIDI'; end if;
   inviate := jsonb_array_length(p->'righe');
 

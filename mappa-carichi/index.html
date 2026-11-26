@@ -2772,7 +2772,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
   function crmCol(p) { return 'var(' + (CRM_COL[p] || '--of-aa') + ')'; }
   function crmOpen() {
     if (!token) return;
-    $('crm-imp').hidden = !(isAdmin && CLOUD);
+    $('crm-imp').hidden = !(CLOUD && !isVisitor);
     if (!$('crm-file').dataset.ok) { $('crm-file').dataset.ok = '1'; $('crm-file').addEventListener('change', function () { var f = this.files && this.files[0]; this.value = ''; ofImporta(f, $('crm-impmsg')); }); }
     if (!CLOUD) { $('crm-app').hidden = true; $('crm-msg').hidden = false; $('crm-msg').textContent = 'Il report CRM è disponibile solo con il database collegato.'; return; }
     if (CRM.all) { crmRender(); return; }
@@ -2784,7 +2784,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     rpc('app_crm_attivita', { token: token }).then(function (r) {
       CRM.loading = false;
       CRM.all = (r.items || []).map(function (x) { return { q: x[0], d: x[0].slice(0, 10), p: x[1] || '—', o: x[2], s: x[3], t: x[4], tm: x[5], pr: x[6], rg: x[7] }; });
-      if (!CRM.all.length) { $('crm-msg').textContent = isAdmin ? 'Nessuna attività ancora: importa l\'export «Closed Activities» del CRM con il pulsante qui sopra.' : 'Nessuna attività del CRM ancora.'; return; }
+      if (!CRM.all.length) { $('crm-msg').textContent = !isVisitor ? 'Nessuna attività ancora: importa l\'export «Closed Activities» del CRM con il pulsante qui sopra.' : 'Nessuna attività del CRM ancora.'; return; }
       var ds = CRM.all.map(function (x) { return x.d; }).sort(); CRM.min = ds[0]; CRM.max = ds[ds.length - 1];
       if (!CRM.da) CRM.da = CRM.min; if (!CRM.a) CRM.a = CRM.max;
       crmWire(); crmRender();
@@ -2888,12 +2888,12 @@ body.visitatore .nav a.hubnav { display: flex !important; }
         OF.data = null; OF.all = null; HCRM = null; CRM.all = null; CRM.loading = false; ofLoad(); if (!$('pg-crm').hidden) crmLoad();
       });
     }).catch(function (e) {
-      var t = errTxt(e); m.textContent = /app_offerte_importa|function|does not exist|404/i.test(String(e && (e.message || e))) ? 'Prima esegui in Supabase l\'SQL 8-offerte-crm.sql, poi riprova.' : 'Importazione non riuscita: ' + (e && e.file ? 'il file non è un export «Closed Activities» del CRM leggibile (' + (e.message || 'formato non riconosciuto') + ').' : t);
+      var t = errTxt(e); m.textContent = /app_offerte_importa|function|does not exist|404/i.test(String(e && (e.message || e))) ? 'Prima esegui in Supabase l\'SQL 8-offerte-crm.sql, poi riprova.' : 'Importazione non riuscita: ' + (/NON_AUTORIZZATO/.test(String(e && e.message)) ? 'per importare serve l\'SQL 11-import-crm-per-tutti.sql in Supabase (lo esegue l\'amministratore).' : e && e.file ? 'il file non è un export «Closed Activities» del CRM leggibile (' + (e.message || 'formato non riconosciuto') + ').' : t);
     });
   }
   function ofOpen() {
     if (!token) return;
-    if ($('of-imp')) { $('of-imp').hidden = !(isAdmin && CLOUD); if (!$('of-file').dataset.ok) { $('of-file').dataset.ok = '1'; $('of-file').addEventListener('change', function () { var f = this.files && this.files[0]; this.value = ''; ofImporta(f); }); } }
+    if ($('of-imp')) { $('of-imp').hidden = !(CLOUD && !isVisitor); if (!$('of-file').dataset.ok) { $('of-file').dataset.ok = '1'; $('of-file').addEventListener('change', function () { var f = this.files && this.files[0]; this.value = ''; ofImporta(f); }); } }
     if (!CLOUD) { $('of-app').hidden = true; $('of-msg').hidden = false; $('of-msg').textContent = 'La sezione Offerte è disponibile solo con il database collegato.'; return; }
     if (OF.data) { ofRender(); return; }
     ofLoad();
