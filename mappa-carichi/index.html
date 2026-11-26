@@ -981,6 +981,8 @@ section[aria-labelledby="h-pw"], section[aria-labelledby="h-gpw"], section[aria-
 .of-ctl{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end}
 .of-ctl .field{flex:0 1 auto}
 .of-ctl input[type=search]{width:230px;max-width:100%}
+.of-app{display:flex;flex-direction:column;gap:20px}.of-app[hidden]{display:none}
+.of-fonte{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .of-chips{display:flex;gap:6px;flex-wrap:wrap}
 .of-chips button[aria-pressed=true]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .of-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
@@ -1686,7 +1688,8 @@ body.visitatore .nav a.hubnav { display: flex !important; }
       <div class="row" style="align-items:center;gap:10px"><label class="primary" style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:#f39b00;color:#fff;font-weight:600">Importa export CRM (.xlsx)<input type="file" id="of-file" accept=".xlsx" hidden></label><span class="hint" id="of-impmsg" role="status"></span></div>
     </section>
     <p class="empty" id="of-msg" role="status"></p>
-    <div id="of-app" hidden style="display:flex;flex-direction:column;gap:20px">
+    <div id="of-app" class="of-app" hidden>
+      <div class="of-fonte"><span class="hint">Fonte dei dati</span><div class="of-chips" id="of-fonte" role="group" aria-label="Fonte dei dati"></div></div>
       <div class="of-chips" id="of-tabs" role="group" aria-label="Tipo di conversazioni"></div>
       <section class="panel" aria-label="Grafico per persona">
         <div class="of-ch-h"><h3>Conversazioni per persona</h3><div class="of-chips" id="of-per" role="group" aria-label="Periodo"></div></div>
@@ -2729,7 +2732,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     $('teamList').innerHTML = h + '</tbody>';
   }
   // ---------- Sezione Offerte (Admin e Visitatori in sola lettura; dati letti dal server con app_offerte) ----------
-  var OF = { data: null, st: {}, fam: '', mese: '', q: '', sel: {}, limit: 40, loading: false, wired: false, per: 'a' };
+  var OF = { data: null, st: {}, fam: '', mese: '', q: '', sel: {}, limit: 40, loading: false, wired: false, per: 'a', fonte: 'crm' };
   var OF_PER = [['s', 'Settimana'], ['m', 'Mese'], ['2', '2 mesi'], ['6', '6 mesi'], ['a', '1 anno']];
   function ofMk(back) { var t = new Date(); t.setDate(1); t.setMonth(t.getMonth() - back); return t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2); }
   function ofWeek() { var t = new Date(); t.setHours(0, 0, 0, 0); var dow = (t.getDay() + 6) % 7, a = new Date(t); a.setDate(t.getDate() - dow); var f = new Date(a); f.setDate(a.getDate() + 4); var z = function (x) { return x.getFullYear() + '-' + ('0' + (x.getMonth() + 1)).slice(-2) + '-' + ('0' + x.getDate()).slice(-2); }; return [z(a), z(f)]; }
@@ -2747,7 +2750,15 @@ body.visitatore .nav a.hubnav { display: flex !important; }
   var OF_ND = "Non determinabile dall'oggetto", OF_MM = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
   function ofHas(d, k) { return ('+' + (d.t || 'offerta') + '+').indexOf('+' + k + '+') >= 0; }
   var OF_TK = { o: 'offerta', t: 'tecnico', d: 'dichiarazione' };
-  function ofTabOf(d, t) { return t === 'x' || ofHas(d, OF_TK[t]); }
+  /* fonte: 'crm' = export del CRM (da novembre 2026), 'arch' = archivio offerte precedente (Excel/Lovable). Le due fonti non si sommano (Marco, 26/11) */
+  function ofFonte(d) { return d.c === 'crm' ? 'crm' : 'arch'; }
+  function ofTabOf(d, t) { return ofFonte(d) === OF.fonte && (t === 'x' || ofHas(d, OF_TK[t])); }
+  function ofFonteChips() {
+    var info = { crm: { n: 0, m: [] }, arch: { n: 0, m: [] } };
+    (OF.all || []).forEach(function (d) { var x = info[ofFonte(d)]; x.n++; if (d.m) x.m.push(d.m); });
+    var per = function (x) { if (!x.m.length) return ''; x.m.sort(); var a = ofM(x.m[0]), b = ofM(x.m[x.m.length - 1]); return a === b ? a : a + ' – ' + b; };
+    $('of-fonte').innerHTML = [['crm', 'Export CRM'], ['arch', 'Archivio precedente']].filter(function (f) { return info[f[0]].n; }).map(function (f) { var x = info[f[0]]; return '<button type="button" data-f="' + f[0] + '" aria-pressed="' + (OF.fonte === f[0]) + '">' + f[1] + ' · ' + per(x) + ' (' + x.n + ')</button>'; }).join('');
+  }
   function ofTab(d) { return ofTabOf(d, OF.tab); }
   /* Gli stati (evase, da redigere, KAM...) valgono solo per le offerte: Tecnico e Dichiarazioni sono dataset a parte */
   function ofSts() { return OF.tab === 'o' ? OF_ST.slice(0, 4) : OF.tab === 'x' ? OF_ST : []; }
@@ -2897,7 +2908,8 @@ body.visitatore .nav a.hubnav { display: flex !important; }
         d.g = {}; (d.p || []).forEach(function (x) { if (OF_FOCUS.indexOf(x) >= 0) d.g[x] = 1; });
         if (!(d.p || []).length || (d.p || []).some(function (x) { return OF_FOCUS.indexOf(x) < 0; })) d.g.Altri = 1;
       });
-      OF.all = items; OF.data = items.filter(ofTab); ofInit();
+      OF.all = items; if (!items.some(function (d) { return ofFonte(d) === OF.fonte; })) OF.fonte = OF.fonte === 'crm' ? 'arch' : 'crm';
+      OF.data = items.filter(ofTab); ofFonteChips(); ofInit();
     }).catch(function (e) { OF.loading = false; $('of-msg').textContent = /NON_AUTORIZZATO/.test(String(e && e.message)) ? 'Le offerte saranno visibili a tutti appena l\'amministratore esegue in Supabase l\'SQL 9-offerte-crm-per-tutti.sql.' : 'Impossibile caricare le offerte: ' + errTxt(e); });
   }
   function ofInit() {
@@ -2917,6 +2929,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
       $('of-fam').addEventListener('change', function () { OF.fam = this.value; OF.limit = 40; ofRender(); });
       $('of-mese').addEventListener('change', function () { OF.mese = this.value; OF.limit = 40; ofRender(); });
       $('of-q').addEventListener('input', function () { OF.q = this.value; OF.limit = 40; ofRender(); });
+      $('of-fonte').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b || !OF.all) return; OF.fonte = b.dataset.f; OF.data = OF.all.filter(ofTab); OF.st = {}; OF.fam = ''; OF.mese = ''; OF.sel = {}; OF.limit = 40; ofFonteChips(); ofInit(); });
       $('of-tabs').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b || !OF.all) return; OF.tab = b.dataset.t; OF.data = OF.all.filter(ofTab); OF.cv = ofSts().length ? 's' : 'm'; OF.st = {}; OF.fam = ''; OF.sel = {}; OF.limit = 40; ofInit(); });
       $('of-reset').addEventListener('click', function () { OF.st = {}; OF.fam = ''; OF.mese = ''; OF.q = ''; OF.sel = {}; OF.per = 'a'; OF.cv = 's'; OF.tlv = 'm'; OF.limit = 40; $('of-q').value = ''; ofInit(); });
       $('of-per').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; OF.per = b.dataset.p; OF.limit = 40; ofRender(); });
