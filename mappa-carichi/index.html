@@ -2323,7 +2323,10 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     $('teamAdd').disabled = !isAdmin; $('t-name').disabled = !isAdmin;
     $('t-name').placeholder = isAdmin ? 'Es. Mario Rossi' : 'Solo l\'admin aggiunge persone';
     $('loadCsv').disabled = !isAdmin;
-    $('navAdmin').hidden = !isAdmin; $('navRic').hidden = isVisitor; $('navOfferte').hidden = false; if ($('navCrm')) $('navCrm').hidden = false; ofClear(); HCRM = null; if (CRM) { CRM.all = null; CRM.loading = false; }
+    $('navAdmin').hidden = !isAdmin; $('navRic').hidden = isVisitor; $('navOfferte').hidden = false; if ($('navCrm')) $('navCrm').hidden = false;
+    // dati di Offerte / Report CRM: si ricaricano solo quando cambia la sessione (accesso, uscita, altro utente)
+    if (OF_TOK !== (logged ? token : '')) { OF_TOK = logged ? token : ''; ofClear(); if (OF) OF.loading = false; HCRM = null; if (CRM) { CRM.all = null; CRM.loading = false; }
+      if (logged && token) { if (!$('pg-offerte').hidden) ofOpen(); if (!$('pg-crm').hidden) crmOpen(); } }
     document.querySelector('#nav [data-go=ins]').hidden = isVisitor; document.querySelector('#nav [data-go=daily]').hidden = isVisitor; $('heroNew').hidden = isVisitor;
     if (typeof renderOutlook === 'function') renderOutlook();
   }
@@ -2753,10 +2756,11 @@ body.visitatore .nav a.hubnav { display: flex !important; }
   function ofM(m) { return m ? OF_MM[+m.slice(5) - 1] + ' ' + m.slice(2, 4) : ''; }
   function ofClear() { if (!OF) return; OF.data = null; OF.all = null; if ($('of-app')) { $('of-app').hidden = true; ['of-kpis', 'of-people', 'of-stato', 'of-months', 'of-heat', 'of-tbl'].forEach(function (k) { $(k).innerHTML = ''; }); } }
   // ---------- Report attività CRM (Admin e Visitatori; dati da app_crm_attivita) ----------
-  var CRM = { all: null, loading: false, wired: false, da: '', a: '', q: '', limit: 60 };
+  var CRM = { all: null, loading: false, wired: false, da: '', a: '', q: '', limit: 60 }, OF_TOK = null;
   var CRM_COL = { Castiglioni: '--of-cs', Lequoque: '--of-ll', Martin: '--of-mm', Tartaglione: '--of-tt' };
   function crmCol(p) { return 'var(' + (CRM_COL[p] || '--of-aa') + ')'; }
   function crmOpen() {
+    if (!token) return;
     $('crm-imp').hidden = !(isAdmin && CLOUD);
     if (!$('crm-file').dataset.ok) { $('crm-file').dataset.ok = '1'; $('crm-file').addEventListener('change', function () { var f = this.files && this.files[0]; this.value = ''; ofImporta(f, $('crm-impmsg')); }); }
     if (!CLOUD) { $('crm-app').hidden = true; $('crm-msg').hidden = false; $('crm-msg').textContent = 'Il report CRM è disponibile solo con il database collegato.'; return; }
@@ -2877,6 +2881,7 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     });
   }
   function ofOpen() {
+    if (!token) return;
     if ($('of-imp')) { $('of-imp').hidden = !(isAdmin && CLOUD); if (!$('of-file').dataset.ok) { $('of-file').dataset.ok = '1'; $('of-file').addEventListener('change', function () { var f = this.files && this.files[0]; this.value = ''; ofImporta(f); }); } }
     if (!CLOUD) { $('of-app').hidden = true; $('of-msg').hidden = false; $('of-msg').textContent = 'La sezione Offerte è disponibile solo con il database collegato.'; return; }
     if (OF.data) { ofRender(); return; }
