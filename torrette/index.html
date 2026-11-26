@@ -120,9 +120,14 @@
   #ufs { zoom:var(--zoom,1); }
   #ufs > div { font-family:var(--font) !important; min-height:auto !important; background:var(--sfondo) !important; }
   #ufs img { max-width:100%; }
+  /* forme come le altre app di OBO Hub: schede arrotondate, pulsanti a pillola */
+  #ufs div[style*="border-radius: 3px"], #ufs button[style*="border-radius: 3px"], #ufs div[style*="border-radius: 4px"], #ufs button[style*="border-radius: 4px"] { border-radius:12px !important; }
+  #ufs button { font-family:inherit !important; }
+  #ufs div[style*="background: rgb(245, 245, 245)"] { background:#fff !important; }
+  .progetto { background:var(--carta); border:1px solid var(--bordo); border-radius:12px; padding:10px 12px; }
   /* tema scuro: il configuratore ha colori propri; si invertono le parti (non il contenitore, così il carrello fisso resta in basso) e si rimettono dritte le foto */
-  :root[data-theme="dark"] #ufs > div > *:not([style*="rgb(40, 42, 49)"]) { filter:invert(.92) hue-rotate(180deg); }
-  :root[data-theme="dark"] #ufs > div > * img { filter:invert(1) hue-rotate(180deg); }
+  :root[data-theme="dark"] .ufs-radice > *:not(.ufs-barra) { background-color:#fff; filter:invert(.9) hue-rotate(180deg); }
+  :root[data-theme="dark"] .ufs-radice > *:not(.ufs-barra) img { filter:invert(1) hue-rotate(180deg); }
   @media print { header.barra, .eroe, .schede, .noprint { display:none !important; } body { background:#fff; color:#000; } }
 </style>
 </head>
@@ -144,7 +149,8 @@
   </div></section>
   <main class="contenitore">
     <section class="progetto noprint" aria-label="Progetto">
-      <label><span data-t="Progetto|Project"></span> <select id="selProgetto"></select></label>
+      <label><b data-t="Progetto (unico per tutte le app)|Project (shared by all apps)"></b> <select id="selProgetto"></select></label>
+      <a class="pill" href="../progetti.html" data-t="Tutti i progetti|All projects"></a>
       <button type="button" class="pill" id="nuovaConf" data-t="Nuova configurazione|New configuration"></button>
       <button type="button" class="pill" id="csv" data-t="Scarica distinta (CSV)|Download parts list (CSV)"></button>
       <a class="pill" href="precedente.html" data-t="Versione precedente|Previous version"></a>

@@ -1491,7 +1491,7 @@ function StepFamiglia({ onSelect }) {
             {/* Immagine — nascosta su mobile */}
             {!isMobile && FAMIGLIA_IMG[f.id] && (
               <div style={{ height: 80, overflow: "hidden", borderRadius: "3px 3px 0 0", background: "#f5f5f5", display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #f0f0f0" }}>
-                <img src={FAMIGLIA_IMG[f.id]} alt={f.label} style={{ maxHeight: 70, maxWidth: "100%", objectFit: "contain", padding: 6 }} onError={e => { e.target.parentElement.style.display="none"; }} />
+                <img referrerPolicy="no-referrer" loading="lazy" src={FAMIGLIA_IMG[f.id]} alt={f.label} style={{ maxHeight: 70, maxWidth: "100%", objectFit: "contain", padding: 6 }} onError={e => { e.target.parentElement.style.display="none"; }} />
               </div>
             )}
             {/* Icona + titolo */}
@@ -1601,10 +1601,11 @@ const SISTEMA_DESC = {
 };
 
 // URL immagini prodotto da obo.it — grafici prodotto ufficiali
-const OBO_IMG = (codice) => `https://www.obo.it/fileadmin/DMS/Produktbilder/${codice}_PG1.jpg`;
+// foto prodotto di obo.it (stesso indirizzo usato da Prodotti OBO e Zavorra WRR)
+const OBO_IMG = (codice) => `https://www.obo.it/out/pictures/generated/product/1/794_794_75/${codice}_PG1.jpg`;
 
 const SISTEMA_IMG = {
-  GES4:       OBO_IMG("7404700"),   // GES4
+  GES4:       OBO_IMG("7405196"),   // GES4 (modulo apparecchi: la torretta non ha foto su obo.it)
   GES9:       OBO_IMG("7405371"),   // GES9M-2 acciaio (rappresentativo)
   GRAF9:      OBO_IMG("7405746"),   // GRAF9
   UDHOME_ONE: OBO_IMG("7368280"),   // UDHOME-ONE GV inox
@@ -1613,7 +1614,7 @@ const SISTEMA_IMG = {
   UDHOME9:    OBO_IMG("7427324"),   // UDHOME9 2V inox
   CASS_LIV_4: OBO_IMG("7408960"),   // cassetta livellabile 4
   CASS_LIV_9: OBO_IMG("7408976"),   // cassetta livellabile 9
-  DISACC_4:   OBO_IMG("7408810"),   // disaccoppiata 4
+  DISACC_4:   OBO_IMG("7409228"),   // disaccoppiata (RKSNUZD3 inox)
   DISACC_9:   OBO_IMG("7409232"),   // disaccoppiata 9
   SEMINATO:   OBO_IMG("7409601"),   // seminato quadrata
   GES_R2:     OBO_IMG("7408847"),   // GES R2 Nero (uscita laterale)
@@ -1685,7 +1686,7 @@ function StepSistema({ famigliaId, onSelect, onBack }) {
               {/* Immagine — solo tablet+ */}
               {!isMobile && SISTEMA_IMG[key] && (
                 <div style={{ height:100, overflow:"hidden", borderRadius:"3px 3px 0 0", background:"#f5f5f5", display:"flex", alignItems:"center", justifyContent:"center", borderBottom:"1px solid #f0f0f0" }}>
-                  <img src={SISTEMA_IMG[key]} alt={s.label} style={{ maxHeight:90, maxWidth:"100%", objectFit:"contain", padding:8 }} onError={e => { e.target.parentElement.style.display="none"; }} />
+                  <img referrerPolicy="no-referrer" loading="lazy" src={SISTEMA_IMG[key]} alt={s.label} style={{ maxHeight:90, maxWidth:"100%", objectFit:"contain", padding:8 }} onError={e => { e.target.parentElement.style.display="none"; }} />
                 </div>
               )}
               {/* Header */}
@@ -2628,7 +2629,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
           <div style={{ fontSize:13, color:"#F39B00", fontWeight:700, letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>Step 3 di 3 — {fam.label}</div>
           <div style={{ display:"flex", alignItems:"flex-start", gap:20 }}>
             {SISTEMA_IMG[sistemaKey] && (
-              <img src={SISTEMA_IMG[sistemaKey]} alt={s.label}
+              <img referrerPolicy="no-referrer" src={SISTEMA_IMG[sistemaKey]} alt={s.label}
                 style={{ width:90, height:90, objectFit:"contain", background:"#f5f5f5", borderRadius:4, flexShrink:0, border:"1px solid #eee" }}
                 onError={e => { e.target.style.display = "none"; }}
               />
@@ -2787,7 +2788,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
         <div style={{ fontSize:10, color:"#F39B00", fontWeight:700, letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>Step 3 di 3 — {fam.label}</div>
         <div style={{ display:"flex", alignItems:"flex-start", gap: isMobile ? 10 : 20 }}>
           {SISTEMA_IMG[sistemaKey] && !isMobile && (
-            <img src={SISTEMA_IMG[sistemaKey]} alt={s.label}
+            <img referrerPolicy="no-referrer" src={SISTEMA_IMG[sistemaKey]} alt={s.label}
               style={{ width:80, height:80, objectFit:"contain", background:"#f5f5f5", borderRadius:4, flexShrink:0, border:"1px solid #eee" }}
               onError={e => { e.target.style.display="none"; }} />
           )}
@@ -3658,70 +3659,49 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
   const famAttiva = FAMIGLIE.find(f => f.sistemi.includes(sistema));
 
   return (
-    <div style={{ fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", background: "#F2F1EE", minHeight: "100vh" }}>
+    <div className="ufs-radice" style={{ fontFamily: "var(--font, Helvetica, Arial, sans-serif)", background: "var(--sfondo, #fff)" }}>
 
-      {/* HEADER */}
-      <div style={{ background: "#282a31", display: "flex", alignItems: "stretch" }}>
-        <div style={{ background: "#F39B00", width: 4, flexShrink: 0 }} />
-        <div style={{ padding: isMobile ? "10px 12px" : "14px 24px", flex: 1, display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: isMobile ? 13 : 18, fontWeight: 900, color: "#F39B00", letterSpacing: 1, textTransform: "uppercase", lineHeight: 1 }}>OBO Bettermann</div>
-            {!isMobile && <div style={{ fontSize: 10, color: "#7694a4", letterSpacing: 2, textTransform: "uppercase", marginTop: 3 }}>Configuratore UFS — Sistemi Sottopavimento</div>}
+      {/* BARRA (stile OBO Hub: schede chiare con pillole arancio; il titolo è nella fascia della pagina) */}
+      <div className="ufs-barra" style={{ background: "var(--carta, #fff)", borderBottom: "1px solid var(--bordo, #dee2e6)", position: "sticky", top: 56, zIndex: 20 }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "8px 12px" : "10px 28px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <div role="tablist" style={{ display: "flex", gap: 6 }}>
+            {[["wizard", "Configura"], ["trova", "Trova dai requisiti"]].map(([k, t]) => (
+              <button key={k} role="tab" aria-selected={modalita === k} onClick={() => setModalita(k)}
+                style={{ padding: "7px 14px", borderRadius: 999, border: `1px solid ${modalita === k ? "#F39B00" : "var(--bordo, #dee2e6)"}`, background: modalita === k ? "#F39B00" : "var(--carta, #fff)", color: modalita === k ? "#fff" : "var(--testo, #212529)", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
+                {t}
+              </button>
+            ))}
           </div>
           {famAttiva && !isMobile && (
-            <div style={{ background: `${famAttiva.colore}22`, border: `1px solid ${famAttiva.colore}44`, borderRadius: 20, padding: "3px 10px", fontSize: 10, color: famAttiva.colore, fontWeight: 700, whiteSpace: "nowrap" }}>
-              {famAttiva.label}
-            </div>
+            <span style={{ border: `1px solid ${famAttiva.colore}55`, color: famAttiva.colore, borderRadius: 999, padding: "3px 10px", fontSize: 12, fontWeight: 600 }}>{famAttiva.label}</span>
           )}
-        </div>
-        <div style={{ display: "flex", gap: isMobile ? 4 : 8, alignItems: "center", padding: isMobile ? "0 8px" : "0 16px", flexShrink: 0 }}>
-          {/* Toggle wizard / trova */}
-          <div style={{ display: "flex", background: "#1a1c22", borderRadius: 3, overflow: "hidden" }}>
-            <button onClick={() => setModalita("wizard")}
-              style={{ padding: isMobile ? "7px 8px" : "7px 14px", background: modalita==="wizard" ? "#F39B00" : "transparent", color: modalita==="wizard" ? "white" : "#bbb", border: "none", cursor: "pointer", fontSize: isMobile ? 9 : 10, letterSpacing: 1, textTransform: "uppercase", fontWeight: 700 }}>
-              {isMobile ? "🗂" : "🗂 Configura"}
-            </button>
-            <button onClick={() => setModalita("trova")}
-              style={{ padding: isMobile ? "7px 8px" : "7px 14px", background: modalita==="trova" ? "#F39B00" : "transparent", color: modalita==="trova" ? "white" : "#bbb", border: "none", cursor: "pointer", fontSize: isMobile ? 9 : 10, letterSpacing: 1, textTransform: "uppercase", fontWeight: 700 }}>
-              {isMobile ? "🔍" : "🔍 Trova"}
-            </button>
-          </div>
+          <span style={{ flex: 1 }} />
+          {modalita === "wizard" && step > 1 && (
+            <button onClick={reset} title="Ricomincia" style={{ padding: "7px 12px", borderRadius: 999, border: "1px solid var(--bordo, #dee2e6)", background: "var(--carta, #fff)", color: "var(--testo, #212529)", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>↺ Ricomincia</button>
+          )}
           <button onClick={() => setCarrelloAperto(v => !v)}
-            style={{ background: carrello.length > 0 ? "#1B5E20" : "transparent", border: `1px solid ${carrello.length > 0 ? "#2E7D32" : "#555"}`, color: "white", padding: isMobile ? "7px 10px" : "8px 16px", cursor: "pointer", fontSize: isMobile ? 9 : 11, letterSpacing: 1, textTransform: "uppercase", fontWeight: 700, display: "flex", alignItems: "center", gap: 6, borderRadius: 3 }}>
-            🛒
-            {carrello.length > 0 && <span style={{ background: "#F39B00", borderRadius: 10, padding: "1px 6px", fontSize: 9 }}>{carrello.length}</span>}
+            style={{ padding: "7px 14px", borderRadius: 999, border: "1px solid #F39B00", background: carrello.length > 0 ? "#F39B00" : "var(--carta, #fff)", color: carrello.length > 0 ? "#fff" : "#d98a00", cursor: "pointer", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
+            Carrello{carrello.length > 0 && <span style={{ background: "#fff", color: "#d98a00", borderRadius: 999, padding: "0 7px", fontSize: 12 }}>{carrello.length}</span>}
           </button>
-          {modalita === "wizard" && step > 1 && !isMobile && (
-            <button onClick={reset} style={{ background: "transparent", border: "1px solid #333", color: "#aaa", padding: "8px 14px", cursor: "pointer", fontSize: 10, letterSpacing: 1, textTransform: "uppercase", fontWeight: 700, borderRadius: 3 }}>
-              ↺
-            </button>
-          )}
         </div>
-      </div>
-
-      {/* STEP BAR */}
-      {modalita === "wizard" && (
-        <div style={{ background: "#282a31", borderBottom: "1px solid #252525" }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "0 8px" : "0 28px", display: "flex", alignItems: "center" }}>
-            {["Famiglia", "Modello", "Config."].map((label, i) => {
-              const active = step === i + 1;
-              const done = step > i + 1;
+        {modalita === "wizard" && (
+          <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "0 12px" : "0 28px", display: "flex", alignItems: "center", gap: 4 }}>
+            {["Famiglia", "Modello", "Configurazione"].map((label, i) => {
+              const active = step === i + 1, done = step > i + 1;
               return (
                 <div key={i} style={{ display: "flex", alignItems: "center" }}>
-                  <div style={{ padding: isMobile ? "9px 8px 7px" : "11px 16px 9px", display: "flex", alignItems: "center", gap: isMobile ? 4 : 8, borderBottom: active ? "2px solid #F39B00" : "2px solid transparent", cursor: done ? "pointer" : "default" }}
-                    onClick={() => { if(done && i===0){setStep(1);setFamiglia(null);setSistema(null);} else if(done && i===1){setStep(2);setSistema(null);} }}>
-                    <div style={{ width: 16, height: 16, borderRadius: "50%", background: done ? "#2E7D32" : active ? "#F39B00" : "#41525d", color: "white", fontSize: 8, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, flexShrink: 0 }}>
-                      {done ? "✓" : i+1}
-                    </div>
-                    <span style={{ fontSize: isMobile ? 9 : 10, letterSpacing: isMobile ? 0.5 : 2, textTransform: "uppercase", fontWeight: 700, color: active ? "white" : done ? "#81C784" : "#999" }}>{label}</span>
+                  <div style={{ padding: "8px 8px 7px", display: "flex", alignItems: "center", gap: 6, borderBottom: active ? "3px solid #F39B00" : "3px solid transparent", cursor: done ? "pointer" : "default" }}
+                    onClick={() => { if (done && i === 0) { setStep(1); setFamiglia(null); setSistema(null); } else if (done && i === 1) { setStep(2); setSistema(null); } }}>
+                    <span style={{ width: 20, height: 20, borderRadius: "50%", background: done ? "#1d7a45" : active ? "#F39B00" : "var(--bordo, #dee2e6)", color: done || active ? "#fff" : "var(--tenue, #6c757d)", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>{done ? "✓" : i + 1}</span>
+                    <span style={{ fontSize: 13, fontWeight: active ? 700 : 600, color: active ? "var(--testo, #212529)" : "var(--tenue, #6c757d)" }}>{label}</span>
                   </div>
-                  {i < 2 && <span style={{ color: "#555", fontSize: 14, margin: "0 1px" }}>›</span>}
+                  {i < 2 && <span style={{ color: "var(--tenue, #6c757d)", margin: "0 2px" }}>›</span>}
                 </div>
               );
             })}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* CONTENUTO */}
       {modalita === "trova" ? (
