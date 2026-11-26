@@ -31,7 +31,7 @@ header.barra .contenitore { display: flex; align-items: center; justify-content:
 .eroe { background: var(--ardesia); color: #fff; padding: 18px 0 20px; }
 .eroe h1 { margin: 0; font-size: clamp(22px, 3vw, 28px); line-height: 1.2; }
 .eroe p { margin: 6px 0 0; font-size: 15px; opacity: .9; max-width: 720px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 999px; border: 1px solid var(--bordo); background: var(--carta); color: var(--testo); font: 600 15px var(--font); cursor: pointer; text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--bordo); background: var(--carta); color: var(--testo); font: 600 15px var(--font); cursor: pointer; text-decoration: none; }
 .btn-primario { background: var(--arancio); border-color: var(--arancio); color: #fff; }
 .btn:disabled { opacity: .6; cursor: default; }
 .nota { color: var(--tenue); font-size: 14px; }
