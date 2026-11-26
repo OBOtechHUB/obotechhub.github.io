@@ -119,14 +119,16 @@
     var I = function (nome) { for (var i = 0; i < h.length; i++) if (h[i] === nome || h[i].indexOf(nome) >= 0) return i; return -1; };
     var cId = I('(do not modify) activity'), cEnd = I('actual end'), cSub = I('subject'), cReg = I('regarding'), cTipo = I('activity type'), cStato = I('activity status'), cOwn = I('owner');
     if (cSub < 0 || cOwn < 0 || cEnd < 0) throw new Error("Il file non è l'export «Closed Activities» del CRM: mancano le colonne Subject, Owner o Actual End.");
-    var g = {}, attivita = 0, saltate = 0, elenco = [];
+    var g = {}, attivita = 0, saltate = 0, elenco = [], visti = {}, ripetute = 0;
     for (var r = 1; r < righe.length; r++) {
       var x = righe[r]; if (!x || !x.length) continue;
+      // export incrementale: la stessa attività (Activity id) ripetuta nel file si conta una volta sola
+      if (cId >= 0 && x[cId]) { var aid = String(x[cId]).trim().toLowerCase(); if (visti[aid]) { ripetute++; continue; } visti[aid] = 1; }
       var sub = String(x[cSub] || ''), ogg = pulisci(sub);
       if (cStato >= 0 && x[cStato] && /cancel/i.test(x[cStato])) { saltate++; continue; }
       // ogni attività (anche senza oggetto) va nel report attività CRM
       var fineA = String(x[cEnd] || ''); if (/^\d+(\.\d+)?$/.test(fineA)) { var dA = new Date(Date.UTC(1899, 11, 30) + parseFloat(fineA) * 864e5); fineA = dA.toISOString().slice(0, 19).replace('T', ' '); }
-      if (cId >= 0 && x[cId] && /^\d{4}-\d{2}-\d{2}/.test(fineA)) elenco.push({ id: String(x[cId]).slice(0, 60), quando: fineA.slice(0, 19), owner: String(x[cOwn] || '').slice(0, 120), persona: cognome(x[cOwn]), oggetto: sub.slice(0, 500), tipo: tipoAttivita(sub, cTipo >= 0 ? x[cTipo] : ''), tema: tema(sub + ' ' + (cReg >= 0 ? x[cReg] || '' : '')), pratica: (ogg || sub).toLowerCase().slice(0, 300), regarding: cReg >= 0 ? String(x[cReg] || '').slice(0, 300) : '' });
+      if (cId >= 0 && x[cId] && /^\d{4}-\d{2}-\d{2}/.test(fineA)) elenco.push({ id: String(x[cId]).slice(0, 60), quando: fineA.slice(0, 19), owner: String(x[cOwn] || '').slice(0, 120), persona: cognome(x[cOwn]), oggetto: sub.slice(0, 500), tipo: tipoAttivita(sub, cTipo >= 0 ? x[cTipo] : ''), tema: tema(sub + ' ' + (cReg >= 0 ? x[cReg] || '' : '')), pratica: (ogg || sub).toLowerCase().slice(0, 300), regarding: cReg >= 0 ? String(x[cReg] || '').slice(0, 300) : '', crm_id: ogg ? 'crm-' + hash(ogg.toLowerCase()) : null });
       if (!ogg) { saltate++; continue; }
       var fine = String(x[cEnd] || ''); if (/^\d+(\.\d+)?$/.test(fine)) { var d0 = new Date(Date.UTC(1899, 11, 30) + parseFloat(fine) * 864e5); fine = d0.toISOString().slice(0, 19).replace('T', ' '); }
       var giorno = /^\d{4}-\d{2}-\d{2}/.test(fine) ? fine.slice(0, 10) : null;
@@ -145,7 +147,7 @@
       var c = g[k], base = c.oggetto + ' ' + c.regarding;
       return { crm_id: c.crm_id, oggetto: c.oggetto.slice(0, 500), stato: c.risposta ? 'EVASE' : 'IN VALUTAZIONE', famiglia: famiglia(base), persone: c.persone, mese: c.giorno ? c.giorno.slice(0, 7) : null, giorno: c.giorno, tipo: tipo(base), regarding: c.regarding.slice(0, 300), attivita: c.n };
     });
-    return { righe: out, attivita: attivita, saltate: saltate, elenco: elenco };
+    return { righe: out, attivita: attivita, saltate: saltate, elenco: elenco, ripetute: ripetute };
   }
 
   var api = { leggiXlsx: leggiXlsx, conversazioni: conversazioni, famiglia: famiglia, tipo: tipo, tema: tema, tipoAttivita: tipoAttivita, pulisci: pulisci, cognome: cognome };

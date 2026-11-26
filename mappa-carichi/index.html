@@ -2860,14 +2860,14 @@ body.visitatore .nav a.hubnav { display: flex !important; }
         if (k >= blocchi.length) return Promise.resolve();
         return rpc('app_offerte_importa', { token: token, righe: blocchi[k++] }).then(function (x) { tot.nuove += (x && x.nuove) || 0; tot.aggiornate += (x && x.aggiornate) || 0; return prossimo(); });
       }
-      var att = r.elenco || [], kb = 0, nuoveAtt = 0, ba = [];
+      var att = r.elenco || [], kb = 0, nuoveAtt = 0, doppi = 0, ba = [];
       for (i = 0; i < att.length; i += 2000) ba.push(att.slice(i, i + 2000));
       function attivitaSucc() {
         if (kb >= ba.length) return Promise.resolve();
-        return rpc('app_crm_attivita_importa', { token: token, righe: ba[kb++] }).then(function (x) { nuoveAtt += (x && x.nuove) || 0; return attivitaSucc(); });
+        return rpc('app_crm_attivita_importa', { token: token, righe: ba[kb++] }).then(function (x) { nuoveAtt += (x && x.nuove) || 0; doppi += (x && x.doppioni) || 0; return attivitaSucc(); });
       }
       return prossimo().then(attivitaSucc).then(function () {
-        m.textContent = 'Fatto: ' + tot.nuove + ' conversazioni nuove, ' + tot.aggiornate + ' aggiornate; ' + nuoveAtt + ' attività nuove nel Report CRM (' + r.attivita + ' email' + (r.saltate ? ', ' + r.saltate + ' senza oggetto o annullate non considerate nelle conversazioni' : '') + ').';
+        var ign = doppi + (r.ripetute || 0); m.textContent = 'Fatto: ' + nuoveAtt + ' attività nuove' + (ign ? ', ' + ign + ' doppioni ignorati (già importati o ripetuti nel file)' : ', nessun doppione') + '; conversazioni: ' + tot.nuove + ' nuove, ' + tot.aggiornate + ' aggiornate' + (r.saltate ? '; ' + r.saltate + ' righe senza oggetto o annullate fuori dalle conversazioni' : '') + '.';
         OF.data = null; OF.all = null; HCRM = null; CRM.all = null; CRM.loading = false; ofLoad(); if (!$('pg-crm').hidden) crmLoad();
       });
     }).catch(function (e) {
