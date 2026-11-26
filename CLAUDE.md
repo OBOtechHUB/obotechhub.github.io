@@ -30,5 +30,6 @@ Repository delle app di OBO Hub senza compilazione (pagina iniziale, Mappa caric
 
 ## Codice
 - Pagine singole HTML con JavaScript ES5 (niente build): `mappa-carichi/index.html` contiene tutto, con `rpc(fn, p)`, `showPage(id)`, array `PAGES`, `TITLES`. File comuni in `comune/` (`registro.js` carica stili ed effetti comuni, `nomi.js` per i nomi: cognome maiuscolo, nome con iniziale maiuscola).
+- Torrette: il configuratore UFS è React; il sorgente sta in `torrette/sorgente/` (file di Marco `configuratore-ufs.jsx`, ritoccato solo per il carrello del progetto) e si compila con `bash strumenti/torrette/compila.sh` in `torrette/ufs.js` (generato, non modificare a mano). La pagina `torrette/ufs-app.js` fa accesso, progetto e CSV; la versione precedente resta in `torrette/precedente.html` (+ `app.js`, `dati.js`).
 - Controllare la sintassi dopo ogni modifica: estrarre lo `<script>` principale e `node --check`.
 - Le pagine devono funzionare a 390 px senza scorrimento laterale e in tema chiaro/scuro.

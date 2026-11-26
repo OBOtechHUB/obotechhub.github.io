@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script src="../registro.js" data-app="torrette"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Configuratore torrette · OBO Hub</title>
+<title>Configuratore torrette e sottopavimento · OBO Hub</title>
 <meta name="theme-color" content="#ffffff">
 <script>try{var z=Number(localStorage.getItem("obo-zoom"));if(z)document.documentElement.style.setProperty("--zoom",String(z))}catch(e){}</script>
 <script>try{var t=localStorage.getItem("obo-tema");document.documentElement.dataset.theme=(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))?"dark":"light"}catch(e){}</script>
@@ -113,6 +113,16 @@
   .seg button { border:0; background:none; padding:6px 12px; cursor:pointer; font-weight:600; }
   .seg button[aria-pressed="true"] { background:var(--arancio); color:#fff; }
   .seg .zv { min-width:48px; text-align:center; }
+  .progetto { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:12px 0; }
+  .progetto select { max-width:min(100%, 420px); }
+  .pill { border:1px solid var(--bordo); background:var(--carta); padding:7px 14px; border-radius:999px; cursor:pointer; font-weight:600; text-decoration:none; color:inherit; font-size:calc(13px * var(--zoom,1)); }
+  .pill:hover { border-color:var(--arancio); color:var(--arancio); }
+  #ufs { zoom:var(--zoom,1); }
+  #ufs > div { font-family:var(--font) !important; min-height:auto !important; background:var(--sfondo) !important; }
+  #ufs img { max-width:100%; }
+  /* tema scuro: il configuratore ha colori propri; si invertono le parti (non il contenitore, così il carrello fisso resta in basso) e si rimettono dritte le foto */
+  :root[data-theme="dark"] #ufs > div > *:not([style*="rgb(40, 42, 49)"]) { filter:invert(.92) hue-rotate(180deg); }
+  :root[data-theme="dark"] #ufs > div > * img { filter:invert(1) hue-rotate(180deg); }
   @media print { header.barra, .eroe, .schede, .noprint { display:none !important; } body { background:#fff; color:#000; } }
 </style>
 </head>
@@ -129,23 +139,25 @@
     </div>
   </div></header>
   <section class="eroe"><div class="contenitore">
-    <h1 data-t="Configuratore torrette|Service outlet configurator"></h1>
-    <p data-t="Come OBO Construct underfloor: pavimento, torretta, apparecchi, poi unità e stanze. Ottieni la distinta con i codici OBO.|Like OBO Construct underfloor: floor, outlet, devices, then units and rooms. Get the parts list with OBO codes."></p>
+    <h1 data-t="Configuratore torrette e sistemi sottopavimento|Service outlets and underfloor systems"></h1>
+    <p data-t="Scegli famiglia e modello oppure trova il sistema dai requisiti; aggiungi le configurazioni al carrello e salvale nel progetto. Distinta con i codici OBO.|Choose family and model or find the system from the requirements; add configurations to the cart and save them in the project. Parts list with OBO codes."></p>
   </div></section>
   <main class="contenitore">
-    <div class="schede noprint" role="tablist">
-      <button class="scheda" role="tab" data-scheda="progetto" data-t="Progetto|Project"></button>
-      <button class="scheda" role="tab" data-scheda="riepilogo" data-t="Riepilogo|Summary"></button>
-      <button class="scheda" role="tab" data-scheda="trova" data-t="Trova|Find"></button>
-    </div>
-    <div id="vista"></div>
-    <p class="nota" id="notaDati"></p>
+    <section class="progetto noprint" aria-label="Progetto">
+      <label><span data-t="Progetto|Project"></span> <select id="selProgetto"></select></label>
+      <button type="button" class="pill" id="nuovaConf" data-t="Nuova configurazione|New configuration"></button>
+      <button type="button" class="pill" id="csv" data-t="Scarica distinta (CSV)|Download parts list (CSV)"></button>
+      <a class="pill" href="precedente.html" data-t="Versione precedente|Previous version"></a>
+      <span id="statoCloud" class="nota" role="status"></span>
+    </section>
   </main>
+  <div id="ufs"></div>
 </div>
 
 <script src="../manutenzione.js" data-sezione="app:torrette"></script>
 <script src="../aggiorna.js" data-versione="../version.json" data-app="torrette"></script>
-<script type="module" src="./app.js"></script>
+<script src="./ufs.js"></script>
+<script type="module" src="./ufs-app.js"></script>
 <script src="../piede.js"></script>
 </body>
 </html>
