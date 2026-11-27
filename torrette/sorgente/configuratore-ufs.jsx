@@ -2243,7 +2243,7 @@ function Riepilogo({ righe, altezza, estensioni, piedini, colore, onReset, onAdd
         </div>
       )}
 
-      <DevLegenda righe={righe} sistemaKey={sistemaKey} />
+      {typeof location !== "undefined" && /[?&]dev\b/.test(location.search) && <DevLegenda righe={righe} sistemaKey={sistemaKey} />}
 
       <div style={{ marginTop:20, display:"flex", gap:10, flexWrap:"wrap" }}>
         {onAddToCart && (
@@ -2253,8 +2253,8 @@ function Riepilogo({ righe, altezza, estensioni, piedini, colore, onReset, onAdd
           </button>
         )}
         <button onClick={onReset}
-          style={{ flex: isMobile ? 1 : "unset", background:colore, color:"white", border:"none", padding: isMobile ? "12px 16px" : "12px 28px", cursor:"pointer", fontSize: isMobile ? 13 : 14, letterSpacing:1, textTransform:"uppercase", fontWeight:700, borderRadius:2 }}>
-          ↺ Nuova config.
+          style={{ flex: isMobile ? 1 : "unset", background:"white", color:"#41525d", border:"1px solid #c5d9de", padding: isMobile ? "12px 16px" : "12px 28px", cursor:"pointer", fontSize: isMobile ? 13 : 14, letterSpacing:1, textTransform:"uppercase", fontWeight:700, borderRadius:2 }}>
+          ↺ Ricomincia questa configurazione
         </button>
       </div>
     </div>
@@ -2473,7 +2473,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
 
       {/* A — GRUPPO */}
       <div style={{ marginBottom:20 }}>
-        <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>A — Tipo di configurazione</div>
+        <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Tipo di configurazione</div>
         <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
           {s.gruppi.map((g, i) => (
             <button key={i} onClick={() => handleGruppo(i)}
@@ -2493,12 +2493,12 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* B — USCITA CAVI (solo se il gruppo ha più varianti di uscita) */}
       {selGruppo !== null && hasUscitaStep && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>B — Tipo di uscita cavi</div>
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Tipo di uscita cavi</div>
           <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
             {usciteDisponibili.map(u => (
               <button key={u} onClick={() => handleUscita(u)}
                 style={{ flex:"1 1 140px", padding:"13px 12px", border:`2px solid ${selUscita===u?colore:"#c5d9de"}`, background:selUscita===u?`${colore}10`:"white", cursor:"pointer", fontWeight:selUscita===u?800:500, fontSize:13, color:selUscita===u?colore:"#41525d", borderRadius:2, transition:"all 0.12s", textAlign:"center" }}>
-                {LABEL_USCITA[u] ?? u}
+                {LABEL_USCITA[u] ?? (String(u).charAt(0).toUpperCase() + String(u).slice(1))}
               </button>
             ))}
           </div>
@@ -2508,7 +2508,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* B/C — TORRETTA (filtrata per uscita se selezionata) */}
       {selGruppo !== null && (!hasUscitaStep || selUscita !== null) && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>{hasUscitaStep ? "C" : "B"} — Scegli la torretta</div>
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Scegli la torretta</div>
           <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
             {righeFiltrate.map((r, i) => (
               <button key={i} onClick={() => handleRiga(i)}
@@ -2528,7 +2528,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* C/D — PAVIMENTO (solo se più di un pavimento disponibile) */}
       {selRiga !== null && !soloPavimento && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>{hasUscitaStep ? "D" : "C"} — Tipo di pavimento</div>
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Tipo di pavimento</div>
           <div style={{ display:"flex", gap:12 }}>
             {s.pavimenti.map(pav => (
               <button key={pav} onClick={() => handlePav(pav)}
@@ -2550,8 +2550,8 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* D — BOX portafrutti (tutti i sistemi con box libero) */}
       {hasBoxLibero && selRiga !== null && (selPav !== null || soloPavimento) && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>
-            {hasDimRiga ? "C" : "D"} — Scegli il box portafrutti
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>
+            Scegli il box portafrutti
           </div>
           <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
             {gruppo.box.map(b => (
@@ -2572,7 +2572,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* E — SCATOLA MASSETTO classica (box libero, scatole non filtrate per dim) */}
       {hasBoxLibero && !hasDimRiga && selBox && pavEffettivo === "massetto" && scatoleFiltrate.length > 0 && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:6 }}>E — Scatola massetto</div>
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:6 }}>Scatola massetto</div>
           <div style={{ fontSize:11, color:"#666", marginBottom:10 }}>
             Scegli in base all'altezza disponibile in cantiere. Min. effettivo = max(altezza box, h_min scatola).
           </div>
@@ -2600,8 +2600,8 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* D — SCATOLA MASSETTO seminato (logica dim: filtrata per dim riga, senza dipendenza da box) */}
       {hasDimRiga && selBox && pavEffettivo === "massetto" && scatoleFiltrate.length > 0 && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:6 }}>
-            D — Scatola massetto{" "}
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:6 }}>
+            Scatola massetto{" "}
             <span style={{ fontWeight:400, color:"#888", fontSize:10, letterSpacing:0, textTransform:"none" }}>
               dim. {rigaDim} — altezza totale = 73–113 mm (cassetta) + 12,5 mm + h scatola
             </span>
@@ -2632,7 +2632,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* ACC INTERNI — opzionali a livello sistema, checkbox multi */}
       {hasAccInterni && righeRiepilogo && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
             Accessori interni{" "}
             <span style={{ fontSize:10, fontWeight:400, color:"#888", letterSpacing:0, textTransform:"none" }}>(opzionali)</span>
           </div>
@@ -2647,7 +2647,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {/* ACC H — opzionale, appare quando il riepilogo è pronto */}
       {hasAccH && righeRiepilogo && (
         <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
+          <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
             Accessorio altezza{" "}
             <span style={{ fontSize:10, fontWeight:400, color:"#888", letterSpacing:0, textTransform:"none" }}>(opzionale — solo se serve maggiore altezza)</span>
           </div>
@@ -2916,12 +2916,12 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {/* A — USCITA CAVI */}
       {hasUscitaStep && (
         <div style={{ marginBottom:16 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>A — Tipo di uscita cavi</div>
+          <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Tipo di uscita cavi</div>
           <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
             {usciteDisponibili.map(u => (
               <button key={u} onClick={() => handleUscita(u)}
                 style={{ flex:"1 1 120px", padding: isMobile ? "10px 8px" : "13px 12px", border:`2px solid ${selUscita===u?colore:"#c5d9de"}`, background:selUscita===u?`${colore}10`:"white", cursor:"pointer", fontWeight:selUscita===u?800:500, fontSize: isMobile ? 12 : 13, color:selUscita===u?colore:"#41525d", borderRadius:2, transition:"all 0.12s" }}>
-                {LABEL_USCITA[u] ?? u}
+                {LABEL_USCITA[u] ?? (String(u).charAt(0).toUpperCase() + String(u).slice(1))}
               </button>
             ))}
           </div>
@@ -2931,7 +2931,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {/* B — TORRETTA */}
       {s.righe && (!hasUscitaStep || selUscita !== null) && (
         <div style={{ marginBottom:16 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>{hasUscitaStep ? "B" : "A"} — Scegli la torretta</div>
+          <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Scegli la torretta</div>
           <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
             {righeFiltrate.map((r, i) => (
               <button key={i} onClick={() => handleRiga(i)}
@@ -2952,7 +2952,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {/* PAVIMENTO */}
       {selectedRiga !== null && s.pavimenti?.length > 0 && (
         <div style={{ marginBottom:16 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>{letteraPav} — Tipo di pavimento</div>
+          <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Tipo di pavimento</div>
           <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
             {s.pavimenti.map(pav => (
               <button key={pav} onClick={() => handlePav(pav)}
@@ -2969,7 +2969,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {/* BOX portafrutti */}
       {hasBoxStep && selectedPav !== null && !avviso && (
         <div style={{ marginBottom:16 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>{letteraBox} — Box portafrutti</div>
+          <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Box portafrutti</div>
           {boxDisponibili.length === 0
             ? <div style={{ background:"#FFEBEE", border:"1px solid #EF9A9A", padding:"10px 12px", fontSize:12, color:"#8B0000", borderRadius:2 }}>Nessun box disponibile per questa combinazione.</div>
             : <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
@@ -2992,8 +2992,8 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {/* SCATOLA MASSETTO (CASS_TEL) */}
       {hasScatolaScelta && selectedRiga !== null && (
         <div style={{ marginBottom:16 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
-            {hasUscitaStep ? "C" : "B"} — Scatola da massetto
+          <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
+            Scatola da massetto
             {!isMobile && <span style={{ fontWeight:400, color:"#888", fontSize:10, letterSpacing:0, textTransform:"none", marginLeft:8 }}>h scatola + {riga?.riv_max != null ? `${riga.riv_max}mm riv.` : "riv. cassetta"}</span>}
           </div>
           {isMobile && <div style={{ fontSize:10, color:"#888", marginBottom:8 }}>Altezza tot. = h scatola + {riga?.riv_max != null ? `${riga.riv_max}mm` : "riv."}</div>}
@@ -3020,8 +3020,8 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {/* ACCESSORI INTERNI */}
       {hasAccInterni && showRiepilogo && (
         <div style={{ marginBottom:16 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
-            {letteraBase} — Accessori interni <span style={{ fontSize:10, fontWeight:400, color:"#888", letterSpacing:0, textTransform:"none" }}>(opzionali)</span>
+          <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
+            Accessori interni <span style={{ fontSize:10, fontWeight:400, color:"#888", letterSpacing:0, textTransform:"none" }}>(opzionali)</span>
           </div>
           <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
             {s.accessori_interni.map(acc => (
@@ -3034,8 +3034,8 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {/* ACCESSORIO ALTEZZA */}
       {hasAccH && showRiepilogo && (
         <div style={{ marginBottom:16 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
-            {letteraH} — Accessorio altezza <span style={{ fontSize:10, fontWeight:400, color:"#888", letterSpacing:0, textTransform:"none" }}>(opzionale)</span>
+          <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>
+            Accessorio altezza <span style={{ fontSize:10, fontWeight:400, color:"#888", letterSpacing:0, textTransform:"none" }}>(opzionale)</span>
           </div>
           <AccessorioCheckbox acc={s.accessorio_h} checked={accHSelezionato} onChange={() => setAccHSelezionato(v => !v)} colore={colore} />
         </div>

@@ -145,6 +145,10 @@
   .ufs-radice button { font-family:inherit; }
   .ufs-radice button:not(:has(div, img)) { border-radius:999px !important; text-transform:none !important; letter-spacing:0 !important; font-weight:700 !important; }
   .ufs-radice button:has(div, img) { border-radius:14px !important; overflow:hidden; }
+  /* passi della configurazione numerati da soli (1, 2, 3…), qualunque siano quelli mostrati */
+  .ufs-radice { counter-reset:passo; }
+  .ufs-radice .ufs-passo { counter-increment:passo; font-size:calc(14px * var(--zoom,1)) !important; font-weight:700 !important; color:#282a31 !important; margin-top:6px; }
+  .ufs-radice .ufs-passo::before { content:counter(passo); display:inline-grid; place-items:center; width:22px; height:22px; margin-right:8px; border-radius:50%; background:#f39b00; color:#fff; font-size:12px; font-weight:700; }
   .ufs-radice h2 { font-weight:700 !important; letter-spacing:0 !important; font-size:calc(22px * var(--zoom,1)) !important; }
   .ufs-radice [style*="text-transform: uppercase"] { text-transform:none !important; letter-spacing:0 !important; }
   .ufs-radice label[style*="text-transform"], .ufs-radice div[style*="text-transform: uppercase"][style*="font-size: 11px"], .ufs-radice div[style*="text-transform: uppercase"][style*="font-size: 10px"] { font-size:calc(13px * var(--zoom,1)) !important; font-weight:600 !important; }

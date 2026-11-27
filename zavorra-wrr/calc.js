@@ -2,27 +2,19 @@
 // Fonte: istruzioni di montaggio OBO "Magic PV Mount inverter frame" (EN, 28/07/2026), cap. 11, tab. 5-8.
 // Modulo puro: nessun accesso al DOM, usabile anche lato server o nei test.
 
-export const COLS = [2000, 2500, 3500, 5500, 7500, 11500]; // area frontale cm²
-export const SPEEDS = [80, 90, 100, 110, 120, 130, 140, 150, 160, 170]; // km/h
-export const PRESS = [0.31, 0.39, 0.48, 0.58, 0.69, 0.82, 0.95, 1.09, 1.23, 1.39]; // kN/m²
-export const FRAME_HEIGHT = 1554; // mm, altezza totale telaio autoportante
+import { DATI } from './dati.js';
+// I numeri (telai, colonne, velocità, tabelle) stanno in dati.js, aggiornato dalla tabella condivisa: qui solo il calcolo.
+export const COLS = DATI.colonne; // area frontale cm²
+export const SPEEDS = DATI.velocita; // km/h
+export const PRESS = DATI.pressioni; // kN/m²
+export const FRAME_HEIGHT = DATI.altezzaTelaio; // mm, altezza totale telaio autoportante
 
 // Valori tra parentesi = come pubblicati da OBO tra parentesi (da verificare)
-const RAW = {
-  '1500-45': `33 38 48 68 89 129|61 67 80 106 132 183|92 100 116 148 180 243|127 136 156 194 233 309|165 176 199 245 291 (382)|206 219 246 300 (354) (461)|250 266 297 (359) (422) (546)|298 (316) (352) (423) (495) (638)|(349) (370) (410) (492) (573) (736)|(404) (427) (473) (564) (656) (840)`,
-  '1000-45': `41 54 52 67 82 (143)|57 61 71 (98) (136) (213)|74 80 (101) (149) (196) (292)|(105) (119) (148) (206) (263) (378)|(148) (165) (199) (268) (336) (473)|(195) (215) (255) (336) (416) (577)|(245) (269) (315) (409) (502) (688)|(300) (326) (380) (487) (594) (808)|(358) (388) (449) (571) (693) (936)|(420) (454) (523) (660) (797) (1072)`,
-  '1500-30': `11 16 26 46 67 107|33 39 52 78 104 155|58 66 82 113 145 209|85 95 114 154 191 268|115 126 149 195 241 (332)|148 161 188 242 295 (403)|183 198 229 292 (354) (478)|221 238 274 (346) (417) (560)|261 281 (322) (403) (485) (647)|304 (327) (373) (465) (556) (470)`,
-  '1000-30': `12 17 28 48 68 109|30 36 49 75 100 152|49 57 73 105 136 (200)|70 80 99 138 176 (253)|94 105 128 174 (219) (311)|119 133 159 (213) (267) (374)|147 162 (193) (256) (318) (442)|176 (194) (230) (301) (373) (516)|(208) (228) (269) (350) (431) (594)|(241) (264) (310) (402) (494) (677)`,
-};
-
 export const TABLES = Object.fromEntries(
-  Object.entries(RAW).map(([k, s]) => [
-    k,
-    s.split('|').map((r) => r.trim().split(/\s+/).map((c) => ({ v: parseFloat(c.replace(/[()]/g, '')), p: c.startsWith('(') }))),
-  ])
+  Object.entries(DATI.tabelle).map(([k, righe]) => [k, righe.map((r) => r.map((c) => ({ v: parseFloat(String(c).replace(/[()]/g, '')), p: String(c).trim().startsWith('(') })))])
 );
 
-export const TABNO = { '1500-45': 5, '1000-45': 6, '1500-30': 7, '1000-30': 8 };
+export const TABNO = DATI.numeroTabella;
 
 // Probabili errori di stampa nelle tabelle pubblicate [riga, colonna, messaggio]
 export const ANOM = {
@@ -30,15 +22,7 @@ export const ANOM = {
   '1000-45': [[0, 1, '80 km/h / 2.500 cm²: 54 kg è superiore al valore della colonna 3.500 cm² (52); possibile errore di stampa']],
 };
 
-export const FRAMES = {
-  F1500: { name: 'WRR F1500', code: '5904015', w: 1500, double: false },
-  F1000: { name: 'WRR F1000', code: '5904013', w: 1000, double: false },
-  D1500: { name: 'WRR D1500', code: '5904029', w: 1500, double: true },
-  D1000: { name: 'WRR D1000', code: '5904026', w: 1000, double: true },
-  // telai a parete (obo.it 5904005 / 5904007, 1082 / 1582 × 1501 × 468 mm): fissati al muro, non si zavorrano
-  W1000: { name: 'WRR W1000', code: '5904005', w: 1000, double: false, wall: true, h: 1501 },
-  W1500: { name: 'WRR W1500', code: '5904007', w: 1500, double: false, wall: true, h: 1501 },
-};
+export const FRAMES = DATI.telai;
 /** pressione cinetica del vento (kN/m²) = ½ · 1,25 kg/m³ · v² (stessi valori della colonna "Pressione" delle tabelle OBO) */
 export const pressioneVento = (kmh) => 0.625 * (kmh / 3.6) ** 2 / 1000;
 const famiglia = (fr) => (fr.wall ? 'W' : fr.double ? 'D' : 'F');
