@@ -159,7 +159,7 @@
   /* ── Guida «Trova la torretta giusta» (torrette/sorgente/guida.jsx): colori del tema, niente inversione ── */
   :root { --g-soletta:#b9c3c9; --g-massetto:#e3e7ea; --g-finito:#c9a36b; --g-metallo:#41525d; --g-linea:#5c6b75; --g-vuoto:#f4f6f7; }
   :root[data-theme="dark"] { --g-soletta:#4b5860; --g-massetto:#333c43; --g-finito:#a07b45; --g-metallo:#c5d9de; --g-linea:#9fb0ba; --g-vuoto:#1f262b; }
-  .guida { color:var(--testo); padding-bottom:96px; scroll-margin-top:118px; min-height:70vh; }
+  .guida { color:var(--testo); padding-bottom:96px; scroll-margin-top:118px; }
   body.guida-attiva #boxProgetto, body.guida-attiva main > .progetto { display:none; }
   @media (max-width: 760px) { body.guida-attiva .eroe { display:none; } }
   .guida .g-dentro { max-width:1100px; margin:0 auto; padding:0 28px; }
@@ -173,14 +173,16 @@
   .guida .g-passi li.ora button { border-top-color:var(--arancio) !important; color:var(--testo); font-weight:700 !important; }
   .guida .g-passi li.ora span { background:var(--arancio); color:#fff; }
   /* nastro: una scheda colorata per domanda, si scorre di lato (dito, trackpad o pulsanti); dentro la scheda si scorre in verticale */
-  .guida .g-nastro { display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:18px max(28px, calc((100vw - 1044px) / 2)) 8px; margin:0 calc(-1 * max(28px, (100vw - 1100px) / 2 + 28px)); overscroll-behavior-x:contain; }
+  .guida .g-nastro { display:flex; align-items:flex-start; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:18px max(28px, calc((100vw - 1044px) / 2)) 8px; margin:0 calc(-1 * max(28px, (100vw - 1100px) / 2 + 28px)); overscroll-behavior-x:contain; }
   .guida .g-nastro::-webkit-scrollbar { display:none; }
-  .guida .g-carta { flex:0 0 min(900px, calc(100vw - 64px)); scroll-snap-align:center; border-radius:28px; padding:26px 28px 28px; min-height:min(560px, calc(100vh - 300px)); box-sizing:border-box; transition:transform .3s ease, opacity .3s ease; opacity:.5; transform:scale(.96); cursor:pointer;
-    --testo:#1c2226; --tenue:#47545c; --carta:rgba(255,255,255,.62); --bordo:rgba(20,30,40,.16); --grigio:rgba(255,255,255,.5); --scelto:#fff; --ardesia:#33434d; --arancio-scuro:#8a4b00;
+  .guida .g-carta { flex:0 0 min(900px, calc(100vw - 64px)); scroll-snap-align:center; border-radius:28px; padding:26px 28px 28px; box-sizing:border-box; transition:transform .3s ease, opacity .3s ease; opacity:.5; transform:scale(.96); cursor:pointer;
+    --testo:#282a31; --tenue:#41525d; --carta:rgba(255,255,255,.62); --bordo:rgba(20,30,40,.16); --grigio:rgba(255,255,255,.5); --scelto:#fff; --ardesia:#33434d; --arancio-scuro:#8a4b00;
     --g-soletta:#9aa7ae; --g-massetto:#e6eaec; --g-finito:#b98a4a; --g-metallo:#33434d; --g-linea:#4a5962; --g-vuoto:#f7f9fa; color:var(--testo); }
+  .guida .g-carta:not(.ora) { max-height:420px; overflow:hidden; }
   .guida .g-carta.ora { opacity:1; transform:none; cursor:auto; box-shadow:0 18px 40px rgba(0,0,0,.18); }
-  .guida .g-carta.c0 { background:#ece9e3; } .guida .g-carta.c1 { background:#a9cdd1; } .guida .g-carta.c2 { background:#e6a3b0; }
-  .guida .g-carta.c3 { background:#bdb2e6; } .guida .g-carta.c4 { background:#a9d6bf; } .guida .g-carta.c5 { background:#ecd99f; } .guida .g-carta.c6 { background:#eef1f2; }
+  /* colori del marchio OBO: #E4EBED, #C5D9DE, #7694A4 e #F39B00 schiariti, testo #282A31 */
+  .guida .g-carta.c0 { background:#e4ebed; } .guida .g-carta.c1 { background:#fbe1b0; } .guida .g-carta.c2 { background:#c5d9de; }
+  .guida .g-carta.c3 { background:#f8cf86; } .guida .g-carta.c4 { background:#b3c7d1; } .guida .g-carta.c5 { background:#fdebc9; } .guida .g-carta.c6 { background:#f2f5f6; }
   @media (prefers-reduced-motion: reduce) { .guida .g-carta { transition:none; } }
   .guida .g-n { margin:0 0 4px; color:var(--tenue); letter-spacing:.04em; text-transform:uppercase; font-weight:700; font-size:calc(13px * var(--zoom,1)); }
   .guida h2 { margin:0 0 6px; font-size:calc(28px * var(--zoom,1)) !important; line-height:1.15; text-wrap:balance; color:var(--testo); }
@@ -189,9 +191,9 @@
   .guida .g-griglia.tre { grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); }
   .guida .g-griglia.due { grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); }
   .guida .g-scelta { position:relative; display:flex; flex-direction:column; text-align:left; gap:0; padding:0; background:var(--carta); color:var(--testo); border:2px solid var(--bordo); cursor:pointer; font:inherit; transition:border-color .15s, transform .15s; }
-  .guida .g-scelta:hover { border-color:#1c2226; transform:translateY(-2px); }
+  .guida .g-scelta:hover { border-color:#282a31; transform:translateY(-2px); }
   .guida .g-scelta:focus-visible, .guida .g-btn:focus-visible, .guida .g-pill:focus-visible, .guida .g-vai:focus-visible { outline:3px solid var(--arancio); outline-offset:2px; }
-  .guida .g-scelta.attiva { border-color:#1c2226; background:var(--scelto); }
+  .guida .g-scelta.attiva { border-color:#282a31; background:var(--scelto); }
   .guida .g-scelta.larga { flex-direction:row; align-items:center; }
   .guida .g-fig { background:var(--grigio); padding:14px; display:grid; place-items:center; color:var(--ardesia); min-height:96px; }
   .guida .g-fig svg { width:100%; max-width:320px; height:auto; display:block; }
@@ -201,7 +203,7 @@
   .guida .g-st b { display:block; font-size:calc(16px * var(--zoom,1)); }
   .guida .g-st small { display:block; margin-top:3px; color:var(--tenue); font-size:calc(13.5px * var(--zoom,1)); line-height:1.35; font-weight:400; }
   .guida .g-spunta { flex:none; width:22px; height:22px; margin-top:1px; border-radius:50%; display:grid; place-items:center; border:2px solid var(--tenue); color:transparent; font-size:13px; font-weight:800; transition:.15s; box-sizing:border-box; }
-  .guida .g-scelta.attiva .g-spunta { background:#1c2226; border-color:#1c2226; color:#fff; }
+  .guida .g-scelta.attiva .g-spunta { background:#282a31; border-color:#282a31; color:#fff; }
   .guida .g-due { display:grid; grid-template-columns:minmax(0, 1.35fr) minmax(0, 1fr); gap:24px; align-items:start; }
   .guida .g-tavola { background:var(--grigio); border:1px solid var(--bordo); border-radius:14px; padding:18px; }
   .guida .g-tavola svg { width:100%; height:auto; display:block; }
@@ -214,7 +216,7 @@
   .guida .g-num span { color:var(--tenue); font-weight:700; }
   .guida .g-rapide, .guida .g-riassunto { display:flex; flex-wrap:wrap; gap:8px; }
   .guida .g-pill { border:1px solid var(--bordo); background:var(--carta); color:var(--testo); padding:7px 14px; cursor:pointer; font-size:calc(14px * var(--zoom,1)); }
-  .guida .g-carta .g-pill.attiva { background:#1c2226; border-color:#1c2226; color:#fff; }
+  .guida .g-carta .g-pill.attiva { background:#282a31; border-color:#282a31; color:#fff; }
   .guida .g-suggerimento { margin:0; color:var(--tenue); font-size:calc(14px * var(--zoom,1)); }
   .guida .g-conta { display:flex; align-items:center; gap:14px; }
   .guida .g-conta button { width:48px; height:48px; border:2px solid var(--bordo); background:var(--carta); color:var(--testo); font-size:24px; cursor:pointer; }
@@ -249,7 +251,8 @@
   @media (max-width: 760px) {
     .guida .g-dentro { padding:0 14px; }
     .guida .g-nastro { gap:10px; padding:14px 14px 6px; margin:0 -14px; }
-    .guida .g-carta { flex-basis:calc(100vw - 44px); padding:18px 16px 20px; border-radius:24px; min-height:calc(100vh - 250px); }
+    .guida .g-carta { flex-basis:calc(100vw - 44px); padding:18px 16px 20px; border-radius:24px; }
+    .guida .g-carta:not(.ora) { max-height:300px; }
     .guida .g-due { grid-template-columns:1fr; gap:14px; }
     .guida h2 { font-size:calc(23px * var(--zoom,1)) !important; }
     .guida .g-passi em { display:none; }
@@ -319,7 +322,7 @@
 
 <script src="../manutenzione.js" data-sezione="app:torrette"></script>
 <script src="../aggiorna.js" data-versione="../version.json" data-app="torrette"></script>
-<script src="./ufs.js?v=bdc4eec011"></script>
+<script src="./ufs.js?v=0019e51fd0"></script>
 <script type="module" src="./ufs-app.js?v=7678ed4c10"></script>
 <script src="../avviso-uscita.js"></script>
 <script src="../piede.js"></script>

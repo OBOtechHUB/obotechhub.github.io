@@ -71,17 +71,20 @@ export function DisegnoRivestimento({ mm }) {
 
 /** Coperchio aperto visto dall'alto con le prese richieste. */
 export function DisegnoPrese({ n, tipo }) {
-  const k = Math.max(0, Math.min(16, Number(n) || 0)), ita = tipo === "ita", col = Math.min(8, k || 4), righe = k > 8 ? 2 : 1;
-  const lw = ita ? 26 : 20, gap = 5, tot = col * lw + (col - 1) * gap, x0 = 150 - tot / 2;
+  const k = Math.max(0, Math.min(16, Number(n) || 0)), ita = tipo === "ita", tot0 = k || 4;
+  const per = Math.min(8, tot0), righe = tot0 > 8 ? 2 : 1, hh = righe === 2 ? 44 : 60, lw = ita ? hh / 2 : hh, gap = 4;
+  const larg = per * lw + (per - 1) * gap, x0 = 150 - larg / 2, y0 = righe === 2 ? 22 : 45;
   return (
-    <svg viewBox="0 0 300 150" role="img" aria-label={`Scatola portafrutti con ${k || "le"} prese`}>
-      <rect x={Math.max(8, x0 - 22)} y="18" width={Math.min(284, tot + 44)} height="114" rx="10" fill="var(--carta)" stroke={C.metallo} strokeWidth="2.5" />
-      {Array.from({ length: k || 4 }, (_, i) => {
-        const r = righe === 2 ? Math.floor(i / 8) : 0, c = righe === 2 ? i % 8 : i, y = righe === 2 ? 30 + r * 48 : 48, hh = righe === 2 ? 40 : 54, x = x0 + c * (lw + gap);
+    <svg viewBox="0 0 300 150" role="img" aria-label={`Scatola portafrutti con ${k || "i"} ${ita ? "dispositivi standard Italia (moduli stretti)" : "moduli Modul45 (quadrati)"}`}>
+      <rect x={Math.max(6, x0 - 16)} y={y0 - 14} width={Math.min(288, larg + 32)} height={righe * hh + (righe - 1) * 8 + 28} rx="10" fill="var(--carta)" stroke={C.metallo} strokeWidth="2.5" />
+      {Array.from({ length: tot0 }, (_, i) => {
+        const r = Math.floor(i / per), c = i % per, x = x0 + c * (lw + gap), y = y0 + r * (hh + 8), cx = x + lw / 2, cy = y + hh / 2;
         return <g key={i} opacity={k ? 1 : .3}><rect x={x} y={y} width={lw} height={hh} rx="3" fill={C.vuoto} stroke={C.linea} strokeWidth="1" />
-          {ita ? <g fill={C.quota}><circle cx={x + lw / 2} cy={y + hh / 2 - 9} r="2.2" /><circle cx={x + lw / 2} cy={y + hh / 2} r="2.2" /><circle cx={x + lw / 2} cy={y + hh / 2 + 9} r="2.2" /></g>
-            : <g fill={C.quota}><circle cx={x + lw / 2 - 4} cy={y + hh / 2} r="2" /><circle cx={x + lw / 2 + 4} cy={y + hh / 2} r="2" /><rect x={x + lw / 2 - 1} y={y + hh / 2 - 12} width="2" height="5" /></g>}</g>;
+          {ita ? <g fill={C.quota}><circle cx={cx} cy={cy - hh * .2} r="2" /><circle cx={cx} cy={cy} r="2" /><circle cx={cx} cy={cy + hh * .2} r="2" /></g>
+            : <g><circle cx={cx} cy={cy} r={hh * .3} fill="none" stroke={C.quota} strokeWidth="1.6" /><circle cx={cx - hh * .12} cy={cy} r="2.4" fill={C.quota} /><circle cx={cx + hh * .12} cy={cy} r="2.4" fill={C.quota} /></g>}</g>;
       })}
+      {!ita && k > 0 && <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>Modul45: moduli quadrati 45 × 45 mm</text>}
+      {ita && k > 0 && <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>Standard Italia: moduli 22,5 × 45 mm</text>}
     </svg>
   );
 }
@@ -99,7 +102,7 @@ const ICONE = {
 
 // ───────────────────────── domande ─────────────────────────
 const PASSI = [
-  { id: "prese", titolo: "Quante prese servono in ogni torretta?", aiuto: "Conta prese di corrente e prese dati insieme. Lo standard dice che forma hanno i frutti." },
+  { id: "prese", titolo: "Quanti dispositivi servono in ogni torretta?", aiuto: "Conta insieme prese di corrente e prese dati: ogni frutto è un dispositivo. Poi scegli il sistema dei frutti." },
   { id: "forma", titolo: "Che forma deve avere la torretta?", aiuto: "È solo una questione estetica: scegli quella che sta meglio con la posa del pavimento." },
   { id: "pavimento", titolo: "Com'è fatto il pavimento?", aiuto: "Guarda come sarà la struttura sotto il pavimento finito, nel punto dove va la torretta." },
   { id: "altezza", titolo: "Quanto spazio c'è sotto il pavimento?", aiuto: "È la misura H del disegno: dal solaio grezzo fino al piano del pavimento finito, in millimetri." },
@@ -128,7 +131,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
   const adatti = ris.ok.length + ris.parziali.length, fine = passo >= PASSI.length, P = PASSI[passo];
   const azzera = () => { setFiltri({ altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", moduli: "", tipoPrese: "" }); setPasso(0); };
   const riassunto = [
-    ["prese", (filtri.moduli || filtri.tipoPrese) && `${filtri.moduli || "?"} prese${filtri.tipoPrese ? (filtri.tipoPrese === "ita" ? " standard Italia" : " Modul45") : ""}`],
+    ["prese", (filtri.moduli || filtri.tipoPrese) && `${filtri.moduli || "?"} dispositivi${filtri.tipoPrese ? (filtri.tipoPrese === "ita" ? " standard Italia" : " Modul45") : ""}`],
     ["forma", filtri.forma && filtri.forma !== "indifferente" && (filtri.forma === "quadrata" ? "Quadrata" : "Rotonda")],
     ["pavimento", filtri.pavimento && { massetto: "Massetto", flottante: "Flottante", seminato: "Seminato" }[filtri.pavimento]],
     ["altezza", filtri.altezza && `H ${filtri.altezza} mm`],
@@ -191,17 +194,17 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
               <div className="g-due">
                 <div className="g-tavola"><DisegnoPrese n={nPrese} tipo={filtri.tipoPrese} /></div>
                 <div className="g-campi">
-                  <label>Numero di prese</label>
+                  <label>Numero di dispositivi</label>
                   <div className="g-conta">
-                    <button type="button" aria-label="Una presa in meno" onClick={() => metti("moduli", nPrese > 1 ? String(nPrese - 1) : "")}>−</button>
+                    <button type="button" aria-label="Un dispositivo in meno" onClick={() => metti("moduli", nPrese > 1 ? String(nPrese - 1) : "")}>−</button>
                     <output aria-live="polite">{nPrese || "—"}</output>
-                    <button type="button" aria-label="Una presa in più" onClick={() => metti("moduli", String(Math.min(16, nPrese + 1)))}>+</button>
+                    <button type="button" aria-label="Un dispositivo in più" onClick={() => metti("moduli", String(Math.min(16, nPrese + 1)))}>+</button>
                   </div>
                   <div className="g-rapide">{[2, 4, 6, 8, 12].map((a) => <button type="button" key={a} className={"g-pill" + (nPrese === a ? " attiva" : "")} onClick={() => metti("moduli", String(a))}>{a}</button>)}</div>
                   <label>Standard dei frutti</label>
                   <div className="g-griglia due">
-                    <Scelta larga attiva={filtri.tipoPrese === "modul45"} onClick={() => set("tipoPrese", "modul45")} titolo="Modul45®" testo="frutti OBO 45 × 45 mm, si montano a scatto" />
-                    <Scelta larga attiva={filtri.tipoPrese === "ita"} onClick={() => set("tipoPrese", "ita")} titolo="Standard Italia" testo="frutti delle serie civili (3 moduli)" />
+                    <Scelta larga attiva={filtri.tipoPrese === "modul45"} onClick={() => set("tipoPrese", "modul45")} titolo="Modul45®" testo="frutti OBO quadrati 45 × 45 mm" />
+                    <Scelta larga attiva={filtri.tipoPrese === "ita"} onClick={() => set("tipoPrese", "ita")} titolo="Standard Italia" testo="frutti delle serie civili italiane, 1 modulo (22,5 × 45 mm) ciascuno" />
                   </div>
                 </div>
               </div>
@@ -251,7 +254,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
     <div className="guida" ref={radice}>
       <div className="g-dentro">
         <ol className="g-passi" aria-label="Avanzamento">
-          {PASSI.map((x, i) => <li key={x.id} className={i === passo ? "ora" : riassunto[i][1] ? "fatto" : ""}><button type="button" onClick={() => setPasso(i)} aria-current={i === passo ? "step" : undefined}><span>{i + 1}</span><em>{["Prese", "Forma", "Pavimento", "Altezza", "Rivestimento", "Uso"][i]}</em></button></li>)}
+          {PASSI.map((x, i) => <li key={x.id} className={i === passo ? "ora" : riassunto[i][1] ? "fatto" : ""}><button type="button" onClick={() => setPasso(i)} aria-current={i === passo ? "step" : undefined}><span>{i + 1}</span><em>{["Dispositivi", "Forma", "Pavimento", "Altezza", "Rivestimento", "Uso"][i]}</em></button></li>)}
           <li className={fine ? "ora" : ""}><button type="button" onClick={() => setPasso(PASSI.length)}><span>✓</span><em>Risultato</em></button></li>
         </ol>
 
