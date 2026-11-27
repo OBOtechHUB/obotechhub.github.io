@@ -22,7 +22,7 @@ export function documento(d) {
   B.push({ t: 'dati', righe: [
     ['Cliente', d.cliente || '—'],
     ['Impianto / riferimento', [d.progetto, d.riferimento].filter(Boolean).join(' · ') || '—'],
-    ['Luogo', d.luogo || '—'],
+    ['Luogo', d.luogo || (d.sito && d.sito.luogo && d.sito.luogo.etichetta) || '—'],
     ['Numero progetto', d.codice || '—'],
     ['Data', data],
     ['Redatto da', d.autore ? `${d.autore} · Ufficio tecnico OBO Italia` : 'Ufficio tecnico OBO Italia'],
@@ -42,6 +42,27 @@ export function documento(d) {
     ['Velocità del vento di progetto', `${fmt(state.wind)} km/h`],
     ...(fr.wall ? [] : [['Criterio di lettura delle tabelle', MODE_LABELS[state.calcMode] || state.calcMode]]),
   ] });
+  if (d.sito && d.sito.luogo) {
+    const S = d.sito, L = S.luogo, V = S.vento, picco = Math.ceil(V.kmh);
+    B.push({ t: 'p', x: 'Luogo dell\'impianto e vento del sito (NTC 2018, par. 3.3: velocità di riferimento della zona corretta per l\'altitudine, coefficiente di esposizione della categoria con coefficiente di topografia 1):' });
+    B.push({ t: 'tab', intest: ['Dato del sito', 'Valore'], righe: [
+      ['Comune', [L.comune, L.provincia && L.provincia !== L.comune ? `(${L.provincia})` : ''].filter(Boolean).join(' ') || L.etichetta],
+      ...(L.indirizzo ? [['Indirizzo', L.indirizzo]] : []),
+      ...(L.regione ? [['Regione', L.regione]] : []),
+      ['Coordinate', `${fmt(L.lat, 5)}° N, ${fmt(L.lon, 5)}° E`],
+      ['Altitudine', `${fmt(S.alt)} m s.l.m.`],
+      ['Zona di vento', `Zona ${S.zona}${S.Z ? ` (vb,0 = ${fmt(S.Z.vb0)} m/s, a0 = ${fmt(S.Z.a0)} m, ks = ${fmt(S.Z.ks, 2)})` : ''}`],
+      ['Categoria di esposizione', `${S.cat}${S.C ? ` · ${S.C.d}` : ''}`],
+      ['Altezza del telaio dal suolo', `${fmt(S.z, 1)} m`],
+      ['Velocità di riferimento vb', `${fmt(V.vb, 1)} m/s${V.ca > 1 ? ` (coefficiente di altitudine ${fmt(V.ca, 2)})` : ''}`],
+      ['Coefficiente di esposizione ce', fmt(V.ce, 2)],
+      ['Pressione cinetica di picco qp', `${fmt(V.qp / 1000, 2)} kN/m²`],
+      ['Velocità di picco del sito', `${fmt(picco)} km/h`],
+    ] });
+    B.push({ t: 'p', x: state.wind >= picco
+      ? `La velocità del vento di progetto (${fmt(state.wind)} km/h) è uguale o superiore alla velocità di picco del sito (${fmt(picco)} km/h).`
+      : `Attenzione: la velocità del vento di progetto (${fmt(state.wind)} km/h) è inferiore alla velocità di picco calcolata per il sito (${fmt(picco)} km/h): va confermata dal progettista.` });
+  }
   const devs = state.devs.filter((x) => x.q > 0);
   B.push({ t: 'p', x: 'Apparecchiature fissate al telaio (dati delle schede tecniche forniti dal cliente):' });
   let n = 0;
@@ -103,8 +124,10 @@ export function documento(d) {
 
   B.push({ t: 'h2', x: '7. Riferimenti e limiti' });
   B.push({ t: 'p', x: 'Riferimento: OBO Bettermann, istruzioni di montaggio «Magic PV Mount – telaio per inverter», edizione 07/2026, capitolo 11.' });
+  if (d.sito && d.sito.luogo) B.push({ t: 'p', x: 'Vento del sito: D.M. 17/01/2018 (NTC 2018), par. 3.3. Posizione da OpenStreetMap (Photon), altitudine da Open-Meteo.' });
+  if (d.stemma && !d.stemma.pubblicoDominio) B.push({ t: 'p', x: d.stemma.credito });
   B.push({ t: 'p', x: 'La presente relazione è uno strumento di supporto alla scelta dei prodotti OBO e si basa sui dati forniti dal cliente. Non sostituisce la progettazione strutturale dell\'impianto, che resta a cura di un tecnico abilitato.' });
-  return { titolo, blocchi: B, fr, r };
+  return { titolo, blocchi: B, fr, r, stemma: d.stemma || null, comune: (d.sito && d.sito.luogo && d.sito.luogo.comune) || '' };
 }
 
 
@@ -191,7 +214,7 @@ export function paginaHTML(doc, logoUrl) {
 *{box-sizing:border-box}body{margin:0;background:#e4ebed;color:#282a31;font:10.5pt/1.45 "Nimbus Sans L","Nimbus Sans",Arial,Helvetica,sans-serif}
 .foglio{max-width:210mm;margin:16px auto;background:#fff;padding:16mm;box-shadow:0 4px 20px rgba(0,0,0,.12)}
 .testa{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;border-bottom:3px solid #f39b00;padding-bottom:10px;margin-bottom:14px}
-.testa img{height:44px}.testa .soc{font-size:8pt;color:#41525d;text-align:right}
+.testa img{height:44px}.testa img.stemma{height:62px;margin-bottom:3px}.testa .soc{font-size:8pt;color:#41525d;text-align:right}
 h1{font-size:17pt;margin:0 0 4px;color:#282a31}.sott{color:#41525d;margin:0 0 12px}
 h2{font-size:12pt;color:#282a31;margin:18px 0 6px;padding-bottom:3px;border-bottom:1px solid #c5d9de;break-after:avoid}
 table{border-collapse:collapse;width:100%;margin:6px 0 10px;break-inside:avoid}
@@ -211,7 +234,7 @@ ul{margin:4px 0 8px;padding-left:18px}li{margin:3px 0}
 </style></head><body>
 <div class="barra"><button type="button" onclick="print()">Stampa o salva PDF</button><button type="button" class="sec" onclick="close()">Chiudi</button></div>
 <div class="foglio">
-<div class="testa">${logoUrl ? `<img src="${e(logoUrl)}" alt="OBO Bettermann">` : '<b>OBO Bettermann</b>'}<div class="soc"><b>OBO Bettermann S.r.l.</b><br>Ufficio tecnico</div></div>
+<div class="testa">${logoUrl ? `<img src="${e(logoUrl)}" alt="OBO Bettermann">` : '<b>OBO Bettermann</b>'}<div class="soc">${doc.stemma ? `<img class="stemma" src="${doc.stemma.dataUrl}" alt="Stemma del Comune"><br>${doc.comune ? `Comune di ${e(doc.comune)}<br>` : ''}` : ''}<b>OBO Bettermann S.r.l.</b><br>Ufficio tecnico</div></div>
 <h1>${e(doc.titolo)}</h1><p class="sott">OBO Magic PV Mount ${e(doc.fr.name)} · art. ${e(doc.fr.code)}</p>
 ${corpo}
 <div class="firma"><div>Ufficio tecnico OBO Italia</div></div>
@@ -233,9 +256,10 @@ function tabella(intest, righe, o = {}) {
   return `<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/>${bordi}<w:tblCellMar><w:left w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr>${testa}${corpo}</w:tbl>${par('', { after: 80 })}`;
 }
 const immagine = (rid, id, w, h) => `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="40"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${Math.round(w * 9525)}" cy="${Math.round(h * 9525)}"/><wp:docPr id="${id}" name="Disegno ${id}"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="${id}" name="vista.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${rid}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${Math.round(w * 9525)}" cy="${Math.round(h * 9525)}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`;
-export function docxBlob(doc, logo /* {bytes:Uint8Array, w, h} | null */, viste = [] /* [{bytes, w, h, titolo}] PNG dei disegni */) {
+export function docxBlob(doc, logo /* {bytes:Uint8Array, w, h} | null */, viste = [] /* [{bytes, w, h, titolo}] PNG dei disegni */, stemma = null /* {bytes, w, h} PNG */) {
   const corpo = [];
   if (logo) corpo.push(`<w:p><w:pPr><w:spacing w:after="120"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${Math.round(logo.w * 9525)}" cy="${Math.round(logo.h * 9525)}"/><wp:docPr id="1" name="Logo OBO"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="1" name="logo.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdLogo"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${Math.round(logo.w * 9525)}" cy="${Math.round(logo.h * 9525)}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`);
+  if (stemma) { const hs = 70; corpo.push(immagine('rIdStemma', 90, Math.round(stemma.w * hs / stemma.h), hs)); if (doc.comune) corpo.push(par(run(`Comune di ${doc.comune}`, { sz: 18, c: '41525D' }), { jc: 'center', after: 160 })); }
   corpo.push(par(run(doc.titolo, { b: true, sz: 32, c: '282A31' }), { after: 40, bordo: 18, bordoC: 'F39B00' }));
   corpo.push(par(run(`OBO Magic PV Mount ${doc.fr.name} · art. ${doc.fr.code}`, { c: '41525D', sz: 22 }), { before: 60, after: 200 }));
   for (const b of doc.blocchi) {
@@ -256,12 +280,13 @@ export function docxBlob(doc, logo /* {bytes:Uint8Array, w, h} | null */, viste 
   const files = {
     '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>`,
     '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`,
-    'word/_rels/document.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdPiede" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/><Relationship Id="rIdNum" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>${logo ? '<Relationship Id="rIdLogo" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/logo.png"/>' : ''}${relV}</Relationships>`,
+    'word/_rels/document.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdPiede" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/><Relationship Id="rIdNum" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>${logo ? '<Relationship Id="rIdLogo" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/logo.png"/>' : ''}${stemma ? '<Relationship Id="rIdStemma" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/stemma.png"/>' : ''}${relV}</Relationships>`,
     'word/document.xml': documentXml,
     'word/footer1.xml': piede,
     'word/numbering.xml': numbering,
   };
   if (logo) files['word/media/logo.png'] = logo.bytes;
+  if (stemma) files['word/media/stemma.png'] = stemma.bytes;
   viste.forEach((v, i) => { files[`word/media/vista${i}.png`] = v.bytes; });
   return new Blob([zip(files)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
 }

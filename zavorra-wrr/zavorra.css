@@ -101,3 +101,13 @@ main.contenitore { padding-top: 18px; padding-bottom: 48px; }
 .zwrr .disegno figure { margin: 0; flex: 1 1 240px; max-width: 460px; text-align: center; }
 .zwrr .disegno svg { width: 100%; height: auto; display: block; border: .8px solid var(--line); border-radius: 10px; background: #fff; }
 .zwrr .disegno figcaption { font-size: calc(12px * var(--zoom, 1)); color: var(--muted); margin-top: 4px; }
+
+/* ricerca del luogo dell'impianto */
+.zwrr .luoghi { display: grid; gap: 2px; border: .8px solid var(--line); border-radius: 10px; padding: 4px; background: var(--panel); max-height: 280px; overflow: auto; }
+.zwrr .luoghi button { display: block; width: 100%; text-align: left; border: 0; background: none; color: inherit; font: inherit; padding: 7px 9px; border-radius: 7px; cursor: pointer; }
+.zwrr .luoghi button:hover, .zwrr .luoghi button:focus-visible { background: var(--accent-soft); }
+.zwrr .luoghi small, .zwrr .luogo-scelto small { display: block; color: var(--muted); font-size: calc(12px * var(--zoom, 1)); }
+.zwrr .luoghi p { margin: 6px 9px; }
+.zwrr .luogo-scelto { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 12px; border: .8px solid var(--accent); border-radius: 10px; background: var(--accent-soft); }
+.zwrr .luogo-scelto img { height: 54px; width: auto; flex: none; }
+.zwrr .luogo-scelto > div { flex: 1 1 160px; min-width: 0; }

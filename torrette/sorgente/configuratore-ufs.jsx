@@ -1511,11 +1511,7 @@ function StepFamiglia({ onSelect }) {
             {/* Descrizione e tag — nascosti su mobile */}
             {!isMobile && <>
               <div style={{ padding: "0 18px 12px", fontSize: 12, color: "#555", lineHeight: 1.6, borderBottom: "1px solid #f0f0f0" }}>{f.descrizione}</div>
-              <div style={{ padding: "8px 18px", display: "flex", flexWrap: "wrap", gap: 5 }}>
-                {f.tag.map(t => (
-                  <span key={t} style={{ background: `${f.colore}12`, color: f.colore, fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>{t}</span>
-                ))}
-              </div>
+              <Caratteristiche chiavi={f.sistemi} stile={{ padding: "10px 18px 12px" }} />
             </>}
             {/* Arrow su mobile */}
             {isMobile && <span style={{ fontSize: 18, color: f.colore, paddingRight: 14 }}>›</span>}
@@ -1654,6 +1650,50 @@ const DATASHEET = {
 };
 
 
+// ── Caratteristiche con icona: sempre le stesse cinque, nello stesso ordine, calcolate dai dati dei sistemi (DB).
+// Se cambiano i dati di un sistema, le etichette cambiano da sole in tutte le schede (famiglie, modelli, ricerca).
+const ICONE_CAR = {
+  forma: <><rect x="3" y="3" width="8" height="8" rx="1"/><circle cx="16.5" cy="16.5" r="4.5"/></>,
+  quadrata: <rect x="4" y="4" width="16" height="16" rx="2"/>,
+  rotonda: <circle cx="12" cy="12" r="8.5"/>,
+  ip: <><path d="M12 3l7.5 3v5.5c0 4.6-3.1 8-7.5 9.5-4.4-1.500-7.500-4.900-7.500-9.500V6z"/><path d="M12 8.500c-1.500 2-2.300 3.200-2.300 4.300a2.300 2.300 0 004.600 0c0-1.100-.800-2.300-2.300-4.300z"/></>,
+  carico: <><path d="M7 9h10l3 11H4z"/><path d="M9.500 9a2.500 2.500 0 115 0"/></>,
+  pavimento: <><path d="M3 8l9-4 9 4-9 4z"/><path d="M3 12.500l9 4 9-4"/><path d="M3 17l9 4 9-4"/></>,
+  rivestimento: <><rect x="3" y="13" width="18" height="7" rx="1"/><path d="M3 9h18M7 5v4M12 5v4M17 5v4"/></>,
+};
+function caratteristiche(chiavi) {
+  const sis = chiavi.map(k => DB[k]).filter(Boolean);
+  if (!sis.length) return [];
+  const out = [];
+  const testoForma = sis.map(x => x.forma || "").join(" ").toLowerCase();
+  const q = testoForma.includes("quadrat"), r = testoForma.includes("rotond");
+  if (q || r) out.push({ k: q && r ? "forma" : q ? "quadrata" : "rotonda", t: q && r ? "Quadrata o rotonda" : q ? "Quadrata" : "Rotonda", d: "Forma del coperchio" });
+  const ip = [];
+  sis.forEach(x => [x.ip_chiuso, x.ip_laterale, x.ip_tubo, x.ip_cieco].forEach(v => (String(v || "").match(/IP\s?(\d{2})/g) || []).forEach(m => ip.push(parseInt(m.replace(/\D/g, ""), 10)))));
+  if (ip.length) { const a = Math.min(...ip), b = Math.max(...ip); out.push({ k: "ip", t: a === b ? `IP${a}` : `IP${a}–IP${b}`, d: "Grado di protezione a coperchio chiuso (dal minimo al massimo secondo la variante)" }); }
+  const kn = [];
+  sis.forEach(x => { const c = String(x.carico || ""); (c.match(/(\d+(?:[.,]\d+)?)\s*kN/gi) || []).forEach(m => kn.push(parseFloat(m.replace(",", ".")))); (c.match(/(\d+)\s*N\b/g) || []).forEach(m => kn.push(parseFloat(m) / 1000)); });
+  if (kn.length) { const a = Math.min(...kn), b = Math.max(...kn), f = v => String(v).replace(".", ","); out.push({ k: "carico", t: a === b ? `${f(b)} kN` : `fino a ${f(b)} kN`, d: "Carico ammesso sul coperchio (valore massimo tra le varianti)" }); }
+  const pav = new Set(); sis.forEach(x => (x.pavimenti || []).forEach(v => pav.add(v)));
+  if (pav.size) out.push({ k: "pavimento", t: pav.has("massetto") && pav.has("flottante") ? "Massetto e flottante" : pav.has("flottante") ? "Solo flottante" : "Solo massetto", d: "Tipo di pavimento in cui si installa" });
+  const mm = [];
+  sis.forEach(x => (String(x.rivestimento_max || "").match(/(\d+)\s*mm/g) || []).forEach(m => mm.push(parseInt(m, 10))));
+  if (mm.length) out.push({ k: "rivestimento", t: `Rivestibile fino a ${Math.max(...mm)} mm`, d: "Spessore massimo del rivestimento nel coperchio" });
+  else if (sis.some(x => /non rivest/i.test(x.rivestimento_max || ""))) out.push({ k: "rivestimento", t: "Non rivestibile", d: "Il coperchio non prende il rivestimento del pavimento" });
+  return out;
+}
+function Caratteristiche({ chiavi, stile }) {
+  return (
+    <div className="ufs-car" style={{ display: "flex", flexWrap: "wrap", gap: 6, ...(stile || {}) }}>
+      {caratteristiche(chiavi).map(c => (
+        <span key={c.k + c.t} title={c.d} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "#eef2f4", color: "#282a31", border: "1px solid #c5d9de", fontSize: 12, fontWeight: 600, padding: "3px 9px 3px 7px", borderRadius: 20, lineHeight: 1.3 }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#41525d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{ICONE_CAR[c.k]}</svg>{c.t}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 // Foto di ambiente e di posa prese dalla brochure OBO "Soluzioni di design per l'installazione elettrica"
 // (ritagli in torrette/img/): scheda = foto sulla scheda della famiglia, ambiente = foto larga nel passo 2.
 const FAMIGLIA_FOTO = {
@@ -1728,21 +1768,14 @@ function StepSistema({ famigliaId, onSelect, onBack }) {
               </div>
               {/* Specs — solo tablet+ */}
               {!isMobile && (
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", borderTop:"1px solid #f0f0f0", marginTop:"auto" }}>
-                  {specs.map((sp, i) => (
-                    <div key={i} style={{ padding:"8px 18px", borderRight: i%2===0?"1px solid #f0f0f0":"none", borderBottom: i<2?"1px solid #f0f0f0":"none", background:"#f8f8f8" }}>
-                      <div style={{ fontSize:9, fontWeight:700, color:"#888", letterSpacing:1.5, textTransform:"uppercase", marginBottom:2 }}>{sp.l}</div>
-                      <div style={{ fontSize:12, fontWeight:700, color:"#111" }}>{sp.v}</div>
-                    </div>
-                  ))}
-                </div>
+                <Caratteristiche chiavi={[key]} stile={{ padding:"10px 18px", borderTop:"1px solid #f0f0f0", marginTop:"auto" }} />
               )}
               {/* CTA / arrow */}
               {isMobile
                 ? <span style={{ fontSize:18, color:fam.colore, paddingRight:14 }}>›</span>
                 : <div style={{ padding:"9px 18px", background: isHover ? `${fam.colore}0D` : "transparent" }}>
                     <span style={{ fontSize:12, color: isHover ? fam.colore : "#999", fontWeight:700 }}>
-                      {isHover ? "Configura →" : (s.pavimenti?.length > 1 ? "Massetto e flottante" : "Solo massetto")}
+                      Configura →
                     </span>
                   </div>
               }
@@ -3463,6 +3496,7 @@ function FiltraSistema({ onSeleziona, filtri, setFiltri, risultati, setRisultati
               {tipo === "ok"      && <span style={{ fontSize: 10, color: "#2E7D32", fontWeight: 700 }}>✓ Compatibile</span>}
               {tipo === "parziale"&& <span style={{ fontSize: 10, color: "#F57F17", fontWeight: 700 }}>⚠ Compatibile con rinunce</span>}
             </div>
+            <Caratteristiche chiavi={[r.key]} stile={{ margin: "6px 0 4px" }} />
             {tipo !== "ok" && r.rinunce.map((rn, i) => (
               <div key={i} style={{ fontSize: 11, color: "#7A4F00", background: "#FFF8E1", border: "1px solid #FFE082", borderRadius: 2, padding: "3px 8px", marginTop: 4, display: "inline-block", marginRight: 4 }}>
                 ⚠ {rn.campo}: {rn.motivo}

@@ -2,6 +2,23 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json). Le novità solo grafiche (animazioni, sigle, aspetto) non si mostrano: restano conservate in 'grafica_non_mostrata'.",
   "aggiornamenti": [
     {
+      "id": "2026-11-27-zavorra-5",
+      "data": "2026-11-27",
+      "app": "zavorra",
+      "titolo": "Zavorra WRR: luogo dell'impianto, stemma e vento nella relazione",
+      "voci": [
+        "Cerchi il comune o l'indirizzo dell'impianto: l'app trova da sola zona di vento e altitudine e calcola la raffica di picco del sito",
+        "Nella relazione per il cliente compaiono comune, stemma del Comune e la tabella con i valori del vento del sito",
+        "Nel risultato vedi il disegno in scala del telaio con le apparecchiature"
+      ],
+      "titolo_en": "WRR ballast: site location, coat of arms and wind in the report",
+      "voci_en": [
+        "Search the town or address of the plant: the app finds wind zone and altitude and computes the site peak gust",
+        "The customer report shows town, municipal coat of arms and the table with the site wind values",
+        "The result shows a scale drawing of the frame with the equipment"
+      ]
+    },
+    {
       "id": "2026-11-27-zavorra-4",
       "data": "2026-11-27",
       "app": "zavorra",

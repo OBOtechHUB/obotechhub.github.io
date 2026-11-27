@@ -137,6 +137,18 @@
   .pannello-progetto label { display:grid; gap:4px; font-weight:600; font-size:calc(13px * var(--zoom,1)); min-width:0; }
   .pannello-progetto input, .pannello-progetto select { border:1px solid var(--bordo); background:var(--carta); color:inherit; border-radius:10px; padding:8px 10px; font:inherit; font-size:16px; font-weight:400; max-width:100%; min-width:0; }
   .pannello-progetto .strumenti { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+  /* stessa estetica delle altre app: campi, pulsanti, schede e titoli del configuratore come in OBO Hub */
+  .ufs-radice { color-scheme:light; }
+  .ufs-radice input, .ufs-radice select, .ufs-radice textarea { border:1px solid #c5d9de !important; border-radius:10px !important; background:#fff !important; color:#282a31 !important; font:inherit !important; font-size:16px !important; padding:8px 10px !important; min-height:40px; box-shadow:none !important; box-sizing:border-box !important; min-width:0; max-width:100%; }
+  .ufs-radice input::placeholder { color:#7694a4; }
+  .ufs-radice input:focus-visible, .ufs-radice select:focus-visible { outline:2px solid #f39b00; outline-offset:1px; }
+  .ufs-radice button { font-family:inherit; }
+  .ufs-radice button:not(:has(div, img)) { border-radius:999px !important; text-transform:none !important; letter-spacing:0 !important; font-weight:700 !important; }
+  .ufs-radice button:has(div, img) { border-radius:14px !important; overflow:hidden; }
+  .ufs-radice h2 { font-weight:700 !important; letter-spacing:0 !important; font-size:calc(22px * var(--zoom,1)) !important; }
+  .ufs-radice [style*="text-transform: uppercase"] { text-transform:none !important; letter-spacing:0 !important; }
+  .ufs-radice label[style*="text-transform"], .ufs-radice div[style*="text-transform: uppercase"][style*="font-size: 11px"], .ufs-radice div[style*="text-transform: uppercase"][style*="font-size: 10px"] { font-size:calc(13px * var(--zoom,1)) !important; font-weight:600 !important; }
+  .ufs-radice div[style*="border-radius: 3px"], .ufs-radice div[style*="border-radius: 2px"] { border-radius:12px !important; }
   /* tema scuro: il configuratore ha colori propri; si invertono le parti (non il contenitore, così il carrello fisso resta in basso) e si rimettono dritte le foto */
   :root[data-theme="dark"] .ufs-radice > *:not(.ufs-barra) { background-color:#fff; filter:invert(.9) hue-rotate(180deg); }
   :root[data-theme="dark"] .ufs-radice > *:not(.ufs-barra) img { filter:invert(1) hue-rotate(180deg); }

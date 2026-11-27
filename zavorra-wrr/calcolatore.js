@@ -8,6 +8,7 @@ import {
 } from './calc.js';
 import { createStorage } from './storage.js';
 import { documento, paginaHTML, docxBlob, disegni } from './relazione.js';
+import { cercaLuoghi, altitudine, zonaDa, stemmaComune } from './luogo.js';
 
 /** SVG → PNG (per il Word), larghezza in px dell'immagine nel documento */
 function svgPng(v, larghezzaPx) {
@@ -107,9 +108,15 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           <input type="number" id="${u}-wind" min="0" max="250" step="1" style="max-width:200px">
         </label>
         <p class="hint">Se il progettista dell'impianto ti ha dato la velocità, scrivila qui. Le tabelle OBO coprono 80–170 km/h.</p>
-        <details class="adv" id="${u}-sito">
-          <summary>Non conosci la velocità? Calcolala dal luogo <span class="hint">· NTC 2018, come l'Eurocodice 1</span></summary>
+        <details class="adv" id="${u}-sito" open>
+          <summary>Luogo dell'impianto e vento del sito <span class="hint">· NTC 2018, come l'Eurocodice 1</span></summary>
           <div class="adv-body">
+            <label class="f" for="${u}-sCerca">Cerca il comune o l'indirizzo dell'impianto
+              <input type="search" id="${u}-sCerca" autocomplete="off" placeholder="Es. Via Roma 10, Bergamo" aria-controls="${u}-sLista">
+            </label>
+            <div class="luoghi" id="${u}-sLista" role="listbox" hidden></div>
+            <div class="luogo-scelto" id="${u}-sLuogo" hidden></div>
+            <p class="hint">Scelto il luogo, l'app compila da sola zona di vento e altitudine e mette comune, stemma e valori del vento nella relazione. Puoi sempre correggere i campi qui sotto.</p>
             <label class="f" for="${u}-sZona">Dove si trova l'impianto
               <select id="${u}-sZona">${ZONE_VENTO.map((z) => `<option value="${z.zona}">Zona ${z.zona} · ${esc(z.d)}</option>`).join('')}</select>
             </label>
@@ -421,6 +428,54 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     q('sUsa').textContent = `Usa ${fmt(v)} km/h come vento di progetto`;
     q('sUsa').onclick = () => { state.wind = v; q('wind').value = v; update(); };
   }
+  // ricerca del luogo: zona e altitudine in automatico, comune e stemma per la relazione
+  let stemma = null, stemmaDi = '', cercaT = 0, cercaCtl = null;
+  const chiaveStemma = (L) => (L && L.comune ? `${L.comune}|${L.provincia || ''}` : '');
+  async function assicuraStemma() {
+    const L = state.sito && state.sito.luogo, k = chiaveStemma(L);
+    if (!k) { stemma = null; stemmaDi = ''; return null; }
+    if (k !== stemmaDi) { stemmaDi = k; stemma = null; try { stemma = await stemmaComune(L.comune, L.provincia, { lat: L.lat, lon: L.lon }); } catch { stemma = null; } if (chiaveStemma(state.sito && state.sito.luogo) === k) mostraLuogo(); }
+    return stemma;
+  }
+  function mostraLuogo() {
+    const L = state.sito && state.sito.luogo, box = q('sLuogo');
+    box.hidden = !L;
+    if (!L) return;
+    const st = stemma && stemmaDi === chiaveStemma(L) ? stemma : null;
+    box.innerHTML = `${st ? `<img src="${st.dataUrl}" alt="Stemma del Comune di ${esc(L.comune)}">` : ''}<div><b>${esc([L.comune, L.provincia && L.provincia !== L.comune ? `(${L.provincia})` : ''].filter(Boolean).join(' ') || L.etichetta)}</b><small>${esc([L.indirizzo, L.regione, `${fmt(L.lat, 4)}° N, ${fmt(L.lon, 4)}° E`].filter(Boolean).join(' · '))}</small>${L.nota ? `<small>${esc(L.nota)}</small>` : ''}</div><button type="button" class="btn" id="${u}-sTogli">Cambia luogo</button>`;
+    q('sTogli').onclick = () => { delete state.sito.luogo; stemma = null; stemmaDi = ''; mostraLuogo(); q('sCerca').value = ''; q('sCerca').focus(); update(); };
+  }
+  async function scegliLuogo(l) {
+    q('sLista').hidden = true; q('sCerca').value = '';
+    const S = sito(), zona = l.paese && !/ital/i.test(l.paese) ? null : zonaDa(l.regione, l.provincia, l.lat, l.lon);
+    S.luogo = { etichetta: [l.principale, l.secondario].filter(Boolean).join(', '), comune: l.comune, provincia: l.provincia, regione: l.regione, indirizzo: l.indirizzo, lat: l.lat, lon: l.lon,
+      nota: zona == null ? 'Zona di vento non riconosciuta (fuori Italia o isola minore): sceglila a mano qui sotto.' : '' };
+    if (zona != null) S.zona = zona;
+    const rel = state.rel || {};
+    const testoLuogo = [l.indirizzo, [l.comune, l.provincia && l.provincia !== l.comune ? `(${l.provincia})` : ''].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    if (testoLuogo) { state.rel = { ...rel, luogo: testoLuogo }; mostraRel(); }
+    mostraLuogo(); renderSito(); update();
+    const a = await altitudine(l.lat, l.lon);
+    if (a != null && state.sito && state.sito.luogo && state.sito.luogo.lat === l.lat) { state.sito.alt = a; renderSito(); update(); }
+    else if (a == null && state.sito && state.sito.luogo) { state.sito.luogo.nota = [state.sito.luogo.nota, 'Altitudine non trovata: scrivila a mano.'].filter(Boolean).join(' '); mostraLuogo(); }
+    assicuraStemma();
+  }
+  q('sCerca').oninput = (e) => {
+    clearTimeout(cercaT); if (cercaCtl) cercaCtl.abort();
+    const testo = e.target.value, lista = q('sLista');
+    if (testo.trim().length < 3) { lista.hidden = true; return; }
+    cercaT = setTimeout(async () => {
+      cercaCtl = new AbortController();
+      try {
+        const ris = await cercaLuoghi(testo, cercaCtl.signal);
+        lista.hidden = false;
+        lista.innerHTML = ris.length ? '' : '<p class="hint">Nessun luogo trovato: prova con il solo nome del comune.</p>';
+        ris.forEach((l) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'option'); b.innerHTML = `<b>${esc(l.principale)}</b><small>${esc(l.secondario)}</small>`; b.onclick = () => scegliLuogo(l); lista.appendChild(b); });
+      } catch (err) { if (err && err.name === 'AbortError') return; lista.hidden = false; lista.innerHTML = '<p class="hint">Ricerca non raggiungibile: scegli zona e altitudine a mano qui sotto.</p>'; }
+    }, 300);
+  };
+  q('sCerca').onkeydown = (e) => { if (e.key === 'Escape') q('sLista').hidden = true; if (e.key === 'Enter') { e.preventDefault(); const b = q('sLista').querySelector('button'); if (b && !q('sLista').hidden) b.click(); } };
+  mostraLuogo(); assicuraStemma();
   q('sZona').onchange = (e) => { sito().zona = Number(e.target.value); renderSito(); update(); };
   q('sCat').onchange = (e) => { sito().cat = e.target.value; renderSito(); update(); };
   q('sAlt').oninput = (e) => { sito().alt = parseFloat(e.target.value) || 0; renderSito(); update(); };
@@ -443,14 +498,17 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
   const datiRelazione = () => {
     const rel = state.rel || {}, val = (id) => (q(id) ? q(id).value.trim() : '');
     return { state, cliente: rel.cliente || val('cliente'), riferimento: rel.riferimento || '', progetto: val('progetto'), luogo: rel.luogo || '', codice: rel.codice || val('codice'),
-      note: rel.note || '', autore: (q('who') && q('who').textContent) || '', data: new Date() };
+      note: rel.note || '', autore: (q('who') && q('who').textContent) || '', data: new Date(),
+      sito: state.sito && state.sito.luogo ? { ...state.sito, vento: ventoSito(state.sito.zona, state.sito.alt, state.sito.cat, state.sito.z), Z: ZONE_VENTO.find((x) => x.zona === Number(state.sito.zona)), C: CATEGORIE_VENTO.find((x) => x.cat === state.sito.cat) } : null,
+      stemma: stemma && stemmaDi === chiaveStemma(state.sito && state.sito.luogo) ? stemma : null };
   };
   const nomeFile = (est) => `Relazione_zavorra_${FRAMES[state.frame].name.replace(/\s+/g, '')}_${(datiRelazione().codice || datiRelazione().cliente || 'OBO').replace(/[^\w-]+/g, '_').slice(0, 40)}_${new Date().toISOString().slice(0, 10)}.${est}`;
   const LOGO = new URL('logo-obo.png', import.meta.url).href;
-  q('rApri').onclick = () => {
-    const doc = documento(datiRelazione());
+  q('rApri').onclick = async () => {
     const w = window.open('', '_blank');
     if (!w) { q('rMsg').textContent = 'Il browser ha bloccato la nuova finestra: consenti i popup per OBO Hub.'; return; }
+    await assicuraStemma();
+    const doc = documento(datiRelazione());
     w.document.open(); w.document.write(paginaHTML(doc, LOGO)); w.document.close();
     q('rMsg').textContent = '';
   };
@@ -463,9 +521,10 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         const dv = new DataView(bytes.buffer), lw = dv.getUint32(16), lh = dv.getUint32(20), h = 46;
         logo = { bytes, w: Math.round(lw * h / lh), h };
       } catch { /* senza logo */ }
+      await assicuraStemma();
       const doc = documento(datiRelazione()), dis = doc.blocchi.find((b) => b.t === 'disegno');
       const viste = dis ? await Promise.all(dis.viste.map((v) => svgPng(v, dis.viste.length > 1 ? 260 : 380))) : [];
-      const blob = docxBlob(doc, logo, viste);
+      const blob = docxBlob(doc, logo, viste, doc.stemma);
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nomeFile('docx'); document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
       msg.textContent = 'File Word scaricato.';
@@ -511,7 +570,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       q('lps').value = row.progetto_lps && lps.some((p) => p.id === row.progetto_lps) ? row.progetto_lps : '';
       ricordaAperto(row.id);
       q('vaiProgetti').href = '../progetti.html' + (q('lps').value ? '?id=' + encodeURIComponent(q('lps').value) : '');
-      mostraRel(); renderDevs(); update(); mostraAperto();
+      mostraRel(); renderDevs(); renderSito(); mostraLuogo(); assicuraStemma(); update(); mostraAperto();
       clearTimeout(timer); inAttesa = false; modificato = false;
     }
     function disegnaElenco() {
