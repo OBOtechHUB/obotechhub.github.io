@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+// Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
+import DATI_TABELLA from "./dati-sistemi.json";
 
 // ─────────────────────────────────────────────────────────────────
 // RESPONSIVE — hook e helpers
@@ -1244,6 +1246,8 @@ const DB = {
     ],
   },
 };
+Object.keys(DATI_TABELLA).forEach(k => { DB[k] = DATI_TABELLA[k]; });
+
 
 // ─────────────────────────────────────────────────────────────────
 // CONFIGURAZIONE UI

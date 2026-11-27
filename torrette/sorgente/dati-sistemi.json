@@ -1,0 +1,2942 @@
+{
+ "GES4": {
+  "label": "GES 4",
+  "famiglia": "GES",
+  "forma": "quadrata",
+  "dimensione": "217×217 mm",
+  "ip_chiuso": "IP40",
+  "ip_aperto": "IP20",
+  "carico": "2 kN (plastica) / 3 kN (acciaio)",
+  "rivestimento_max": "5 mm",
+  "note": "Plastica: 3 colori. Acciaio: variante M-2. Box GT I4 utilizzabile solo su flottante (h min. 110mm). Box MT4 6I utilizzabile anche su massetto (h 95–100mm).",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "colonne": [
+   "Torretta",
+   "Box portafrutti",
+   "Scatola massetto"
+  ],
+  "righe": [
+   {
+    "label": "GES4 U 7011 – Grigio ferro RAL 7011",
+    "finitura": "grigio",
+    "colore_ral": "RAL 7011",
+    "materiale": "plastica",
+    "codici": [
+     "7405196",
+     null,
+     null
+    ],
+    "note_righe": [
+     "GES4 U 7011",
+     "scegli sotto ↓",
+     "solo con MT4 6I (95–100mm)"
+    ]
+   },
+   {
+    "label": "GES4 U 9011 – Nero grafite RAL 9011",
+    "finitura": "nero",
+    "colore_ral": "RAL 9011",
+    "materiale": "plastica",
+    "codici": [
+     "7405200",
+     null,
+     null
+    ],
+    "note_righe": [
+     "GES4 U 9011",
+     "scegli sotto ↓",
+     "solo con MT4 6I (95–100mm)"
+    ]
+   },
+   {
+    "label": "GES4 U 1019 – Grigio beige RAL 1019",
+    "finitura": "beige",
+    "colore_ral": "RAL 1019",
+    "materiale": "plastica",
+    "codici": [
+     "7405204",
+     null,
+     null
+    ],
+    "note_righe": [
+     "GES4 U 1019",
+     "scegli sotto ↓",
+     "solo con MT4 6I (95–100mm)"
+    ]
+   },
+   {
+    "label": "GES4M-2 10U – Acciaio",
+    "finitura": "acciaio",
+    "colore_ral": "—",
+    "materiale": "acciaio",
+    "codici": [
+     "7405191",
+     null,
+     null
+    ],
+    "note_righe": [
+     "GES4M-2 10U",
+     "scegli sotto ↓",
+     "solo con MT4 6I (95–100mm)"
+    ]
+   }
+  ],
+  "box": [
+   {
+    "codice": "7407577",
+    "tipo": "MT4 6I",
+    "desc": "6 moduli Modul45®",
+    "pavimenti_ok": [
+     "flottante",
+     "massetto"
+    ],
+    "nota": "Compatibile con massetto (h 95–100mm) e flottante (h min. 110mm)"
+   },
+   {
+    "codice": "7429194",
+    "tipo": "GT I4",
+    "desc": "4 prese standard italiano",
+    "pavimenti_ok": [
+     "flottante"
+    ],
+    "nota": "Solo su pavimento flottante (h min. 110mm). Non installabile su massetto."
+   }
+  ],
+  "scatola_massetto": {
+   "codice": "7427430",
+   "tipo": "UDHOME BOX 4",
+   "desc": "Scatola per installazione su massetto"
+  },
+  "altezze": {
+   "flottante": "min. 110 mm",
+   "massetto": "95–100 mm (solo con MT4 6I)"
+  }
+ },
+ "GES9": {
+  "label": "GES 9",
+  "famiglia": "GES",
+  "forma": "quadrata",
+  "dimensione": "264×264 mm",
+  "ip_chiuso": "IP40",
+  "ip_aperto": "IP20",
+  "carico": "2 kN (plastica) / 3 kN (acciaio)",
+  "rivestimento_max": "10 mm (5 mm System55)",
+  "note": null,
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "tipo": "gruppi",
+  "gruppi": [
+   {
+    "id": "GT",
+    "label": "Con box GTI 14I pre-montato",
+    "sottotitolo": "14 dispositivi standard Italia — box incluso, nessuna scelta aggiuntiva",
+    "righe": [
+     {
+      "label": "GES9-3B U9011 GT — Nero grafite RAL 9011",
+      "finitura": "nero",
+      "colore_ral": "RAL 9011",
+      "materiale": "plastica",
+      "codice": "7405093"
+     }
+    ],
+    "box_fisso": {
+     "codice": null,
+     "tipo": "GTI 14I",
+     "desc": "14 dispositivi standard Italia (pre-montato)"
+    },
+    "scatola_massetto": {
+     "codice": "7427434",
+     "tipo": "UDHOME BOX 9 EX",
+     "desc": "Regolazione h 110–125mm"
+    },
+    "altezze": {
+     "flottante": "min. 110 mm",
+     "massetto": "110–125 mm"
+    }
+   },
+   {
+    "id": "55U",
+    "label": "Con box MT45 V0 pre-montato — System55",
+    "sottotitolo": "8 moduli Modul45® — richiede 2× telaio 7408670 (obbligatorio). Min. 55mm: soluzione unica nel mercato italiano.",
+    "righe": [
+     {
+      "label": "GES9 55U V 7011 — Grigio ferro RAL 7011",
+      "finitura": "grigio",
+      "colore_ral": "RAL 7011",
+      "materiale": "plastica",
+      "codice": "7405037"
+     },
+     {
+      "label": "GES9 55U V 9011 — Nero grafite RAL 9011",
+      "finitura": "nero",
+      "colore_ral": "RAL 9011",
+      "materiale": "plastica",
+      "codice": "7405039"
+     }
+    ],
+    "box_fisso": {
+     "codice": null,
+     "tipo": "MT45 V0",
+     "desc": "8 moduli Modul45® (pre-montato)"
+    },
+    "accessorio_obbligatorio": {
+     "codice": "7408670",
+     "tipo": "Telaio MT45",
+     "desc": "Telaio 4 moduli Modul45®",
+     "qty": 2,
+     "nota": "Obbligatori 2 pezzi per completare il box"
+    },
+    "scatola_massetto": {
+     "codice": "7410060",
+     "tipo": "UGD55 250-3 9R",
+     "desc": "Regolazione h 55–80mm"
+    },
+    "altezze": {
+     "flottante": "min. 55 mm",
+     "massetto": "55–80 mm"
+    }
+   },
+   {
+    "id": "VUOTA",
+    "label": "Vuota — scelta libera del box",
+    "sottotitolo": "Scegli il box e la scatola massetto in base all'altezza disponibile in cantiere",
+    "righe": [
+     {
+      "label": "GES9-3B U 7011 — Grigio ferro RAL 7011",
+      "finitura": "grigio",
+      "colore_ral": "RAL 7011",
+      "materiale": "plastica",
+      "codice": "7405077"
+     },
+     {
+      "label": "GES9-3B U 9011 — Nero grafite RAL 9011",
+      "finitura": "nero",
+      "colore_ral": "RAL 9011",
+      "materiale": "plastica",
+      "codice": "7405079"
+     },
+     {
+      "label": "GES9M-2 10U — Acciaio inox",
+      "finitura": "acciaio",
+      "colore_ral": "—",
+      "materiale": "acciaio",
+      "codice": "7405371"
+     }
+    ],
+    "box": [
+     {
+      "codice": "7407578",
+      "tipo": "MT9 9I",
+      "desc": "9 moduli Modul45®",
+      "altezza_min": 105,
+      "pavimenti_ok": [
+       "flottante",
+       "massetto"
+      ],
+      "nota": "Altezza min. installazione: 105mm"
+     },
+     {
+      "codice": "7407579",
+      "tipo": "MT9 12I",
+      "desc": "3 file da 4 Modul45® (12 totali)",
+      "altezza_min": 95,
+      "pavimenti_ok": [
+       "flottante",
+       "massetto"
+      ],
+      "nota": "Altezza min. installazione: 95mm"
+     }
+    ],
+    "scatole_massetto": [
+     {
+      "codice": "7410068",
+      "tipo": "UZD 80125 250-4",
+      "desc": "Regolazione h 80–125mm",
+      "h_min": 80,
+      "h_max": 125
+     },
+     {
+      "codice": "7410070",
+      "tipo": "UZD 120165 250-4M",
+      "desc": "Regolazione h 120–165mm",
+      "h_min": 120,
+      "h_max": 165
+     },
+     {
+      "codice": "7410072",
+      "tipo": "UZD 160205 250-4",
+      "desc": "Regolazione h 160–205mm",
+      "h_min": 160,
+      "h_max": 205
+     }
+    ],
+    "altezze": {
+     "flottante": "min. 95mm (MT9 12I) oppure min. 105mm (MT9 9I)"
+    }
+   }
+  ]
+ },
+ "GRAF9": {
+  "label": "GRAF 9",
+  "famiglia": "GES",
+  "forma": "rotonda",
+  "dimensione": "Ø 325 mm",
+  "ip_chiuso": "IP45",
+  "ip_aperto": "IP20",
+  "carico": "5 kN",
+  "rivestimento_max": "4 mm (solo versione BA3)",
+  "note": "Solo massetto. Uscita cavi tubo telescopico. DUG 350-3 R9 sempre obbligatorio.",
+  "pavimenti": [
+   "massetto"
+  ],
+  "tipo": "gruppi",
+  "gruppi": [
+   {
+    "id": "NR",
+    "label": "Coperchio non rivestibile",
+    "sottotitolo": "Finitura colore — nessun accessorio coperchio aggiuntivo",
+    "righe": [
+     {
+      "label": "GRAF9-2 U 7011 — Grigio ferro RAL 7011",
+      "finitura": "grigio",
+      "colore_ral": "RAL 7011",
+      "materiale": "plastica",
+      "codice": "7405746"
+     },
+     {
+      "label": "GRAF9-2 U 9011 — Nero grafite RAL 9011",
+      "finitura": "nero",
+      "colore_ral": "RAL 9011",
+      "materiale": "plastica",
+      "codice": "7405750"
+     }
+    ],
+    "box": [
+     {
+      "codice": "7429196",
+      "tipo": "GTI 14I",
+      "desc": "14 dispositivi standard Italia",
+      "altezza_min": 110,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": "Altezza min. installazione: 110mm"
+     },
+     {
+      "codice": "7407579",
+      "tipo": "MT9 12I",
+      "desc": "3 file da 4 Modul45® (12 totali)",
+      "altezza_min": 100,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": "Altezza min. installazione: 100mm (ipotetico)"
+     }
+    ],
+    "scatole_massetto": [
+     {
+      "codice": "7410074",
+      "tipo": "UZD 80125 350-4",
+      "desc": "Regolazione h 80–125mm",
+      "h_min": 80,
+      "h_max": 125
+     },
+     {
+      "codice": "7410076",
+      "tipo": "UZD 120165 350-4M",
+      "desc": "Regolazione h 120–165mm",
+      "h_min": 120,
+      "h_max": 165
+     },
+     {
+      "codice": "7410078",
+      "tipo": "UZD 160205 350-4",
+      "desc": "Regolazione h 160–205mm",
+      "h_min": 160,
+      "h_max": 205
+     }
+    ],
+    "accessorio_sempre": {
+     "codice": "7400549",
+     "tipo": "DUG 350-3 R9",
+     "desc": "Telaio di montaggio — sempre obbligatorio"
+    },
+    "altezze": {
+     "massetto": "dipende da box e scatola scelti"
+    }
+   },
+   {
+    "id": "BA3",
+    "label": "Coperchio rivestibile — BA3",
+    "sottotitolo": "Inox rivestibile fino a 4mm — richiede coperchio 7428140 (obbligatorio)",
+    "righe": [
+     {
+      "label": "GRAF9-2 BA3 — Inox rivestibile 4mm",
+      "finitura": "inox",
+      "colore_ral": "—",
+      "materiale": "acciaio inox",
+      "codice": "7405743"
+     }
+    ],
+    "accessorio_obbligatorio": {
+     "codice": "7428140",
+     "tipo": "Coperchio uscita cavi telescopica",
+     "desc": "Obbligatorio con versione BA3",
+     "qty": 1,
+     "nota": "Coperchio uscita cavi telescopica — obbligatorio con BA3"
+    },
+    "box": [
+     {
+      "codice": "7429196",
+      "tipo": "GTI 14I",
+      "desc": "14 dispositivi standard Italia",
+      "altezza_min": 110,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": "Altezza min. installazione: 110mm"
+     },
+     {
+      "codice": "7407579",
+      "tipo": "MT9 12I",
+      "desc": "3 file da 4 Modul45® (12 totali)",
+      "altezza_min": 100,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": "Altezza min. installazione: 100mm (ipotetico)"
+     }
+    ],
+    "scatole_massetto": [
+     {
+      "codice": "7410074",
+      "tipo": "UZD 80125 350-4",
+      "desc": "Regolazione h 80–125mm",
+      "h_min": 80,
+      "h_max": 125
+     },
+     {
+      "codice": "7410076",
+      "tipo": "UZD 120165 350-4M",
+      "desc": "Regolazione h 120–165mm",
+      "h_min": 120,
+      "h_max": 165
+     },
+     {
+      "codice": "7410078",
+      "tipo": "UZD 160205 350-4",
+      "desc": "Regolazione h 160–205mm",
+      "h_min": 160,
+      "h_max": 205
+     }
+    ],
+    "accessorio_sempre": {
+     "codice": "7400549",
+     "tipo": "DUG 350-3 R9",
+     "desc": "Telaio di montaggio — sempre obbligatorio"
+    },
+    "altezze": {
+     "massetto": "dipende da box e scatola scelti"
+    }
+   }
+  ]
+ },
+ "UDHOME_ONE": {
+  "label": "UDHOME-ONE",
+  "famiglia": "UDHOME",
+  "forma": "quadrata",
+  "dimensione": "140×140 mm",
+  "ip_chiuso": "IP40",
+  "ip_aperto": "IP20",
+  "carico": "15 kN",
+  "rivestimento_max": "Non rivestibile o 15 mm (per variante)",
+  "note": "All-in-one. 1 Modul45 preinstallato. Uscita laterale classica (GV/GM) o Angel-Hair spazzola ruotabile (BN). Accessori interni opzionali: DTP UH1 C (keystone dati) o MT UH1 2M45 (2 Modul45). Accessorio H: HE 60UH2 per +10÷+60 mm.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "colonne": [
+   "Torretta",
+   "Accessori interni",
+   "Accessorio H"
+  ],
+  "righe": [
+   {
+    "label": "Inox – Riv. 15mm – Uscita laterale classica",
+    "finitura": "inox",
+    "riv": 15,
+    "uscita": "laterale",
+    "codici": [
+     "7368282",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME-ONE GV15",
+     "DTP UH1 C / MT UH1 2M45 (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Inox – Non rivestibile – Uscita laterale classica",
+    "finitura": "inox",
+    "riv": 0,
+    "uscita": "laterale",
+    "codici": [
+     "7368280",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME-ONE GV",
+     "DTP UH1 C / MT UH1 2M45 (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Ottone – Riv. 15mm – Uscita laterale classica",
+    "finitura": "ottone",
+    "riv": 15,
+    "uscita": "laterale",
+    "codici": [
+     "7368286",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME-ONE GM15",
+     "DTP UH1 C / MT UH1 2M45 (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Ottone – Non rivestibile – Uscita laterale classica",
+    "finitura": "ottone",
+    "riv": 0,
+    "uscita": "laterale",
+    "codici": [
+     "7368284",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME-ONE GM",
+     "DTP UH1 C / MT UH1 2M45 (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Inox – Riv. 15mm – Uscita Angel-Hair (spazzola ruotabile)",
+    "finitura": "inox",
+    "riv": 15,
+    "uscita": "angel-hair",
+    "codici": [
+     "7368357",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME-ONE BN15",
+     "DTP UH1 C / MT UH1 2M45 (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Inox – Non rivestibile – Uscita Angel-Hair (spazzola ruotabile)",
+    "finitura": "inox",
+    "riv": 0,
+    "uscita": "angel-hair",
+    "codici": [
+     "7368356",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME-ONE BN",
+     "DTP UH1 C / MT UH1 2M45 (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   }
+  ],
+  "accessori_interni": [
+   {
+    "codice": "7368494",
+    "tipo": "DTP UH1 C",
+    "desc": "Aggiunge 1 presa dati keystone (affianca il Modul45)"
+   },
+   {
+    "codice": "7368485",
+    "tipo": "MT UH1 2M45",
+    "desc": "Sostituisce il telaio interno — permette 2 Modul45"
+   }
+  ],
+  "accessori_interni_esclusivi": true,
+  "accessorio_h": {
+   "codice": "7368418",
+   "tipo": "HE 60UH2",
+   "desc": "Accessorio altezza: +10÷+60 mm"
+  },
+  "altezze": {
+   "massetto": "75–105 mm (+ HE 60UH2: fino a +60 mm)",
+   "flottante": "75–105 mm (+ HE 60UH2: fino a +60 mm)"
+  }
+ },
+ "UDHOME2": {
+  "label": "UDHOME 2",
+  "famiglia": "UDHOME",
+  "forma": "quadrata",
+  "dimensione": "140×140 mm",
+  "ip_chiuso": "IP40 (lat.) / IP65 (tubo teles.)",
+  "ip_aperto": "IP20",
+  "carico": "15 kN",
+  "rivestimento_max": "Non rivestibile o 15 mm (per variante)",
+  "note": "All-in-one. 2 Modul45 preinstallati. Versione tubo telescopico: IP65 anche con spina inserita. Accessorio opzionale: DT UH2 C (aggiunge 2 keystone dati).",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "colonne": [
+   "Torretta",
+   "Accessori interni",
+   "Accessori H"
+  ],
+  "righe": [
+   {
+    "label": "Inox – Riv. 15mm – Uscita laterale classica",
+    "finitura": "inox",
+    "riv": 15,
+    "uscita": "laterale",
+    "codici": [
+     "7368340",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME2 GV15",
+     "DT UH2 C (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Inox – Non rivestibile – Uscita laterale classica",
+    "finitura": "inox",
+    "riv": 0,
+    "uscita": "laterale",
+    "codici": [
+     "7368342",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME2 GV",
+     "DT UH2 C (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Ottone – Riv. 15mm – Uscita laterale classica",
+    "finitura": "ottone",
+    "riv": 15,
+    "uscita": "laterale",
+    "codici": [
+     "7368346",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME2 GM15",
+     "DT UH2 C (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Ottone – Non rivestibile – Uscita laterale classica",
+    "finitura": "ottone",
+    "riv": 0,
+    "uscita": "laterale",
+    "codici": [
+     "7368348",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME2 GM",
+     "DT UH2 C (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Inox – Non rivestibile – Uscita laterale VT2 (IP superiore)",
+    "finitura": "inox",
+    "riv": 0,
+    "uscita": "laterale-vt2",
+    "codici": [
+     "7427097",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME2 VT2 — IP superiore",
+     "DT UH2 C (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Inox – Riv. 15mm – Uscita Angel-Hair (spazzola ruotabile)",
+    "finitura": "inox",
+    "riv": 15,
+    "uscita": "angel-hair",
+    "codici": [
+     "7368353",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME2 BN15",
+     "DT UH2 C (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   },
+   {
+    "label": "Inox – Non rivestibile – Uscita Angel-Hair (spazzola ruotabile)",
+    "finitura": "inox",
+    "riv": 0,
+    "uscita": "angel-hair",
+    "codici": [
+     "7368352",
+     "—",
+     "—"
+    ],
+    "note_righe": [
+     "UDHOME2 BN",
+     "DT UH2 C (opz.)",
+     "HE 60UH2 (opz.)"
+    ]
+   }
+  ],
+  "accessori_interni": [
+   {
+    "codice": "7368474",
+    "tipo": "DT UH2 C",
+    "desc": "Aggiunge 2 prese dati keystone (affianca i 2 Modul45 preinstallati)"
+   }
+  ],
+  "accessorio_h": {
+   "codice": "7368418",
+   "tipo": "HE 60UH2",
+   "desc": "Accessorio altezza: +10÷+60 mm"
+  },
+  "altezze": {
+   "massetto": "100–130 mm (+ HE 60UH2: fino a +60 mm)",
+   "flottante": "100–130 mm (+ HE 60UH2: fino a +60 mm)"
+  }
+ },
+ "UDHOME4": {
+  "label": "UDHOME 4",
+  "famiglia": "UDHOME",
+  "forma": "quadrata",
+  "dimensione": "199×199 mm",
+  "ip_chiuso": "IP40",
+  "ip_aperto": "IP20",
+  "carico": "3 kN",
+  "rivestimento_max": "15 mm",
+  "note": "Versioni Inox con box pre-montato (4 disp. ITA o 6 Modul45). Versione Ottone vuota, equipaggiabile con MT4 6I. Coperchio rivestibile 15 mm. Accessorio altezza HE60 UDHOME4 per +10÷+60 mm.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "tipo": "gruppi",
+  "gruppi": [
+   {
+    "id": "I4",
+    "label": "Inox – Box 4 dispositivi ITA pre-montato",
+    "sottotitolo": "4 prese standard italiano — box incluso, nessuna scelta aggiuntiva",
+    "righe": [
+     {
+      "label": "Inox – Riv. 15mm – 4 disp. ITA",
+      "finitura": "inox",
+      "riv": 15,
+      "codice": "7427074"
+     }
+    ],
+    "box_fisso": {
+     "codice": null,
+     "tipo": "Box I4",
+     "desc": "4 dispositivi standard Italia (pre-montato)"
+    },
+    "altezze": {
+     "massetto": "110–140 mm",
+     "flottante": "110–140 mm"
+    }
+   },
+   {
+    "id": "6I",
+    "label": "Inox – Box 6 Modul45 pre-montato",
+    "sottotitolo": "6 Modul45® — box incluso, nessuna scelta aggiuntiva",
+    "righe": [
+     {
+      "label": "Inox – Riv. 15mm – 6 Modul45",
+      "finitura": "inox",
+      "riv": 15,
+      "codice": "7427230"
+     }
+    ],
+    "box_fisso": {
+     "codice": null,
+     "tipo": "MT4 6I",
+     "desc": "6 Modul45® (pre-montato)"
+    },
+    "altezze": {
+     "massetto": "110–125 mm",
+     "flottante": "110–125 mm"
+    }
+   },
+   {
+    "id": "VUOTA",
+    "label": "Ottone – Vuota (box a scelta)",
+    "sottotitolo": "Coperchio ottone riv. 15mm — scegli il box portafrutti",
+    "righe": [
+     {
+      "label": "Ottone – Riv. 15mm – Vuota",
+      "finitura": "ottone",
+      "riv": 15,
+      "codice": "7427236"
+     }
+    ],
+    "box": [
+     {
+      "codice": "7407577",
+      "tipo": "MT4 6I",
+      "desc": "6 Modul45®",
+      "altezza_min": 110,
+      "pavimenti_ok": [
+       "massetto",
+       "flottante"
+      ]
+     }
+    ],
+    "altezze": {
+     "massetto": "110–125 mm",
+     "flottante": "110–125 mm"
+    }
+   }
+  ],
+  "accessorio_h": {
+   "codice": "7427440",
+   "tipo": "HE60 UDHOME4",
+   "desc": "Accessorio altezza: +10÷+60 mm"
+  }
+ },
+ "UDHOME9": {
+  "label": "UDHOME 9",
+  "famiglia": "UDHOME",
+  "forma": "quadrata",
+  "dimensione": "243×243 mm",
+  "ip_chiuso": "IP40",
+  "ip_aperto": "IP20",
+  "carico": "3 kN",
+  "rivestimento_max": "15 mm",
+  "note": "Versioni Inox con box pre-montato (14 ITA o 12 Modul45). Versioni vuote (Ottone/Inox) equipaggiabili con MT45 v0 + ×2 7408670 (8 Modul45) o GTI 14I (12 ITA, solo Ottone). Coperchio rivestibile 15 mm.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "tipo": "gruppi",
+  "gruppi": [
+   {
+    "id": "I14",
+    "label": "Inox – Box 14 dispositivi ITA pre-montato",
+    "sottotitolo": "Fino a 14 prese standard italiano — box incluso, nessuna scelta aggiuntiva",
+    "righe": [
+     {
+      "label": "Inox – Riv. 15mm – 14 disp. ITA",
+      "finitura": "inox",
+      "riv": 15,
+      "codice": "7427076"
+     }
+    ],
+    "box_fisso": {
+     "codice": null,
+     "tipo": "Box I14",
+     "desc": "Fino a 14 dispositivi standard Italia (pre-montato)"
+    },
+    "altezze": {
+     "massetto": "110–140 mm",
+     "flottante": "110–140 mm"
+    }
+   },
+   {
+    "id": "I12",
+    "label": "Inox – Box 12 Modul45 pre-montato",
+    "sottotitolo": "3 file da 4 Modul45® (12 totali) — box incluso, nessuna scelta aggiuntiva",
+    "righe": [
+     {
+      "label": "Inox – Riv. 15mm – 12 Modul45",
+      "finitura": "inox",
+      "riv": 15,
+      "codice": "7427323"
+     }
+    ],
+    "box_fisso": {
+     "codice": null,
+     "tipo": "MT9 I12",
+     "desc": "3 file da 4 Modul45® — 12 totali (pre-montato)"
+    },
+    "altezze": {
+     "massetto": "110–125 mm",
+     "flottante": "110–125 mm"
+    }
+   },
+   {
+    "id": "VUOTA_OTT",
+    "label": "Ottone – Vuota (box a scelta)",
+    "sottotitolo": "Coperchio ottone riv. 15mm — scegli il box portafrutti",
+    "righe": [
+     {
+      "label": "Ottone – Riv. 15mm – Vuota",
+      "finitura": "ottone",
+      "riv": 15,
+      "codice": "7427328"
+     }
+    ],
+    "box": [
+     {
+      "codice": "7408698",
+      "tipo": "MT45 v0",
+      "desc": "Fino a 8 Modul45® (richiede ×2 pz art. 7408670)",
+      "altezza_min": 110,
+      "pavimenti_ok": [
+       "massetto",
+       "flottante"
+      ]
+     },
+     {
+      "codice": "7407579",
+      "tipo": "MT9 12I",
+      "desc": "3 file da 4 Modul45® (12 totali)",
+      "altezza_min": 110,
+      "pavimenti_ok": [
+       "massetto",
+       "flottante"
+      ]
+     },
+     {
+      "codice": "7429196",
+      "tipo": "GTI 14I",
+      "desc": "Fino a 14 dispositivi standard Italia",
+      "altezza_min": 110,
+      "pavimenti_ok": [
+       "massetto",
+       "flottante"
+      ]
+     }
+    ],
+    "accessorio_obbligatorio_per_box": {
+     "7408698": {
+      "codice": "7408670",
+      "tipo": "Acc. MT45 v0",
+      "desc": "Accessorio completamento MT45 v0",
+      "qty": 2
+     }
+    },
+    "altezze": {
+     "massetto": "110–125 mm",
+     "flottante": "110–125 mm"
+    }
+   }
+  ],
+  "accessorio_h": {
+   "codice": "7427444",
+   "tipo": "HE60 UDHOME9",
+   "desc": "Accessorio altezza: +10÷+60 mm"
+  }
+ },
+ "CASS_LIV_4": {
+  "label": "Cassetta livellabile 4 / R4",
+  "famiglia": "Cassette livellabili",
+  "forma": "quadrata o rotonda",
+  "dimensione": "4: 199×199mm  |  R4: Ø 214mm",
+  "ip_chiuso": "IP40 (lat.) / IP66 (tubo teles.)",
+  "ip_aperto": "IP20",
+  "carico": "3 kN / 20 kN heavy",
+  "rivestimento_max": "20 o 25 mm",
+  "note": "Con piedini. Altezza regolazione: riv. 20mm → 105–150mm; riv. 25mm → 110–155mm. Versione tubo telescopico da completare con coperchio TUK2 GV art. 7428140.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "colonne": [
+   "Torretta",
+   "Cop. tubo (se tubo)",
+   "Box portafrutti",
+   "Accessori massetto"
+  ],
+  "righe": [
+   {
+    "label": "Dim. 4 quadrata – Inox – Cieca (RKN3) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7408950",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 4 VS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Inox – Cieca (RKN3) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7408954",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 4 VS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Inox – Uscita laterale (RKSN2) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409208",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 4 VS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Inox – Uscita laterale (RKSN2) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409210",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 4 VS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Inox – Tubo telescopico (RKFN3) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "tubo",
+    "codici": [
+     "7408960",
+     "7428140",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKFN3 4 VS 20",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Inox – Tubo telescopico (RKFN3) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "tubo",
+    "codici": [
+     "7408962",
+     "7428140",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKFN3 4 VS 25",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Ottone – Cieca (RKN3) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7408952",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 4 MS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Ottone – Cieca (RKN3) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7408956",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 4 MS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Ottone – Uscita laterale (RKSN2) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409202",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 4 MS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Ottone – Uscita laterale (RKSN2) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409204",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 4 MS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Inox – Cieca (RKR2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7409088",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKR2 4V 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Inox – Cieca (RKR2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7409090",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKR2 4V 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Inox – Uscita laterale (RKS2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409258",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKS2 R4 V20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Inox – Uscita laterale (RKS2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409260",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKS2 R4 V25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Inox – Tubo telescopico (RKFR2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "tubo",
+    "codici": [
+     "7409422",
+     "7428140",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKFR2 4 V20",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Inox – Tubo telescopico (RKFR2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "tubo",
+    "codici": [
+     "7409424",
+     "7428140",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKFR2 4 V25",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Ottone – Cieca (RKR2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7409082",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKR2 4M 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Ottone – Cieca (RKR2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7409084",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKR2 4M 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Ottone – Uscita laterale (RKS2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409252",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKS2 R4 M20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Ottone – Uscita laterale (RKS2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409254",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKS2 R4 M25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   }
+  ],
+  "box": [
+   {
+    "codice": "7429194",
+    "tipo": "GTI 4",
+    "desc": "Fino a 4 dispositivi standard Italia",
+    "pavimenti_ok": [
+     "massetto",
+     "flottante"
+    ]
+   },
+   {
+    "codice": "7407577",
+    "tipo": "MT4 6I",
+    "desc": "Fino a 6 Modul45®",
+    "pavimenti_ok": [
+     "massetto",
+     "flottante"
+    ]
+   }
+  ],
+  "estensioni": [
+   {
+    "codice": "⚠7410134",
+    "desc": "Accessorio altezza fino a 240mm"
+   },
+   {
+    "codice": "⚠7410136",
+    "desc": "Accessorio altezza fino a 320mm"
+   }
+  ],
+  "piedini": [
+   {
+    "codice": "7405814",
+    "tipo": "RK NEV2 70",
+    "hMin": 100,
+    "hMax": 150,
+    "desc": "Piedini alternativi — livellamento 100–150mm"
+   },
+   {
+    "codice": "7405815",
+    "tipo": "RK NEV2 110",
+    "hMin": 140,
+    "hMax": 190,
+    "desc": "Piedini alternativi — livellamento 140–190mm"
+   },
+   {
+    "codice": "7405816",
+    "tipo": "RK NEV2 150",
+    "hMin": 180,
+    "hMax": 230,
+    "desc": "Piedini alternativi — livellamento 180–230mm"
+   },
+   {
+    "codice": "7405817",
+    "tipo": "RK NEV2 190",
+    "hMin": 220,
+    "hMax": 270,
+    "desc": "Piedini alternativi — livellamento 220–270mm"
+   },
+   {
+    "codice": "7405818",
+    "tipo": "RK NEV2 230",
+    "hMin": 260,
+    "hMax": 310,
+    "desc": "Piedini alternativi — livellamento 260–310mm"
+   },
+   {
+    "codice": "7405819",
+    "tipo": "RK NEV2 270",
+    "hMin": 300,
+    "hMax": 355,
+    "desc": "Piedini alternativi — livellamento 300–355mm"
+   }
+  ],
+  "altezze": {
+   "flottante": "riv. 20mm: 105–150mm  |  riv. 25mm: 110–155mm",
+   "massetto": "riv. 20mm: 105–150mm  |  riv. 25mm: 110–155mm"
+  }
+ },
+ "CASS_LIV_9": {
+  "label": "Cassetta livellabile 9 / R9",
+  "famiglia": "Cassette livellabili",
+  "forma": "quadrata o rotonda",
+  "dimensione": "9: 243×243mm  |  R9: Ø 304mm",
+  "ip_chiuso": "IP40 (lat.) / IP66 (tubo teles.)",
+  "ip_aperto": "IP20",
+  "carico": "3 kN / 20 kN heavy",
+  "rivestimento_max": "20 o 25 mm",
+  "note": "Con piedini. Altezza regolazione: riv. 20mm → 105–150mm; riv. 25mm → 110–155mm. Versione tubo telescopico da completare con coperchio TUK2 GV art. 7428140.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "colonne": [
+   "Torretta",
+   "Cop. tubo (se tubo)",
+   "Box portafrutti",
+   "Accessori flottante",
+   "Accessori massetto"
+  ],
+  "righe": [
+   {
+    "label": "Dim. 9 quadrata – Inox – Cieca (RKN3) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7408970",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 9 VS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Inox – Cieca (RKN3) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7408974",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 9 VS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Inox – Uscita laterale (RKSN2) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409218",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 9 VS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Inox – Uscita laterale (RKSN2) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409220",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 9 VS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Inox – Tubo telescopico (RKFN3) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "tubo",
+    "codici": [
+     "7408980",
+     "7428140",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKFN3 9 VS 20",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Inox – Tubo telescopico (RKFN3) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "tubo",
+    "codici": [
+     "7408982",
+     "7428140",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKFN3 9 VS 25",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Ottone – Cieca (RKN3) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7408972",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 9 MS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Ottone – Cieca (RKN3) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7408976",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKN3 9 MS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Ottone – Uscita laterale (RKSN2) – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409212",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 9 MS 20",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Ottone – Uscita laterale (RKSN2) – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409214",
+     "—",
+     "—",
+     "7400467"
+    ],
+    "note_righe": [
+     "RKSN2 9 MS 25",
+     "",
+     "scegli box ↓",
+     "DUG 250-3 9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Inox – Cieca (RKR2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7409128",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKR2 9V 20",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Inox – Cieca (RKR2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7409130",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKR2 9V 25",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Inox – Uscita laterale (RKS2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409278",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKS2 R9 V20",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Inox – Uscita laterale (RKS2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409280",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKS2 R9 V25",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Inox – Tubo telescopico (RKFR2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "tubo",
+    "codici": [
+     "7409430",
+     "7428140",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKFR2 9 V20",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Inox – Tubo telescopico (RKFR2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "tubo",
+    "codici": [
+     "7409432",
+     "7428140",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKFR2 9 V25",
+     "TUK2 GV (obbl.)",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Ottone – Cieca (RKR2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "cieca",
+    "codici": [
+     "7409122",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKR2 9M 20",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Ottone – Cieca (RKR2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "cieca",
+    "codici": [
+     "7409124",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKR2 9M 25",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Ottone – Uscita laterale (RKS2) – Riv. 20mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409272",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKS2 R9 M20",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Ottone – Uscita laterale (RKS2) – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "ottone",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "7409274",
+     "—",
+     "—",
+     "7400549"
+    ],
+    "note_righe": [
+     "RKS2 R9 M25",
+     "",
+     "scegli box ↓",
+     "DUG 350-3 R9"
+    ]
+   }
+  ],
+  "box": [
+   {
+    "codice": "7429196",
+    "tipo": "GTI 14",
+    "desc": "Fino a 14 dispositivi standard Italia",
+    "pavimenti_ok": [
+     "massetto",
+     "flottante"
+    ]
+   },
+   {
+    "codice": "7407579",
+    "tipo": "MT9 12I",
+    "desc": "3 file da 4 Modul45® (12 totali)",
+    "pavimenti_ok": [
+     "massetto",
+     "flottante"
+    ]
+   },
+   {
+    "codice": "7408698",
+    "tipo": "MT45 V0",
+    "desc": "Fino a 8 Modul45® (richiede ×2 pz art. 7408670)",
+    "pavimenti_ok": [
+     "massetto",
+     "flottante"
+    ]
+   }
+  ],
+  "accessorio_obbligatorio_per_box": {
+   "7408698": {
+    "codice": "7408670",
+    "tipo": "Acc. MT45 V0",
+    "desc": "Completamento MT45 V0",
+    "qty": 2
+   }
+  },
+  "estensioni": [
+   {
+    "codice": "⚠7410134",
+    "desc": "Accessorio altezza fino a 240mm"
+   },
+   {
+    "codice": "⚠7410136",
+    "desc": "Accessorio altezza fino a 320mm"
+   }
+  ],
+  "piedini": [
+   {
+    "codice": "7405814",
+    "tipo": "RK NEV2 70",
+    "hMin": 100,
+    "hMax": 150,
+    "desc": "Piedini alternativi — livellamento 100–150mm"
+   },
+   {
+    "codice": "7405815",
+    "tipo": "RK NEV2 110",
+    "hMin": 140,
+    "hMax": 190,
+    "desc": "Piedini alternativi — livellamento 140–190mm"
+   },
+   {
+    "codice": "7405816",
+    "tipo": "RK NEV2 150",
+    "hMin": 180,
+    "hMax": 230,
+    "desc": "Piedini alternativi — livellamento 180–230mm"
+   },
+   {
+    "codice": "7405817",
+    "tipo": "RK NEV2 190",
+    "hMin": 220,
+    "hMax": 270,
+    "desc": "Piedini alternativi — livellamento 220–270mm"
+   },
+   {
+    "codice": "7405818",
+    "tipo": "RK NEV2 230",
+    "hMin": 260,
+    "hMax": 310,
+    "desc": "Piedini alternativi — livellamento 260–310mm"
+   },
+   {
+    "codice": "7405819",
+    "tipo": "RK NEV2 270",
+    "hMin": 300,
+    "hMax": 355,
+    "desc": "Piedini alternativi — livellamento 300–355mm"
+   }
+  ],
+  "altezze": {
+   "flottante": "riv. 20mm: 105–150mm  |  riv. 25mm: 110–155mm",
+   "massetto": "riv. 20mm: 105–150mm  |  riv. 25mm: 110–155mm"
+  }
+ },
+ "DISACC_4": {
+  "label": "Cassetta disaccoppiata 4 / R4",
+  "famiglia": "Cassette disaccoppiate",
+  "forma": "quadrata o rotonda",
+  "dimensione": "4: 199×199mm  |  R4: Ø 214mm",
+  "ip_chiuso": "IP40 (lat.) / IP66 (tubo teles.)",
+  "ip_aperto": "IP20",
+  "carico": "3 kN",
+  "rivestimento_max": "20 o 25 mm",
+  "note": "Senza piedini. Altezza min. 90mm. Flottante: culla DUG OBBLIGATORIA. ⚠ Accessorio flottante NON disponibile per versione R4 rotonda.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "colonne": [
+   "Torretta",
+   "Cop. tubo (se tubo)",
+   "Box portafrutti",
+   "Accessori flottante",
+   "Accessori massetto"
+  ],
+  "righe": [
+   {
+    "label": "Dim. 4 quadrata – Inox – Uscita laterale – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "⚠7408810",
+     "—",
+     "⚠7407577",
+     "7428544",
+     "⚠7410540"
+    ],
+    "note_righe": [
+     "",
+     "",
+     "MT4 6I / GT I4",
+     "DUG RK UAN 5 (verificato)",
+     "NW 250-3 QK"
+    ]
+   },
+   {
+    "label": "Dim. 4 quadrata – Inox – Uscita laterale – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "⚠7408812",
+     "—",
+     "⚠7407577",
+     "7428544",
+     "⚠7410540"
+    ],
+    "note_righe": [
+     "",
+     "",
+     "MT4 6I / GT I4",
+     "DUG RK UAN 5",
+     "NW 250-3 QK"
+    ]
+   },
+   {
+    "label": "Dim. R4 rotonda – Inox – Uscita laterale – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "⚠7408820",
+     "—",
+     "⚠7407577",
+     "⚠N/D",
+     "⚠7410556"
+    ],
+    "note_righe": [
+     "",
+     "",
+     "MT4 6I / GT I4",
+     "NON DISPONIBILE per rotonda",
+     "NW 350-3 RK"
+    ]
+   }
+  ],
+  "avviso_rotonda_flottante": true,
+  "altezze": {
+   "massetto": "90mm min.",
+   "flottante": "90mm min."
+  }
+ },
+ "DISACC_9": {
+  "label": "Cassetta disaccoppiata 9 / R9",
+  "famiglia": "Cassette disaccoppiate",
+  "forma": "quadrata o rotonda",
+  "dimensione": "9: 243×243mm  |  R9: Ø 304mm",
+  "ip_chiuso": "IP40 (lat.) / IP66 (tubo teles.)",
+  "ip_aperto": "IP20",
+  "carico": "3 kN",
+  "rivestimento_max": "20 o 25 mm",
+  "note": "Senza piedini. Altezza min. 90mm. ⚠ Accessorio flottante NON disponibile per versione R9 rotonda.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "colonne": [
+   "Torretta",
+   "Cop. tubo (se tubo)",
+   "Box portafrutti",
+   "Accessori flottante",
+   "Accessori massetto"
+  ],
+  "righe": [
+   {
+    "label": "Dim. 9 quadrata – Inox – Uscita laterale – Riv. 20mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 20,
+    "uscita": "laterale",
+    "codici": [
+     "7409232",
+     "—",
+     "⚠7407578",
+     "⚠7428547",
+     "⚠7410540"
+    ],
+    "note_righe": [
+     "verificato",
+     "",
+     "MT9 9I / GT I14",
+     "DUG RK UAN 9",
+     "NW 250-3 QK"
+    ]
+   },
+   {
+    "label": "Dim. 9 quadrata – Inox – Uscita laterale – Riv. 25mm",
+    "forma": "quadrata",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "⚠7409234",
+     "—",
+     "⚠7407578",
+     "⚠7428547",
+     "⚠7410540"
+    ],
+    "note_righe": [
+     "",
+     "",
+     "MT9 9I / GT I14",
+     "DUG RK UAN 9",
+     "NW 250-3 QK"
+    ]
+   },
+   {
+    "label": "Dim. R9 rotonda – Inox – Uscita laterale – Riv. 25mm",
+    "forma": "rotonda",
+    "finitura": "inox",
+    "riv": 25,
+    "uscita": "laterale",
+    "codici": [
+     "⚠7409260",
+     "—",
+     "⚠7407578",
+     "⚠N/D",
+     "⚠7410556"
+    ],
+    "note_righe": [
+     "",
+     "",
+     "MT9 9I / GT I14",
+     "NON DISPONIBILE per rotonda",
+     "NW 350-3 RK"
+    ]
+   }
+  ],
+  "avviso_rotonda_flottante": true,
+  "altezze": {
+   "massetto": "90mm min.",
+   "flottante": "90mm min."
+  }
+ },
+ "SEMINATO": {
+  "label": "Cassetta pav. seminato",
+  "famiglia": "Seminato",
+  "forma": "rotonda o quadrata",
+  "dimensione": "Rotonda: Ø ~250 mm  |  Quadrata: ~250×250 mm",
+  "ip_chiuso": "IP40 (lat./cieco) / IP66 (tubo teles.)",
+  "ip_aperto": "IP20",
+  "carico": "20 kN",
+  "rivestimento_max": "25 mm (nella levigatura)",
+  "note": "Solo installazione su MASSETTO. Acciaio inox. Rivestimento 25 mm nella levigatura a filo. Coperchio tubo telescopico (Art. 7428140) obbligatorio con versioni tubo.",
+  "pavimenti": [
+   "massetto"
+  ],
+  "tipo": "gruppi",
+  "gruppi": [
+   {
+    "id": "QUADRATA",
+    "label": "Quadrata",
+    "sottotitolo": "Scegli la variante di coperchio e la scatola massetto in base all'altezza disponibile",
+    "righe": [
+     {
+      "label": "TRKN 9 VS 250 — Coperchio cieco – Dim. 250",
+      "finitura": "inox",
+      "uscita": "cieco",
+      "dim": "250",
+      "codice": "7409601"
+     },
+     {
+      "label": "TRKN 9 VS 350 — Coperchio cieco – Dim. 350",
+      "finitura": "inox",
+      "uscita": "cieco",
+      "dim": "350",
+      "codice": "7409621"
+     },
+     {
+      "label": "TRKSN 9 VS 250 — Uscita cavi laterale – Dim. 250",
+      "finitura": "inox",
+      "uscita": "laterale",
+      "dim": "250",
+      "codice": "7409603"
+     },
+     {
+      "label": "TRKSN 9 VS 350 — Uscita cavi laterale – Dim. 350",
+      "finitura": "inox",
+      "uscita": "laterale",
+      "dim": "350",
+      "codice": "7409623"
+     },
+     {
+      "label": "TRKFN 9 VS 250 — Tubo telescopico – Dim. 250",
+      "finitura": "inox",
+      "uscita": "tubo",
+      "dim": "250",
+      "codice": "7409605"
+     },
+     {
+      "label": "TRKFN 9 VS 350 — Tubo telescopico – Dim. 350",
+      "finitura": "inox",
+      "uscita": "tubo",
+      "dim": "350",
+      "codice": "7409625"
+     }
+    ],
+    "accessorio_obbligatorio_per_uscita": {
+     "tubo": {
+      "codice": "7428140",
+      "tipo": "TUK2 GV",
+      "desc": "Coperchio per tubo telescopico — obbligatorio",
+      "qty": 1
+     }
+    },
+    "box": [
+     {
+      "codice": "7408698",
+      "tipo": "MT45 V0",
+      "desc": "8 Modul45® (richiede ×2 pz art. 7408670)",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": "⚠ Completare con 2× art. 7408670"
+     },
+     {
+      "codice": "7429196",
+      "tipo": "GT I14",
+      "desc": "14 dispositivi standard Italia",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": ""
+     },
+     {
+      "codice": "7407578",
+      "tipo": "MT9 9I",
+      "desc": "9 Modul45®",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": ""
+     },
+     {
+      "codice": "7407579",
+      "tipo": "MT9 12I",
+      "desc": "3 file da 4 Modul45® (12 totali)",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": ""
+     }
+    ],
+    "accessorio_obbligatorio_per_box": {
+     "7408698": {
+      "codice": "7408670",
+      "tipo": "Acc. MT45 V0",
+      "desc": "Accessorio completamento MT45 V0",
+      "qty": 2
+     }
+    },
+    "scatole_massetto": [
+     {
+      "codice": "7410060",
+      "tipo": "UGD55 250-3 9R",
+      "desc": "h 55–80 mm",
+      "h_min": 55,
+      "h_max": 80,
+      "dim": "250"
+     },
+     {
+      "codice": "7410068",
+      "tipo": "UZD 80125 250-4",
+      "desc": "h 80–125 mm",
+      "h_min": 80,
+      "h_max": 125,
+      "dim": "250"
+     },
+     {
+      "codice": "7410070",
+      "tipo": "UZD 120165 250-4M",
+      "desc": "h 120–165 mm",
+      "h_min": 120,
+      "h_max": 165,
+      "dim": "250"
+     },
+     {
+      "codice": "7410072",
+      "tipo": "UZD 160205 250-4",
+      "desc": "h 160–205 mm",
+      "h_min": 160,
+      "h_max": 205,
+      "dim": "250"
+     },
+     {
+      "codice": "7410062",
+      "tipo": "UGD55 350-3 9R",
+      "desc": "h 55–80 mm",
+      "h_min": 55,
+      "h_max": 80,
+      "dim": "350"
+     },
+     {
+      "codice": "7410074",
+      "tipo": "UZD 80125 350-4",
+      "desc": "h 80–125 mm",
+      "h_min": 80,
+      "h_max": 125,
+      "dim": "350"
+     },
+     {
+      "codice": "7410076",
+      "tipo": "UZD 120165 350-4M",
+      "desc": "h 120–165 mm",
+      "h_min": 120,
+      "h_max": 165,
+      "dim": "350"
+     },
+     {
+      "codice": "7410078",
+      "tipo": "UZD 160205 350-4",
+      "desc": "h 160–205 mm",
+      "h_min": 160,
+      "h_max": 205,
+      "dim": "350"
+     }
+    ],
+    "altezze": {
+     "massetto": "dipende da scatola scelta (cassetta: 73–113 mm + 12,5 mm fisso + h scatola)"
+    }
+   },
+   {
+    "id": "ROTONDA",
+    "label": "Rotonda",
+    "sottotitolo": "Scegli la variante di coperchio e la scatola massetto in base all'altezza disponibile",
+    "righe": [
+     {
+      "label": "TRKRN 9 VS 250 — Coperchio cieco – Dim. 250",
+      "finitura": "inox",
+      "uscita": "cieco",
+      "dim": "250",
+      "codice": "7409495"
+     },
+     {
+      "label": "TRKRN 9 VS 350 — Coperchio cieco – Dim. 350",
+      "finitura": "inox",
+      "uscita": "cieco",
+      "dim": "350",
+      "codice": "7409650"
+     },
+     {
+      "label": "TRKRFN 9 VS 250 — Tubo telescopico – Dim. 250",
+      "finitura": "inox",
+      "uscita": "tubo",
+      "dim": "250",
+      "codice": "7409497"
+     },
+     {
+      "label": "TRKRFN 9 VS 350 — Tubo telescopico – Dim. 350",
+      "finitura": "inox",
+      "uscita": "tubo",
+      "dim": "350",
+      "codice": "7409651"
+     }
+    ],
+    "accessorio_obbligatorio_per_uscita": {
+     "tubo": {
+      "codice": "7428140",
+      "tipo": "TUK2 GV",
+      "desc": "Coperchio per tubo telescopico — obbligatorio",
+      "qty": 1
+     }
+    },
+    "box": [
+     {
+      "codice": "7408698",
+      "tipo": "MT45 V0",
+      "desc": "8 Modul45® (richiede ×2 pz art. 7408670)",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": "⚠ Completare con 2× art. 7408670"
+     },
+     {
+      "codice": "7429196",
+      "tipo": "GT I14",
+      "desc": "14 dispositivi standard Italia",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": ""
+     },
+     {
+      "codice": "7407578",
+      "tipo": "MT9 9I",
+      "desc": "9 Modul45®",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": ""
+     },
+     {
+      "codice": "7407579",
+      "tipo": "MT9 12I",
+      "desc": "3 file da 4 Modul45® (12 totali)",
+      "altezza_min": 85,
+      "pavimenti_ok": [
+       "massetto"
+      ],
+      "nota": ""
+     }
+    ],
+    "accessorio_obbligatorio_per_box": {
+     "7408698": {
+      "codice": "7408670",
+      "tipo": "Acc. MT45 V0",
+      "desc": "Accessorio completamento MT45 V0",
+      "qty": 2
+     }
+    },
+    "scatole_massetto": [
+     {
+      "codice": "7410060",
+      "tipo": "UGD55 250-3 9R",
+      "desc": "h 55–80 mm",
+      "h_min": 55,
+      "h_max": 80,
+      "dim": "250"
+     },
+     {
+      "codice": "7410068",
+      "tipo": "UZD 80125 250-4",
+      "desc": "h 80–125 mm",
+      "h_min": 80,
+      "h_max": 125,
+      "dim": "250"
+     },
+     {
+      "codice": "7410070",
+      "tipo": "UZD 120165 250-4M",
+      "desc": "h 120–165 mm",
+      "h_min": 120,
+      "h_max": 165,
+      "dim": "250"
+     },
+     {
+      "codice": "7410072",
+      "tipo": "UZD 160205 250-4",
+      "desc": "h 160–205 mm",
+      "h_min": 160,
+      "h_max": 205,
+      "dim": "250"
+     },
+     {
+      "codice": "7410062",
+      "tipo": "UGD55 350-3 9R",
+      "desc": "h 55–80 mm",
+      "h_min": 55,
+      "h_max": 80,
+      "dim": "350"
+     },
+     {
+      "codice": "7410074",
+      "tipo": "UZD 80125 350-4",
+      "desc": "h 80–125 mm",
+      "h_min": 80,
+      "h_max": 125,
+      "dim": "350"
+     },
+     {
+      "codice": "7410076",
+      "tipo": "UZD 120165 350-4M",
+      "desc": "h 120–165 mm",
+      "h_min": 120,
+      "h_max": 165,
+      "dim": "350"
+     },
+     {
+      "codice": "7410078",
+      "tipo": "UZD 160205 350-4",
+      "desc": "h 160–205 mm",
+      "h_min": 160,
+      "h_max": 205,
+      "dim": "350"
+     }
+    ],
+    "altezze": {
+     "massetto": "dipende da scatola scelta (cassetta: 73–113 mm + 12,5 mm fisso + h scatola)"
+    }
+   }
+  ]
+ },
+ "GES_R2": {
+  "label": "GES R2",
+  "famiglia": "GES R2",
+  "forma": "rotonda",
+  "dimensione": "Ø 140 mm",
+  "ip_chiuso": "IP66 (metallo) / IP40 (plastica)",
+  "ip_aperto": "IP20",
+  "carico": "20 kN (metallo) / 500 N (plastica)",
+  "rivestimento_max": "Non rivestibile",
+  "note": "Versioni metallo: IP66, carico 20 kN — finiture Nero, Nichel ossidato, Nichel, Ottonato, Ramato, Cromato. Versioni plastica: IP40, 500 N — Grigio ferro RAL 7011 o Nero grafite RAL 9011.",
+  "pavimenti": [
+   "massetto",
+   "flottante"
+  ],
+  "tipo": "gruppi",
+  "gruppi": [
+   {
+    "id": "LAT",
+    "label": "Uscita laterale — metallo (IP66 / 20 kN)",
+    "sottotitolo": "6 finiture disponibili — Nero, Nichel ox., Nichel, Ottonato, Ramato, Cromato",
+    "righe": [
+     {
+      "label": "Nero RAL 9005",
+      "finitura": "nero",
+      "codice": "7408847"
+     },
+     {
+      "label": "Nichel ossidato",
+      "finitura": "ni-o",
+      "codice": "7408849"
+     },
+     {
+      "label": "Nichel",
+      "finitura": "nichel",
+      "codice": "7408850"
+     },
+     {
+      "label": "Ottonato",
+      "finitura": "ottone",
+      "codice": "7408852"
+     },
+     {
+      "label": "Ramato",
+      "finitura": "rame",
+      "codice": "7408854"
+     },
+     {
+      "label": "Cromato",
+      "finitura": "cromo",
+      "codice": "7408856"
+     }
+    ],
+    "altezze": {
+     "massetto": "85–130 mm",
+     "flottante": "85–130 mm"
+    }
+   },
+   {
+    "id": "TUBO",
+    "label": "Tubo telescopico — metallo (IP66 / 20 kN)",
+    "sottotitolo": "6 finiture disponibili — Nero, Nichel ox., Nichel, Ottonato, Ramato, Cromato",
+    "righe": [
+     {
+      "label": "Nero RAL 9005",
+      "finitura": "nero",
+      "codice": "7408857"
+     },
+     {
+      "label": "Nichel ossidato",
+      "finitura": "ni-o",
+      "codice": "7408859"
+     },
+     {
+      "label": "Nichel",
+      "finitura": "nichel",
+      "codice": "7408860"
+     },
+     {
+      "label": "Ottonato",
+      "finitura": "ottone",
+      "codice": "7408862"
+     },
+     {
+      "label": "Ramato",
+      "finitura": "rame",
+      "codice": "7408864"
+     },
+     {
+      "label": "Cromato",
+      "finitura": "cromo",
+      "codice": "7408866"
+     }
+    ],
+    "altezze": {
+     "massetto": "85–130 mm",
+     "flottante": "85–130 mm"
+    }
+   },
+   {
+    "id": "CIECO",
+    "label": "Cieco con chiave sicurezza ottagonale — metallo (IP66 / 20 kN)",
+    "sottotitolo": "5 finiture disponibili — Nichel ox., Nichel, Ottonato, Ramato, Cromato",
+    "righe": [
+     {
+      "label": "Nichel ossidato",
+      "finitura": "ni-o",
+      "codice": "7408869"
+     },
+     {
+      "label": "Nichel",
+      "finitura": "nichel",
+      "codice": "7408870"
+     },
+     {
+      "label": "Ottonato",
+      "finitura": "ottone",
+      "codice": "7408872"
+     },
+     {
+      "label": "Ramato",
+      "finitura": "rame",
+      "codice": "7408874"
+     },
+     {
+      "label": "Cromato",
+      "finitura": "cromo",
+      "codice": "7408876"
+     }
+    ],
+    "altezze": {
+     "massetto": "85–130 mm",
+     "flottante": "85–130 mm"
+    }
+   },
+   {
+    "id": "PLAST",
+    "label": "Versione plastica (IP40 / 500 N)",
+    "sottotitolo": "Grigio ferro RAL 7011 o Nero grafite RAL 9011 — uscita laterale o cieco",
+    "righe": [
+     {
+      "label": "Grigio ferro RAL 7011 – Uscita laterale",
+      "finitura": "grigio",
+      "uscita": "laterale",
+      "codice": "7405082"
+     },
+     {
+      "label": "Nero grafite RAL 9011 – Uscita laterale",
+      "finitura": "nero",
+      "uscita": "laterale",
+      "codice": "7408084"
+     },
+     {
+      "label": "Grigio ferro RAL 7011 – Cieco",
+      "finitura": "grigio",
+      "uscita": "cieco",
+      "codice": "7405086"
+     },
+     {
+      "label": "Nero grafite RAL 9011 – Cieco",
+      "finitura": "nero",
+      "uscita": "cieco",
+      "codice": "7405088"
+     }
+    ],
+    "altezze": {
+     "massetto": "85–130 mm",
+     "flottante": "85–130 mm"
+    }
+   }
+  ]
+ },
+ "CASS_TEL": {
+  "label": "Cassette telaio",
+  "famiglia": "Cassette telaio",
+  "forma": "quadrata",
+  "dimensione": "288×288mm (coperchio)",
+  "ip_laterale": "IP40",
+  "ip_tubo": "IP44",
+  "ip_cieco": "IP44",
+  "carico": "⚠ da verificare",
+  "rivestimento_max": "fino a 28mm",
+  "note": "Solo pavimento massetto. Da completare con scatola da massetto. Altezza totale = altezza scatola massetto + spessore rivestimento cassetta. Uscita laterale: integrare con Art. 7407995 (uscita cavi inox). Tubo telescopico: integrare con Art. 7428140 (coperchio TUK2 GV). Coperchio cieco: solo pozzetto di ispezione, nessun box portafrutti.",
+  "pavimenti": [
+   "massetto"
+  ],
+  "scatole_massetto": [
+   {
+    "codice": "7410060",
+    "tipo": "UGD55 250-3 9R",
+    "desc": "H 55–80mm",
+    "h_min": 55,
+    "h_max": 80
+   },
+   {
+    "codice": "7410068",
+    "tipo": "UZD 80125 250-4",
+    "desc": "H 80–125mm",
+    "h_min": 80,
+    "h_max": 125
+   },
+   {
+    "codice": "7410070",
+    "tipo": "UZD 120165 250-4",
+    "desc": "H 120–165mm",
+    "h_min": 120,
+    "h_max": 165
+   },
+   {
+    "codice": "7410072",
+    "tipo": "UZD 160205 250-4",
+    "desc": "H 160–205mm",
+    "h_min": 160,
+    "h_max": 205
+   }
+  ],
+  "box": [],
+  "box_note": "Da definire — in attesa di specifica compatibilità dispositivi.",
+  "colonne": [
+   "Torretta",
+   "Accessorio uscita",
+   "Scatola massetto",
+   "Box portafrutti"
+  ],
+  "righe": [
+   {
+    "label": "Inox – Uscita laterale (RKS 2V2) – Riv. fino a 13mm",
+    "uscita": "laterale",
+    "riv_max": 13,
+    "codici": [
+     "7406550",
+     "7407995",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKS 2V2 15",
+     "Uscita cavi inox (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Uscita laterale (RKS 2V2) – Riv. fino a 18mm",
+    "uscita": "laterale",
+    "riv_max": 18,
+    "codici": [
+     "7406554",
+     "7407995",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKS 2V2 20",
+     "Uscita cavi inox (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Uscita laterale (RKS 2V2) – Riv. fino a 23mm",
+    "uscita": "laterale",
+    "riv_max": 23,
+    "codici": [
+     "7406558",
+     "7407995",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKS 2V2 25",
+     "Uscita cavi inox (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Uscita laterale (RKS 2V2) – Riv. fino a 28mm",
+    "uscita": "laterale",
+    "riv_max": 28,
+    "codici": [
+     "7406560",
+     "7407995",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKS 2V2 30",
+     "Uscita cavi inox (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Tubo telescopico (RKF3 V2) – Riv. fino a 8mm",
+    "uscita": "tubo",
+    "riv_max": 8,
+    "codici": [
+     "7409402",
+     "7428140",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKF3 V2 10",
+     "TUK2 GV (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Tubo telescopico (RKF3 V2) – Riv. fino a 13mm",
+    "uscita": "tubo",
+    "riv_max": 13,
+    "codici": [
+     "7409404",
+     "7428140",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKF3 V2 15",
+     "TUK2 GV (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Tubo telescopico (RKF3 V2) – Riv. fino a 18mm",
+    "uscita": "tubo",
+    "riv_max": 18,
+    "codici": [
+     "7409406",
+     "7428140",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKF3 V2 20",
+     "TUK2 GV (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Tubo telescopico (RKF3 V2) – Riv. fino a 23mm",
+    "uscita": "tubo",
+    "riv_max": 23,
+    "codici": [
+     "7409408",
+     "7428140",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKF3 V2 25",
+     "TUK2 GV (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Tubo telescopico (RKF3 V2) – Riv. fino a 28mm",
+    "uscita": "tubo",
+    "riv_max": 28,
+    "codici": [
+     "7409410",
+     "7428140",
+     "→ scegli",
+     "⚠ da definire"
+    ],
+    "note_righe": [
+     "RKF3 V2 30",
+     "TUK2 GV (obbl.)",
+     "",
+     ""
+    ]
+   },
+   {
+    "label": "Inox – Coperchio cieco (RK V2) – Riv. fino a 8mm",
+    "uscita": "cieco",
+    "riv_max": 8,
+    "codici": [
+     "7406000",
+     "—",
+     "→ scegli",
+     "—"
+    ],
+    "note_righe": [
+     "RK V2 10",
+     "Solo ispezione",
+     "",
+     "Nessun box"
+    ]
+   },
+   {
+    "label": "Inox – Coperchio cieco (RK V2) – Riv. fino a 13mm",
+    "uscita": "cieco",
+    "riv_max": 13,
+    "codici": [
+     "7406004",
+     "—",
+     "→ scegli",
+     "—"
+    ],
+    "note_righe": [
+     "RK V2 15",
+     "Solo ispezione",
+     "",
+     "Nessun box"
+    ]
+   },
+   {
+    "label": "Inox – Coperchio cieco (RK V2) – Riv. fino a 18mm",
+    "uscita": "cieco",
+    "riv_max": 18,
+    "codici": [
+     "7406008",
+     "—",
+     "→ scegli",
+     "—"
+    ],
+    "note_righe": [
+     "RK V2 20",
+     "Solo ispezione",
+     "",
+     "Nessun box"
+    ]
+   },
+   {
+    "label": "Inox – Coperchio cieco (RK V2) – Riv. fino a 23mm",
+    "uscita": "cieco",
+    "riv_max": 23,
+    "codici": [
+     "7406012",
+     "—",
+     "→ scegli",
+     "—"
+    ],
+    "note_righe": [
+     "RK V2 25",
+     "Solo ispezione",
+     "",
+     "Nessun box"
+    ]
+   },
+   {
+    "label": "Inox – Coperchio cieco (RK V2) – Riv. fino a 28mm",
+    "uscita": "cieco",
+    "riv_max": 28,
+    "codici": [
+     "7406016",
+     "—",
+     "→ scegli",
+     "—"
+    ],
+    "note_righe": [
+     "RK V2 30",
+     "Solo ispezione",
+     "",
+     "Nessun box"
+    ]
+   }
+  ]
+ }
+}
