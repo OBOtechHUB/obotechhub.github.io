@@ -22,6 +22,35 @@ function svgPng(v, larghezzaPx) {
 
 const SOURCE_URL = 'https://www.obo-bettermann.com/out/media/01-100_MA_Magic_PV_Mount_Wechselrichterrahmen_EN_2026-07-28.pdf';
 const LS_KEY = 'wrr-zavorra-v3';
+
+/* Vento del sito, NTC 2018 par. 3.3 (stessi valori della pagina Vento di Progettazione LPS):
+   Tab. 3.3.I zone (vb0 m/s, a0 m, ks) e Tab. 3.3.II categorie di esposizione (kr, z0, zmin). */
+const ZONE_VENTO = [
+  { zona: 1, vb0: 25, a0: 1000, ks: 0.4, d: "Valle d'Aosta, Piemonte, Lombardia, Trentino-Alto Adige, Veneto, Friuli Venezia Giulia (non Trieste)" },
+  { zona: 2, vb0: 25, a0: 750, ks: 0.45, d: 'Emilia-Romagna' },
+  { zona: 3, vb0: 27, a0: 500, ks: 0.37, d: 'Toscana, Marche, Umbria, Lazio, Abruzzo, Molise, Puglia, Campania, Basilicata, Calabria (non Reggio Calabria)' },
+  { zona: 4, vb0: 28, a0: 500, ks: 0.36, d: 'Sicilia e provincia di Reggio Calabria' },
+  { zona: 5, vb0: 28, a0: 750, ks: 0.4, d: 'Sardegna orientale' },
+  { zona: 6, vb0: 28, a0: 500, ks: 0.36, d: 'Sardegna occidentale' },
+  { zona: 7, vb0: 28, a0: 1000, ks: 0.54, d: 'Liguria' },
+  { zona: 8, vb0: 30, a0: 1500, ks: 0.5, d: 'Provincia di Trieste' },
+  { zona: 9, vb0: 31, a0: 500, ks: 0.32, d: 'Isole minori e mare aperto' },
+];
+const CATEGORIE_VENTO = [
+  { cat: 'I', kr: 0.17, z0: 0.01, zmin: 2, d: 'mare aperto o costa a meno di 2 km' },
+  { cat: 'II', kr: 0.19, z0: 0.05, zmin: 4, d: 'aperta campagna, pochi ostacoli' },
+  { cat: 'III', kr: 0.2, z0: 0.1, zmin: 5, d: 'zona suburbana, industriale o rurale con ostacoli' },
+  { cat: 'IV', kr: 0.22, z0: 0.3, zmin: 8, d: 'area urbana con edifici alti' },
+  { cat: 'V', kr: 0.23, z0: 0.7, zmin: 12, d: 'centro di grande città' },
+];
+/** Velocità di picco (km/h) alla quota z: vb = vb0·ca, qp = ½·ρ·vb²·ce(z), v = radice(2·qp/ρ). */
+export function ventoSito(zona, altitudine, cat, z) {
+  const Z = ZONE_VENTO.find((x) => x.zona === Number(zona)) || ZONE_VENTO[0], C = CATEGORIE_VENTO.find((x) => x.cat === cat) || CATEGORIE_VENTO[2];
+  const as = Math.max(0, Number(altitudine) || 0), ca = as <= Z.a0 ? 1 : 1 + Z.ks * (Math.min(as, 1500) / Z.a0 - 1);
+  const vb = Z.vb0 * ca, zz = Math.max(Number(z) || 0, C.zmin), l = Math.log(zz / C.z0), ce = C.kr * C.kr * l * (7 + l);
+  const qp = 0.5 * 1.25 * vb * vb * ce;
+  return { vb, ca, ce, qp, kmh: Math.sqrt((2 * qp) / 1.25) * 3.6 };
+}
 /** telai a 45°: in arrivo, non ancora a catalogo; mettere true quando escono */
 const PITCH_45_DISPONIBILE = false;
 const CHECKS = [
@@ -58,7 +87,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
   <div class="grid">
     <div class="col">
       <section class="panel">
-        <h2>1 · Telaio e sito</h2>
+        <h2>1 · Scegli il telaio e il vento</h2>
         <div class="row">
           <label class="f" for="${u}-frame">Telaio
             <select id="${u}-frame">
@@ -74,10 +103,34 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           </div>
         </div>
         <div class="fit" id="${u}-fit" role="status" hidden></div>
-        <label class="f" for="${u}-wind">Velocità vento di progetto (km/h)
+        <label class="f" for="${u}-wind">Velocità del vento di progetto: raffica di picco (km/h)
           <input type="number" id="${u}-wind" min="0" max="250" step="1" style="max-width:200px">
         </label>
-        <p class="hint">La velocità del vento va presa dal progetto dell'impianto (zona, quota, esposizione, altezza). Le tabelle OBO coprono 80–170 km/h.</p>
+        <p class="hint">Se il progettista dell'impianto ti ha dato la velocità, scrivila qui. Le tabelle OBO coprono 80–170 km/h.</p>
+        <details class="adv" id="${u}-sito">
+          <summary>Non conosci la velocità? Calcolala dal luogo <span class="hint">· NTC 2018, come l'Eurocodice 1</span></summary>
+          <div class="adv-body">
+            <label class="f" for="${u}-sZona">Dove si trova l'impianto
+              <select id="${u}-sZona">${ZONE_VENTO.map((z) => `<option value="${z.zona}">Zona ${z.zona} · ${esc(z.d)}</option>`).join('')}</select>
+            </label>
+            <div class="row">
+              <label class="f" for="${u}-sAlt">Altitudine sul mare (m)
+                <input type="number" id="${u}-sAlt" min="0" max="3000" step="10">
+              </label>
+              <label class="f" for="${u}-sZ">Altezza del telaio dal suolo (m)
+                <input type="number" id="${u}-sZ" min="0" max="200" step="0.5">
+              </label>
+            </div>
+            <label class="f" for="${u}-sCat">Intorno all'impianto
+              <select id="${u}-sCat">${CATEGORIE_VENTO.map((c) => `<option value="${c.cat}">${c.cat} · ${esc(c.d)}</option>`).join('')}</select>
+            </label>
+            <p class="hint">Per l'altezza conta il punto più alto del telaio: a terra circa 1,5 m, su un tetto l'altezza del tetto più 1,5 m.</p>
+            <div class="fit" id="${u}-sEsito" role="status"></div>
+            <div class="tools"><button type="button" class="btn" id="${u}-sUsa"></button></div>
+            <p class="hint">Calcolo semplificato: velocità di riferimento della zona corretta per l'altitudine, coefficiente di esposizione della categoria, senza effetti del rilievo (colline, crinali) né coefficienti di forma. In casi particolari vale il calcolo del progettista.</p>
+          </div>
+        </details>
+        <p class="hint"><strong>Da dove vengono i numeri.</strong> La zavorra viene dalle tabelle OBO delle istruzioni di montaggio (cap. 11, tabelle 5–8): per ogni velocità del vento e area delle apparecchiature danno i chili. L'app non rifà un calcolo strutturale secondo l'Eurocodice: la pressione mostrata è solo q = ½ · 1,25 · v².</p>
         <details class="adv">
           <summary>Opzioni di calcolo <span class="hint">· facoltative, il default segue il manuale OBO</span></summary>
           <div class="adv-body">
@@ -99,7 +152,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       </section>
 
       <section class="panel">
-        <h2>2 · Apparecchiature sul telaio</h2>
+        <h2>2 · Cosa monti sul telaio</h2>
         <div class="dev-table">
           <table>
             <thead><tr>
@@ -116,7 +169,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       </section>
 
       <section class="panel">
-        <h2>Promemoria · da verificare a parte</h2>
+        <h2>Da verificare a parte (non entra nel calcolo)</h2>
         <p class="hint">Solo un promemoria: queste voci non entrano nel calcolo. Le tabelle OBO considerano solo vento, area frontale e peso.</p>
         <ul class="check">${CHECKS.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
       </section>
@@ -124,7 +177,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
 
     <div class="col">
       <section class="panel" aria-live="polite">
-        <h2>3 · Risultato</h2>
+        <h2>3 · Quanta zavorra serve</h2>
         <div class="banner" id="${u}-banner" hidden></div>
         <div class="result" id="${u}-resBox">
           <span class="lbl" id="${u}-resLbl">Zavorra totale</span>
@@ -136,7 +189,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       </section>
 
       <section class="panel">
-        <h2>4 · Tabella per tutte le velocità del vento</h2>
+        <h2>4 · Zavorra per le altre velocità del vento</h2>
         <p class="callout" id="${u}-windHint"></p>
         <div class="wind-table">
           <table>
@@ -172,7 +225,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
 
       ${storage ? `
       <section class="panel" id="${u}-progettoBox">
-        <h2>5 · Progetto (salvataggio automatico)</h2>
+        <h2>5 · Salva nel progetto</h2>
         <div id="${u}-login" hidden>
           <p class="hint" style="margin-bottom:8px">Entra in OBO Hub con il tuo account per salvare i calcoli nei progetti e ritrovarli su qualsiasi dispositivo.</p>
           <p><a class="btn primary" href="../">Vai a OBO Hub</a></p>
@@ -300,7 +353,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       add('Calcolo', `${fmt(r.table, 1)} − ${fmt(r.weight, 1)} = ${fmt(r.raw, 1)} kg${r.raw < 0 ? ' → 0' : ''}${fr.double ? ` ÷ 2 = ${fmt(r.perSide, 1)} kg/lato` : ''}`);
       q('resLbl').textContent = `Zavorra totale a ${fmt(state.wind)} km/h`;
       q('resBig').innerHTML = `${fmt(Math.ceil(r.total))} <small>kg${r.paren ? ' *' : ''}</small>`;
-      q('resSub').textContent = fr.double ? `${fmt(Math.ceil(r.perSide))} kg per lato, distribuiti in modo uniforme` : 'su un unico telaio monofacciale';
+      q('resSub').textContent = (fr.double ? `${fmt(Math.ceil(r.perSide))} kg per lato, distribuiti in modo uniforme` : 'da mettere sul telaio, distribuiti in modo uniforme') + ` · tabella OBO ${fmt(r.table)} kg meno ${fmt(r.weight)} kg di apparecchiature`;
       if (r.paren) alerts.push(['warn', '* Valore tra parentesi nella tabella OBO: da verificare mediante calcolo strutturale specifico.']);
       if (r.raw < 0) alerts.push(['info', 'Il peso delle apparecchiature supera il valore di tabella: zavorra aggiuntiva non necessaria secondo il metodo OBO.']);
       if (r.cp.note) alerts.push(['info', r.cp.note]);
@@ -352,6 +405,22 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
   q('p45').onclick = () => { if (PITCH_45_DISPONIBILE) { setPitch(45); update(); } };
   q('frame').onchange = (e) => setFrame(e.target.value);
   q('wind').oninput = (e) => { state.wind = parseFloat(e.target.value) || 0; update(); };
+  // vento dal luogo (NTC 2018): aiuto per chi non ha la velocità di progetto
+  const sito = () => (state.sito = Object.assign({ zona: 1, alt: 200, cat: 'III', z: 1.5 }, state.sito || {}));
+  function renderSito() {
+    const S = sito(), r = ventoSito(S.zona, S.alt, S.cat, S.z), v = Math.ceil(r.kmh);
+    q('sZona').value = String(S.zona); q('sCat').value = S.cat;
+    if (document.activeElement !== q('sAlt')) q('sAlt').value = S.alt;
+    if (document.activeElement !== q('sZ')) q('sZ').value = S.z;
+    q('sEsito').innerHTML = `<p><strong>Raffica di picco: ${fmt(v)} km/h</strong> (pressione ${fmt(r.qp / 1000, 2)} kN/m²)</p><p>Velocità di riferimento ${fmt(r.vb, 1)} m/s${r.ca > 1 ? `, già aumentata per l'altitudine (× ${fmt(r.ca, 2)})` : ''}; coefficiente di esposizione ${fmt(r.ce, 2)}.</p>${v > 170 ? '<p><strong>Oltre le tabelle OBO (170 km/h):</strong> serve un calcolo specifico.</p>' : ''}`;
+    q('sUsa').textContent = `Usa ${fmt(v)} km/h come vento di progetto`;
+    q('sUsa').onclick = () => { state.wind = v; q('wind').value = v; update(); };
+  }
+  q('sZona').onchange = (e) => { sito().zona = Number(e.target.value); renderSito(); update(); };
+  q('sCat').onchange = (e) => { sito().cat = e.target.value; renderSito(); update(); };
+  q('sAlt').oninput = (e) => { sito().alt = parseFloat(e.target.value) || 0; renderSito(); update(); };
+  q('sZ').oninput = (e) => { sito().z = parseFloat(e.target.value) || 0; renderSito(); update(); };
+  renderSito();
   q('mode').onchange = (e) => { state.calcMode = e.target.value; update(); };
   q('addInv').onclick = () => { state.devs.push({ d: 'Inverter', side: 'A', w: 0, h: 0, kg: 0, q: 1 }); renderDevs(); update(); };
   q('addDev').onclick = () => { state.devs.push({ d: 'Quadro di stringa', side: 'A', w: 0, h: 0, kg: 0, q: 1 }); renderDevs(); update(); };
@@ -432,7 +501,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     function carica(row) {
       if (row.stato) { state = { ...defaultState(), ...structuredClone(row.stato) }; save(); }
       if (!FRAMES[state.frame]) state.frame = 'F1500';
-      q('frame').value = state.frame; q('wind').value = state.wind; q('mode').value = state.calcMode; setPitch(state.pitch);
+      q('frame').value = state.frame; q('wind').value = state.wind; renderSito(); q('mode').value = state.calcMode; setPitch(state.pitch);
       q('cliente').value = row.cliente || ''; q('progetto').value = row.progetto || ''; q('codice').value = row.codice_crm || '';
       q('lps').value = row.progetto_lps && lps.some((p) => p.id === row.progetto_lps) ? row.progetto_lps : '';
       ricordaAperto(row.id);

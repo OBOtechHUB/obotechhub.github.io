@@ -2,6 +2,23 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json). Le novità solo grafiche (animazioni, sigle, aspetto) non si mostrano: restano conservate in 'grafica_non_mostrata'.",
   "aggiornamenti": [
     {
+      "id": "2026-11-27-zavorra-4",
+      "data": "2026-11-27",
+      "app": "zavorra",
+      "titolo": "Zavorra WRR: vento dal luogo e passi più chiari",
+      "voci": [
+        "Se non conosci la velocità del vento, la calcoli dal luogo: zona d'Italia, altitudine, altezza del telaio dal suolo e tipo di zona intorno (NTC 2018), poi la usi con un tocco",
+        "Titoli dei passi riscritti (scegli il telaio e il vento, cosa monti, quanta zavorra serve) e risultato con il conto in chiaro: tabella OBO meno peso delle apparecchiature",
+        "Spiegato da dove vengono i numeri: tabelle OBO delle istruzioni di montaggio"
+      ],
+      "titolo_en": "WRR ballast: wind from the site and clearer steps",
+      "voci_en": [
+        "If you don't know the wind speed, compute it from the site: Italian wind zone, altitude, frame height above ground and surroundings (NTC 2018), then use it with one tap",
+        "Step titles rewritten and result with the sum spelled out: OBO table minus equipment weight",
+        "Explains where the numbers come from: the OBO tables in the mounting instructions"
+      ]
+    },
+    {
       "id": "2026-11-27-hub-13",
       "data": "2026-11-27",
       "app": "hub",
