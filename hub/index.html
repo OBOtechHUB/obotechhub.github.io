@@ -673,6 +673,8 @@
         return;
       }
       segnaInviata(scheda, r.creata_il || new Date().toISOString());
+      // email all'amministratore (funzione richiesta-accesso): una sola volta per richiesta, senza bloccare chi la manda
+      if (!r.gia && r.id) supabase.functions.invoke("richiesta-accesso", { body: { tipo: "app", id: r.id } }).then(() => {}, () => {});
       esito.textContent = r.gia ? (en ? "You had already asked: the request is waiting for the administrator." : "L'avevi già chiesta: la richiesta è in attesa dell'amministratore.") : (en ? "Request sent. The administrator will enable the app for you." : "Richiesta inviata. L'amministratore abiliterà l'app per te.");
       b.remove(); f.querySelector("label")?.remove();
     });
