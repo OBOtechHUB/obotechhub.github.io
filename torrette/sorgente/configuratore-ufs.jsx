@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 // Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
 import DATI_TABELLA from "./dati-sistemi.json";
 
@@ -1440,7 +1440,7 @@ function CodicePill({ codice }) {
   const isNA = clean === "N/D";
   const dsUrl = DATASHEET[clean];
   return (
-    <span style={{ display:"inline-flex", alignItems:"center", gap:4 }}>
+    <span title={isWarn ? "⚠ Codice da verificare sul listino OBO prima di ordinare" : undefined} style={{ display:"inline-flex", alignItems:"center", gap:4 }}>
       <span style={{
         fontFamily: "'Courier New', monospace",
         fontSize: 12, fontWeight: 700,
@@ -2167,6 +2167,7 @@ function Riepilogo({ righe, altezza, estensioni, piedini, colore, onReset, onAdd
       {estensioni && estensioni.length > 0 && (
         <div style={{ marginTop:14 }}>
           <div style={{ fontSize:10, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:6 }}>Accessori opzionali — aumento altezza</div>
+          <div style={{ fontSize:12, color:"#7a4b00", marginBottom:6 }}>⚠ davanti a un codice = da verificare sul listino OBO prima di ordinare.</div>
           {estensioni.map((e, i) => (
             <div key={i} style={{ background:"#f5f5f5", border:"1px solid #EEE", padding:"7px 12px", marginBottom:4, display:"flex", alignItems:"center", gap:10, borderRadius:2 }}>
               <CodicePill codice={e.codice} />
