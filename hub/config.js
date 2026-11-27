@@ -9,6 +9,8 @@ export const CONFIG = {
 
 // Le app di OBO Hub. Per aggiungerne una nuova basta un elemento in più.
 // abilitataSe: riceve le sezioni abilitate all'utente (Admin → Utenti → Cambia sezioni).
+// intro / intro_en: cosa fa l'app, per chi non l'ha ancora abilitata (scheda bloccata con «Richiedi l'accesso»).
+// richiesta: id dell'app nella richiesta all'amministratore (tabella richieste_app, SQL 21); senza, l'app non si richiede.
 export const APP = [
   {
     id: "progetti",
@@ -29,6 +31,9 @@ export const APP = [
     descrizione: "Protezione contro i fulmini secondo CEI EN IEC 62305: analisi del rischio, captazione 3D, calate, terra, SPD, computo e particolari OBO.",
     icona: "fulmine",
     url: "/appOBOtechHUB/",
+    richiesta: "lps",
+    intro: ["Analisi del rischio secondo CEI EN IEC 62305-2 e Guida CEI 81-29, con la relazione in Word.", "Edificio in 3D da disegni CAD, PDF, IFC o dalla mappa; captazione con sfera rotolante, maglia e aste OBO.", "Calate, distanza di separazione, isCon, impianto di terra e scelta degli SPD.", "Computo dei materiali con i codici OBO, particolari costruttivi e tavole per AutoCAD e ZWCAD.", "Impianti d'antenna su palo con calate isolate isCon."],
+    intro_en: ["Risk assessment to IEC 62305-2 and the Italian CEI 81-29 guide, with the Word report.", "3D building from CAD, PDF, IFC or the map; air-termination with rolling sphere, mesh and OBO rods.", "Down conductors, separation distance, isCon, earthing and SPD selection.", "Bill of materials with OBO codes, construction details and drawings for AutoCAD and ZWCAD.", "Antenna masts with isCon insulated down conductors."],
     abilitataSe: (sezioni) => sezioni.some((s) => !s.startsWith("app_")),
   },
   {
@@ -39,6 +44,9 @@ export const APP = [
     descrizione: "Chi lavora su cosa, quanto è carico e dove c'è spazio per darsi una mano: progetti, giorni, ore e offerte.",
     icona: "carichi",
     url: "mappa-carichi/",
+    richiesta: "mappa",
+    intro: ["Progetti dell'ufficio tecnico con giorni e ore per persona.", "Mappa dei carichi, calendario e cruscotto: chi è libero e chi è pieno.", "Daily task: le mail tecniche e commerciali gestite ogni giorno.", "Offerte e report delle attività dal CRM."],
+    intro_en: ["Technical office projects with days and hours per person.", "Workload map, calendar and dashboard: who is free and who is busy.", "Daily tasks: technical and sales emails handled each day.", "Quotes and activity reports from the CRM."],
     abilitataSe: (sezioni) => sezioni.includes("app_mappa"),
   },
   {
@@ -50,6 +58,9 @@ export const APP = [
     icona: "prodotti",
     url: "prodotti/",
     // si abilita per persona (Amministrazione → Utenti → Cambia sezioni → Prodotti OBO); i visitatori la vedono
+    richiesta: "prodotti",
+    intro: ["Tutto il catalogo obo.it, aggiornato ogni notte.", "Ricerca per nome, codice o più codici insieme.", "Nuovi prodotti in evidenza e download in Excel."],
+    intro_en: ["The whole obo.it catalogue, updated every night.", "Search by name, code or several codes at once.", "New products highlighted and Excel download."],
     abilitataSe: (sezioni) => sezioni.includes("app_prodotti"),
   },
   {
@@ -72,6 +83,9 @@ export const APP = [
     icona: "zavorra",
     url: "zavorra-wrr/",
     // si abilita per persona (Amministrazione → Utenti → Cambia sezioni → Zavorra telai inverter WRR)
+    richiesta: "zavorra",
+    intro: ["Zavorra dei telai OBO Magic PV Mount WRR con le tabelle delle istruzioni OBO.", "Vento della località, apparecchiature appese al telaio e controllo del carico.", "Calcoli salvati nei progetti e relazione per il cliente in Word."],
+    intro_en: ["Ballast for OBO Magic PV Mount WRR frames using the OBO instruction tables.", "Local wind, equipment hung on the frame and load check.", "Calculations saved in projects and a Word report for the customer."],
     abilitataSe: (sezioni) => sezioni.includes("app_zavorra"),
   },
   {

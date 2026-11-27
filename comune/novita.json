@@ -2,6 +2,23 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json). Le novità solo grafiche (animazioni, sigle, aspetto) non si mostrano: restano conservate in 'grafica_non_mostrata'.",
   "aggiornamenti": [
     {
+      "id": "2026-11-27-hub-13",
+      "data": "2026-11-27",
+      "app": "hub",
+      "titolo": "Tutte le app visibili e richiesta di accesso",
+      "voci": [
+        "Nella pagina iniziale vedi anche le app di OBO Hub che non hai ancora: un lucchetto le distingue",
+        "Toccando una di queste app leggi cosa puoi fare e mandi la richiesta di accesso all'amministratore, anche con una nota",
+        "Dopo l'invio la scheda mostra «Richiesta inviata» con la data; quando l'amministratore approva, l'app si apre normalmente"
+      ],
+      "titolo_en": "All apps visible and access request",
+      "voci_en": [
+        "The home page also shows the OBO Hub apps you don't have yet, marked with a padlock",
+        "Tap one of them to read what it does and send an access request to the administrator, with an optional note",
+        "After sending, the card shows «Request sent» with the date; once the administrator approves, the app opens normally"
+      ]
+    },
+    {
       "id": "2026-11-27-tutte-1",
       "data": "2026-11-27",
       "app": "tutte",

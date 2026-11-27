@@ -78,6 +78,24 @@
   .app .vai { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
   .app.bloccata { background: var(--grigio); }
   .app.bloccata .piede { color: var(--tenue); }
+  button.app.bloccata { font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; }
+  button.app.bloccata:hover { border-color: var(--arancio); }
+  .app.bloccata .simbolo { background: var(--sfondo); color: var(--tenue); }
+  .app.bloccata .lucchetto { position: absolute; top: 12px; right: 12px; color: var(--tenue); }
+  .app.bloccata .lucchetto svg { width: 16px; height: 16px; }
+  .app.bloccata.inviata .piede { color: var(--arancio); }
+  .app.bloccata .vai { white-space: normal; }
+  .altre-app { grid-column: 1 / -1; margin: 10px 0 0; color: var(--tenue); font-size: calc(14px * var(--zoom, 1)); }
+  .finestra-app { position: fixed; inset: 0; z-index: 2147482000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(20,24,28,.55); }
+  .finestra-app > div { width: 100%; max-width: 480px; max-height: 90svh; overflow-y: auto; border: .8px solid var(--bordo); border-radius: 16px; padding: 20px; background: var(--sfondo); color: var(--testo); box-shadow: 0 18px 48px rgba(0,0,0,.35); }
+  .finestra-app h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: calc(19px * var(--zoom, 1)); }
+  .finestra-app h2 .simbolo { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #fff4e0; color: var(--arancio); flex: none; }
+  .finestra-app h2 .simbolo svg { width: 22px; height: 22px; }
+  .finestra-app ul { margin: 12px 0; padding-left: 20px; line-height: 1.45; font-size: calc(14px * var(--zoom, 1)); }
+  .finestra-app label { display: grid; gap: 4px; font-size: calc(13px * var(--zoom, 1)); font-weight: 600; }
+  .finestra-app textarea { font: inherit; font-weight: 400; padding: 8px; border: .8px solid var(--bordo); border-radius: 10px; background: var(--sfondo); color: var(--testo); }
+  .finestra-app .azioni-f { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  .finestra-app .esito { margin: 10px 0 0; font-size: calc(13px * var(--zoom, 1)); }
   .etichetta { font-size: calc(12px * var(--zoom, 1)); font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--grigio); color: var(--tenue); }
   .vantaggi { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top: 40px; }
   .vantaggi div { padding: 16px; border-top: 3px solid var(--arancio); background: var(--grigio); border-radius: 0 0 10px 10px; }
@@ -254,6 +272,7 @@
     admin: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
     accedi: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>',
     esci: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+    lucchetto: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     richiedi: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>',
     chiave: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3M17 6l3 3M14 9l2 2"/>',
     auto: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
@@ -595,9 +614,71 @@
         <span class="piede"><span class="vai">Apri ${svg("freccia").replace("<svg", '<svg width="18" height="18"')}</span></span>`;
       griglia.appendChild(el);
     }
-    if (profilo && !mie.length) griglia.innerHTML = '<p class="caricamento">Al momento non hai strumenti abilitati. Chiedi all\'amministratore.</p>';
+    // personale OBO con account: anche le app non abilitate, con la presentazione e «Richiedi l'accesso» (SQL 21)
+    const altre = profilo && profilo.ruolo !== "visitatore" && profilo.ruolo !== "admin" ? APP.filter((a) => a.richiesta && !a.soloAdmin && !puoAprire(a, profilo)) : [];
+    if (profilo && !mie.length && !altre.length) griglia.innerHTML = '<p class="caricamento">Al momento non hai strumenti abilitati. Chiedi all\'amministratore.</p>';
+    if (altre.length) {
+      $("titolo-app").classList.remove("nascosto");
+      const nota = document.createElement("p"); nota.className = "altre-app";
+      nota.textContent = lingua === "en" ? (mie.length ? "Other OBO Hub apps: see what they do and ask the administrator for access." : "OBO Hub apps: see what they do and ask the administrator for access.") : (mie.length ? "Altre app di OBO Hub: scopri cosa fanno e chiedi l'accesso all'amministratore." : "Le app di OBO Hub: scopri cosa fanno e chiedi l'accesso all'amministratore.");
+      griglia.appendChild(nota);
+      const schede = altre.map((app) => {
+        const el = document.createElement("button"); el.type = "button"; el.className = "app bloccata";
+        el.innerHTML = `<span class="lucchetto">${svg("lucchetto")}</span><span class="simbolo">${svg(app.icona)}</span><h3>${esc(lingua === "en" && app.nome_en || app.nome)}</h3><p>${esc(lingua === "en" && app.descrizione_en || app.descrizione)}</p>
+          <span class="piede"><span class="vai">${lingua === "en" ? "Discover and request access" : "Scopri e richiedi l'accesso"}</span></span>`;
+        el.addEventListener("click", () => finestraApp(app, el));
+        griglia.appendChild(el);
+        return [app.richiesta, el];
+      });
+      richiesteInviate().then((inv) => { for (const [id, el] of schede) if (inv[id]) segnaInviata(el, inv[id]); });
+    }
     novitaProdotti(mie.some((a) => a.id === "prodotti"));
     segnaManutenzione(mie, profilo);
+  }
+
+  // ---------- richieste di accesso alle app (tabella richieste_app, SQL 21) ----------
+  async function richiesteInviate() {
+    try { const { data, error } = await supabase.from("richieste_app").select("app,creata_il").eq("stato", "in_attesa"); if (error) return {}; const o = {}; for (const r of data || []) o[r.app] = r.creata_il; return o; } catch { return {}; }
+  }
+  const dataBreve = (d) => { try { return new Date(d).toLocaleDateString(lingua === "en" ? "en-GB" : "it-IT"); } catch { return ""; } };
+  function segnaInviata(el, quando) {
+    el.classList.add("inviata");
+    el.querySelector(".vai").textContent = lingua === "en" ? `Request sent on ${dataBreve(quando)}` : `Richiesta inviata il ${dataBreve(quando)}`;
+  }
+  function finestraApp(app, scheda) {
+    const en = lingua === "en", nome = en && app.nome_en || app.nome, intro = (en && app.intro_en) || app.intro || [];
+    const inviata = scheda.classList.contains("inviata");
+    const f = document.createElement("div"); f.className = "finestra-app";
+    f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); f.setAttribute("aria-labelledby", "fa-t");
+    f.innerHTML = `<div><h2 id="fa-t"><span class="simbolo">${svg(app.icona)}</span>${esc(nome)}</h2>
+      <p style="margin:10px 0 0">${esc(en && app.descrizione_en || app.descrizione)}</p>
+      ${intro.length ? `<p style="margin:12px 0 0;font-weight:600">${en ? "What you can do" : "Cosa puoi fare"}</p><ul>${intro.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+      ${inviata ? `<p class="esito">${esc(scheda.querySelector(".vai").textContent)}. ${en ? "The administrator will enable the app for you." : "L'amministratore abiliterà l'app per te."}</p>`
+        : `<label>${en ? "Why do you need it? (optional)" : "Per cosa ti serve? (facoltativo)"}<textarea id="fa-m" rows="3" maxlength="1000"></textarea></label>`}
+      <div class="azioni-f"><button type="button" class="btn btn-chiaro" data-a="chiudi">${en ? "Close" : "Chiudi"}</button>
+      ${inviata ? "" : `<button type="button" class="btn btn-primario" data-a="invia">${svg("richiedi")}${en ? "Request access" : "Richiedi l'accesso"}</button>`}</div>
+      <p class="esito" role="status"></p></div>`;
+    const chiudi = () => { f.remove(); document.removeEventListener("keydown", tasto, true); scheda.focus(); };
+    const tasto = (e) => { if (e.key === "Escape") { e.preventDefault(); chiudi(); } };
+    f.addEventListener("click", async (e) => {
+      if (e.target === f) return chiudi();
+      const b = e.target.closest("button[data-a]"); if (!b) return;
+      if (b.dataset.a === "chiudi") return chiudi();
+      b.disabled = true; const esito = f.querySelector(".esito[role=status]");
+      let r = null, err = null;
+      try { ({ data: r, error: err } = await supabase.rpc("richiedi_app", { p: { app: app.richiesta, motivo: (f.querySelector("#fa-m")?.value || "").trim() } })); } catch (x) { err = x; }
+      if (err || !r || r.errore) {
+        b.disabled = false;
+        esito.textContent = r?.errore || (err && /richiedi_app|function|schema cache/i.test(err.message || "") ? (en ? "Requests are not active yet: ask the administrator to enable them (SQL 21)." : "Le richieste non sono ancora attive: l'amministratore deve eseguire l'SQL 21.") : (en ? "Request not sent, try again later." : "Richiesta non inviata, riprova più tardi."));
+        return;
+      }
+      segnaInviata(scheda, r.creata_il || new Date().toISOString());
+      esito.textContent = r.gia ? (en ? "You had already asked: the request is waiting for the administrator." : "L'avevi già chiesta: la richiesta è in attesa dell'amministratore.") : (en ? "Request sent. The administrator will enable the app for you." : "Richiesta inviata. L'amministratore abiliterà l'app per te.");
+      b.remove(); f.querySelector("label")?.remove();
+    });
+    document.addEventListener("keydown", tasto, true);
+    document.body.appendChild(f);
+    (f.querySelector("#fa-m") || f.querySelector("button[data-a=chiudi]")).focus();
   }
 
   // App in manutenzione (Admin → Manutenzione): etichetta sulla scheda; chi non è admin va alla pagina di manutenzione
