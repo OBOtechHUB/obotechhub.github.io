@@ -3699,7 +3699,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
   const [carrello, setCarrello] = useState(carrelloIniziale);
   useEffect(() => { if (onCarrello) onCarrello(carrello); }, [carrello]);
   const [carrelloAperto, setCarrelloAperto] = useState(false);
-  const [modalita, setModalita] = useState(carrelloIniziale.length ? "wizard" : "trova");
+  const [modalita, setModalita] = useState("trova");
   const [passoGuida, setPassoGuida] = useState(0);
   const { isMobile, isTablet } = useM();
 
