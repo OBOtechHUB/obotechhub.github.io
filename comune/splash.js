@@ -4,7 +4,7 @@
    OBO Hub = particelle che formano l'icona; Progetti = app che confluiscono nella cartella; Zavorra WRR = raffica
    di vento sul telaio; Torrette = anelli dal pavimento; Mappa carichi = calendario che si accende; Prodotti = griglia.
    Un tocco o un tasto la chiudono subito. Spenta con "riduci movimento", nei test (salvo ?fx) e con ?nofx.
-   Se in quel momento c'è il saluto di benvenuto (benvenuto.js) la sigla non parte. */
+   Se in quel momento c'è il saluto di benvenuto (benvenuto.js) la sigla non parte. Mai in Amministrazione (/admin). */
 (function () {
   var q = location.search;
   if ((window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) || /[?&]nofx\b/.test(q) || (navigator.webdriver && !/[?&]fx\b/.test(q))) return;
@@ -12,6 +12,8 @@
   var app = (tag && (tag.getAttribute("data-sigla") || tag.getAttribute("data-app"))) || "hub";
   if (/progetti\.html/.test(location.pathname)) app = "progetti";
   if (/novita\.html|privacy|condizioni/.test(location.pathname)) return;
+  // Amministrazione e manutenzione: niente sigla (Marco, 27/11/2026)
+  if (/\/admin\/?$|manutenzione-admin/.test(location.pathname)) return;
   var chiave = "obo-sigla-" + app;
   // pagina lasciata da pochi secondi nella stessa app (cambio pagina o ricarica): niente sigla
   var appena = false; try { appena = Date.now() - Number(sessionStorage.getItem(chiave) || 0) < 8000; } catch (e) {}
