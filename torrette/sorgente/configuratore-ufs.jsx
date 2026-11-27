@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 // Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
 import DATI_TABELLA from "./dati-sistemi.json";
+import Guida from "./guida.jsx";
 
 // ─────────────────────────────────────────────────────────────────
 // RESPONSIVE — hook e helpers
@@ -3698,7 +3699,8 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
   const [carrello, setCarrello] = useState(carrelloIniziale);
   useEffect(() => { if (onCarrello) onCarrello(carrello); }, [carrello]);
   const [carrelloAperto, setCarrelloAperto] = useState(false);
-  const [modalita, setModalita] = useState("wizard");
+  const [modalita, setModalita] = useState(carrelloIniziale.length ? "wizard" : "trova");
+  const [passoGuida, setPassoGuida] = useState(0);
   const { isMobile, isTablet } = useM();
 
   const [filtri, setFiltri] = useState({
@@ -3735,7 +3737,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
       <div className="ufs-barra" style={{ background: "var(--carta, #fff)", borderBottom: "1px solid var(--bordo, #dee2e6)", position: "sticky", top: 56, zIndex: 20 }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "8px 12px" : "10px 28px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           <div role="tablist" style={{ display: "flex", gap: 6 }}>
-            {[["wizard", "Configura"], ["trova", "Trova dai requisiti"]].map(([k, t]) => (
+            {[["trova", "Trova la torretta giusta"], ["wizard", "Scegli dal catalogo"]].map(([k, t]) => (
               <button key={k} role="tab" aria-selected={modalita === k} onClick={() => setModalita(k)}
                 style={{ padding: "7px 14px", borderRadius: 999, border: `1px solid ${modalita === k ? "#F39B00" : "var(--bordo, #dee2e6)"}`, background: modalita === k ? "#F39B00" : "var(--carta, #fff)", color: modalita === k ? "#fff" : "var(--testo, #212529)", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
                 {t}
@@ -3775,7 +3777,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
 
       {/* CONTENUTO */}
       {modalita === "trova" ? (
-        <FiltraSistema onSeleziona={vaiASistema} filtri={filtri} setFiltri={setFiltri} risultati={risultatiTrova} setRisultati={setRisultatiTrova} mostraRinunce={mostraRinunceTrova} setMostraRinunce={setMostraRinunceTrova} />
+        <Guida sistemi={TUTTI_SISTEMI} punteggio={punteggio} famiglie={FAMIGLIE} foto={FAMIGLIA_FOTO} Caratteristiche={Caratteristiche} filtri={filtri} setFiltri={setFiltri} passo={passoGuida} setPasso={setPassoGuida} onSeleziona={vaiASistema} onCatalogo={() => { setModalita("wizard"); reset(); }} />
       ) : (
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "16px 12px 140px" : isTablet ? "24px 20px 130px" : "32px 28px 120px" }}>
         {step === 1 && <StepFamiglia onSelect={f => { setFamiglia(f); setStep(2); }} />}
