@@ -7,7 +7,7 @@ import {
   defaultState, compute, windTable, frameFit, emailText,
 } from './calc.js';
 import { createStorage } from './storage.js';
-import { documento, paginaHTML, docxBlob } from './relazione.js';
+import { documento, paginaHTML, docxBlob, disegni } from './relazione.js';
 
 /** SVG → PNG (per il Word), larghezza in px dell'immagine nel documento */
 function svgPng(v, larghezzaPx) {
@@ -184,6 +184,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           <span class="big" id="${u}-resBig">–</span>
           <span class="sub" id="${u}-resSub"></span>
         </div>
+        <div class="disegno" id="${u}-disegno" hidden></div>
         <dl class="steps" id="${u}-steps"></dl>
         <ul class="alerts" id="${u}-alerts"></ul>
       </section>
@@ -316,6 +317,10 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     last = r;
     renderFit(r);
 
+    // disegno del telaio con le apparecchiature in scala (lo stesso della relazione)
+    let viste = []; try { viste = disegni(state); } catch { viste = []; }
+    q('disegno').hidden = !viste.length;
+    q('disegno').innerHTML = viste.map((v) => `<figure>${v.svg.replace(/ width="\d+" height="\d+"/, '')}<figcaption>${esc(v.titolo)} · ${esc(fr.name)}, apparecchiature in scala</figcaption></figure>`).join('');
     const steps = q('steps');
     steps.innerHTML = '';
     const add = (k, v) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; steps.append(dt, dd); };

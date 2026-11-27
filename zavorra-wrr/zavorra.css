@@ -3,9 +3,9 @@
    sono definite nella pagina e cambiano da sole con il tema chiaro/scuro. */
 main.contenitore { padding-top: 18px; padding-bottom: 48px; }
 .titolo-telai { margin: 4px 0 8px; font-size: calc(15px * var(--zoom, 1)); }
-.telai { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-bottom: 18px; }
+.telai { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-bottom: 18px; }
 .telaio { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: .8px solid var(--bordo); border-radius: 12px; background: var(--carta); text-align: left; cursor: pointer; color: inherit; font: inherit; }
-.telaio img { width: 56px; height: 56px; object-fit: contain; background: #fff; border-radius: 8px; flex: none; }
+.telaio img { width: 92px; height: 92px; object-fit: contain; background: #fff; border-radius: 8px; flex: none; }
 .telaio b { display: block; font-size: calc(14px * var(--zoom, 1)); }
 .telaio small { display: block; color: var(--tenue); font-size: calc(12px * var(--zoom, 1)); }
 .telaio small a { color: var(--arancio-scuro); }
@@ -95,3 +95,9 @@ main.contenitore { padding-top: 18px; padding-bottom: 48px; }
 .zwrr .sr { position: absolute; left: -9999px; }
 .zwrr textarea.copy { width: 100%; height: 220px; font-family: var(--mono); font-size: calc(13px * var(--zoom, 1)); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 @media print { .telai, .titolo-telai { display: none !important; } .zwrr section.panel { break-inside: avoid; } }
+
+/* disegno del telaio nel risultato */
+.zwrr .disegno { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.zwrr .disegno figure { margin: 0; flex: 1 1 240px; max-width: 460px; text-align: center; }
+.zwrr .disegno svg { width: 100%; height: auto; display: block; border: .8px solid var(--line); border-radius: 10px; background: #fff; }
+.zwrr .disegno figcaption { font-size: calc(12px * var(--zoom, 1)); color: var(--muted); margin-top: 4px; }

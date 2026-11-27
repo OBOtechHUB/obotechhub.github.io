@@ -38,6 +38,7 @@ jobs:
           cp .nojekyll site/
           cp mappa-carichi/index.html mappa-carichi/i18n-en.js mappa-carichi/manifest.webmanifest mappa-carichi/sw.js mappa-carichi/install.js mappa-carichi/crm-import.js mappa-carichi/icone/* site/mappa-carichi/
           cp torrette/*.html torrette/*.js site/torrette/
+          mkdir -p site/torrette/img && cp torrette/img/* site/torrette/img/
           cp zavorra-wrr/index.html zavorra-wrr/app.js zavorra-wrr/calcolatore.js zavorra-wrr/calc.js zavorra-wrr/storage.js zavorra-wrr/relazione.js zavorra-wrr/logo-obo.png zavorra-wrr/zavorra.css site/zavorra-wrr/   # Zavorra telai inverter WRR
           cp prodotti/*.html prodotti/*.js site/prodotti/ 2>/dev/null || true
           # dati dei prodotti per l'app (le cache complete restano solo nel repository)

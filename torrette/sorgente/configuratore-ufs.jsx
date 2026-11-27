@@ -1488,12 +1488,16 @@ function StepFamiglia({ onSelect }) {
               boxShadow: hover === f.id ? `0 6px 24px ${f.colore}22` : "0 1px 4px rgba(0,0,0,0.06)",
               display: "flex", flexDirection: isMobile ? "row" : "column", alignItems: isMobile ? "center" : "stretch",
             }}>
-            {/* Immagine — nascosta su mobile */}
-            {!isMobile && FAMIGLIA_IMG[f.id] && (
+            {/* Foto di come rimane installata (dalla brochure OBO "Soluzioni di design") */}
+            {FAMIGLIA_FOTO[f.id] ? (
+              <div style={{ height: isMobile ? 84 : 150, width: isMobile ? 112 : "auto", flexShrink: 0, overflow: "hidden", borderRadius: isMobile ? "0 0 0 3px" : 0, background: "#e9eef0" }}>
+                <img loading="lazy" src={FAMIGLIA_FOTO[f.id].scheda} alt={"Come rimane installata: " + f.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={e => { e.target.parentElement.style.display="none"; }} />
+              </div>
+            ) : (!isMobile && FAMIGLIA_IMG[f.id] && (
               <div style={{ height: 80, overflow: "hidden", borderRadius: "3px 3px 0 0", background: "#f5f5f5", display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #f0f0f0" }}>
                 <img referrerPolicy="no-referrer" loading="lazy" src={FAMIGLIA_IMG[f.id]} alt={f.label} style={{ maxHeight: 70, maxWidth: "100%", objectFit: "contain", padding: 6 }} onError={e => { e.target.parentElement.style.display="none"; }} />
               </div>
-            )}
+            ))}
             {/* Icona + titolo */}
             <div style={{ padding: isMobile ? "12px 14px" : "14px 18px 10px", display: "flex", alignItems: "center", gap: 10, flex: isMobile ? 1 : undefined }}>
               <div style={{ width: isMobile ? 32 : 38, height: isMobile ? 32 : 38, borderRadius: "50%", background: `${f.colore}15`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: isMobile ? 16 : 20, flexShrink: 0 }}>
@@ -1650,6 +1654,32 @@ const DATASHEET = {
 };
 
 
+// Foto di ambiente e di posa prese dalla brochure OBO "Soluzioni di design per l'installazione elettrica"
+// (ritagli in torrette/img/): scheda = foto sulla scheda della famiglia, ambiente = foto larga nel passo 2.
+const FAMIGLIA_FOTO = {
+  "GES": { scheda: "img/ges-scheda.jpg", ambiente: "img/ges-ambiente.jpg", testo: "Torretta a filo pavimento: chiusa resta solo il coperchio con il rivestimento del pavimento." },
+  "UDHOME": { scheda: "img/udhome-scheda.jpg", ambiente: "img/udhome-ambiente.jpg", dettaglio: "img/udhome-dettaglio.jpg", testo: "Presa a pavimento a scomparsa: a coperchio chiuso si vede solo la cornice e l'uscita dei cavi." },
+  "Cassette livellabili": { scheda: "img/livellabili-scheda.jpg", ambiente: "img/cassette-ambiente.jpg", dettaglio: "img/cassette-sezione.jpg", testo: "Cassetta nel massetto, regolata in altezza: il coperchio prende lo stesso rivestimento del pavimento." },
+  "Cassette telaio": { scheda: "img/telaio-scheda.jpg", ambiente: "img/cassette-ambiente.jpg", testo: "Coperchio a filo, calpestabile, con lo stesso rivestimento del pavimento." },
+  "Cassette disaccoppiate": { scheda: "img/disaccoppiate-scheda.jpg", ambiente: "img/cassette-ambiente.jpg", testo: "Cassetta con coperchio a filo del pavimento finito." },
+  "Seminato": { scheda: "img/seminato-scheda.jpg", ambiente: "img/cassette-ambiente.jpg", testo: "A pavimento finito resta visibile solo l'uscita dei cavi." },
+  "GES R2": { scheda: "img/gesr2-scheda.jpg", ambiente: "img/gesr2-ambiente.jpg", dettaglio: "img/gesr2-sezione.jpg", testo: "Torretta rotonda in metallo per carichi pesanti: a filo pavimento, ci si passa sopra anche con i veicoli." },
+};
+
+function FotoInstallata({ famigliaId, isMobile }) {
+  const f = FAMIGLIA_FOTO[famigliaId];
+  if (!f) return null;
+  return (
+    <div style={{ margin: "0 0 " + (isMobile ? 14 : 22) + "px", border: "1px solid #c5d9de", borderRadius: 3, overflow: "hidden", background: "#fff" }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row" }}>
+        <img loading="lazy" src={f.ambiente} alt="Come rimane installata" style={{ flex: "1 1 0", minWidth: 0, width: isMobile ? "100%" : undefined, height: isMobile ? 150 : 230, objectFit: "cover", display: "block" }} onError={e => { e.target.style.display="none"; }} />
+        {f.dettaglio && !isMobile && <img loading="lazy" src={f.dettaglio} alt="Particolare" style={{ width: 300, height: 230, objectFit: "cover", display: "block", borderLeft: "3px solid #fff" }} onError={e => { e.target.style.display="none"; }} />}
+      </div>
+      <div style={{ padding: isMobile ? "8px 12px" : "10px 16px", fontSize: 13, color: "#41525d" }}><b style={{ color: "#282a31" }}>Come rimane installata.</b> {f.testo}</div>
+    </div>
+  );
+}
+
 function StepSistema({ famigliaId, onSelect, onBack }) {
   const fam = FAMIGLIE.find(f => f.id === famigliaId);
   const [hover, setHover] = useState(null);
@@ -1662,6 +1692,7 @@ function StepSistema({ famigliaId, onSelect, onBack }) {
         <h2 style={{ fontSize: isMobile ? 20 : 28, fontWeight:900, color:"#282a31", margin:"0 0 4px" }}>{fam.label}</h2>
         {!isMobile && <p style={{ color:"#555", fontSize:14, margin:0 }}>Scegli il modello più adatto alle tue esigenze</p>}
       </div>
+      <FotoInstallata famigliaId={famigliaId} isMobile={isMobile} />
       <div style={{ display:"grid", gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2,1fr)" : "repeat(auto-fill,minmax(300px,1fr))", gap: isMobile ? 10 : 16 }}>
         {fam.sistemi.map(key => {
           const s = DB[key];
