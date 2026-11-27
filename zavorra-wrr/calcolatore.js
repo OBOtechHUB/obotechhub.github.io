@@ -402,7 +402,9 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
   // ---------- progetto: apertura, salvataggio automatico, collegamento a Progettazione LPS ----------
   if (storage) {
     const LS_APERTO = 'wrr-zavorra-aperto';
-    let utente = null, aperto = null, righe = [], lps = [], timer = null, inSalvataggio = false;
+    let utente = null, aperto = null, righe = [], lps = [], timer = null, inSalvataggio = false, inAttesa = false, modificato = false, pronto = false;
+    // uscita con dati non salvati nel progetto: «Attenzione: perderai i dati» (comune/avviso-uscita.js)
+    window.oboAvvisoUscita?.registra(() => !!utente && (modificato || inAttesa || inSalvataggio), () => salva(false));
     try { aperto = localStorage.getItem(LS_APERTO) || null; } catch { /* ignora */ }
     const ricordaAperto = (id) => { aperto = id; try { id ? localStorage.setItem(LS_APERTO, id) : localStorage.removeItem(LS_APERTO); } catch { /* ignora */ } };
     const nomeLps = (id) => { const p = lps.find((x) => x.id === id); return p ? [p.codice, p.nome].filter(Boolean).join(' · ') + (p.condiviso ? ' (condiviso)' : '') : ''; };
@@ -419,14 +421,14 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       const msg = q('saveMsg');
       try {
         const id = await storage.save({ ...campi(), state, result: last, table: windTable(state) });
-        ricordaAperto(id);
+        ricordaAperto(id); modificato = false;
         msg.textContent = auto ? '' : 'Salvato nel progetto.';
         mostraAperto('salvato alle ' + new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }));
         if (!auto) await elenca();
       } catch (e) { msg.textContent = 'Salvataggio non riuscito: ' + e.message; }
       finally { inSalvataggio = false; }
     }
-    autoSalva = () => { if (!aperto || !utente) return; clearTimeout(timer); timer = setTimeout(() => salva(true), 1500); };
+    autoSalva = () => { if (!utente) return; if (!aperto) { if (pronto) modificato = true; return; } clearTimeout(timer); inAttesa = true; timer = setTimeout(() => { inAttesa = false; salva(true); }, 1500); };
     function carica(row) {
       if (row.stato) { state = { ...defaultState(), ...structuredClone(row.stato) }; save(); }
       if (!FRAMES[state.frame]) state.frame = 'F1500';
@@ -436,6 +438,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       ricordaAperto(row.id);
       q('vaiProgetti').href = '../progetti.html' + (q('lps').value ? '?id=' + encodeURIComponent(q('lps').value) : '');
       mostraRel(); renderDevs(); update(); mostraAperto();
+      clearTimeout(timer); inAttesa = false; modificato = false;
     }
     function disegnaElenco() {
       const body = q('archBody'), f = q('cerca').value.trim().toLowerCase();
@@ -475,9 +478,11 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         if (daLps && lps.some((p) => p.id === daLps)) { const p = lps.find((x) => x.id === daLps); q('lps').value = daLps; q('codice').value = p.codice || ''; q('progetto').value = p.nome || ''; }
         mostraAperto();
       }
+      pronto = true;
     };
     q('save').onclick = () => salva(false);
-    q('nuovo').onclick = () => { ricordaAperto(null); ['codice', 'progetto', 'cliente'].forEach((n) => (q(n).value = '')); q('lps').value = ''; q('saveMsg').textContent = ''; mostraAperto(); disegnaElenco(); };
+    q('nuovo').onclick = () => (window.oboAvvisoUscita ? window.oboAvvisoUscita.chiedi(nuovoCalcolo) : nuovoCalcolo());
+    const nuovoCalcolo = () => { modificato = false; ricordaAperto(null); ['codice', 'progetto', 'cliente'].forEach((n) => (q(n).value = '')); q('lps').value = ''; q('saveMsg').textContent = ''; mostraAperto(); disegnaElenco(); };
     const aggLink = () => { const v = q('lps').value; q('vaiProgetti').href = '../progetti.html' + (v ? '?id=' + encodeURIComponent(v) : ''); };
     q('lps').addEventListener('change', aggLink);
     q('lps').onchange = () => { const p = lps.find((x) => x.id === q('lps').value); if (p) { if (!q('codice').value) q('codice').value = p.codice || ''; if (!q('progetto').value) q('progetto').value = p.nome || ''; } mostraAperto(); autoSalva(); };

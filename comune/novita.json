@@ -2,6 +2,17 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json). Le novità solo grafiche (animazioni, sigle, aspetto) non si mostrano: restano conservate in 'grafica_non_mostrata'.",
   "aggiornamenti": [
     {
+      "id": "2026-11-27-tutte-1",
+      "data": "2026-11-27",
+      "app": "tutte",
+      "titolo": "Avviso «Attenzione: perderai i dati» quando esci senza salvare",
+      "voci": [
+        "Zavorra WRR: se hai cambiato il calcolo e non l'hai ancora salvato nel progetto (sezione 5), uscendo dall'app compare l'avviso con «Resta qui», «Salva ed esci» o «Esci senza salvare»",
+        "Mappa carichi: lo stesso avviso se esci con un progetto o un daily task scritto ma non salvato",
+        "Vale per i link verso OBO Hub e le altre app; se chiudi o ricarichi la scheda avvisa il browser"
+      ]
+    },
+    {
       "id": "2026-11-25-zavorra-3",
       "data": "2026-11-25",
       "app": "zavorra",

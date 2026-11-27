@@ -52,8 +52,25 @@ applicaZoom(); testiFissi();
 const CHIAVE = "obo-torrette-ufs";
 let S; try { S = JSON.parse(leggi(CHIAVE) || "null"); } catch { S = null; }
 if (!S || !Array.isArray(S.carrello)) S = { progettoId: null, sol: null, carrello: [] };
-const C = { progetti: [], attivo: false, timer: null, versione: 0 };
+const C = { progetti: [], attivo: false, timer: null, versione: 0, inAttesa: false, inSalvataggio: false };
 const stato = (t) => { $("statoCloud").textContent = t; };
+const NUOVO = "__nuovo";
+// dati non salvati: carrello con qualcosa e non ancora salvato nel progetto (o salvataggio in sospeso)
+const nonSalvato = () => S.carrello.length > 0 && (!S.sol || C.inAttesa || C.inSalvataggio);
+window.oboAvvisoUscita?.registra(nonSalvato, () => salvaOra());
+function mostraSalvataggio() {
+  const chip = $("chipSalvato"), ap = $("aperto"); if (!chip) return;
+  const p = C.progetti.find((x) => x.id === S.progettoId), nomeP = p ? [p.codice, p.nome].filter(Boolean).join(" · ") : "";
+  const ok = !!S.sol && !C.inAttesa && !C.inSalvataggio;
+  chip.className = "chip " + (ok || !S.carrello.length ? "ok" : "no");
+  chip.textContent = !S.carrello.length && !S.sol ? T("Carrello vuoto", "Empty cart")
+    : ok ? T("✓ Salvato nel progetto ", "✓ Saved to project ") + nomeP
+    : S.sol ? T("Salvataggio in corso…", "Saving…") : T("⚠ Non salvato nel progetto", "⚠ Not saved to the project");
+  $("vaiSalva").hidden = ok;
+  ap.innerHTML = S.sol
+    ? `<strong>${esc(T("Configurazione aperta:", "Open configuration:"))}</strong> ${esc(S.nome || nomeSoluzione())}${nomeP ? " · " + esc(nomeP) : ""}. ${esc(T("Le modifiche si salvano da sole.", "Changes are saved automatically."))}`
+    : `<strong>${esc(T("Configurazione nuova, non ancora salvata.", "New configuration, not saved yet."))}</strong> ${esc(T("Scegli il progetto (o creane uno nuovo) e premi «Salva nel progetto»: da lì in poi si salva da sola. Se esci senza salvare perderai i dati.", "Choose the project (or create a new one) and press «Save to project»: from then on it saves automatically. If you leave without saving you will lose your data."))}`;
+}
 
 function monta() {
   // la chiave cambia quando si apre un'altra configurazione: il configuratore riparte dal carrello salvato
@@ -62,7 +79,7 @@ function monta() {
   if (!window.OBOTorrette) { stato(T("Configuratore non caricato: ricarica la pagina.", "Configurator not loaded: reload the page.")); return; }
   window.OBOTorrette.monta(box, { carrelloIniziale: S.carrello, onCarrello: (c) => { if (JSON.stringify(c) === JSON.stringify(S.carrello)) return; S.carrello = c; salva(); } });
 }
-function salva() { scrivi(CHIAVE, JSON.stringify(S)); salvaCloud(); }
+function salva() { scrivi(CHIAVE, JSON.stringify(S)); if (S.sol) salvaCloud(); mostraSalvataggio(); }
 
 const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
 function fuori(msg) { $("cancelloMsg").textContent = msg; $("cancelloBtn").hidden = false; }
@@ -96,12 +113,12 @@ async function avviaCloud(user) {
     const { data, error } = await supabase.from("progetti_soluzioni").select("id, progetto, nome, dati").eq("id", daSol).maybeSingle();
     // configurazione della versione precedente: si apre là, così nulla va perso
     if (data?.dati && data.dati.versione !== "ufs" && Array.isArray(data.dati.tipi)) { location.replace(`precedente.html?soluzione=${encodeURIComponent(daSol)}`); return new Promise(() => {}); }
-    if (data?.dati) { S = { progettoId: data.progetto, sol: data.id, carrello: Array.isArray(data.dati.carrello) ? data.dati.carrello : [] }; scrivi(CHIAVE, JSON.stringify(S)); stato(T("Configurazione aperta dal progetto.", "Configuration opened from the project.")); }
+    if (data?.dati) { S = { progettoId: data.progetto, sol: data.id, nome: data.nome || "", carrello: Array.isArray(data.dati.carrello) ? data.dati.carrello : [] }; scrivi(CHIAVE, JSON.stringify(S)); stato(T("Configurazione aperta dal progetto.", "Configuration opened from the project.")); }
     else if (error && /does not exist|schema cache/i.test(error.message)) stato(T("Salvataggio nei progetti non ancora attivo: eseguire il SQL 18.", "Project saving not active yet: run SQL 18."));
     else stato(T("Configurazione non disponibile.", "Configuration not available."));
   } else if (daProg) {
     S = { progettoId: C.progetti.some((x) => x.id === daProg) ? daProg : null, sol: null, carrello: [] }; scrivi(CHIAVE, JSON.stringify(S));
-    stato(T("Nuova configurazione nel progetto: si salva da sola.", "New configuration in the project: it saves automatically."));
+    stato(T("Nuova configurazione per il progetto: premi «Salva nel progetto» in fondo alla pagina.", "New configuration for the project: press «Save to project» at the bottom of the page."));
   }
   if (daSol || daProg) history.replaceState(null, "", location.pathname);
   disegnaProgetti();
@@ -109,34 +126,70 @@ async function avviaCloud(user) {
 
 function disegnaProgetti() {
   const sel = $("selProgetto"); if (!sel) return;
-  sel.innerHTML = `<option value="">${esc(T("Nessun progetto (solo in questo browser)", "No project (this browser only)"))}</option>` +
-    C.progetti.map((p) => `<option value="${esc(p.id)}">${esc([p.codice, p.nome].filter(Boolean).join(" · ") || T("Progetto senza nome", "Untitled project"))}${p.condiviso ? esc(T(" (condiviso)", " (shared)")) : ""}</option>`).join("");
-  sel.value = S.progettoId && C.progetti.some((p) => p.id === S.progettoId) ? S.progettoId : "";
+  const prima = sel.value;
+  sel.innerHTML = `<option value="">${esc(T("— scegli il progetto —", "— choose the project —"))}</option>` +
+    C.progetti.map((p) => `<option value="${esc(p.id)}">${esc([p.codice, p.nome].filter(Boolean).join(" · ") || T("Progetto senza nome", "Untitled project"))}${p.condiviso ? esc(T(" (condiviso)", " (shared)")) : ""}</option>`).join("") +
+    `<option value="${NUOVO}">${esc(T("+ Nuovo progetto…", "+ New project…"))}</option>`;
+  sel.value = S.progettoId && C.progetti.some((p) => p.id === S.progettoId) ? S.progettoId : prima === NUOVO ? NUOVO : "";
+  $("nuovoProg").hidden = sel.value !== NUOVO;
+  $("nomeConf").value = S.nome || ""; $("nomeConf").placeholder = nomeSoluzione();
+  mostraSalvataggio();
 }
 $("selProgetto").onchange = (e) => {
-  // il carrello attuale si salva nel progetto scelto come nuova configurazione
-  S.progettoId = e.target.value || null; S.sol = null; salva();
-  stato(S.progettoId ? T("Configurazione salvata nel progetto: si salva da sola a ogni modifica.", "Configuration saved in the project: it saves automatically on every change.") : T("Configurazione solo in questo browser.", "Configuration in this browser only."));
+  const v = e.target.value;
+  $("nuovoProg").hidden = v !== NUOVO;
+  if (v === NUOVO) { $("npCodice").focus(); return; }
+  // cambiare progetto dopo il salvataggio = nuova configurazione in quel progetto (la precedente resta dov'era)
+  if ((v || null) !== S.progettoId) { S.progettoId = v || null; if (S.sol) { S.sol = null; stato(T("Progetto cambiato: premi «Salva nel progetto» per salvarla qui (la configurazione precedente resta nell'altro progetto).", "Project changed: press «Save to project» to save it here (the previous configuration stays in the other project).")); } scrivi(CHIAVE, JSON.stringify(S)); }
+  mostraSalvataggio();
 };
-$("nuovaConf").onclick = () => {
-  S = { progettoId: S.progettoId, sol: null, carrello: [] }; scrivi(CHIAVE, JSON.stringify(S)); monta();
+$("nomeConf").oninput = (e) => { S.nome = e.target.value.trim(); salva(); };
+$("salvaProg").onclick = () => salvaOra().catch((er) => stato(T("Non salvato: ", "Not saved: ") + er.message));
+$("nuovaConf").onclick = () => window.oboAvvisoUscita ? window.oboAvvisoUscita.chiedi(nuovaConf) : nuovaConf();
+function nuovaConf() {
+  S = { progettoId: S.progettoId, sol: null, nome: "", carrello: [] }; scrivi(CHIAVE, JSON.stringify(S)); monta(); disegnaProgetti();
   stato(T("Nuova configurazione: la precedente resta salvata nel progetto.", "New configuration: the previous one stays saved in the project."));
-};
+}
+// primo salvataggio (anche con creazione del progetto); poi le modifiche si salvano da sole
+async function salvaOra() {
+  if (!C.attivo) throw new Error(T("accesso non attivo", "not signed in"));
+  if (!S.carrello.length) throw new Error(T("il carrello è vuoto: aggiungi almeno una configurazione", "the cart is empty: add at least one configuration"));
+  const sel = $("selProgetto");
+  if (sel.value === NUOVO) {
+    const codice = $("npCodice").value.trim(), nome = $("npNome").value.trim(), comune = $("npComune").value.trim();
+    if (!codice && !nome) { $("npCodice").focus(); throw new Error(T("scrivi numero CRM o nome del nuovo progetto", "write the CRM number or the name of the new project")); }
+    const { data: p, error } = await supabase.from("progetti").insert({ codice: codice || null, nome: nome || codice, comune: comune || null, dati: {} }).select("id, codice, nome, comune").single();
+    if (error) throw new Error(error.message);
+    C.progetti.unshift({ ...p, condiviso: false }); S.progettoId = p.id; S.sol = null;
+    $("npCodice").value = $("npNome").value = $("npComune").value = "";
+  } else if (!sel.value) { sel.focus(); throw new Error(T("scegli il progetto o creane uno nuovo", "choose the project or create a new one")); }
+  else S.progettoId = sel.value;
+  clearTimeout(C.timer); C.inAttesa = false;
+  await scriviCloud();
+  disegnaProgetti();
+}
 
 function nomeSoluzione() {
   const n = S.carrello.length, p = C.progetti.find((x) => x.id === S.progettoId);
   return `${T("Torrette e sottopavimento", "Outlets and underfloor")}${p?.codice ? " " + p.codice : ""} (${n} ${n === 1 ? T("configurazione", "configuration") : T("configurazioni", "configurations")})`.slice(0, 200);
 }
 function salvaCloud() {
-  if (!C.attivo || !S.progettoId) return;
-  clearTimeout(C.timer);
-  C.timer = setTimeout(async () => {
-    const riga = { app: "torrette", progetto: S.progettoId, nome: nomeSoluzione(), dati: { versione: "ufs", carrello: S.carrello } };
+  if (!C.attivo || !S.progettoId || !S.sol) return;
+  clearTimeout(C.timer); C.inAttesa = true; mostraSalvataggio();
+  C.timer = setTimeout(() => { C.inAttesa = false; scriviCloud().catch(() => { /* messaggio già mostrato */ }); }, 1200);
+}
+async function scriviCloud() {
+  C.inSalvataggio = true; mostraSalvataggio();
+  try {
+    const riga = { app: "torrette", progetto: S.progettoId, nome: S.nome || nomeSoluzione(), dati: { versione: "ufs", carrello: S.carrello } };
     const q = S.sol ? supabase.from("progetti_soluzioni").update(riga).eq("id", S.sol) : supabase.from("progetti_soluzioni").insert(riga);
     const { data, error } = await q.select("id").single();
-    if (error) stato(/does not exist|schema cache/i.test(error.message) ? T("Salvataggio nei progetti non ancora attivo: eseguire il SQL 18.", "Project saving not active yet: run SQL 18.") : T("Salvataggio nel progetto non riuscito: ", "Saving to the project failed: ") + error.message);
-    else { S.sol = data.id; scrivi(CHIAVE, JSON.stringify(S)); stato(T("Salvato nel progetto alle ", "Saved to the project at ") + new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })); }
-  }, 1200);
+    if (error) {
+      const m = /does not exist|schema cache/i.test(error.message) ? T("Salvataggio nei progetti non ancora attivo: eseguire il SQL 18.", "Project saving not active yet: run SQL 18.") : T("Salvataggio nel progetto non riuscito: ", "Saving to the project failed: ") + error.message;
+      stato(m); throw new Error(m);
+    }
+    S.sol = data.id; scrivi(CHIAVE, JSON.stringify(S)); stato(T("Salvato nel progetto alle ", "Saved to the project at ") + new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
+  } finally { C.inSalvataggio = false; mostraSalvataggio(); }
 }
 
 // ---------- distinta in CSV (Excel italiano: separatore ";" e BOM) ----------

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <script src="../registro.js" data-app="mappa"></script>
 <script src="../nomi.js"></script>
+<script src="../avviso-uscita.js"></script>
 <script src="crm-import.js"></script>
 <script src="../benvenuto.js" data-app="Mappa carichi"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -3999,6 +4000,17 @@ body.visitatore .nav a.hubnav { display: flex !important; }
     }).catch(function (e) { $('dSubmit').disabled = false; m.textContent = /app_daily|schema cache|HTTP 404/i.test((e && e.message) || '') ? 'Daily task non ancora attivo: va eseguito database/5-daily-task-e-persone.sql in Supabase.' : errTxt(e); });
   });
   $('dCancel').addEventListener('click', function () { dReset(); $('dMsg').textContent = ''; });
+  // uscita dall'app con un progetto o un daily task scritto ma non salvato: «Attenzione: perderai i dati» (comune/avviso-uscita.js)
+  (function () {
+    var sporco = {};
+    ['form', 'dForm'].forEach(function (id) {
+      var f = $(id); if (!f) return;
+      var segna = function (e) { if (e.isTrusted) sporco[id] = true; };
+      f.addEventListener('input', segna); f.addEventListener('change', segna);
+      f.addEventListener('reset', function () { sporco[id] = false; });
+    });
+    if (window.oboAvvisoUscita) window.oboAvvisoUscita.registra(function () { return !isVisitor && (sporco.form || sporco.dForm); });
+  })();
   $('dList').addEventListener('click', function (ev) {
     var b = ev.target.closest('button'); if (!b) return;
     var id = b.dataset.dedit || b.dataset.dann, x = DT.items.filter(function (y) { return y.id === id; })[0];
