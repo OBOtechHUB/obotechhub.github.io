@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 // Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
 import DATI_TABELLA from "./dati-sistemi.json";
-import Guida, { VistaComposta } from "./guida.jsx";
+import Guida, { VistaComposta, DisegnoPavimento, DisegnoRivestimento } from "./guida.jsx";
+import CODICI_SISTEMI from "./codici-sistemi.json";
 import FOTO_OBO from "./foto-obo.json";
 
 // ─────────────────────────────────────────────────────────────────
@@ -1783,13 +1784,92 @@ function fotoSistema(key, famigliaId) {
   return [...g.filter(x => x.tipo === "Installato"), ...g.filter(x => x.tipo !== "Installato"), ...fotoSito(key)];
 }
 
+// ---------- Scheda per l'architetto: una pagina da mostrare o salvare in PDF (idea presa dalle pagine «soluzione» dei siti dei produttori) ----------
+const leggiLS = (k) => { try { return localStorage.getItem(k) || ""; } catch { return ""; } };
+const scriviLS = (k, v) => { try { localStorage.setItem(k, v); } catch { /* niente */ } };
+// i 4 punti forti si calcolano dai dati del sistema (tabella condivisa): cambiano da soli quando cambiano i dati
+function puntiForti(key) {
+  const s = DB[key] || {}, car = caratteristiche([key]), c = (k) => car.find(x => x.k === k);
+  const out = [], ip = c("ip"), kn = c("carico"), riv = c("rivestimento"), h = c("altezza"), pav = c("pavimento");
+  const ipMax = Math.max(0, ...((ip?.t || "").match(/IP(\d{2})/g) || []).map(x => parseInt(x.slice(2), 10)));
+  if (riv) out.push({ k: "rivestimento", t: /non/i.test(riv.t) ? "Coperchio a vista" : "Sparisce nel pavimento", d: /non/i.test(riv.t) ? "Finitura del coperchio scelta tra le varianti" : `Il coperchio prende lo stesso rivestimento del pavimento: ${riv.t.toLowerCase()}` });
+  if (kn) out.push({ k: "carico", t: "Calpestabile", d: `Carico sul coperchio ${kn.t}${/20 kN/.test(kn.t) ? ": ci passano anche carrelli e veicoli" : ""}` });
+  if (ip) out.push({ k: "ip", t: ipMax >= 65 ? "Pulizia a umido" : "Pulizia a secco", d: ipMax >= 65 ? `Versioni fino a IP${ipMax}: adatta anche alla lavasciuga` : `${ip.t.split(" · ")[0]} a coperchio chiuso` });
+  if (h) out.push({ k: "altezza", t: "Pavimenti bassi", d: `${h.t.replace("Da", "Da")} di pavimento${pav ? ", " + pav.t.toLowerCase() : ""}` });
+  else if (pav) out.push({ k: "pavimento", t: pav.t, d: "Tipo di pavimento in cui si installa" });
+  if (out.length < 4 && c("acustica")) out.push({ k: "acustica", t: "Silenziosa", d: "Testata per non peggiorare l'isolamento acustico del solaio" });
+  return out.slice(0, 4);
+}
+function SchedaArchitetto({ sistemaKey, onChiudi }) {
+  const s = DB[sistemaKey]; const fam = FAMIGLIE.find(f => f.sistemi.includes(sistemaKey));
+  const [per, setPer] = useState(() => leggiLS("obo-scheda-per")), [da, setDa] = useState(() => leggiLS("obo-scheda-da"));
+  useEffect(() => { const t = e => e.key === "Escape" && onChiudi(); document.addEventListener("keydown", t); document.body.classList.add("scheda-aperta"); return () => { document.removeEventListener("keydown", t); document.body.classList.remove("scheda-aperta"); }; }, []);
+  if (!s) return null;
+  const foto = fotoSistema(sistemaKey, s.famiglia), prima = foto.find(x => x.tipo === "Installato") || foto[0];
+  const altre = foto.filter(x => x !== prima).slice(0, 6);
+  const codici = (CODICI_SISTEMI[sistemaKey] || []).filter(x => !NON_FOTO.test(x.nome)).slice(0, 12);
+  const mm = Math.max(0, ...((s.rivestimento_max || "").match(/(\d+)\s*mm/g) || []).map(x => parseInt(x, 10)));
+  const h = altezzeDa(s), pavimenti = (s.pavimenti || []).filter(p => p === "massetto" || p === "flottante");
+  const testo = SISTEMA_DESC[sistemaKey] || FAMIGLIA_FOTO[s.famiglia]?.testo || fam?.descrizione || "";
+  const oggi = new Date().toLocaleDateString("it-IT");
+  return createPortal(
+    <div className="sa-sfondo" role="dialog" aria-modal="true" aria-label={"Scheda per l'architetto: " + s.label}>
+      <div className="sa-comandi">
+        <label>Preparata per <input value={per} maxLength={80} placeholder="es. Studio Bianchi – Uffici Rossi" onChange={e => { setPer(e.target.value); scriviLS("obo-scheda-per", e.target.value); }} /></label>
+        <label>Preparata da <input value={da} maxLength={80} placeholder="Nome, telefono, email" onChange={e => { setDa(e.target.value); scriviLS("obo-scheda-da", e.target.value); }} /></label>
+        <button type="button" className="sa-btn primario" onClick={() => window.print()}>Stampa o salva PDF</button>
+        <button type="button" className="sa-btn" onClick={onChiudi}>Chiudi</button>
+      </div>
+      <article className="sa-foglio">
+        <header className="sa-testa">
+          <img src="img/logo-obo.png" alt="OBO Bettermann" className="sa-logo" />
+          <div><small>{fam?.label || s.famiglia} · sistema sottopavimento</small><h1>{s.label}</h1>{s.dimensione && <p>{s.forma ? s.forma.charAt(0).toUpperCase() + s.forma.slice(1) + " · " : ""}{s.dimensione}</p>}</div>
+        </header>
+        {prima && <figure className="sa-eroe"><img src={prima.src} alt={prima.testo} referrerPolicy="no-referrer" /><figcaption>{prima.testo}</figcaption></figure>}
+        <section className="sa-punti">
+          {puntiForti(sistemaKey).map(p => (
+            <div key={p.k} className="sa-punto"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f39b00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{ICONE_CAR[p.k]}</svg><b>{p.t}</b><span>{p.d}</span></div>
+          ))}
+        </section>
+        {testo && <p className="sa-testo">{testo}</p>}
+        <section className="sa-blocco"><h2>Caratteristiche</h2><Caratteristiche chiavi={[sistemaKey]} /></section>
+        {(pavimenti.length > 0 || mm > 0) && (
+          <section className="sa-blocco sa-disegni"><h2>Come si installa</h2>
+            <div className="sa-griglia">
+              {pavimenti.map(p => <figure key={p}><DisegnoPavimento tipo={p} h={h?.min} compatto /><figcaption>{p === "flottante" ? "Su pavimento flottante" : "Nel massetto"}{h ? ` · altezza da ${h.min} mm` : ""}</figcaption></figure>)}
+              {mm > 0 && <figure><DisegnoRivestimento mm={mm} /><figcaption>Rivestimento nel coperchio fino a {mm} mm</figcaption></figure>}
+            </div>
+          </section>
+        )}
+        {altre.length > 0 && (
+          <section className="sa-blocco"><h2>Il sistema e le installazioni</h2>
+            <div className="sa-foto">{altre.map((f, i) => <figure key={f.src + i}><img src={f.src} alt={f.testo} referrerPolicy="no-referrer" className={f.sito ? "sito" : ""} onError={e => { e.currentTarget.closest("figure").style.display = "none"; }} /><figcaption>{f.testo}</figcaption></figure>)}</div>
+          </section>
+        )}
+        {codici.length > 0 && (
+          <section className="sa-blocco"><h2>Articoli principali</h2>
+            <table className="sa-codici"><thead><tr><th>Codice</th><th>Articolo</th><th>Scheda, disegni e BIM</th></tr></thead>
+              <tbody>{codici.map(c => <tr key={c.codice}><td>{c.codice}</td><td>{c.nome}</td><td>{c.pagina ? <a href={c.pagina} target="_blank" rel="noopener">obo.it</a> : "—"}</td></tr>)}</tbody></table>
+          </section>
+        )}
+        {s.note && <section className="sa-blocco"><h2>Note</h2><p>{s.note}</p></section>}
+        <footer className="sa-piede">
+          <div>{per && <><b>Per:</b> {per}<br /></>}{da && <><b>Contatto:</b> {da}<br /></>}OBO Bettermann Italia · {oggi}</div>
+          <small>Dati dal catalogo OBO; finiture, codici e prezzi da confermare sul listino in vigore. Foto OBO Bettermann.</small>
+        </footer>
+      </article>
+    </div>, document.body);
+}
+
 function GalleriaSistema({ sistemaKey, famigliaId, nome }) {
   const foto = fotoSistema(sistemaKey, famigliaId);
-  const [aperta, setAperta] = useState(-1);
+  const [aperta, setAperta] = useState(-1), [scheda, setScheda] = useState(false);
   if (!foto.length) return null;
   return (
     <section className="ufs-galleria" aria-label={"Foto di " + nome}>
-      <div className="ufs-gal-testa"><b>Com'è e dove si installa</b><small>Tocca una foto per ingrandirla e mostrarla al cliente</small></div>
+      <div className="ufs-gal-testa"><b>Com'è e dove si installa</b><small>Tocca una foto per ingrandirla e mostrarla al cliente</small>
+        <button type="button" className="ufs-scheda-btn" onClick={() => setScheda(true)}>📄 Scheda per l'architetto (PDF)</button></div>
+      {scheda && <SchedaArchitetto sistemaKey={sistemaKey} onChiudi={() => setScheda(false)} />}
       <div className="ufs-gal-nastro">
         {foto.map((x, i) => (
           <button type="button" key={x.src + i} className={"ufs-gal-foto" + (i === 0 ? " larga" : "")} onClick={() => setAperta(i)}>
@@ -3817,6 +3897,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
   useEffect(() => { if (onCarrello) onCarrello(carrello); }, [carrello]);
   const [carrelloAperto, setCarrelloAperto] = useState(false);
   const [fotoGuida, setFotoGuida] = useState({ fam: null, nome: "", i: -1 });
+  const [schedaGuida, setSchedaGuida] = useState(null);
   const [modalita, setModalita] = useState("trova");
   const [passoGuida, setPassoGuida] = useState(0);
   const { isMobile, isTablet } = useM();
@@ -3899,7 +3980,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
 
       {/* CONTENUTO */}
       {modalita === "trova" ? (
-        <Guida sistemi={TUTTI_SISTEMI} punteggio={punteggio} famiglie={FAMIGLIE} foto={FAMIGLIA_FOTO} Caratteristiche={Caratteristiche} filtri={filtri} setFiltri={setFiltri} passo={passoGuida} setPasso={setPassoGuida} onSeleziona={vaiASistema} onCatalogo={() => { setModalita("wizard"); reset(); }} onFoto={(key, fam, nome) => setFotoGuida({ key, fam, nome, i: 0 })} haFoto={(key, fam) => fotoSistema(key, fam)} fotoScheda={key => SCHEDA_SISTEMA[key]} />
+        <Guida sistemi={TUTTI_SISTEMI} punteggio={punteggio} famiglie={FAMIGLIE} foto={FAMIGLIA_FOTO} Caratteristiche={Caratteristiche} filtri={filtri} setFiltri={setFiltri} passo={passoGuida} setPasso={setPassoGuida} onSeleziona={vaiASistema} onCatalogo={() => { setModalita("wizard"); reset(); }} onFoto={(key, fam, nome) => setFotoGuida({ key, fam, nome, i: 0 })} haFoto={(key, fam) => fotoSistema(key, fam)} fotoScheda={key => SCHEDA_SISTEMA[key]} onScheda={key => setSchedaGuida(key)} />
       ) : (
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "16px 12px 140px" : isTablet ? "24px 20px 130px" : "32px 28px 120px" }}>
         {step === 1 && <StepFamiglia onSelect={f => { setFamiglia(f); setStep(2); }} />}
@@ -3908,6 +3989,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
       </div>
       )}
 
+      {schedaGuida && <SchedaArchitetto sistemaKey={schedaGuida} onChiudi={() => setSchedaGuida(null)} />}
       {fotoGuida.key && <Lightbox foto={fotoSistema(fotoGuida.key, fotoGuida.fam)} indice={fotoGuida.i} setIndice={v => setFotoGuida(g => ({ ...g, i: typeof v === "function" ? v(g.i) : v }))} nome={fotoGuida.nome} />}
       {/* CARRELLO — pannello fisso in fondo */}
       {carrelloAperto && (

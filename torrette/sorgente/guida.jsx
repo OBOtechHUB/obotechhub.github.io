@@ -149,7 +149,7 @@ function Scelta({ attiva, onClick, titolo, testo, children, larga }) {
   );
 }
 
-export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristiche, filtri, setFiltri, passo, setPasso, onSeleziona, onCatalogo, onFoto, haFoto, fotoScheda }) {
+export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristiche, filtri, setFiltri, passo, setPasso, onSeleziona, onCatalogo, onFoto, haFoto, fotoScheda, onScheda }) {
   const set = (k, v) => setFiltri((p) => ({ ...p, [k]: p[k] === v ? "" : v }));
   const metti = (k, v) => setFiltri((p) => ({ ...p, [k]: v }));
   const ris = useMemo(() => {
@@ -300,6 +300,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
         <div className="g-ris-c">
           <div className="g-ris-t"><h3>{r.label}</h3>{fam && <span className="g-fam">{fam.label}</span>}</div>
           <Caratteristiche chiavi={[r.key]} />
+          {onScheda && <button type="button" className="g-scheda" onClick={() => onScheda(r.key)}>📄 Scheda per l'architetto</button>}
           {r.rinunce.map((x, i) => <p key={i} className="g-nota">⚠ <b>{x.campo}:</b> {x.motivo}</p>)}
           {r.problemi.map((x, i) => <p key={i} className="g-no">✕ <b>{x.campo}:</b> {x.motivo}</p>)}
         </div>

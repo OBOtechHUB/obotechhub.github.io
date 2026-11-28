@@ -7,11 +7,12 @@ const testo = ["torrette/sorgente/configuratore-ufs.jsx", "torrette/sorgente/dat
 const usati = new Set(testo.match(/\b\d{7}\b/g) || []);
 const mappa = {}, catalogo = JSON.parse(readFileSync("prodotti/dati/prodotti.json", "utf8")), perCodice = {};
 for (const p of catalogo) perCodice[String(p[0] ?? "").replace(/\s/g, "")] = p;
-const DB = JSON.parse(readFileSync("torrette/sorgente/dati-sistemi.json", "utf8")), fotoSistemi = {};
+const DB = JSON.parse(readFileSync("torrette/sorgente/dati-sistemi.json", "utf8")), fotoSistemi = {}, codiciSistemi = {};
 const pulisci = (c) => String(c ?? "").replace(/[^\d]/g, "");
 for (const [k, s] of Object.entries(DB)) {
   const codici = [], righe = (r) => (r || []).forEach((x) => [x.codice, ...(x.codici || [])].forEach((c) => { c = pulisci(c); if (c.length === 7 && !codici.includes(c)) codici.push(c); }));
   righe(s.righe); (s.gruppi || []).forEach((g) => righe(g.righe));
+  codiciSistemi[k] = codici.map((c) => perCodice[c] && { codice: c, nome: String(perCodice[c][1] || "").replace(/\s+/g, " ").trim(), pagina: perCodice[c][3] ? "https://www.obo.it" + perCodice[c][3] : "" }).filter(Boolean).slice(0, 40);
   const viste = new Set(), out = [];
   for (const c of codici) {
     const p = perCodice[c]; if (!p) continue;
@@ -22,6 +23,7 @@ for (const [k, s] of Object.entries(DB)) {
   }
   if (out.length) fotoSistemi[k] = out;
 }
+writeFileSync("torrette/sorgente/codici-sistemi.json", JSON.stringify(codiciSistemi, null, 1) + "\n");
 writeFileSync("torrette/sorgente/foto-obo.json", JSON.stringify(fotoSistemi, null, 1) + "\n");
 console.log(`torrette/sorgente/foto-obo.json: ${Object.keys(fotoSistemi).length} sistemi con foto di obo.it`);
 for (const p of catalogo) {

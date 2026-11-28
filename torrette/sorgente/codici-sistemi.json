@@ -1,0 +1,665 @@
+{
+ "GES4": [
+  {
+   "codice": "7405196",
+   "nome": "Modulo apparecchi GES4 con staffa per maniglia",
+   "pagina": "https://www.obo.it/it-it/prodotti/modulo-apparecchi-ges4-con-staffa-per-maniglia-5-4-grigio-ferro-ral-7011-7405196.html"
+  },
+  {
+   "codice": "7405200",
+   "nome": "Modulo apparecchi GES4 con staffa per maniglia",
+   "pagina": "https://www.obo.it/it-it/prodotti/modulo-apparecchi-ges4-con-staffa-per-maniglia-5-4-nero-grafite-ral-9011-7405200.html"
+  }
+ ],
+ "GES9": [
+  {
+   "codice": "7405093",
+   "nome": "Torretta a scomparsa GES9-3B con maniglia, con premontata scatola montaggio ITA",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-ges9-3b-con-maniglia-con-premontata-scatola-montaggio-ita-5-9-staffa-per-maniglia-nero-grafite-ral-9011-7405093.html"
+  },
+  {
+   "codice": "7405037",
+   "nome": "Torretta a scomparsa quadrata, altezza 55 mm",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-quadrata-altezza-55-mm-5-9-staffa-per-maniglia-grigio-ferro-ral-7011-7405037.html"
+  },
+  {
+   "codice": "7405039",
+   "nome": "Torretta a scomparsa quadrata, altezza 55 mm",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-quadrata-altezza-55-mm-5-9-staffa-per-maniglia-nero-grafite-ral-9011-7405039.html"
+  },
+  {
+   "codice": "7405077",
+   "nome": "Torretta a scomparsa GES9-3B con maniglia",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-ges9-3b-con-maniglia-5-9-staffa-per-maniglia-grigio-ferro-ral-7011-7405077.html"
+  },
+  {
+   "codice": "7405079",
+   "nome": "Torretta a scomparsa GES9-3B con maniglia",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-ges9-3b-con-maniglia-5-9-staffa-per-maniglia-nero-grafite-ral-9011-7405079.html"
+  },
+  {
+   "codice": "7405371",
+   "nome": "Torretta a scomparsa GES9M-2 con maniglia",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-ges9m-2-con-maniglia-5-7405371.html"
+  }
+ ],
+ "GRAF9": [
+  {
+   "codice": "7405746",
+   "nome": "Torretta a scomparsa GRAF9",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-graf9-r9-grigio-ferro-ral-7011-7405746.html"
+  },
+  {
+   "codice": "7405750",
+   "nome": "Torretta a scomparsa GRAF9",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-graf9-r9-nero-grafite-ral-9011-7405750.html"
+  },
+  {
+   "codice": "7405743",
+   "nome": "Torretta a scomparsa GRAF, rivestibile",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-graf-rivestibile-3-r9-7405743.html"
+  }
+ ],
+ "UDHOME_ONE": [
+  {
+   "codice": "7368282",
+   "nome": "Torretta UDHOME-ONE, rivestibile, per dispositivi Modul45®, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome-one-rivestibile-per-dispositivi-modul45-acciaio-inox-scanalatura-del-rivestimento-del-pavimento-7368282.html"
+  },
+  {
+   "codice": "7368280",
+   "nome": "Torretta UDHOME-ONE, non rivestibile, per dispositivi Modul45®, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome-one-non-rivestibile-per-dispositivi-modul45-acciaio-inox-piastra-decorativa-7368280.html"
+  },
+  {
+   "codice": "7368286",
+   "nome": "Torretta UDHOME-ONE, rivestibile, per dispositivi Modul45®, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome-one-rivestibile-per-dispositivi-modul45-ottone-scanalatura-del-rivestimento-del-pavimento-7368286.html"
+  },
+  {
+   "codice": "7368284",
+   "nome": "Torretta UDHOME-ONE, non rivestibile, per dispositivi Modul45®, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome-one-non-rivestibile-per-dispositivi-modul45-ottone-piastra-decorativa-7368284.html"
+  },
+  {
+   "codice": "7368357",
+   "nome": "Pozzetto UDHOME-ONE, con uscita a spazzola, con scanalatura a pavimento, non equipaggiata, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/pozzetto-udhome-one-con-uscita-a-spazzola-con-scanalatura-a-pavimento-non-equipaggiata-acciaio-inox-scanalatura-del-rivestimento-del-pavimento-7368357.html"
+  },
+  {
+   "codice": "7368356",
+   "nome": "Torretta a scomparsa UDHOME-ONE, con uscita a spazzola, con coperchio non rivestibile, non equipaggiata, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-udhome-one-con-uscita-a-spazzola-con-coperchio-non-rivestibile-non-equipaggiata-acciaio-inox-piastra-decorativa-7368356.html"
+  }
+ ],
+ "UDHOME2": [
+  {
+   "codice": "7368340",
+   "nome": "Torretta UDHOME2, rivestibile, per dispositivi Modul45®, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome2-rivestibile-per-dispositivi-modul45-acciaio-inox-scanalatura-del-rivestimento-del-pavimento-7368340.html"
+  },
+  {
+   "codice": "7368342",
+   "nome": "Torretta UDHOME2, non rivestibile, per dispositivi Modul45®, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome2-non-rivestibile-per-dispositivi-modul45-acciaio-inox-piastra-decorativa-7368342.html"
+  },
+  {
+   "codice": "7368346",
+   "nome": "Torretta UDHOME2, rivestibile, per dispositivi Modul45®, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome2-rivestibile-per-dispositivi-modul45-ottone-scanalatura-del-rivestimento-del-pavimento-7368346.html"
+  },
+  {
+   "codice": "7368348",
+   "nome": "Torretta UDHOME2, non rivestibile, per dispositivi Modul45®, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome2-non-rivestibile-per-dispositivi-modul45-ottone-piastra-decorativa-7368348.html"
+  },
+  {
+   "codice": "7427097",
+   "nome": "Torretta UDHOME2 con tubo, non rivestibile, per dispositivi Modul45®, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome2-con-tubo-non-rivestibile-per-dispositivi-modul45-acciaio-inox-piastra-decorativa-7427097.html"
+  },
+  {
+   "codice": "7368353",
+   "nome": "Pozzetto UDHOME2, con uscita a spazzola, con scanalatura a pavimento, non equipaggiata, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/pozzetto-udhome2-con-uscita-a-spazzola-con-scanalatura-a-pavimento-non-equipaggiata-acciaio-inox-scanalatura-del-rivestimento-del-pavimento-7368353.html"
+  },
+  {
+   "codice": "7368352",
+   "nome": "Torretta a scomparsa UDHOME2, con uscita a spazzola, con coperchio non rivestibile, non equipaggiata, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-a-scomparsa-udhome2-con-uscita-a-spazzola-con-coperchio-non-rivestibile-non-equipaggiata-acciaio-inox-piastra-decorativa-7368352.html"
+  }
+ ],
+ "UDHOME4": [
+  {
+   "codice": "7427074",
+   "nome": "Torretta UDHOME4, rivestibile, con una dima 504 per dispositivi ITA, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome4-rivestibile-con-una-dima-504-per-dispositivi-ita-acciaio-inox-15-7427074.html"
+  },
+  {
+   "codice": "7427230",
+   "nome": "Torretta UDHOME4, rivestibile, per 6 dispositivi Modul 45®, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome4-rivestibile-per-6-dispositivi-modul-45-acciaio-inox-15-7427230.html"
+  },
+  {
+   "codice": "7427236",
+   "nome": "Torretta UDHOME4, rivestibile, per dispositivi Modul45®, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome4-rivestibile-per-dispositivi-modul45-ottone-15-7427236.html"
+  }
+ ],
+ "UDHOME9": [
+  {
+   "codice": "7427076",
+   "nome": "Torretta UDHOME 9, rivestibile, con 2 dime 506 per dispositivi ITA, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome-9-rivestibile-con-2-dime-506-per-dispositivi-ita-acciaio-inox-15-7427076.html"
+  },
+  {
+   "codice": "7427323",
+   "nome": "Torretta UDHOME9, rivestibile, per 12 dispositivi Modul 45®, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome9-rivestibile-per-12-dispositivi-modul-45-acciaio-inox-15-7427323.html"
+  },
+  {
+   "codice": "7427328",
+   "nome": "Torretta UDHOME9. rivestibile, per dispositivi Modul45®, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/torretta-udhome9-rivestibile-per-dispositivi-modul45-ottone-15-7427328.html"
+  }
+ ],
+ "CASS_LIV_4": [
+  {
+   "codice": "7408950",
+   "nome": "Cassetta livellabile cieca, RKN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-acciaio-inox-105-150-20-4-105-7408950.html"
+  },
+  {
+   "codice": "7400467",
+   "nome": "Coperchio di montaggio 250 per torretta di dimensione nominale 9",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-di-montaggio-250-per-torretta-di-dimensione-nominale-9-quadrato-7400467.html"
+  },
+  {
+   "codice": "7408954",
+   "nome": "Cassetta livellabile cieca, RKN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-acciaio-inox-110-155-25-4-110-7408954.html"
+  },
+  {
+   "codice": "7409208",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksn-acciaio-inox-105-150-20-4-105-7409208.html"
+  },
+  {
+   "codice": "7409210",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksn-acciaio-inox-110-155-25-4-110-7409210.html"
+  },
+  {
+   "codice": "7408960",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfn-acciaio-inox-105-150-20-4-105-7408960.html"
+  },
+  {
+   "codice": "7428140",
+   "nome": "Coperchio tubo telescopico, con maniglia, per cassetta telaio e cassetta livellabile",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-tubo-telescopico-con-maniglia-per-cassetta-telaio-e-cassetta-livellabile-7428140.html"
+  },
+  {
+   "codice": "7408962",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfn-acciaio-inox-110-155-25-4-110-7408962.html"
+  },
+  {
+   "codice": "7408952",
+   "nome": "Cassetta livellabile cieca, RKN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-ottone-105-150-20-4-105-7408952.html"
+  },
+  {
+   "codice": "7408956",
+   "nome": "Cassetta livellabile cieca, RKN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-ottone-110-155-25-4-110-7408956.html"
+  },
+  {
+   "codice": "7409202",
+   "nome": "Cassetta livellabile con uscita cavo lateriale RKSN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-lateriale-rksn-ottone-105-150-20-4-105-7409202.html"
+  },
+  {
+   "codice": "7409204",
+   "nome": "Cassetta livellabile con uscita cavo lateriale RKSN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-lateriale-rksn-ottone-110-155-25-4-110-7409204.html"
+  },
+  {
+   "codice": "7409088",
+   "nome": "Cassetta livellabile cieca, RKR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkr-acciaio-inox-105-155-20-r4-7409088.html"
+  },
+  {
+   "codice": "7409090",
+   "nome": "Cassetta livellabile cieca, RKR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkr-acciaio-inox-105-155-25-r4-7409090.html"
+  },
+  {
+   "codice": "7409258",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksr-acciaio-inox-110-155-20-r4-7409258.html"
+  },
+  {
+   "codice": "7409260",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksr-acciaio-inox-110-155-25-r4-7409260.html"
+  },
+  {
+   "codice": "7409422",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfr-acciaio-inox-110-155-20-r4-7409422.html"
+  },
+  {
+   "codice": "7409424",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfr-acciaio-inox-110-155-25-r4-7409424.html"
+  },
+  {
+   "codice": "7409084",
+   "nome": "Cassetta livellabile cieca, RKR, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkr-ottone-105-155-25-r4-7409084.html"
+  },
+  {
+   "codice": "7409254",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSR, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksr-ottone-110-155-25-r4-7409254.html"
+  }
+ ],
+ "CASS_LIV_9": [
+  {
+   "codice": "7408970",
+   "nome": "Cassetta livellabile cieca, RKN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-acciaio-inox-105-105-150-20-nessuna-uscita-cavo-9-105-7408970.html"
+  },
+  {
+   "codice": "7400467",
+   "nome": "Coperchio di montaggio 250 per torretta di dimensione nominale 9",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-di-montaggio-250-per-torretta-di-dimensione-nominale-9-quadrato-7400467.html"
+  },
+  {
+   "codice": "7408974",
+   "nome": "Cassetta livellabile cieca, RKN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-acciaio-inox-110-110-155-25-nessuna-uscita-cavo-9-110-7408974.html"
+  },
+  {
+   "codice": "7409218",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksn-acciaio-inox-105-150-20-uscita-cavi-orientabile-9-105-7409218.html"
+  },
+  {
+   "codice": "7409220",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksn-acciaio-inox-110-155-25-uscita-cavi-orientabile-9-110-7409220.html"
+  },
+  {
+   "codice": "7408980",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfn-acciaio-inox-105-105-150-20-tubo-a-scomparsa-9-105-7408980.html"
+  },
+  {
+   "codice": "7428140",
+   "nome": "Coperchio tubo telescopico, con maniglia, per cassetta telaio e cassetta livellabile",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-tubo-telescopico-con-maniglia-per-cassetta-telaio-e-cassetta-livellabile-7428140.html"
+  },
+  {
+   "codice": "7408982",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFN, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfn-acciaio-inox-110-110-155-25-tubo-a-scomparsa-9-110-7408982.html"
+  },
+  {
+   "codice": "7408972",
+   "nome": "Cassetta livellabile cieca, RKN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-ottone-105-105-150-20-nessuna-uscita-cavo-9-105-7408972.html"
+  },
+  {
+   "codice": "7408976",
+   "nome": "Cassetta livellabile cieca, RKN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkn-ottone-110-110-155-25-nessuna-uscita-cavo-9-110-7408976.html"
+  },
+  {
+   "codice": "7409212",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksn-ottone-105-150-20-uscita-cavi-orientabile-9-105-7409212.html"
+  },
+  {
+   "codice": "7409214",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSN, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksn-ottone-110-155-25-uscita-cavi-orientabile-9-110-7409214.html"
+  },
+  {
+   "codice": "7409128",
+   "nome": "Cassetta livellabile cieca, RKR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkr-acciaio-inox-105-155-20-r9-7409128.html"
+  },
+  {
+   "codice": "7400549",
+   "nome": "Coperchio di montaggio 350 per torretta di dimensione nominale R9",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-di-montaggio-350-per-torretta-di-dimensione-nominale-r9-tondo-7400549.html"
+  },
+  {
+   "codice": "7409130",
+   "nome": "Cassetta livellabile cieca, RKR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkr-acciaio-inox-105-155-25-r9-7409130.html"
+  },
+  {
+   "codice": "7409278",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksr-acciaio-inox-110-155-20-r9-7409278.html"
+  },
+  {
+   "codice": "7409280",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksr-acciaio-inox-110-155-25-r9-7409280.html"
+  },
+  {
+   "codice": "7409430",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfr-acciaio-inox-110-155-20-r9-7409430.html"
+  },
+  {
+   "codice": "7409432",
+   "nome": "Cassetta livellabile con uscita cavo tubo, RKFR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-tubo-rkfr-acciaio-inox-110-155-25-r9-7409432.html"
+  },
+  {
+   "codice": "7409124",
+   "nome": "Cassetta livellabile cieca, RKR, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rkr-ottone-105-155-25-r9-7409124.html"
+  },
+  {
+   "codice": "7409274",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSR, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksr-ottone-110-155-25-r9-7409274.html"
+  }
+ ],
+ "DISACC_4": [
+  {
+   "codice": "7407577",
+   "nome": "Supporto di montaggio per 6 apparecchi da installare Modul 45, dimensione nominale 4/R4",
+   "pagina": "https://www.obo.it/it-it/prodotti/supporto-di-montaggio-per-6-apparecchi-da-installare-modul-45-dimensione-nominale-4-r4-7407577.html"
+  },
+  {
+   "codice": "7428544",
+   "nome": "Coperchio di montaggio 250 per torretta di dimensione nominale 4",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-di-montaggio-250-per-torretta-di-dimensione-nominale-4-7428544.html"
+  },
+  {
+   "codice": "7410540",
+   "nome": "Profilo livellante per l'installazione in UZD250 per cassetta quadrata",
+   "pagina": "https://www.obo.it/it-it/prodotti/profilo-livellante-per-l-installazione-in-uzd250-per-cassetta-quadrata-7410540.html"
+  },
+  {
+   "codice": "7410556",
+   "nome": "Angolare di livellamento per montaggio in UZD350 per una torretta tonda",
+   "pagina": "https://www.obo.it/it-it/prodotti/angolare-di-livellamento-per-montaggio-in-uzd350-per-una-torretta-tonda-7410556.html"
+  }
+ ],
+ "DISACC_9": [
+  {
+   "codice": "7409232",
+   "nome": "Cassetta livellabile disaccopiabile con uscita cavo RKSNUZD3, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-disaccopiabile-con-uscita-cavo-rksnuzd3-ottone-105-20-9-90-7409232.html"
+  },
+  {
+   "codice": "7428547",
+   "nome": "Coperchio di montaggio per cassetta livellabile della dimensione nominale 9",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-di-montaggio-per-cassetta-livellabile-della-dimensione-nominale-9-7428547.html"
+  },
+  {
+   "codice": "7410540",
+   "nome": "Profilo livellante per l'installazione in UZD250 per cassetta quadrata",
+   "pagina": "https://www.obo.it/it-it/prodotti/profilo-livellante-per-l-installazione-in-uzd250-per-cassetta-quadrata-7410540.html"
+  },
+  {
+   "codice": "7409234",
+   "nome": "Cassetta livellabile disaccopiabile con uscita cavo RKSNUZD3, ottone",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-disaccopiabile-con-uscita-cavo-rksnuzd3-ottone-95-110-25-9-95-7409234.html"
+  },
+  {
+   "codice": "7409260",
+   "nome": "Cassetta livellabile con uscita cavo laterale RKSR, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-laterale-rksr-acciaio-inox-110-155-25-r4-7409260.html"
+  },
+  {
+   "codice": "7410556",
+   "nome": "Angolare di livellamento per montaggio in UZD350 per una torretta tonda",
+   "pagina": "https://www.obo.it/it-it/prodotti/angolare-di-livellamento-per-montaggio-in-uzd350-per-una-torretta-tonda-7410556.html"
+  }
+ ],
+ "SEMINATO": [
+  {
+   "codice": "7409601",
+   "nome": "Cassetta livellabile sospesa cieca, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-sospesa-cieca-acciaio-inox-136-25-nessuna-uscita-cavo-9-7409601.html"
+  },
+  {
+   "codice": "7409621",
+   "nome": "Cassetta livellabile cieca, RKNUZD3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rknuzd3-acciaio-inox-136-25-nessuna-uscita-cavo-9-81-7409621.html"
+  },
+  {
+   "codice": "7409603",
+   "nome": "Cassetta livellabile sospesa con uscita cavo laterale, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-sospesa-con-uscita-cavo-laterale-acciaio-inox-136-25-uscita-cavi-orientabile-9-7409603.html"
+  },
+  {
+   "codice": "7409623",
+   "nome": "Cassetta livellabile con uscita cavo RKSNUZD3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-con-uscita-cavo-rksnuzd3-acciaio-inox-136-25-uscita-cavi-orientabile-9-81-7409623.html"
+  },
+  {
+   "codice": "7409605",
+   "nome": "Cassetta livellabile sospesa con tubo telescopico, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-sospesa-con-tubo-telescopico-acciaio-inox-136-25-tubo-a-scomparsa-9-7409605.html"
+  },
+  {
+   "codice": "7409625",
+   "nome": "Cassetta livellabile per tubo, RKFNUZD3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-per-tubo-rkfnuzd3-acciaio-inox-136-25-tubo-a-scomparsa-9-81-7409625.html"
+  },
+  {
+   "codice": "7409495",
+   "nome": "Cassetta livellabile cieca, RKNUZD3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rknuzd3-acciaio-inox-140-25-r9-7409495.html"
+  },
+  {
+   "codice": "7409650",
+   "nome": "Cassetta livellabile cieca, RKNUZD3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-cieca-rknuzd3-acciaio-inox-140-25-r9-7409650.html"
+  },
+  {
+   "codice": "7409497",
+   "nome": "Cassetta livellabile per tubo, RKFNUZD3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-per-tubo-rkfnuzd3-acciaio-inox-140-25-r9-7409497.html"
+  },
+  {
+   "codice": "7409651",
+   "nome": "Cassetta livellabile per tubo, RKFNUZD3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-livellabile-per-tubo-rkfnuzd3-acciaio-inox-140-25-r9-7409651.html"
+  }
+ ],
+ "GES_R2": [
+  {
+   "codice": "7408847",
+   "nome": "Coperchio incernierato con cursore di arresto",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-incernierato-con-cursore-di-arresto-bagnato-ip66-fino-a-3-000-n-blocco-a-scorrimento-zinco-pressofuso-nero-ral-9005-7408847.html"
+  },
+  {
+   "codice": "7408849",
+   "nome": "Coperchio incernierato con cursore di arresto, nichel ossidato",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-incernierato-con-cursore-di-arresto-nichel-ossidato-bagnato-ip66-fino-a-3-000-n-blocco-a-scorrimento-zinco-pressofuso-7408849.html"
+  },
+  {
+   "codice": "7408850",
+   "nome": "Coperchio incernierato con cursore arresto, nichel",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-incernierato-con-cursore-arresto-nichel-bagnato-ip66-fino-a-3-000-n-blocco-a-scorrimento-zinco-pressofuso-7408850.html"
+  },
+  {
+   "codice": "7408852",
+   "nome": "Coperchio incernierato con cursore arresto, ottone antico",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-incernierato-con-cursore-arresto-ottone-antico-bagnato-ip66-fino-a-3-000-n-blocco-a-scorrimento-zinco-pressofuso-7408852.html"
+  },
+  {
+   "codice": "7408854",
+   "nome": "Coperchio incernierato con cursore arresto, rame antico",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-incernierato-con-cursore-arresto-rame-antico-bagnato-ip66-fino-a-3-000-n-blocco-a-scorrimento-zinco-pressofuso-7408854.html"
+  },
+  {
+   "codice": "7408856",
+   "nome": "Coperchio incernierato con cursore arresto, cromo",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-incernierato-con-cursore-arresto-cromo-bagnato-ip66-fino-a-3-000-n-blocco-a-scorrimento-zinco-pressofuso-7408856.html"
+  },
+  {
+   "codice": "7408857",
+   "nome": "Coperchio con tubo telescopico con maniglia",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-con-tubo-telescopico-con-maniglia-zinco-pressofuso-7408857.html"
+  },
+  {
+   "codice": "7408859",
+   "nome": "Coperchio con tubo telescopico con maniglia, nichel ossidato",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-con-tubo-telescopico-con-maniglia-nichel-ossidato-zinco-pressofuso-7408859.html"
+  },
+  {
+   "codice": "7408860",
+   "nome": "Coperchio con tubo telescopico con maniglia, nichel",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-con-tubo-telescopico-con-maniglia-nichel-zinco-pressofuso-7408860.html"
+  },
+  {
+   "codice": "7408862",
+   "nome": "Coperchio con tubo telescopico con maniglia, ottone antico",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-con-tubo-telescopico-con-maniglia-ottone-antico-zinco-pressofuso-7408862.html"
+  },
+  {
+   "codice": "7408864",
+   "nome": "Coperchio con tubo telescopico con maniglia, rame antico",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-con-tubo-telescopico-con-maniglia-rame-antico-zinco-pressofuso-7408864.html"
+  },
+  {
+   "codice": "7408866",
+   "nome": "Coperchio con tubo telescopico con maniglia, cromo",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-con-tubo-telescopico-con-maniglia-cromo-zinco-pressofuso-7408866.html"
+  },
+  {
+   "codice": "7408869",
+   "nome": "Coperchio cieco con chiave sicurezza, nichel ossidato",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-cieco-con-chiave-sicurezza-nichel-ossidato-7408869.html"
+  },
+  {
+   "codice": "7408870",
+   "nome": "Coperchio cieco con chiave sicurezza, nichel",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-cieco-con-chiave-sicurezza-nichel-7408870.html"
+  },
+  {
+   "codice": "7408872",
+   "nome": "Coperchio cieco con chiave sicurezza, ottone antico",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-cieco-con-chiave-sicurezza-ottone-antico-7408872.html"
+  },
+  {
+   "codice": "7408874",
+   "nome": "Coperchio cieco con chiave sicurezza, rame antico",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-cieco-con-chiave-sicurezza-rame-antico-7408874.html"
+  },
+  {
+   "codice": "7408876",
+   "nome": "Coperchio cieco con chiave sicurezza, cromo",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-cieco-con-chiave-sicurezza-cromo-7408876.html"
+  },
+  {
+   "codice": "7405082",
+   "nome": "Coperchio con uscita laterale, grigio",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-con-uscita-laterale-grigio-asciutto-ip40-fino-a-500-n-utensile-poliammide-grigio-ferro-ral-7011-7405082.html"
+  },
+  {
+   "codice": "7405086",
+   "nome": "Coperchio cieco, grigio",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-cieco-grigio-7405086.html"
+  },
+  {
+   "codice": "7405088",
+   "nome": "Coperchio cieco, grigio",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-cieco-grigio-7405088.html"
+  }
+ ],
+ "CASS_TEL": [
+  {
+   "codice": "7406550",
+   "nome": "Cassetta telaio con uscita cavo laterale, RKS, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-cavo-laterale-rks-dimensione-nominale-250-3-acciaio-inox-13-15-7406550.html"
+  },
+  {
+   "codice": "7407995",
+   "nome": "Uscitacavo in acciaio inox per cassetta telaio",
+   "pagina": "https://www.obo.it/it-it/prodotti/uscitacavo-in-acciaio-inox-per-cassetta-telaio-7407995.html"
+  },
+  {
+   "codice": "7406554",
+   "nome": "Cassetta telaio con uscita cavo laterale, RKS, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-cavo-laterale-rks-dimensione-nominale-250-3-acciaio-inox-18-20-7406554.html"
+  },
+  {
+   "codice": "7406558",
+   "nome": "Cassetta telaio con uscita cavo laterale, RKS, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-cavo-laterale-rks-dimensione-nominale-250-3-acciaio-inox-23-25-7406558.html"
+  },
+  {
+   "codice": "7406560",
+   "nome": "Cassetta telaio con uscita cavo laterale, RKS, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-cavo-laterale-rks-dimensione-nominale-250-3-acciaio-inox-28-30-7406560.html"
+  },
+  {
+   "codice": "7409402",
+   "nome": "Cassetta telaio con uscita tubo, RKF, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-tubo-rkf-dimensione-nominale-250-3-acciaio-inox-8-10-7409402.html"
+  },
+  {
+   "codice": "7428140",
+   "nome": "Coperchio tubo telescopico, con maniglia, per cassetta telaio e cassetta livellabile",
+   "pagina": "https://www.obo.it/it-it/prodotti/coperchio-tubo-telescopico-con-maniglia-per-cassetta-telaio-e-cassetta-livellabile-7428140.html"
+  },
+  {
+   "codice": "7409404",
+   "nome": "Cassetta telaio con uscita tubo, RKF, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-tubo-rkf-dimensione-nominale-250-3-acciaio-inox-13-15-7409404.html"
+  },
+  {
+   "codice": "7409406",
+   "nome": "Cassetta telaio con uscita tubo, RKF, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-tubo-rkf-dimensione-nominale-250-3-acciaio-inox-18-20-7409406.html"
+  },
+  {
+   "codice": "7409408",
+   "nome": "Cassetta telaio con uscita tubo, RKF, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-tubo-rkf-dimensione-nominale-250-3-acciaio-inox-23-25-7409408.html"
+  },
+  {
+   "codice": "7409410",
+   "nome": "Cassetta telaio con uscita tubo, RKF, dimensione nominale 250-3, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-con-uscita-tubo-rkf-dimensione-nominale-250-3-acciaio-inox-28-30-7409410.html"
+  },
+  {
+   "codice": "7406000",
+   "nome": "Cassetta telaio cieca, RK, dimensione nominale 250-2, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-cieca-rk-dimensione-nominale-250-2-acciaio-inox-8-10-7406000.html"
+  },
+  {
+   "codice": "7406004",
+   "nome": "Cassetta telaio cieca, RK, dimensione nominale 250-2, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-cieca-rk-dimensione-nominale-250-2-acciaio-inox-13-15-7406004.html"
+  },
+  {
+   "codice": "7406008",
+   "nome": "Cassetta telaio cieca, RK, dimensione nominale 250-2, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-cieca-rk-dimensione-nominale-250-2-acciaio-inox-18-20-7406008.html"
+  },
+  {
+   "codice": "7406012",
+   "nome": "Cassetta telaio cieca, RK, dimensione nominale 250-2, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-cieca-rk-dimensione-nominale-250-2-acciaio-inox-23-25-7406012.html"
+  },
+  {
+   "codice": "7406016",
+   "nome": "Cassetta telaio cieca, RK, dimensione nominale 250-2, acciaio inox",
+   "pagina": "https://www.obo.it/it-it/prodotti/cassetta-telaio-cieca-rk-dimensione-nominale-250-2-acciaio-inox-28-30-7406016.html"
+  }
+ ]
+}

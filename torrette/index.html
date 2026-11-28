@@ -225,6 +225,44 @@
   .guida .g-alternative { border-left:4px solid var(--arancio); background:var(--carta); padding:10px 14px; margin:0 0 16px; }
   .guida .g-alternative > b { display:block; margin-bottom:8px; }
   .ufs-galleria { margin:0 0 16px; }
+  .ufs-scheda-btn, .guida .g-scheda { margin-left:auto; border:1px solid var(--arancio); color:#a45f00; background:#fff; border-radius:999px; padding:6px 12px; font-weight:700; font-size:calc(13px * var(--zoom,1)); cursor:pointer; }
+  .guida .g-scheda { margin:8px 0 0; align-self:flex-start; }
+  /* Scheda per l'architetto: foglio A4 chiaro sopra la pagina, stampabile */
+  .sa-sfondo { position:fixed; inset:0; z-index:3000; background:rgba(40,42,49,.75); overflow:auto; padding:12px; color-scheme:light; }
+  .sa-comandi { max-width:210mm; margin:0 auto 10px; display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; background:#fff; border-radius:12px; padding:10px 12px; color:#282a31; }
+  .sa-comandi label { display:flex; flex-direction:column; gap:3px; font-size:12px; font-weight:600; color:#41525d; flex:1 1 200px; min-width:0; }
+  .sa-comandi input { border:1px solid #c5d9de; border-radius:8px; padding:8px 10px; font-size:16px; color:#282a31; background:#fff; }
+  .sa-btn { border:1px solid #c5d9de; background:#fff; color:#282a31; border-radius:999px; padding:9px 16px; font-weight:700; cursor:pointer; }
+  .sa-btn.primario { background:#f39b00; border-color:#f39b00; color:#fff; }
+  .sa-foglio { max-width:210mm; margin:0 auto 24px; background:#fff; color:#282a31; padding:14mm 13mm; border-radius:4px; font-family:var(--font); box-shadow:0 10px 40px rgba(0,0,0,.3); }
+  .sa-testa { display:flex; gap:16px; align-items:center; border-bottom:3px solid #f39b00; padding-bottom:10px; margin-bottom:12px; }
+  .sa-logo { height:38px; width:auto; }
+  .sa-testa small { color:#7694a4; font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:11px; }
+  .sa-testa h1 { margin:2px 0 0; font-size:30px; line-height:1.1; }
+  .sa-testa p { margin:2px 0 0; color:#41525d; }
+  .sa-eroe { margin:0 0 12px; } .sa-eroe img { width:100%; max-height:95mm; object-fit:cover; border-radius:8px; display:block; }
+  .sa-eroe figcaption, .sa-foto figcaption, .sa-disegni figcaption { font-size:11px; color:#41525d; margin-top:4px; }
+  .sa-punti { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 0 12px; }
+  .sa-punto { background:#f3f6f7; border-radius:8px; padding:10px; display:flex; flex-direction:column; gap:4px; font-size:12px; line-height:1.35; }
+  .sa-punto b { font-size:14px; }
+  .sa-testo { font-size:13px; line-height:1.5; margin:0 0 12px; }
+  .sa-blocco { margin:0 0 12px; break-inside:avoid; } .sa-blocco h2 { font-size:15px; margin:0 0 6px; color:#41525d; border-left:4px solid #f39b00; padding-left:8px; }
+  .sa-blocco p { font-size:12.5px; line-height:1.45; margin:0; }
+  .sa-griglia { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; } .sa-griglia figure { margin:0; } .sa-griglia svg { width:100%; height:auto; }
+  .sa-foto { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; } .sa-foto figure { margin:0; break-inside:avoid; }
+  .sa-foto img { width:100%; height:38mm; object-fit:cover; border-radius:6px; display:block; } .sa-foto img.sito { object-fit:contain; background:#fff; border:1px solid #e4ebed; }
+  .sa-codici { width:100%; border-collapse:collapse; font-size:12px; } .sa-codici th { background:#41525d; color:#fff; text-align:left; padding:5px 6px; } .sa-codici td { padding:4px 6px; border-bottom:1px solid #e4ebed; } .sa-codici tr:nth-child(even) td { background:#f3f6f7; } .sa-codici a { color:#a45f00; }
+  .sa-piede { border-top:1px solid #c5d9de; padding-top:8px; margin-top:6px; font-size:12px; display:flex; flex-direction:column; gap:4px; } .sa-piede small { color:#7694a4; }
+  @media (max-width:600px) { .sa-foglio { padding:16px 12px; } .sa-punti { grid-template-columns:1fr 1fr; } .sa-foto { grid-template-columns:1fr 1fr; } .sa-testa h1 { font-size:24px; } }
+  @media print {
+    @page { size:A4; margin:10mm; }
+    body.scheda-aperta > *:not(.sa-sfondo) { display:none !important; }
+    body.scheda-aperta { background:#fff !important; }
+    .sa-sfondo { position:static; background:#fff; padding:0; overflow:visible; }
+    .sa-comandi { display:none; }
+    .sa-foglio { box-shadow:none; padding:0; max-width:none; margin:0; }
+    .sa-foglio * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
   :root[data-theme="dark"] .ufs-radice .ufs-gal-foto { filter:invert(1) hue-rotate(180deg); }
   :root[data-theme="dark"] .ufs-radice .ufs-gal-foto img { filter:none; }
   .ufs-gal-testa { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; margin-bottom:8px; }
@@ -364,7 +402,7 @@
 
 <script src="../manutenzione.js" data-sezione="app:torrette"></script>
 <script src="../aggiorna.js" data-versione="../version.json" data-app="torrette"></script>
-<script src="./ufs.js?v=8a8778b498"></script>
+<script src="./ufs.js?v=1919b7dd46"></script>
 <script type="module" src="./ufs-app.js?v=378e944886"></script>
 <script src="../avviso-uscita.js"></script>
 <script src="../piede.js"></script>
