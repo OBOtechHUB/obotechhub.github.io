@@ -320,7 +320,7 @@
      {
       "codice": "7429196",
       "tipo": "GTI 14I",
-      "desc": "14 dispositivi standard Italia",
+      "desc": "Fino a 14 dispositivi standard Italia: 2 supporti 506, uno per lato, 6 o 7 per lato secondo la serie",
       "altezza_min": 110,
       "pavimenti_ok": [
        "massetto"
@@ -394,7 +394,7 @@
      {
       "codice": "7429196",
       "tipo": "GTI 14I",
-      "desc": "14 dispositivi standard Italia",
+      "desc": "Fino a 14 dispositivi standard Italia: 2 supporti 506, uno per lato, 6 o 7 per lato secondo la serie",
       "altezza_min": 110,
       "pavimenti_ok": [
        "massetto"
@@ -928,7 +928,7 @@
      {
       "codice": "7429196",
       "tipo": "GTI 14I",
-      "desc": "Fino a 14 dispositivi standard Italia",
+      "desc": "Fino a 14 dispositivi standard Italia: 2 supporti 506, uno per lato, 6 o 7 per lato secondo la serie",
       "altezza_min": 110,
       "pavimenti_ok": [
        "massetto",
@@ -1844,7 +1844,7 @@
    {
     "codice": "7429196",
     "tipo": "GTI 14",
-    "desc": "Fino a 14 dispositivi standard Italia",
+    "desc": "Fino a 14 dispositivi standard Italia: 2 supporti 506, uno per lato, 6 o 7 per lato secondo la serie",
     "pavimenti_ok": [
      "massetto",
      "flottante"
@@ -2205,7 +2205,7 @@
      {
       "codice": "7429196",
       "tipo": "GT I14",
-      "desc": "14 dispositivi standard Italia",
+      "desc": "Fino a 14 dispositivi standard Italia: 2 supporti 506, uno per lato, 6 o 7 per lato secondo la serie",
       "altezza_min": 85,
       "pavimenti_ok": [
        "massetto"
@@ -2367,7 +2367,7 @@
      {
       "codice": "7429196",
       "tipo": "GT I14",
-      "desc": "14 dispositivi standard Italia",
+      "desc": "Fino a 14 dispositivi standard Italia: 2 supporti 506, uno per lato, 6 o 7 per lato secondo la serie",
       "altezza_min": 85,
       "pavimenti_ok": [
        "massetto"
