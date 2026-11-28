@@ -5,6 +5,7 @@ import DATI_TABELLA from "./dati-sistemi.json";
 import Guida, { VistaComposta, DisegnoPavimento, DisegnoRivestimento } from "./guida.jsx";
 import { Icona, PERCORSI, FiguraUscita, DESCR_USCITA } from "./icone.jsx";
 import CODICI_SISTEMI from "./codici-sistemi.json";
+import PAGINE_OBO from "./pagine-obo.json";
 import FOTO_OBO from "./foto-obo.json";
 
 // ─────────────────────────────────────────────────────────────────
@@ -1466,7 +1467,7 @@ function Badge({ children, variant = "ok" }) {
 function CodicePill({ codice }) {
   const [copiato, setCopiato] = useState(false);
   if (!codice || codice === "—") return <span className="cod-vuoto">—</span>;
-  const isWarn = isBadge(codice), clean = cleanCode(codice), isNA = clean === "N/D", dsUrl = DATASHEET[clean];
+  const isWarn = isBadge(codice), clean = cleanCode(codice), isNA = clean === "N/D", dsUrl = paginaObo(clean);
   const copia = (e) => {
     e.stopPropagation(); if (isNA) return;
     const fatto = () => { setCopiato(true); setTimeout(() => setCopiato(false), 1400); };
@@ -1480,7 +1481,7 @@ function CodicePill({ codice }) {
         <small>Art.</small><b>{copiato ? "Copiato" : clean}</b>
         {!isNA && <Icona nome={copiato ? "ok" : "copia"} size={12} />}
       </span>
-      {dsUrl && <a className="cod-ds" href={dsUrl} target="_blank" rel="noreferrer" title="Scheda tecnica (PDF)" onClick={e => e.stopPropagation()}><Icona nome="documento" size={14} /></a>}
+      {dsUrl && <a className="cod-ds" href={dsUrl} target="_blank" rel="noreferrer" title="Pagina del prodotto su obo.it: scheda tecnica, disegni e BIM" onClick={e => e.stopPropagation()}><Icona nome="documento" size={14} /></a>}
     </span>
   );
 }
@@ -1659,6 +1660,8 @@ const FAMIGLIA_IMG = {
 // Pattern: https://www.obo.it/datasheet/?file=SLUG-CODICE-it_IT.pdf
 // ─────────────────────────────────────────────────────────────────
 const DS_BASE = "https://www.obo.it/datasheet/?file=";
+// pagina del prodotto su obo.it (scheda tecnica, disegni, BIM), dal catalogo prodotti.json: i vecchi link ai PDF non funzionano più
+const paginaObo = (cod) => (PAGINE_OBO[cod] ? "https://www.obo.it" + PAGINE_OBO[cod] : null);
 const DATASHEET = {
   // ── UDHOME-ONE ──────────────────────────────────────────────────
   "7368282": DS_BASE + "UDHOME-ONE_GV15-7368282-it_IT.pdf",
@@ -3314,7 +3317,7 @@ function Carrello({ voci, onRimuovi, onModifica, onSvuota, onChiudi, onSalva, on
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(testo).then(fatto).catch(() => {});
     else { const ta = document.createElement("textarea"); ta.value = testo; ta.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); fatto(); } catch (e) { /* niente */ } ta.remove(); }
   };
-  const ds = righe.map(r => ({ cod: cleanCode(r.codice), label: r.label, url: DATASHEET[cleanCode(r.codice)] })).filter(x => x.url);
+  const ds = righe.map(r => ({ cod: cleanCode(r.codice), label: r.label, url: paginaObo(cleanCode(r.codice)) })).filter(x => x.url);
   const excel = () => { const b = document.getElementById("csv"); if (b) b.click(); };
   const cambiaPezzi = (v, d) => onModifica(v.id, { qta: Math.min(999, Math.max(1, pezzi(v) + d)) });
 
@@ -3366,7 +3369,7 @@ function Carrello({ voci, onRimuovi, onModifica, onSvuota, onChiudi, onSalva, on
                 <tbody>{righe.map(r => <tr key={cleanCode(r.codice)}><td><CodicePill codice={r.codice} /></td><td>{r.label}{r.nota ? <small style={{ display: "block", color: "#7694a4" }}>{r.nota}</small> : null}</td><td className="q">{r.qty}</td></tr>)}</tbody></table>
             )}
             {ds.length > 0 && vista === "codici" && (
-              <details className="cr-ds"><summary>Schede tecniche ({ds.length})</summary>
+              <details className="cr-ds"><summary>Pagine dei prodotti su obo.it ({ds.length})</summary>
                 <ul>{ds.map(x => <li key={x.cod}><a href={x.url} target="_blank" rel="noopener">{x.cod} · {x.label}</a></li>)}</ul></details>
             )}
           </div>

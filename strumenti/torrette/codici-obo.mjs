@@ -30,5 +30,6 @@ for (const p of catalogo) {
   const cod = String(p[0] ?? "").replace(/\s/g, "");
   if (usati.has(cod) && typeof p[3] === "string" && p[3].startsWith("/")) mappa[cod] = p[3];
 }
+writeFileSync("torrette/sorgente/pagine-obo.json", JSON.stringify(mappa) + "\n");
 writeFileSync("torrette/codici-obo.js", "/* Generato da strumenti/torrette/codici-obo.mjs (non modificare a mano): codice OBO → pagina su www.obo.it */\nexport const CODICI_OBO = " + JSON.stringify(mappa) + ";\n");
 console.log(`torrette/codici-obo.js: ${Object.keys(mappa).length} codici con pagina obo.it su ${usati.size} usati`);
