@@ -70,21 +70,40 @@ export function DisegnoRivestimento({ mm }) {
 }
 
 /** Coperchio aperto visto dall'alto con le prese richieste. */
+// Modul45: frutti quadrati 45 × 45 nella scatola OBO. Standard Italia: supporti come le scatole 504 (4 moduli) e 506
+// (6 o 7 moduli secondo la serie civile) con moduli stretti 22,5 × 45; la torretta ne porta 1 da 504 oppure 2 da 506.
 export function DisegnoPrese({ n, tipo }) {
-  const k = Math.max(0, Math.min(16, Number(n) || 0)), ita = tipo === "ita", tot0 = k || 4;
-  const per = Math.min(8, tot0), righe = tot0 > 8 ? 2 : 1, hh = righe === 2 ? 44 : 60, lw = ita ? hh / 2 : hh, gap = 4;
-  const larg = per * lw + (per - 1) * gap, x0 = 150 - larg / 2, y0 = righe === 2 ? 22 : 45;
+  const k = Math.max(0, Math.min(16, Number(n) || 0)), ita = tipo === "ita";
+  if (ita) {
+    const due = k > 4, supporti = due ? [7, 7] : [4], mw = 15, mh = 34, gap = 2;
+    const largS = (m) => m * mw + (m - 1) * gap + 16;
+    return (
+      <svg viewBox="0 0 300 150" role="img" aria-label={due ? "Due supporti 506 con 6 o 7 moduli standard Italia ciascuno" : "Un supporto 504 con 4 moduli standard Italia"}>
+        {supporti.map((m, j) => {
+          const w = largS(m), x0 = 150 - w / 2, y0 = due ? 12 + j * 64 : 40;
+          return <g key={j}>
+            <rect x={x0} y={y0} width={w} height={mh + 16} rx="6" fill="var(--carta)" stroke={C.metallo} strokeWidth="2.2" />
+            {Array.from({ length: m }, (_, i) => { const x = x0 + 8 + i * (mw + gap), y = y0 + 8, sett = due && i === 6;
+              return <g key={i}><rect x={x} y={y} width={mw} height={mh} rx="2" fill={sett ? "none" : C.vuoto} stroke={C.linea} strokeWidth="1" strokeDasharray={sett ? "3 2" : undefined} />
+                {!sett && <g fill={C.quota}><circle cx={x + mw / 2} cy={y + 9} r="1.6" /><circle cx={x + mw / 2} cy={y + 17} r="1.6" /><circle cx={x + mw / 2} cy={y + 25} r="1.6" /></g>}</g>; })}
+            <text x={x0 + w + 6} y={y0 + mh / 2 + 12} fontSize="11" fontWeight="700" fill={C.testo}>{due ? "506" : "504"}</text>
+          </g>;
+        })}
+        <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>{due ? "2 × 506: 6 o 7 moduli ciascuno (7° secondo la serie)" : "1 × 504: fino a 4 moduli 22,5 × 45 mm"}</text>
+      </svg>
+    );
+  }
+  const tot0 = k || 4, per = Math.min(8, tot0), righe = tot0 > 8 ? 2 : 1, gap = 4, hh = Math.min(righe === 2 ? 44 : 56, (262 - (per - 1) * gap) / per), lw = hh;
+  const larg = per * lw + (per - 1) * gap, x0 = 150 - larg / 2, y0 = righe === 2 ? 20 : 40;
   return (
-    <svg viewBox="0 0 300 150" role="img" aria-label={`Scatola portafrutti con ${k || "i"} ${ita ? "dispositivi standard Italia (moduli stretti)" : "moduli Modul45 (quadrati)"}`}>
-      <rect x={Math.max(6, x0 - 16)} y={y0 - 14} width={Math.min(288, larg + 32)} height={righe * hh + (righe - 1) * 8 + 28} rx="10" fill="var(--carta)" stroke={C.metallo} strokeWidth="2.5" />
+    <svg viewBox="0 0 300 150" role="img" aria-label={`Scatola OBO con ${k || "i"} moduli Modul45 quadrati`}>
+      <rect x={Math.max(6, x0 - 14)} y={y0 - 12} width={Math.min(288, larg + 28)} height={righe * hh + (righe - 1) * 8 + 24} rx="10" fill="var(--carta)" stroke={C.metallo} strokeWidth="2.5" />
       {Array.from({ length: tot0 }, (_, i) => {
         const r = Math.floor(i / per), c = i % per, x = x0 + c * (lw + gap), y = y0 + r * (hh + 8), cx = x + lw / 2, cy = y + hh / 2;
         return <g key={i} opacity={k ? 1 : .3}><rect x={x} y={y} width={lw} height={hh} rx="3" fill={C.vuoto} stroke={C.linea} strokeWidth="1" />
-          {ita ? <g fill={C.quota}><circle cx={cx} cy={cy - hh * .2} r="2" /><circle cx={cx} cy={cy} r="2" /><circle cx={cx} cy={cy + hh * .2} r="2" /></g>
-            : <g><circle cx={cx} cy={cy} r={hh * .3} fill="none" stroke={C.quota} strokeWidth="1.6" /><circle cx={cx - hh * .12} cy={cy} r="2.4" fill={C.quota} /><circle cx={cx + hh * .12} cy={cy} r="2.4" fill={C.quota} /></g>}</g>;
+          <circle cx={cx} cy={cy} r={hh * .3} fill="none" stroke={C.quota} strokeWidth="1.6" /><circle cx={cx - hh * .12} cy={cy} r="2.4" fill={C.quota} /><circle cx={cx + hh * .12} cy={cy} r="2.4" fill={C.quota} /></g>;
       })}
-      {!ita && k > 0 && <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>Modul45: moduli quadrati 45 × 45 mm</text>}
-      {ita && k > 0 && <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>Standard Italia: moduli 22,5 × 45 mm</text>}
+      <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>{tipo === "modul45" ? "Modul45®: moduli quadrati 45 × 45 mm" : "Scegli il sistema dei frutti"}</text>
     </svg>
   );
 }
@@ -102,7 +121,7 @@ const ICONE = {
 
 // ───────────────────────── domande ─────────────────────────
 const PASSI = [
-  { id: "prese", titolo: "Quanti dispositivi servono in ogni torretta?", aiuto: "Conta insieme prese di corrente e prese dati: ogni frutto è un dispositivo. Poi scegli il sistema dei frutti." },
+  { id: "prese", titolo: "Quali frutti e quanti in ogni torretta?", aiuto: "Prima il sistema dei frutti (Modul45® o standard Italia), poi quanti: prese di corrente e prese dati contano insieme." },
   { id: "forma", titolo: "Che forma deve avere la torretta?", aiuto: "È solo una questione estetica: scegli quella che sta meglio con la posa del pavimento." },
   { id: "pavimento", titolo: "Com'è fatto il pavimento?", aiuto: "Guarda come sarà la struttura sotto il pavimento finito, nel punto dove va la torretta." },
   { id: "altezza", titolo: "Quanto spazio c'è sotto il pavimento?", aiuto: "È la misura H del disegno: dal solaio grezzo fino al piano del pavimento finito, in millimetri." },
@@ -131,7 +150,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
   const adatti = ris.ok.length + ris.parziali.length, fine = passo >= PASSI.length, P = PASSI[passo];
   const azzera = () => { setFiltri({ altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", moduli: "", tipoPrese: "" }); setPasso(0); };
   const riassunto = [
-    ["prese", (filtri.moduli || filtri.tipoPrese) && `${filtri.moduli || "?"} dispositivi${filtri.tipoPrese ? (filtri.tipoPrese === "ita" ? " standard Italia" : " Modul45") : ""}`],
+    ["prese", (filtri.moduli || filtri.tipoPrese) && (filtri.tipoPrese === "ita" ? (filtri.moduli === "4" ? "Standard Italia · 1 × 504" : filtri.moduli ? "Standard Italia · 2 × 506" : "Standard Italia") : filtri.tipoPrese === "modul45" ? `${filtri.moduli ? filtri.moduli + " moduli " : ""}Modul45` : `${filtri.moduli} dispositivi`)],
     ["forma", filtri.forma && filtri.forma !== "indifferente" && (filtri.forma === "quadrata" ? "Quadrata" : "Rotonda")],
     ["pavimento", filtri.pavimento && { massetto: "Massetto", flottante: "Flottante", seminato: "Seminato" }[filtri.pavimento]],
     ["altezza", filtri.altezza && `H ${filtri.altezza} mm`],
@@ -194,18 +213,27 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
               <div className="g-due">
                 <div className="g-tavola"><DisegnoPrese n={nPrese} tipo={filtri.tipoPrese} /></div>
                 <div className="g-campi">
-                  <label>Numero di dispositivi</label>
-                  <div className="g-conta">
-                    <button type="button" aria-label="Un dispositivo in meno" onClick={() => metti("moduli", nPrese > 1 ? String(nPrese - 1) : "")}>−</button>
-                    <output aria-live="polite">{nPrese || "—"}</output>
-                    <button type="button" aria-label="Un dispositivo in più" onClick={() => metti("moduli", String(Math.min(16, nPrese + 1)))}>+</button>
-                  </div>
-                  <div className="g-rapide">{[2, 4, 6, 8, 12].map((a) => <button type="button" key={a} className={"g-pill" + (nPrese === a ? " attiva" : "")} onClick={() => metti("moduli", String(a))}>{a}</button>)}</div>
-                  <label>Standard dei frutti</label>
+                  <label>Sistema dei frutti</label>
                   <div className="g-griglia due">
-                    <Scelta larga attiva={filtri.tipoPrese === "modul45"} onClick={() => set("tipoPrese", "modul45")} titolo="Modul45®" testo="frutti OBO quadrati 45 × 45 mm" />
-                    <Scelta larga attiva={filtri.tipoPrese === "ita"} onClick={() => set("tipoPrese", "ita")} titolo="Standard Italia" testo="frutti delle serie civili italiane, 1 modulo (22,5 × 45 mm) ciascuno" />
+                    <Scelta larga attiva={filtri.tipoPrese === "modul45"} onClick={() => setFiltri((p) => ({ ...p, tipoPrese: p.tipoPrese === "modul45" ? "" : "modul45", moduli: p.tipoPrese === "modul45" ? p.moduli : "" }))} titolo="Modul45®" testo="frutti OBO quadrati 45 × 45 mm" />
+                    <Scelta larga attiva={filtri.tipoPrese === "ita"} onClick={() => setFiltri((p) => ({ ...p, tipoPrese: p.tipoPrese === "ita" ? "" : "ita", moduli: p.tipoPrese === "ita" ? p.moduli : "" }))} titolo="Standard Italia" testo="frutti delle serie civili italiane, moduli 22,5 × 45 mm" />
                   </div>
+                  {filtri.tipoPrese === "ita" ? <>
+                    <label>Supporti per i frutti</label>
+                    <div className="g-griglia due">
+                      <Scelta larga attiva={filtri.moduli === "4"} onClick={() => metti("moduli", filtri.moduli === "4" ? "" : "4")} titolo="1 supporto 504" testo="fino a 4 moduli" />
+                      <Scelta larga attiva={filtri.moduli === "12"} onClick={() => metti("moduli", filtri.moduli === "12" ? "" : "12")} titolo="2 supporti 506" testo="6 o 7 moduli ciascuno secondo la serie civile: 12–14 moduli" />
+                    </div>
+                    <p className="g-suggerimento">Secondo la torretta il box è già montato oppure va aggiunto sotto (box GTI 4 per il 504, GTI 14 per i due 506): lo scegli nella configurazione.</p>
+                  </> : filtri.tipoPrese === "modul45" ? <>
+                    <label>Numero di moduli Modul45®</label>
+                    <div className="g-conta">
+                      <button type="button" aria-label="Un modulo in meno" onClick={() => metti("moduli", nPrese > 1 ? String(nPrese - 1) : "")}>−</button>
+                      <output aria-live="polite">{nPrese || "—"}</output>
+                      <button type="button" aria-label="Un modulo in più" onClick={() => metti("moduli", String(Math.min(16, nPrese + 1)))}>+</button>
+                    </div>
+                    <div className="g-rapide">{[2, 4, 6, 8, 9, 12].map((a) => <button type="button" key={a} className={"g-pill" + (nPrese === a ? " attiva" : "")} onClick={() => metti("moduli", String(a))}>{a}</button>)}</div>
+                  </> : <p className="g-suggerimento">Scegli il sistema: cambiano i supporti, il numero di frutti e il disegno.</p>}
                 </div>
               </div>
     );
@@ -254,7 +282,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
     <div className="guida" ref={radice}>
       <div className="g-dentro">
         <ol className="g-passi" aria-label="Avanzamento">
-          {PASSI.map((x, i) => <li key={x.id} className={i === passo ? "ora" : riassunto[i][1] ? "fatto" : ""}><button type="button" onClick={() => setPasso(i)} aria-current={i === passo ? "step" : undefined}><span>{i + 1}</span><em>{["Dispositivi", "Forma", "Pavimento", "Altezza", "Rivestimento", "Uso"][i]}</em></button></li>)}
+          {PASSI.map((x, i) => <li key={x.id} className={i === passo ? "ora" : riassunto[i][1] ? "fatto" : ""}><button type="button" onClick={() => setPasso(i)} aria-current={i === passo ? "step" : undefined}><span>{i + 1}</span><em>{["Frutti", "Forma", "Pavimento", "Altezza", "Rivestimento", "Uso"][i]}</em></button></li>)}
           <li className={fine ? "ora" : ""}><button type="button" onClick={() => setPasso(PASSI.length)}><span>✓</span><em>Risultato</em></button></li>
         </ol>
 
