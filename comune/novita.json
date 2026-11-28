@@ -2,6 +2,21 @@
   "nota": "Registro degli aggiornamenti di OBO Hub, Mappa carichi e Configuratore torrette. Una voce per aggiornamento, la più recente per prima. app: hub | mappa | torrette | prodotti | tutte. Le novità di Progettazione LPS stanno nel registro del suo repository (public/novita.json). Le novità solo grafiche (animazioni, sigle, aspetto) non si mostrano: restano conservate in 'grafica_non_mostrata'.",
   "aggiornamenti": [
     {
+      "id": "2026-11-28-tutte-1",
+      "data": "2026-11-28",
+      "app": "tutte",
+      "titolo": "Cerca il progetto per numero CRM, nome o comune",
+      "voci": [
+        "In Zavorra WRR il campo «Progetto» è una ricerca: scrivi numero CRM, nome o comune e scegli dall'elenco",
+        "Nella Mappa carichi il filtro «Progetto» si cerca allo stesso modo (CRM, nome, persona)"
+      ],
+      "titolo_en": "Find the project by CRM number, name or town",
+      "voci_en": [
+        "In WRR ballast the «Project» field is a search: type CRM number, name or town and pick from the list",
+        "In the workload map the «Project» filter works the same way (CRM, name, person)"
+      ]
+    },
+    {
       "id": "2026-11-27-zavorra-5",
       "data": "2026-11-27",
       "app": "zavorra",
