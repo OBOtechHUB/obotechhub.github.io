@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 // Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
 import DATI_TABELLA from "./dati-sistemi.json";
 import Guida, { VistaComposta, DisegnoPavimento, DisegnoRivestimento } from "./guida.jsx";
+import { Icona, PERCORSI, FiguraUscita, DESCR_USCITA } from "./icone.jsx";
 import CODICI_SISTEMI from "./codici-sistemi.json";
 import FOTO_OBO from "./foto-obo.json";
 
@@ -1285,28 +1286,28 @@ const FAMIGLIE = [
   {
     id: "GES", label: "Torrette GES", colore: "#F39B00",
     sistemi: ["GES4","GES9","GRAF9"],
-    icona: "⬛",
+    icona: "quadrata",
     descrizione: "Il grande classico delle installazioni sottopavimento: torrette quadrate e rotonde per uffici e ambienti professionali. Installabili su massetto o flottante, in plastica o metallo. Compatibili con Modul45® e standard Italia. Ideale per uffici, aree commerciali e showroom.",
     tag: ["Uffici","Plastica","Massetto/Flottante"],
   },
   {
     id: "UDHOME", label: "UDHOME (All-in-one)", colore: "#1A6EA0",
     sistemi: ["UDHOME_ONE","UDHOME2","UDHOME4","UDHOME9"],
-    icona: "🏠",
+    icona: "ufficio",
     descrizione: "La torretta all-in-one per ambienti residenziali, hotel e uffici di rappresentanza. Scatola da incasso integrata con le stesse dimensioni del coperchio. Finiture in inox satinato o ottone massiccio. Coperchio rivestibile (4/9) o prefinito (ONE/2). Spazzola reversibile IP40.",
     tag: ["All-in-one","Inox/Ottone","Hotel","Residenziale","Filo pavimento"],
   },
   {
     id: "Cassette livellabili", label: "Cassette livellabili", colore: "#2E7D32",
     sistemi: ["CASS_LIV_4","CASS_LIV_9"],
-    icona: "🔧",
+    icona: "livella",
     descrizione: "Cassette con piedini di regolazione per una perfetta integrazione in pavimentazioni di pregio: marmo, cotto, legno, seminato alla veneziana. Altezza min. 105 mm. IP66 con tubo telescopico. Versione heavy-duty fino a 20 kN (2.000 kg) per showroom, stazioni e aeroporti.",
     tag: ["Con piedini","Lavaggio secco/umido","Carichi pesanti","Pavimenti di pregio","Massetto","Filo pavimento"],
   },
   {
     id: "Cassette telaio", label: "Cassette telaio", colore: "#00695C",
     sistemi: ["CASS_TEL"],
-    icona: "⬜",
+    icona: "telaio",
     descrizione: "Cassette a telaio inox per pavimento massetto. Coperchio 288×288mm rivestibile. " +
                  "Disponibili con uscita cavi laterale (IP40), tubo telescopico (IP44) o coperchio cieco (IP44 — solo ispezione). " +
                  "Da abbinare a scatola da massetto con range di altezza da 55 a 205mm.",
@@ -1315,21 +1316,21 @@ const FAMIGLIE = [
   {
     id: "Cassette disaccoppiate", label: "Cassette disaccoppiate", colore: "#6A1EA0",
     sistemi: ["DISACC_4","DISACC_9"],
-    icona: "🔩",
+    icona: "disaccoppiata",
     descrizione: "Variante senza piedini: il telaio superiore è separato dalla scatola da incasso, con regolazione possibile a pavimento finito. Altezza min. 90 mm, ideale quando l'altezza struttura è ridotta. Versione heavy-duty fino a 20 kN. Culla obbligatoria per pavimento flottante.",
     tag: ["Senza piedini","Flottante","Filo pavimento","Lavaggio secco/umido"],
   },
   {
     id: "Seminato", label: "Cassette pav. seminato", colore: "#9C2A2A",
     sistemi: ["SEMINATO"],
-    icona: "🪨",
+    icona: "seminato",
     descrizione: "Cassetta dedicata al pavimento seminato levigato alla veneziana. Solo massetto. Range di altezza 126–442 mm con recesso di 25 mm per la levigatura a filo. Versioni con uscita laterale, tubo telescopico o coperchio cieco.",
     tag: ["Massetto","Riv. 25 mm","Levigato","Filo pavimento"],
   },
   {
     id: "GES R2", label: "Torrette tonde GES R2", colore: "#006060",
     sistemi: ["GES_R2"],
-    icona: "⭕",
+    icona: "rotonda",
     descrizione: "Torretta rotonda compatta Ø 140 mm: aspetto discreto, capacità di carico elevatissima e design ricercato. Metallo: IP66, 20 kN, 6 finiture pregiate (cromo, nichel, ottone, rame, nero, nichel ossidato). Plastica: IP40, 500 N. Ideale per showroom, supermercati e spazi comuni.",
     tag: ["Rotonda Ø 140 mm","IP66","2 tonnellate","6 finiture metallo"],
   },
@@ -1488,7 +1489,7 @@ function CodicePill({ codice }) {
           style={{ fontSize:13, lineHeight:1, textDecoration:"none", opacity:0.7, transition:"opacity 0.15s" }}
           onMouseEnter={e => e.currentTarget.style.opacity=1}
           onMouseLeave={e => e.currentTarget.style.opacity=0.7}
-        >📄</a>
+        ><Icona nome="documento" size={13} /></a>
       )}
     </span>
   );
@@ -1533,7 +1534,7 @@ function StepFamiglia({ onSelect }) {
             {/* Icona + titolo */}
             <div style={{ padding: isMobile ? "12px 14px" : "14px 18px 10px", display: "flex", alignItems: "center", gap: 10, flex: isMobile ? 1 : undefined }}>
               <div style={{ width: isMobile ? 32 : 38, height: isMobile ? 32 : 38, borderRadius: "50%", background: `${f.colore}15`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: isMobile ? 16 : 20, flexShrink: 0 }}>
-                {f.icona}
+                <Icona nome={f.icona} size={isMobile ? 18 : 21} colore={f.colore} />
               </div>
               <div>
                 <div style={{ fontSize: isMobile ? 13 : 15, fontWeight: 800, color: "#282a31" }}>{f.label}</div>
@@ -1684,17 +1685,7 @@ const DATASHEET = {
 
 // ── Caratteristiche con icona: sempre le stesse cinque, nello stesso ordine, calcolate dai dati dei sistemi (DB).
 // Se cambiano i dati di un sistema, le etichette cambiano da sole in tutte le schede (famiglie, modelli, ricerca).
-const ICONE_CAR = {
-  forma: <><rect x="3" y="3" width="8" height="8" rx="1"/><circle cx="16.5" cy="16.5" r="4.5"/></>,
-  quadrata: <rect x="4" y="4" width="16" height="16" rx="2"/>,
-  rotonda: <circle cx="12" cy="12" r="8.5"/>,
-  ip: <><path d="M12 3l7.5 3v5.5c0 4.6-3.1 8-7.5 9.5-4.4-1.500-7.500-4.900-7.500-9.500V6z"/><path d="M12 8.500c-1.500 2-2.300 3.200-2.300 4.300a2.300 2.300 0 004.600 0c0-1.100-.800-2.300-2.300-4.300z"/></>,
-  carico: <><path d="M7 9h10l3 11H4z"/><path d="M9.500 9a2.500 2.500 0 115 0"/></>,
-  pavimento: <><path d="M3 8l9-4 9 4-9 4z"/><path d="M3 12.500l9 4 9-4"/><path d="M3 17l9 4 9-4"/></>,
-  rivestimento: <><rect x="3" y="13" width="18" height="7" rx="1"/><path d="M3 9h18M7 5v4M12 5v4M17 5v4"/></>,
-  altezza: <><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/><path d="M3 21h18"/></>,
-  acustica: <><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.500 8.500a5 5 0 010 7M19 6a8.500 8.500 0 010 12"/></>,
-};
+const ICONE_CAR = PERCORSI; // stesse icone in tutta l'app (icone.jsx)
 // altezza minima e regolazione lette dai testi delle altezze (sistema e gruppi): «75–105 mm», «min. 110 mm»
 function altezzeDa(s) {
   const testi = [s.altezze, ...(s.gruppi || []).map(g => g.altezze)].filter(Boolean).flatMap(a => Object.values(a)).map(String);
@@ -1770,6 +1761,81 @@ const GALLERIA = {
   "UDHOME": [G("g-udhome-hall.jpg", "Hall d'albergo: la torretta alimenta la lampada da terra", 1), G("g-udhome-parquet.jpg", "Nel parquet con i cavi delle scrivanie", 1), G("g-udhome-corridoio.jpg", "A coperchio chiuso nel corridoio", 1),
     G("g-udhome-spazzola.jpg", "Uscita dei cavi con spazzola: chiusa anche con la spina inserita"), G("g-udhome-one.jpg", "UDHOME-ONE con uscita laterale"), G("g-udhome9.jpg", "UDHOME 9 aperta con i frutti"), G("g-udhome-sezione.jpg", "Montaggio nel massetto, in sezione"), G("g-udhome-spazzola2.jpg", "La spazzola si gira di 180°")],
 };
+
+// ---------- scelte del passo 3 con le icone comuni ----------
+const NOMI_PAV = { massetto: ["Massetto", "Nel massetto, sul solaio"], flottante: ["Pavimento flottante", "Sopraelevato su piedini"], seminato: ["Seminato", "Pavimento alla veneziana"] };
+function SceltaPavimento({ pavimenti, sel, onSel }) {
+  return (
+    <div className="ufs-scelte due">
+      {pavimenti.map(p => (
+        <button key={p} type="button" className="ufs-scelta" aria-pressed={sel === p} onClick={() => onSel(p)}>
+          <Icona nome={p} size={30} spessore={1.5} />
+          <span><b>{(NOMI_PAV[p] || [p])[0]}</b><small>{(NOMI_PAV[p] || [])[1]}</small></span>
+        </button>
+      ))}
+    </div>
+  );
+}
+function SceltaUscita({ uscite, sel, onSel, etichette, righe }) {
+  return (
+    <div className="ufs-uscite">
+      {uscite.map(u => {
+        const n = (righe || []).filter(r => r.uscita === u).length;
+        return (
+          <button key={u} type="button" className="ufs-uscita" aria-pressed={sel === u} onClick={() => onSel(u)}>
+            <FiguraUscita tipo={u} size={140} />
+            <b>{etichette[u] ?? (String(u).charAt(0).toUpperCase() + String(u).slice(1))}</b>
+            <small>{DESCR_USCITA(u)}</small>
+            <em>{n} {n === 1 ? "variante" : "varianti"}</em>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+// elenco delle torrette: se sono tante si sceglie per forma, finitura e rivestimento, e si vede solo quella che serve
+const ATTR = [["forma", "Forma"], ["finitura", "Finitura"], ["riv", "Rivestimento"], ["colore", "Colore"]];
+const nomeAttr = (k, v) => k === "riv" ? `${v} mm` : String(v).charAt(0).toUpperCase() + String(v).slice(1);
+const SWATCH = { inox: "linear-gradient(135deg,#e9edf0,#aab4bb)", ottone: "linear-gradient(135deg,#f3dc9a,#b8913a)", nero: "#282a31", grigio: "#8a949b" };
+function ElencoTorrette({ righe, sel, onSel }) {
+  const attivi = ATTR.filter(([k]) => new Set(righe.map(r => r[k]).filter(v => v != null && v !== "")).size > 1);
+  const [f, setF] = useState({});
+  const chiaveRighe = righe.map(r => r.label).join("|");
+  useEffect(() => { setF({}); }, [chiaveRighe]);
+  const vale = (r) => attivi.every(([k]) => f[k] == null || String(r[k]) === String(f[k]));
+  const visibili = righe.map((r, i) => [r, i]).filter(([r]) => vale(r));
+  useEffect(() => { if (attivi.length && visibili.length === 1 && sel !== visibili[0][1] && Object.keys(f).length) onSel(visibili[0][1]); }, [f]);
+  return (
+    <div>
+      {righe.length > 3 && attivi.map(([k, t]) => {
+        const valori = [...new Set(righe.map(r => r[k]).filter(v => v != null && v !== ""))];
+        return (
+          <div key={k} className="ufs-attr" role="group" aria-label={t}>
+            <span>{t}</span>
+            {valori.map(v => (
+              <button key={String(v)} type="button" aria-pressed={String(f[k]) === String(v)} onClick={() => setF(o => ({ ...o, [k]: String(o[k]) === String(v) ? undefined : v }))}>
+                {k === "forma" && <Icona nome={/rotond/i.test(v) ? "rotonda" : "quadrata"} size={15} />}
+                {k === "finitura" && <i className="ufs-sw" style={{ background: SWATCH[String(v).toLowerCase()] || "#c5d9de" }} />}
+                {k === "riv" && <Icona nome="rivestimento" size={15} />}
+                {nomeAttr(k, v)}
+              </button>
+            ))}
+          </div>
+        );
+      })}
+      <div className="ufs-varianti">
+        {visibili.map(([r, i]) => (
+          <button key={i} type="button" className="ufs-variante" aria-pressed={sel === i} onClick={() => onSel(i)}>
+            <span className="ufs-radio" />
+            <span className="ufs-var-t"><b>{r.label}</b>{(r.materiale || r.colore_ral) && <small>{[r.materiale, r.colore_ral].filter(Boolean).join(" · ")}</small>}</span>
+            {sel === i && (r.codice || r.codici?.[0]) && <CodicePill codice={r.codice || r.codici[0]} />}
+          </button>
+        ))}
+        {!visibili.length && <p className="ufs-nessuna">Nessuna torretta con queste scelte.</p>}
+      </div>
+    </div>
+  );
+}
 
 // foto a schermo intero (sopra tutto, anche nel tema scuro: va nel body)
 function Lightbox({ foto, indice, setIndice, nome }) {
@@ -1892,7 +1958,7 @@ function GalleriaSistema({ sistemaKey, famigliaId, nome }) {
   return (
     <section className="ufs-galleria" aria-label={"Foto di " + nome}>
       <div className="ufs-gal-testa"><b>Com'è e dove si installa</b><small>Tocca una foto per ingrandirla e mostrarla al cliente</small>
-        <button type="button" className="ufs-scheda-btn" onClick={() => setScheda(true)}>📄 Scheda per l'architetto (PDF)</button></div>
+        <button type="button" className="ufs-scheda-btn" onClick={() => setScheda(true)}><Icona nome="documento" size={15} stile={{ verticalAlign: "-3px", marginRight: 5 }} />Scheda per l'architetto (PDF)</button></div>
       {scheda && <SchedaArchitetto sistemaKey={sistemaKey} onChiudi={() => setScheda(false)} />}
       <div className="ufs-gal-nastro">
         {foto.map((x, i) => (
@@ -2014,20 +2080,20 @@ function RigaTabella({ label, codice, nota, bg }) {
 
 const DISPOSITIVI_M45 = [
   // ── ENERGIA ─────────────────────────────────────────────────────
-  { id: "unel_w",  cat: "energia", label: "UNEL bianca",    desc: "Presa UNEL 2P+T bianca",         codice: "6120760", slot: 1,   colore: "#1565C0", emoji: "🔌" },
-  { id: "unel_r",  cat: "energia", label: "UNEL rossa",     desc: "Presa UNEL 2P+T rossa",          codice: "6120761", slot: 1,   colore: "#C62828", emoji: "🔌" },
-  { id: "unel_b",  cat: "energia", label: "UNEL nera",      desc: "Presa UNEL 2P+T nera",           codice: "6120762", slot: 1,   colore: "#212121", emoji: "🔌" },
-  { id: "unel_a",  cat: "energia", label: "UNEL alluminio", desc: "Presa UNEL 2P+T alluminio",      codice: "6120763", slot: 1,   colore: "#78909C", emoji: "🔌" },
-  { id: "bip_w",   cat: "energia", label: "Bipasso bianca", desc: "Presa bipasso 2P+T bianca",      codice: "6120746", slot: 0.5, colore: "#0277BD", emoji: "🔌" },
-  { id: "bip_r",   cat: "energia", label: "Bipasso rossa",  desc: "Presa bipasso 2P+T rossa",       codice: "6120747", slot: 0.5, colore: "#AD1457", emoji: "🔌" },
+  { id: "unel_w",  cat: "energia", label: "UNEL bianca",    desc: "Presa UNEL 2P+T bianca",         codice: "6120760", slot: 1,   colore: "#1565C0", emoji: "presa" },
+  { id: "unel_r",  cat: "energia", label: "UNEL rossa",     desc: "Presa UNEL 2P+T rossa",          codice: "6120761", slot: 1,   colore: "#C62828", emoji: "presa" },
+  { id: "unel_b",  cat: "energia", label: "UNEL nera",      desc: "Presa UNEL 2P+T nera",           codice: "6120762", slot: 1,   colore: "#212121", emoji: "presa" },
+  { id: "unel_a",  cat: "energia", label: "UNEL alluminio", desc: "Presa UNEL 2P+T alluminio",      codice: "6120763", slot: 1,   colore: "#78909C", emoji: "presa" },
+  { id: "bip_w",   cat: "energia", label: "Bipasso bianca", desc: "Presa bipasso 2P+T bianca",      codice: "6120746", slot: 0.5, colore: "#0277BD", emoji: "presa" },
+  { id: "bip_r",   cat: "energia", label: "Bipasso rossa",  desc: "Presa bipasso 2P+T rossa",       codice: "6120747", slot: 0.5, colore: "#AD1457", emoji: "presa" },
   // ── DATI / MULTIMEDIALE ─────────────────────────────────────────
-  { id: "rj45",    cat: "dati",    label: "2× RJ45",        desc: "Presa dati 2×RJ45 Cat.6A bianca",codice: "6119214", slot: 1,   colore: "#2E7D32", emoji: "🌐" },
-  { id: "usbc",    cat: "dati",    label: "USB-A+C",        desc: "Presa USB-A + USB-C bianca",     codice: "6105306", slot: 0.5, colore: "#E65100", emoji: "⚡" },
-  { id: "hdmi",    cat: "dati",    label: "HDMI",           desc: "Presa HDMI con cavo bianca",     codice: "6104826", slot: 1,   colore: "#37474F", emoji: "🖥" },
-  { id: "tv",      cat: "dati",    label: "TV/Radio/SAT",   desc: "Presa TV/Radio/SAT bianca",      codice: "6105282", slot: 1,   colore: "#6A1EA0", emoji: "📡" },
+  { id: "rj45",    cat: "dati",    label: "2× RJ45",        desc: "Presa dati 2×RJ45 Cat.6A bianca",codice: "6119214", slot: 1,   colore: "#2E7D32", emoji: "dati" },
+  { id: "usbc",    cat: "dati",    label: "USB-A+C",        desc: "Presa USB-A + USB-C bianca",     codice: "6105306", slot: 0.5, colore: "#E65100", emoji: "usb" },
+  { id: "hdmi",    cat: "dati",    label: "HDMI",           desc: "Presa HDMI con cavo bianca",     codice: "6104826", slot: 1,   colore: "#37474F", emoji: "hdmi" },
+  { id: "tv",      cat: "dati",    label: "TV/Radio/SAT",   desc: "Presa TV/Radio/SAT bianca",      codice: "6105282", slot: 1,   colore: "#6A1EA0", emoji: "antenna" },
   // ── CIECHI ──────────────────────────────────────────────────────
-  { id: "ciec1",   cat: "cieco",   label: "Cieco 1M",       desc: "Coperchio cieco 1 modulo bianco",codice: "6117406", slot: 1,   colore: "#90A4AE", emoji: "⬜" },
-  { id: "ciec05",  cat: "cieco",   label: "Cieco ½M",       desc: "Coperchio cieco ½ modulo bianco",codice: "6117414", slot: 0.5, colore: "#B0BEC5", emoji: "▫" },
+  { id: "ciec1",   cat: "cieco",   label: "Cieco 1M",       desc: "Coperchio cieco 1 modulo bianco",codice: "6117406", slot: 1,   colore: "#90A4AE", emoji: "cieco" },
+  { id: "ciec05",  cat: "cieco",   label: "Cieco ½M",       desc: "Coperchio cieco ½ modulo bianco",codice: "6117414", slot: 0.5, colore: "#B0BEC5", emoji: "cieco" },
 ];
 
 // Struttura box: file × mezzi slot (ogni mezzo = ½ Modul45)
@@ -2088,7 +2154,8 @@ function ConfiguratoreBox({ layout, onConferma, onAnnulla, colore }) {
   const [selDispositivo, setSelDispositivo] = useState(null); // id dispositivo selezionato dalla palette
   const [catAperta, setCatAperta] = useState("energia"); // categoria palette aperta
 
-  const CAT_LABELS = { energia: "⚡ Energia", dati: "🌐 Dati / AV", cieco: "⬜ Ciechi" };
+  const CAT_LABELS = { energia: "Energia", dati: "Dati / AV", cieco: "Ciechi" };
+  const CAT_ICONE = { energia: "energia", dati: "dati", cieco: "cieco" };
   const devPerCat = cat => DISPOSITIVI_M45.filter(d => d.cat === cat);
 
   const assegna = (idx) => {
@@ -2165,7 +2232,7 @@ function ConfiguratoreBox({ layout, onConferma, onAnnulla, colore }) {
       const sf = slotFissi.find(s => s.idx === idx);
       return (
         <div style={{ width: isMobile?20:24, height: isMobile?44:52, background:`${sf?.colore ?? "#7694a4"}20`, border:`1px dashed ${sf?.colore ?? "#7694a4"}`, borderRadius:3, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:1 }}>
-          <span style={{ fontSize: isMobile?10:12 }}>{sf?.emoji ?? "🔒"}</span>
+          <Icona nome={sf?.emoji || "cieco"} size={isMobile ? 11 : 13} colore={sf?.colore ?? "#7694a4"} />
           <span style={{ fontSize:6, fontWeight:700, color:sf?.colore ?? "#7694a4", lineHeight:1, textAlign:"center" }}>{sf?.label ?? "fisso"}</span>
         </div>
       );
@@ -2186,7 +2253,7 @@ function ConfiguratoreBox({ layout, onConferma, onAnnulla, colore }) {
           display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:1,
           transition:"all 0.1s", flexShrink:0 }}>
         {dev
-          ? <><span style={{ fontSize: isMobile?(n===2?12:10):(n===2?15:12) }}>{dev.emoji}</span>
+          ? <><Icona nome={dev.emoji} size={isMobile ? (n===2?13:11) : (n===2?16:13)} colore={dev.colore} />
               <span style={{ fontSize: isMobile?6:7, fontWeight:700, color:dev.colore, lineHeight:1, textAlign:"center", maxWidth:W-4, overflow:"hidden" }}>{dev.label}</span></>
           : <span style={{ fontSize: isMobile?12:14, color: isSelected?"#1565C0":"#aaa" }}>{isSelected?"▸":"+"}</span>
         }
@@ -2239,10 +2306,10 @@ function ConfiguratoreBox({ layout, onConferma, onAnnulla, colore }) {
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12, flexWrap:"wrap", gap:8 }}>
         <div>
-          <div style={{ fontSize:11, fontWeight:700, color:"#3F51B5", letterSpacing:1, textTransform:"uppercase" }}>⚙ Dispositivi — {layout.label}</div>
+          <div style={{ fontSize:11, fontWeight:700, color:"#3F51B5", letterSpacing:1, textTransform:"uppercase" }}><Icona nome="configura" size={12} stile={{ verticalAlign: "-2px", marginRight: 4 }} />Dispositivi — {layout.label}</div>
           <div style={{ fontSize:10, color:"#666", marginTop:2 }}>
             {slotsLiberi > 0 ? `${Math.floor(slotsLiberi/2)} Modul45 liberi` : "Box completo"}
-            {selDev && <span style={{ color:"#1565C0", fontWeight:700 }}> · Posiziona: {selDev.emoji} {selDev.label}</span>}
+            {selDev && <span style={{ color:"#1565C0", fontWeight:700 }}> · Posiziona: <Icona nome={selDev.emoji} size={12} stile={{ verticalAlign: "-2px" }} /> {selDev.label}</span>}
           </div>
         </div>
         <button onClick={svuota} style={{ background:"none", border:"1px solid #ddd", color:"#666", padding:"4px 10px", cursor:"pointer", fontSize:10, borderRadius:2 }}>Svuota</button>
@@ -2268,7 +2335,7 @@ function ConfiguratoreBox({ layout, onConferma, onAnnulla, colore }) {
             {Object.entries(CAT_LABELS).map(([cat, lbl]) => (
               <button key={cat} onClick={() => setCatAperta(cat)}
                 style={{ padding:"4px 10px", border:`1px solid ${catAperta===cat?"#3F51B5":"#ddd"}`, background:catAperta===cat?"#3F51B5":"white", color:catAperta===cat?"white":"#555", cursor:"pointer", fontSize:10, fontWeight:700, borderRadius:12 }}>
-                {lbl}
+                <Icona nome={CAT_ICONE[cat]} size={12} stile={{ verticalAlign: "-2px", marginRight: 4 }} />{lbl}
               </button>
             ))}
           </div>
@@ -2292,7 +2359,7 @@ function ConfiguratoreBox({ layout, onConferma, onAnnulla, colore }) {
                     cursor: haSpazio?"pointer":"not-allowed", opacity:haSpazio?1:0.35,
                     borderRadius:3, textAlign:"left", transition:"all 0.1s" }}>
                   <div style={{ width: d.slot===1?18:10, height:18, background:d.colore, borderRadius:2, flexShrink:0 }} />
-                  <span style={{ fontSize:13 }}>{d.emoji}</span>
+                  <Icona nome={d.emoji} size={15} colore={d.colore} />
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ fontSize:11, fontWeight:isActive?700:500, color:"#282a31" }}>{d.label}</div>
                     <div style={{ fontSize:9, color:"#888" }}>{d.slot===1?"1 Modul45":"½ Modul45"} · {d.codice}</div>
@@ -2358,7 +2425,7 @@ function Riepilogo({ righe, altezza, estensioni, piedini, colore, onReset, onAdd
 
       {altezza && (
         <div style={{ marginTop:10, background:"#E6F4EA", border:"1px solid #A5D6A7", padding:"8px 12px", borderRadius:2, fontSize:12, color:"#1B5E20" }}>
-          📐 <strong>Range altezza:</strong> {altezza}
+          <Icona nome="altezza" size={14} stile={{ verticalAlign: "-2px", marginRight: 4 }} /><strong>Range altezza:</strong> {altezza}
         </div>
       )}
 
@@ -2381,7 +2448,7 @@ function Riepilogo({ righe, altezza, estensioni, piedini, colore, onReset, onAdd
           <button onClick={() => setPiediniAperti(v => !v)}
             style={{ width:"100%", background:"#F3F8FF", border:"1px solid #BBDEFB", borderRadius: piediniAperti ? "3px 3px 0 0" : 3, padding:"9px 14px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"space-between", gap:8 }}>
             <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-              <span style={{ fontSize:14 }}>📐</span>
+              <Icona nome="altezza" size={15} colore="#41525d" />
               <span style={{ fontSize:10, fontWeight:700, color:"#1565C0", letterSpacing:1.5, textTransform:"uppercase" }}>
                 Piedini alternativi (opzionale)
               </span>
@@ -2428,7 +2495,7 @@ function Riepilogo({ righe, altezza, estensioni, piedini, colore, onReset, onAdd
           </div>
           <button onClick={() => setStatoBox("configuring")}
             style={{ background:"#3F51B5", color:"white", border:"none", padding: isMobile ? "8px 14px" : "8px 18px", cursor:"pointer", fontSize:12, fontWeight:700, borderRadius:2, whiteSpace:"nowrap" }}>
-            ⚙ Configura box
+            <Icona nome="configura" size={14} stile={{ verticalAlign: "-2px", marginRight: 6 }} />Configura box
           </button>
         </div>
       )}
@@ -2542,8 +2609,8 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
           ...s.box_fisso_globale,
           tipo: haKeystone ? "MT R2 1-1+2C" : "MT R2 1-1",
           slotFissi: haKeystone
-            ? [{ idx: 4, label: "Keystone", colore: "#2E7D32", emoji: "🌐" },
-               { idx: 5, label: "Keystone", colore: "#2E7D32", emoji: "🌐" }]
+            ? [{ idx: 4, label: "Keystone", colore: "#2E7D32", emoji: "dati" },
+               { idx: 5, label: "Keystone", colore: "#2E7D32", emoji: "dati" }]
             : [],
         };
       }
@@ -2697,14 +2764,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {selGruppo !== null && hasUscitaStep && (
         <div style={{ marginBottom:20 }}>
           <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Tipo di uscita cavi</div>
-          <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
-            {usciteDisponibili.map(u => (
-              <button key={u} onClick={() => handleUscita(u)}
-                style={{ flex:"1 1 140px", padding:"13px 12px", border:`2px solid ${selUscita===u?colore:"#c5d9de"}`, background:selUscita===u?`${colore}10`:"white", cursor:"pointer", fontWeight:selUscita===u?800:500, fontSize:13, color:selUscita===u?colore:"#41525d", borderRadius:2, transition:"all 0.12s", textAlign:"center" }}>
-                {LABEL_USCITA[u] ?? (String(u).charAt(0).toUpperCase() + String(u).slice(1))}
-              </button>
-            ))}
-          </div>
+          <SceltaUscita uscite={usciteDisponibili} sel={selUscita} onSel={handleUscita} etichette={LABEL_USCITA} righe={gruppo.righe} />
         </div>
       )}
 
@@ -2712,19 +2772,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {selGruppo !== null && (!hasUscitaStep || selUscita !== null) && (
         <div style={{ marginBottom:20 }}>
           <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Scegli la torretta</div>
-          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-            {righeFiltrate.map((r, i) => (
-              <button key={i} onClick={() => handleRiga(i)}
-                style={{ background:selRiga===i?`${colore}12`:"white", border:`2px solid ${selRiga===i?colore:"#c5d9de"}`, padding:"11px 16px", textAlign:"left", cursor:"pointer", transition:"all 0.12s", borderRadius:2, display:"flex", alignItems:"center", gap:12 }}>
-                <div style={{ width:16, height:16, borderRadius:"50%", border:`2px solid ${selRiga===i?colore:"#c5d9de"}`, background:selRiga===i?colore:"white", flexShrink:0 }} />
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:13, fontWeight:selRiga===i?700:500, color:"#282a31" }}>{r.label}</div>
-                  <div style={{ fontSize:11, color:"#666" }}>{r.materiale}</div>
-                </div>
-                {selRiga===i && <CodicePill codice={r.codice} />}
-              </button>
-            ))}
-          </div>
+          <ElencoTorrette righe={righeFiltrate} sel={selRiga} onSel={handleRiga} />
         </div>
       )}
 
@@ -2732,21 +2780,14 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
       {selRiga !== null && !soloPavimento && (
         <div style={{ marginBottom:20 }}>
           <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Tipo di pavimento</div>
-          <div style={{ display:"flex", gap:12 }}>
-            {s.pavimenti.map(pav => (
-              <button key={pav} onClick={() => handlePav(pav)}
-                style={{ flex:1, padding:"14px 12px", border:`2px solid ${selPav===pav?colore:"#c5d9de"}`, background:selPav===pav?`${colore}10`:"white", cursor:"pointer", fontWeight:selPav===pav?800:500, fontSize:14, color:selPav===pav?colore:"#41525d", borderRadius:2, transition:"all 0.12s" }}>
-                {pav==="massetto"?"🧱 Massetto":"🪵 Pav. flottante"}
-              </button>
-            ))}
-          </div>
+          <SceltaPavimento pavimenti={s.pavimenti} sel={selPav} onSel={handlePav} />
         </div>
       )}
 
       {/* C nota: se solo massetto, mostrare avviso */}
       {selRiga !== null && soloPavimento && (
         <div style={{ marginBottom:20, background:"#F3F8FF", border:"1px solid #BBDEFB", padding:"10px 14px", borderRadius:2, fontSize:12, color:"#1565C0" }}>
-          🧱 Questo sistema è installabile <strong>solo su massetto</strong>.
+          <Icona nome="massetto" size={15} stile={{ verticalAlign: "-3px", marginRight: 6 }} />Questo sistema è installabile <strong>solo su massetto</strong>.
         </div>
       )}
 
@@ -2997,7 +3038,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       const haDTP  = accInterni.includes("7368494"); // DTP UH1 C — keystone dati
       const ha2M45 = accInterni.includes("7368485"); // MT UH1 2M45 — 2 Modul45
       if (ha2M45)  return { tipo: "UDHOME-ONE 2M", codice: null, slotFissi: [] };
-      if (haDTP)   return { tipo: "UDHOME-ONE+K",  codice: null, slotFissi: [{ idx: 2, label: "Keystone", colore: "#2E7D32", emoji: "🌐" }] };
+      if (haDTP)   return { tipo: "UDHOME-ONE+K",  codice: null, slotFissi: [{ idx: 2, label: "Keystone", colore: "#2E7D32", emoji: "dati" }] };
       return { tipo: "UDHOME-ONE 1M", codice: null, slotFissi: [] };
     }
     if (sistemaKey === "UDHOME2") {
@@ -3005,8 +3046,8 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       return {
         tipo: haDT ? "UDHOME2+K" : "UDHOME2", codice: null,
         slotFissi: haDT
-          ? [{ idx: 4, label: "Keystone", colore: "#2E7D32", emoji: "🌐" },
-             { idx: 5, label: "Keystone", colore: "#2E7D32", emoji: "🌐" }]
+          ? [{ idx: 4, label: "Keystone", colore: "#2E7D32", emoji: "dati" },
+             { idx: 5, label: "Keystone", colore: "#2E7D32", emoji: "dati" }]
           : [],
       };
     }
@@ -3125,14 +3166,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {hasUscitaStep && (
         <div style={{ marginBottom:16 }}>
           <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Tipo di uscita cavi</div>
-          <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-            {usciteDisponibili.map(u => (
-              <button key={u} onClick={() => handleUscita(u)}
-                style={{ flex:"1 1 120px", padding: isMobile ? "10px 8px" : "13px 12px", border:`2px solid ${selUscita===u?colore:"#c5d9de"}`, background:selUscita===u?`${colore}10`:"white", cursor:"pointer", fontWeight:selUscita===u?800:500, fontSize: isMobile ? 12 : 13, color:selUscita===u?colore:"#41525d", borderRadius:2, transition:"all 0.12s" }}>
-                {LABEL_USCITA[u] ?? (String(u).charAt(0).toUpperCase() + String(u).slice(1))}
-              </button>
-            ))}
-          </div>
+          <SceltaUscita uscite={usciteDisponibili} sel={selUscita} onSel={handleUscita} etichette={LABEL_USCITA} righe={s.righe} />
         </div>
       )}
 
@@ -3140,20 +3174,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {s.righe && (!hasUscitaStep || selUscita !== null) && (
         <div style={{ marginBottom:16 }}>
           <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Scegli la torretta</div>
-          <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-            {righeFiltrate.map((r, i) => (
-              <button key={i} onClick={() => handleRiga(i)}
-                style={{ background:selectedRiga===i?`${colore}12`:"white", border:`2px solid ${selectedRiga===i?colore:"#c5d9de"}`, padding: isMobile ? "10px 12px" : "12px 16px", textAlign:"left", cursor:"pointer", transition:"all 0.12s", borderRadius:2, display:"flex", alignItems:"center", gap:10 }}>
-                <div style={{ width:16, height:16, borderRadius:"50%", border:`2px solid ${selectedRiga===i?colore:"#c5d9de"}`, background:selectedRiga===i?colore:"white", flexShrink:0 }} />
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize: isMobile ? 12 : 13, fontWeight:selectedRiga===i?700:500, color:"#282a31" }}>{r.label}</div>
-                  {r.materiale && <div style={{ fontSize:10, color:"#666", marginTop:1 }}>{r.materiale}{r.colore_ral?` · ${r.colore_ral}`:""}</div>}
-                </div>
-                {selectedRiga===i && r.codici?.[0] && <CodicePill codice={r.codici[0]} />}
-                {selectedRiga===i && r.codice   && <CodicePill codice={r.codice} />}
-              </button>
-            ))}
-          </div>
+          <ElencoTorrette righe={righeFiltrate} sel={selectedRiga} onSel={handleRiga} />
         </div>
       )}
 
@@ -3161,14 +3182,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {selectedRiga !== null && s.pavimenti?.length > 0 && (
         <div style={{ marginBottom:16 }}>
           <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Tipo di pavimento</div>
-          <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-            {s.pavimenti.map(pav => (
-              <button key={pav} onClick={() => handlePav(pav)}
-                style={{ flex:1, minWidth: isMobile ? "calc(50% - 4px)" : 120, padding: isMobile ? "10px 8px" : "14px 12px", border:`2px solid ${selectedPav===pav?colore:"#c5d9de"}`, background:selectedPav===pav?`${colore}10`:"white", cursor:"pointer", fontWeight:selectedPav===pav?800:500, fontSize: isMobile ? 12 : 14, color:selectedPav===pav?colore:"#41525d", borderRadius:2, transition:"all 0.12s" }}>
-                {pav==="massetto"?"🧱 Massetto":pav==="flottante"?"🪵 Flottante":"🔲 Seminato"}
-              </button>
-            ))}
-          </div>
+          <SceltaPavimento pavimenti={s.pavimenti} sel={selectedPav} onSel={handlePav} />
         </div>
       )}
 

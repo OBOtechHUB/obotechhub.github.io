@@ -264,6 +264,32 @@
   .ufs-frutti { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:0 0 10px; font-size:13px; color:#41525d; }
   .ufs-frutti button { border:1px solid #c5d9de; background:#fff; color:#282a31; border-radius:999px; padding:6px 12px; font-weight:600; font-size:13px; cursor:pointer; }
   .ufs-frutti button[aria-pressed="true"] { background:#f39b00; border-color:#f39b00; color:#fff; }
+  /* scelte del passo 3: stesse forme e icone in tutta l'app */
+  .ufs-scelte { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; }
+  .ufs-scelta { display:flex; align-items:center; gap:12px; text-align:left; padding:12px 14px; border:1.5px solid #c5d9de; background:#fff; border-radius:12px; cursor:pointer; color:#41525d; transition:border-color .12s, background .12s; }
+  .ufs-scelta b { display:block; color:#282a31; font-size:14.5px; } .ufs-scelta small { display:block; color:#7694a4; font-size:12px; margin-top:1px; }
+  .ufs-scelta[aria-pressed="true"] { border-color:#f39b00; background:#fff8ec; color:#a45f00; box-shadow:0 0 0 1px #f39b00 inset; }
+  .ufs-scelta:hover { border-color:#7694a4; }
+  .ufs-uscite { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; }
+  .ufs-uscita { display:flex; flex-direction:column; align-items:flex-start; gap:5px; text-align:left; padding:12px 14px 14px; border:1.5px solid #c5d9de; background:#fff; border-radius:14px; cursor:pointer; transition:border-color .12s, background .12s; }
+  .ufs-uscita svg { align-self:center; margin-bottom:4px; } .ufs-uscita b { font-size:14.5px; color:#282a31; } .ufs-uscita small { font-size:12.5px; color:#41525d; line-height:1.4; }
+  .ufs-uscita em { font-style:normal; font-size:11.5px; color:#7694a4; font-weight:600; margin-top:auto; }
+  .ufs-uscita[aria-pressed="true"] { border-color:#f39b00; background:#fff8ec; box-shadow:0 0 0 1px #f39b00 inset; }
+  .ufs-uscita:hover { border-color:#7694a4; }
+  .ufs-attr { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:0 0 8px; }
+  .ufs-attr > span { width:96px; font-size:12px; font-weight:700; color:#41525d; }
+  @media (max-width:600px) { .ufs-attr > span { width:100%; } }
+  .ufs-attr button { display:inline-flex; align-items:center; gap:6px; border:1px solid #c5d9de; background:#fff; color:#282a31; border-radius:999px; padding:6px 12px; font-size:13px; font-weight:600; cursor:pointer; }
+  .ufs-attr button[aria-pressed="true"] { border-color:#f39b00; background:#f39b00; color:#fff; }
+  .ufs-sw { display:inline-block; width:14px; height:14px; border-radius:50%; border:1px solid rgba(0,0,0,.15); }
+  .ufs-varianti { display:flex; flex-direction:column; gap:6px; margin-top:6px; }
+  .ufs-variante { display:flex; align-items:center; gap:12px; text-align:left; padding:10px 14px; border:1.5px solid #c5d9de; background:#fff; border-radius:12px; cursor:pointer; }
+  .ufs-variante[aria-pressed="true"] { border-color:#f39b00; background:#fff8ec; }
+  .ufs-radio { flex:none; width:18px; height:18px; border-radius:50%; border:1.5px solid #c5d9de; background:#fff; }
+  .ufs-variante[aria-pressed="true"] .ufs-radio { border:5px solid #f39b00; }
+  .ufs-var-t { flex:1; min-width:0; } .ufs-var-t b { display:block; font-size:13.5px; font-weight:600; color:#282a31; } .ufs-var-t small { display:block; color:#7694a4; font-size:11.5px; }
+  .ufs-nessuna { color:#7694a4; font-size:13px; margin:4px 0; }
+  .ufs-radice button.ufs-uscita, .ufs-radice button.ufs-scelta, .ufs-radice button.ufs-variante { border-radius:14px !important; }
   .ufs-galleria { margin:0 0 16px; }
   .ufs-scheda-btn, .guida .g-scheda { margin-left:auto; border:1px solid var(--arancio); color:#a45f00; background:#fff; border-radius:999px; padding:6px 12px; font-weight:700; font-size:calc(13px * var(--zoom,1)); cursor:pointer; }
   .guida .g-scheda { margin:8px 0 0; align-self:flex-start; }
@@ -386,6 +412,7 @@
   /* tema scuro: il configuratore ha colori propri; si invertono le parti (non il contenitore, così il carrello fisso resta in basso) e si rimettono dritte le foto */
   :root[data-theme="dark"] .ufs-radice > *:not(.ufs-barra):not(.guida) { background-color:#fff; filter:invert(.9) hue-rotate(180deg); }
   :root[data-theme="dark"] .ufs-radice > *:not(.ufs-barra):not(.guida) img { filter:invert(1) hue-rotate(180deg); }
+  :root[data-theme="dark"] .ufs-radice > *:not(.ufs-barra):not(.guida) :is(.ufs-sw, .ufs-uscita > svg) { filter:invert(1) hue-rotate(180deg); }
   @media print { header.barra, .eroe, .schede, .noprint { display:none !important; } body { background:#fff; color:#000; } }
 </style>
 </head>
@@ -442,7 +469,7 @@
 
 <script src="../manutenzione.js" data-sezione="app:torrette"></script>
 <script src="../aggiorna.js" data-versione="../version.json" data-app="torrette"></script>
-<script src="./ufs.js?v=6b14a7fc1d"></script>
+<script src="./ufs.js?v=de9fa5088b"></script>
 <script type="module" src="./ufs-app.js?v=378e944886"></script>
 <script src="../avviso-uscita.js"></script>
 <script src="../piede.js"></script>

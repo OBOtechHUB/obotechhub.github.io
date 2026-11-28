@@ -1,6 +1,7 @@
 // Guida «Trova la torretta giusta»: una domanda per schermata, con un disegno che spiega che cosa si chiede.
 // I disegni sono fatti qui (SVG), con i colori del tema; le risposte diventano i filtri di `punteggio()`.
 import React, { useMemo, useEffect, useRef } from "react";
+import { Icona as IconaComune } from "./icone.jsx";
 
 // ───────────────────────── disegni ─────────────────────────
 const C = { soletta: "var(--g-soletta)", massetto: "var(--g-massetto)", finito: "var(--g-finito)", metallo: "var(--g-metallo)", linea: "var(--g-linea)", quota: "var(--arancio)", vuoto: "var(--g-vuoto)", testo: "var(--testo)" };
@@ -107,17 +108,9 @@ export function DisegnoPrese({ n, tipo }) {
     </svg>
   );
 }
-const Icona = ({ d, pieno }) => <svg viewBox="0 0 48 48" width="44" height="44" fill={pieno ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{d}</svg>;
-const ICONE = {
-  persona: <><circle cx="24" cy="9" r="4" /><path d="M24 14v14M24 19l-8 6M24 19l8 5M24 28l-6 13M24 28l7 13" /></>,
-  carrello: <><path d="M6 10h6l6 22h20" /><rect x="18" y="14" width="18" height="12" rx="1.500" /><circle cx="20" cy="38" r="3" /><circle cx="36" cy="38" r="3" /></>,
-  auto: <><path d="M5 30v-6l5-2 5-9h16l6 9 6 2v6z" /><circle cx="14" cy="32" r="4" /><circle cx="34" cy="32" r="4" /><path d="M16 22h17" /></>,
-  secco: <><path d="M30 6L18 26" /><path d="M10 28l10-4 6 6-4 10c-6 1-11-2-14-8z" /><path d="M14 34l4 4M19 30l5 5" /></>,
-  umido: <><path d="M24 6c-7 9-11 15-11 21a11 11 0 0022 0c0-6-4-12-11-21z" /><path d="M18 28a6 6 0 006 6" /></>,
-  quadrata: <><rect x="8" y="8" width="32" height="32" rx="3" /><rect x="15" y="15" width="18" height="18" rx="2" /></>,
-  rotonda: <><circle cx="24" cy="24" r="17" /><circle cx="24" cy="24" r="9" /></>,
-  boh: <><circle cx="24" cy="24" r="17" /><path d="M19 19a5 5 0 119 3c-2 2-4 3-4 6M24 34v.500" /></>,
-};
+// icone delle domande: le stesse di tutta l'app (icone.jsx), più grandi
+const Icona = ({ d }) => <IconaComune nome={d} size={40} spessore={1.5} />;
+const ICONE = { persona: "persone", carrello: "trasporto", auto: "veicolo", secco: "secco", umido: "umido", quadrata: "quadrata", rotonda: "rotonda", boh: "indifferente" };
 
 // ───────────────────────── domande ─────────────────────────
 const PASSI = [
@@ -222,7 +215,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
                 <div className="g-campi">
                   <label>Che pavimento è</label>
                   <div className="g-griglia due">{TIPI_RIV.map(([v, t, mm, d]) => <Scelta key={v} larga attiva={filtri.tipoRiv === v} onClick={() => setFiltri((p) => p.tipoRiv === v ? { ...p, tipoRiv: "" } : { ...p, tipoRiv: v, rivestimento: p.rivestimento === "" || p.tipoRiv ? mm : p.rivestimento })} titolo={t} testo={d} />)}</div>
-                  {filtri.tipoRiv && <p className="g-suggerimento">💡 {TIPI_RIV.find((t) => t[0] === filtri.tipoRiv)[4]}</p>}
+                  {filtri.tipoRiv && <p className="g-suggerimento"><IconaComune nome="consiglio" size={16} stile={{ verticalAlign: "-3px", marginRight: 6 }} />{TIPI_RIV.find((t) => t[0] === filtri.tipoRiv)[4]}</p>}
                   <label>Spessore del rivestimento</label>
                   <div className="g-rapide">{RIVESTIMENTI.map(([v, t]) => <button type="button" key={v} className={"g-pill" + (filtri.rivestimento === v ? " attiva" : "")} onClick={() => set("rivestimento", v)}>{t}</button>)}</div>
                   <label htmlFor="g-riv">Oppure scrivi lo spessore</label>
@@ -295,12 +288,12 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
     return (
       <article className={"g-ris " + tipo}>
         {ft && (lf.length
-          ? <button type="button" className="g-ris-foto" onClick={() => onFoto(r.key, fam.id, r.label)} aria-label={etFoto + ": " + r.label}><img src={(fotoScheda && fotoScheda(r.key)) || ft.scheda} alt="" loading="lazy" /><span>📷 {etFoto}</span></button>
+          ? <button type="button" className="g-ris-foto" onClick={() => onFoto(r.key, fam.id, r.label)} aria-label={etFoto + ": " + r.label}><img src={(fotoScheda && fotoScheda(r.key)) || ft.scheda} alt="" loading="lazy" /><span><IconaComune nome="foto" size={13} stile={{ verticalAlign: "-2px", marginRight: 5 }} />{etFoto}</span></button>
           : <img src={(fotoScheda && fotoScheda(r.key)) || ft.scheda} alt="" loading="lazy" />)}
         <div className="g-ris-c">
           <div className="g-ris-t"><h3>{r.label}</h3>{fam && <span className="g-fam">{fam.label}</span>}</div>
           <Caratteristiche chiavi={[r.key]} />
-          {onScheda && <button type="button" className="g-scheda" onClick={() => onScheda(r.key)}>📄 Scheda per l'architetto</button>}
+          {onScheda && <button type="button" className="g-scheda" onClick={() => onScheda(r.key)}><IconaComune nome="documento" size={14} stile={{ verticalAlign: "-2px", marginRight: 5 }} />Scheda per l'architetto</button>}
           {r.rinunce.map((x, i) => <p key={i} className="g-nota">⚠ <b>{x.campo}:</b> {x.motivo}</p>)}
           {r.problemi.map((x, i) => <p key={i} className="g-no">✕ <b>{x.campo}:</b> {x.motivo}</p>)}
         </div>
@@ -331,7 +324,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
             <h2>{ris.ok.length ? `${ris.ok.length} ${ris.ok.length === 1 ? "sistema adatto" : "sistemi adatti"}` : ris.parziali.length ? "Nessun sistema perfetto, ma questi ci vanno vicino" : "Nessun sistema con queste richieste"}</h2>
             <p className="g-aiuto">{adatti ? "Scegli un sistema e premi «Configura»: sceglierai finitura, scatola e accessori, con i codici OBO." : "Prova a togliere una richiesta: tocca una delle risposte qui sotto per cambiarla."}</p>
             <div className="g-riassunto">
-              {riassunto.filter((x) => x[1]).map(([k, t]) => <button type="button" key={k} className="g-pill attiva" onClick={() => setPasso(PASSI.findIndex((x) => x.id === k))}>{t} <span aria-hidden="true">✎</span></button>)}
+              {riassunto.filter((x) => x[1]).map(([k, t]) => <button type="button" key={k} className="g-pill attiva" onClick={() => setPasso(PASSI.findIndex((x) => x.id === k))}>{t} <IconaComune nome="modifica" size={13} stile={{ verticalAlign: "-2px" }} /></button>)}
               {!riassunto.some((x) => x[1]) && <span className="g-suggerimento">Non hai dato nessuna risposta: vedi tutti i sistemi.</span>}
               <button type="button" className="g-pill" onClick={azzera}>Ricomincia da capo</button>
             </div>

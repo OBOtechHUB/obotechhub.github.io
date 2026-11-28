@@ -18,6 +18,14 @@ const APP = "torrette-sopralluogo", BUCKET = "sopralluoghi", CHIAVE_PROG = "obo-
 const TIPI = [["punto", "Punto della torretta", "Outlet position"], ["pavimento", "Pavimento e rivestimento", "Floor and covering"], ["impianto", "Impianto esistente", "Existing installation"], ["altro", "Altro", "Other"]];
 const nomeTipo = (k) => { const t = TIPI.find((x) => x[0] === k); return t ? T(t[1], t[2]) : T("Senza tipo", "No type"); };
 const quando = (d) => (d ? new Date(d).toLocaleString("it-IT", { dateStyle: "short", timeStyle: "short" }) : "");
+// stesse icone di Torrette (icone.jsx), come stringhe SVG
+const ICO = {
+  foto: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  galleria: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>',
+  cerca: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
+  microfono: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21M9 21h6"/>',
+};
+const ico = (n, size = 16) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;vertical-align:-3px">${ICO[n]}</svg>`;
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
 // ---------- aspetto (lingua, tema, testo) come nel configuratore ----------
@@ -161,7 +169,7 @@ function disegna() {
     ${S.msg ? `<p role="status" class="avviso">${esc(S.msg)}</p>` : ""}
     <section class="box" aria-label="${esc(T("Nuove foto", "New photos"))}">
       <div class="tipi" role="radiogroup" aria-label="${esc(T("Tipo delle prossime foto", "Type of the next photos"))}">${TIPI.map(([k]) => `<button type="button" role="radio" aria-checked="${S.tipoNuove === k}" aria-pressed="${S.tipoNuove === k}" data-tipo="${k}">${esc(nomeTipo(k))}</button>`).join("")}</div>
-      <div class="scatti"><button type="button" class="btn btn-primario" data-scatta>📷 ${esc(T("Scatta foto", "Take photo"))}</button><button type="button" class="btn btn-bordo" data-galleria>🖼 ${esc(T("Dalla galleria", "From gallery"))}</button></div>
+      <div class="scatti"><button type="button" class="btn btn-primario" data-scatta>${ico("foto", 18)} ${esc(T("Scatta foto", "Take photo"))}</button><button type="button" class="btn btn-bordo" data-galleria>${ico("galleria", 18)} ${esc(T("Dalla galleria", "From gallery"))}</button></div>
       <input id="inScatta" type="file" accept="image/*" capture="environment" hidden><input id="inGalleria" type="file" accept="image/*" multiple hidden>
     </section>
     ${d.foto.length ? `<div class="filtri">${["tutte", ...TIPI.map((t) => t[0])].map((k) => `<button type="button" aria-pressed="${S.filtro === k}" data-filtro="${k}">${esc(k === "tutte" ? T("Tutte", "All") : nomeTipo(k))} (${conta(k)})</button>`).join("")}</div>` : ""}
@@ -191,7 +199,7 @@ function schedaFoto(f) {
           <label>${esc(T("Rivestimento (mm)", "Covering (mm)"))}<input type="number" inputmode="numeric" min="0" max="60" data-campo="rivestimento" value="${esc(f.rivestimento)}"></label>
         </div>
         <textarea data-campo="nota" maxlength="1000" placeholder="${esc(T("Nota (es. pavimento in gres, pulizia con lavasciuga, 4 prese + 2 dati)", "Note (e.g. tiles, machine cleaning, 4 sockets + 2 data)"))}" aria-label="${esc(T("Nota", "Note"))}">${esc(f.nota)}</textarea>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">${pulsanteDetta("nota:" + f.id)}<button type="button" class="mini-btn arancio" data-trova="${esc(f.id)}">🔎 ${esc(T("Trova la torretta per questo punto", "Find the outlet for this point"))}</button></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${pulsanteDetta("nota:" + f.id)}<button type="button" class="mini-btn arancio" data-trova="${esc(f.id)}">${ico("cerca")} ${esc(T("Trova la torretta per questo punto", "Find the outlet for this point"))}</button></div>
         ${vocali(f.id)}` : ""}
     </div></li>`;
 }
@@ -202,7 +210,7 @@ let dettatura = null, dettaCampo = "";
 function pulsanteDetta(campo) {
   if (!Ricon) return "";
   const attiva = dettaCampo === campo;
-  return `<button type="button" class="mini-btn${attiva ? " attivo" : ""}" data-detta="${esc(campo)}" aria-pressed="${attiva}">${attiva ? `<span class="puntino"></span> ${esc(T("Ferma dettatura", "Stop dictation"))}` : "🎙 " + esc(T("Detta", "Dictate"))}</button>`;
+  return `<button type="button" class="mini-btn${attiva ? " attivo" : ""}" data-detta="${esc(campo)}" aria-pressed="${attiva}">${attiva ? `<span class="puntino"></span> ${esc(T("Ferma dettatura", "Stop dictation"))}` : ico("microfono") + " " + esc(T("Detta", "Dictate"))}</button>`;
 }
 function detta(campo) {
   if (dettatura) { const c = dettaCampo; dettatura.stop(); dettatura = null; dettaCampo = ""; disegna(); if (c === campo) return; }
@@ -223,7 +231,7 @@ let reg = null;
 function vocali(foto) {
   const miei = S.dati.vocali.filter((v) => (v.foto || "") === foto), registra = reg && reg.foto === foto;
   const puo = !!(navigator.mediaDevices && window.MediaRecorder);
-  return `${puo ? `<div style="margin-top:6px"><button type="button" class="mini-btn${registra ? " attivo" : ""}" data-registra="${esc(foto)}">${registra ? `<span class="puntino"></span> ${esc(T("Ferma e salva", "Stop and save"))} (${mmss(reg.secondi)})` : "🎤 " + esc(T("Registra messaggio vocale", "Record voice message"))}</button></div>` : ""}
+  return `${puo ? `<div style="margin-top:6px"><button type="button" class="mini-btn${registra ? " attivo" : ""}" data-registra="${esc(foto)}">${registra ? `<span class="puntino"></span> ${esc(T("Ferma e salva", "Stop and save"))} (${mmss(reg.secondi)})` : ico("microfono") + " " + esc(T("Registra messaggio vocale", "Record voice message"))}</button></div>` : ""}
     ${miei.map((v) => `<div class="vocale" data-voc="${esc(v.id)}"><div class="meta"><span>${esc(quando(v.data))} · ${mmss(v.durata || 0)}</span><button type="button" class="mini-btn" style="margin-left:auto" data-togli-voc="${esc(v.id)}">${esc(T("Togli", "Remove"))}</button></div>
       ${URLS[v.percorso] ? `<audio controls preload="metadata" src="${URLS[v.percorso]}"></audio>` : `<p class="nota">${esc(T("Audio non disponibile su questo dispositivo.", "Audio not available on this device."))}</p>`}
       <textarea data-voc-testo="${esc(v.id)}" maxlength="2000" placeholder="${esc(T("Riassunto del messaggio (scrivi o detta)", "Summary (type or dictate)"))}">${esc(v.testo)}</textarea>${pulsanteDetta("voc:" + v.id)}</div>`).join("")}`;
