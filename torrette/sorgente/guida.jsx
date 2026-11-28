@@ -78,7 +78,7 @@ export function DisegnoPrese({ n, tipo }) {
     const due = k > 4, supporti = due ? [7, 7] : [4], mw = 15, mh = 34, gap = 2;
     const largS = (m) => m * mw + (m - 1) * gap + 16;
     return (
-      <svg viewBox="0 0 300 150" role="img" aria-label={due ? "Due supporti 506 con 6 o 7 moduli standard Italia ciascuno" : "Un supporto 504 con 4 moduli standard Italia"}>
+      <svg viewBox="0 0 300 150" role="img" aria-label={due ? "Due supporti 506, uno per lato, con 6 o 7 moduli standard Italia per lato" : "Un supporto 504 con 4 moduli standard Italia"}>
         {supporti.map((m, j) => {
           const w = largS(m), x0 = 150 - w / 2, y0 = due ? 12 + j * 64 : 40;
           return <g key={j}>
@@ -86,10 +86,10 @@ export function DisegnoPrese({ n, tipo }) {
             {Array.from({ length: m }, (_, i) => { const x = x0 + 8 + i * (mw + gap), y = y0 + 8, sett = due && i === 6;
               return <g key={i}><rect x={x} y={y} width={mw} height={mh} rx="2" fill={sett ? "none" : C.vuoto} stroke={C.linea} strokeWidth="1" strokeDasharray={sett ? "3 2" : undefined} />
                 {!sett && <g fill={C.quota}><circle cx={x + mw / 2} cy={y + 9} r="1.6" /><circle cx={x + mw / 2} cy={y + 17} r="1.6" /><circle cx={x + mw / 2} cy={y + 25} r="1.6" /></g>}</g>; })}
-            <text x={x0 + w + 6} y={y0 + mh / 2 + 12} fontSize="11" fontWeight="700" fill={C.testo}>{due ? "506" : "504"}</text>
+            <text x={x0 + w + 6} y={y0 + mh / 2 + 6} fontSize="11" fontWeight="700" fill={C.testo}>{due ? "506" : "504"}</text>{due && <text x={x0 + w + 6} y={y0 + mh / 2 + 20} fontSize="10" fill={C.testo}>lato {j + 1}</text>}
           </g>;
         })}
-        <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>{due ? "2 × 506: 6 o 7 moduli ciascuno (7° secondo la serie)" : "1 × 504: fino a 4 moduli 22,5 × 45 mm"}</text>
+        <text x="150" y="146" textAnchor="middle" fontSize="11" fill={C.testo}>{due ? "506 per lato: 6 o 7 moduli (7° secondo la serie)" : "1 × 504: fino a 4 moduli 22,5 × 45 mm"}</text>
       </svg>
     );
   }
@@ -150,7 +150,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
   const adatti = ris.ok.length + ris.parziali.length, fine = passo >= PASSI.length, P = PASSI[passo];
   const azzera = () => { setFiltri({ altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", moduli: "", tipoPrese: "" }); setPasso(0); };
   const riassunto = [
-    ["prese", (filtri.moduli || filtri.tipoPrese) && (filtri.tipoPrese === "ita" ? (filtri.moduli === "4" ? "Standard Italia · 1 × 504" : filtri.moduli ? "Standard Italia · 2 × 506" : "Standard Italia") : filtri.tipoPrese === "modul45" ? `${filtri.moduli ? filtri.moduli + " moduli " : ""}Modul45` : `${filtri.moduli} dispositivi`)],
+    ["prese", (filtri.moduli || filtri.tipoPrese) && (filtri.tipoPrese === "ita" ? (filtri.moduli === "4" ? "Standard Italia · 1 × 504" : filtri.moduli ? "Standard Italia · 506 per lato" : "Standard Italia") : filtri.tipoPrese === "modul45" ? `${filtri.moduli ? filtri.moduli + " moduli " : ""}Modul45` : `${filtri.moduli} dispositivi`)],
     ["forma", filtri.forma && filtri.forma !== "indifferente" && (filtri.forma === "quadrata" ? "Quadrata" : "Rotonda")],
     ["pavimento", filtri.pavimento && { massetto: "Massetto", flottante: "Flottante", seminato: "Seminato" }[filtri.pavimento]],
     ["altezza", filtri.altezza && `H ${filtri.altezza} mm`],
@@ -222,7 +222,7 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
                     <label>Supporti per i frutti</label>
                     <div className="g-griglia due">
                       <Scelta larga attiva={filtri.moduli === "4"} onClick={() => metti("moduli", filtri.moduli === "4" ? "" : "4")} titolo="1 supporto 504" testo="fino a 4 moduli" />
-                      <Scelta larga attiva={filtri.moduli === "12"} onClick={() => metti("moduli", filtri.moduli === "12" ? "" : "12")} titolo="2 supporti 506" testo="6 o 7 moduli ciascuno secondo la serie civile: 12–14 moduli" />
+                      <Scelta larga attiva={filtri.moduli === "12"} onClick={() => metti("moduli", filtri.moduli === "12" ? "" : "12")} titolo="2 supporti 506, uno per lato" testo="6 o 7 moduli per lato secondo la serie civile: 12–14 moduli in tutto" />
                     </div>
                     <p className="g-suggerimento">Secondo la torretta il box è già montato oppure va aggiunto sotto (box GTI 4 per il 504, GTI 14 per i due 506): lo scegli nella configurazione.</p>
                   </> : filtri.tipoPrese === "modul45" ? <>
