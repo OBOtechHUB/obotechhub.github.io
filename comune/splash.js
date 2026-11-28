@@ -13,7 +13,8 @@
   if (/progetti\.html/.test(location.pathname)) app = "progetti";
   if (/novita\.html|privacy|condizioni/.test(location.pathname)) return;
   // Amministrazione e manutenzione: niente sigla (Marco, 27/11/2026)
-  if (/\/admin\/?$|manutenzione-admin/.test(location.pathname)) return;
+  // anche quando si arriva da un link diretto: GitHub Pages rimanda a /appOBOtechHUB/?p=%2Fadmin prima di aprire la pagina
+  if (/\/admin\/?$|manutenzione-admin/.test(location.pathname) || /[?&]p=(%2F|\/)admin\b/i.test(location.search)) return;
   var chiave = "obo-sigla-" + app;
   // pagina lasciata da pochi secondi nella stessa app (cambio pagina o ricarica): niente sigla
   var appena = false; try { appena = Date.now() - Number(sessionStorage.getItem(chiave) || 0) < 8000; } catch (e) {}

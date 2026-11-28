@@ -1,7 +1,7 @@
 /* Zavorra telai inverter WRR: stile OBO Hub (stessi colori, caratteri e forme delle altre app).
    Le variabili di OBO Hub (--arancio, --ardesia, --testo, --tenue, --bordo, --carta, --grigio, --scelto, --font)
    sono definite nella pagina e cambiano da sole con il tema chiaro/scuro. */
-main.contenitore { padding-top: 18px; padding-bottom: 48px; }
+main.contenitore { padding-top: 8px; padding-bottom: 48px; overflow-x: clip; }
 .titolo-telai { margin: 4px 0 8px; font-size: calc(15px * var(--zoom, 1)); }
 .telai { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-bottom: 18px; }
 .telaio { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: .8px solid var(--bordo); border-radius: 12px; background: var(--carta); text-align: left; cursor: pointer; color: inherit; font: inherit; }
@@ -111,3 +111,59 @@ main.contenitore { padding-top: 18px; padding-bottom: 48px; }
 .zwrr .luogo-scelto { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 12px; border: .8px solid var(--accent); border-radius: 10px; background: var(--accent-soft); }
 .zwrr .luogo-scelto img { height: 54px; width: auto; flex: none; }
 .zwrr .luogo-scelto > div { flex: 1 1 160px; min-width: 0; }
+
+/* ── schede che scorrono di lato (stile della guida di Torrette, colori del marchio OBO) ── */
+.zwrr .wrap { gap: 0; padding-bottom: 84px; }
+.zwrr .z-passi { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; overflow-x: auto; scrollbar-width: none; scroll-margin-top: 120px; }
+.zwrr .z-passi li { flex: 1 0 auto; }
+.zwrr .z-passi button { width: 100%; display: flex; align-items: center; gap: 7px; background: none; border: 0; border-top: 3px solid var(--line); padding: 8px 4px 4px; color: var(--muted); cursor: pointer; font: inherit; font-size: calc(13px * var(--zoom, 1)); font-weight: 600; white-space: nowrap; }
+.zwrr .z-passi span { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--line); color: var(--ink); font-size: 12px; font-weight: 700; flex: none; }
+.zwrr .z-passi em { font-style: normal; }
+.zwrr .z-passi li.fatto button { border-top-color: #1d7a45; color: var(--ink); }
+.zwrr .z-passi li.fatto span { background: #1d7a45; color: #fff; }
+.zwrr .z-passi li.ora button { border-top-color: var(--accent); color: var(--ink); font-weight: 700; }
+.zwrr .z-passi li.ora span { background: var(--accent); color: #fff; }
+.zwrr .z-nastro { display: flex; align-items: flex-start; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+  padding: 18px max(28px, calc((100vw - 1044px) / 2)) 8px; margin: 0 calc(-1 * max(28px, (100vw - 1100px) / 2 + 28px)); }
+.zwrr .z-nastro::-webkit-scrollbar { display: none; }
+.zwrr section.panel.z-carta { flex: 0 0 min(980px, calc(100vw - 64px)); scroll-snap-align: center; border: 0; border-radius: 28px; padding: 26px 28px 28px; gap: 14px;
+  opacity: .5; transform: scale(.96); transition: transform .3s ease, opacity .3s ease; cursor: pointer;
+  --ink: #282a31; --muted: #41525d; --line: rgba(40, 42, 49, .18); --panel: rgba(255, 255, 255, .7); --soft: rgba(255, 255, 255, .55); --accent-soft: #fff;
+  --warn: #8a4b00; --warn-bg: #fff4e0; --crit: #b3261e; --crit-bg: #fdecea; --ok: #1e6b3a; --ok-bg: #e6f4ea; color: var(--ink); }
+.zwrr section.panel.z-carta:not(.ora) { max-height: 420px; overflow: hidden; }
+.zwrr section.panel.z-carta.ora { opacity: 1; transform: none; cursor: auto; box-shadow: 0 18px 40px rgba(0, 0, 0, .18); }
+.zwrr .z-carta.c0 { background: #e4ebed; } .zwrr .z-carta.c1 { background: #fbe1b0; } .zwrr .z-carta.c2 { background: #c5d9de; }
+.zwrr .z-carta.c3 { background: #f8cf86; } .zwrr .z-carta.c4 { background: #b3c7d1; } .zwrr .z-carta.c5 { background: #fdebc9; }
+@media (prefers-reduced-motion: reduce) { .zwrr section.panel.z-carta { transition: none; } }
+.zwrr .z-carta .z-n { margin: 0; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; font-weight: 700; font-size: calc(13px * var(--zoom, 1)); }
+.zwrr .z-carta h2 { margin: -6px 0 0; font-size: calc(28px * var(--zoom, 1)); line-height: 1.15; text-wrap: balance; color: var(--ink); }
+.zwrr .z-carta .z-aiuto { margin: -4px 0 0; max-width: 62ch; color: var(--muted); font-size: calc(16px * var(--zoom, 1)); }
+.zwrr .z-carta .z-sotto { margin: 10px 0 0; font-size: calc(18px * var(--zoom, 1)); }
+.zwrr .z-carta input, .zwrr .z-carta select, .zwrr .z-carta textarea { background: #fff; color: #282a31; color-scheme: light; }
+.zwrr .z-carta .telai { margin-bottom: 0; }
+.zwrr .z-carta .telaio { background: rgba(255, 255, 255, .7); color: #282a31; border-color: var(--line); }
+.zwrr .z-carta .telaio[aria-pressed="true"] { background: #fff; border-color: #282a31; box-shadow: inset 0 0 0 1px #282a31; }
+.zwrr .z-carta .telaio small { color: #41525d; }
+.zwrr .z-carta .result, .zwrr .z-carta .dev-table, .zwrr .z-carta .wind-table, .zwrr .z-carta .arch-table, .zwrr .z-carta details.adv { background: rgba(255, 255, 255, .72); }
+.zwrr .z-carta .disegno svg { background: #fff; }
+.zwrr .z-piede { position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; background: var(--carta); border-top: 1px solid var(--bordo); box-shadow: 0 -6px 18px rgba(0, 0, 0, .08);
+  padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-right, 0px)); }
+.zwrr .z-piede-riga { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+.zwrr .z-esito { flex: 1; text-align: center; color: var(--tenue); font-size: calc(14px * var(--zoom, 1)); min-width: 0; }
+.zwrr .z-esito b { color: var(--testo); font-size: 1.35em; font-variant-numeric: tabular-nums; }
+.zwrr .z-piede .btn:disabled { opacity: .35; cursor: default; }
+@media (max-width: 760px) {
+  .zwrr .z-nastro { gap: 10px; padding: 14px 14px 6px; margin: 0 -14px; }
+  .zwrr section.panel.z-carta { flex-basis: calc(100vw - 44px); padding: 18px 16px 20px; border-radius: 24px; }
+  .zwrr section.panel.z-carta:not(.ora) { max-height: 300px; }
+  .zwrr .z-carta h2 { font-size: calc(23px * var(--zoom, 1)); }
+  .zwrr .z-passi em { display: none; }
+  .zwrr .z-passi li.ora em { display: inline; }
+  .zwrr .z-piede .btn { padding-inline: 10px; }
+  .zwrr .z-esito small { display: none; }
+  .zwrr .z-esito small:first-child { display: inline; }
+  .zwrr .z-dove { display: none; }
+  .zwrr .z-carta .telai { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .zwrr .z-carta .telaio { flex-direction: column; align-items: flex-start; padding: 8px; }
+  .zwrr .z-carta .telaio img { width: 100%; height: 72px; }
+}

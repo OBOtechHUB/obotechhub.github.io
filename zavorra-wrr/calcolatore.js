@@ -85,10 +85,12 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     <h1>${esc(title)}</h1>
     <p>Calcolo della zavorra per i telai autoportanti OBO Magic PV Mount WRR F e WRR D (i telai a parete WRR W non si zavorrano: spinta del vento per i tasselli), secondo il metodo del cap. 11 delle istruzioni di montaggio (07/2026).</p>
   </header>
-  <div class="grid">
-    <div class="col">
-      <section class="panel">
-        <h2>1 · Scegli il telaio e il vento</h2>
+  <ol class="z-passi" id="${u}-passi" aria-label="Passi del calcolo"></ol>
+  <div class="z-nastro" id="${u}-nastro">
+      <section class="panel z-carta c0" data-nome="Telaio">
+        <p class="z-n">Passo 1</p><h2>Quale telaio monti?</h2>
+        <p class="z-aiuto">Tocca la scheda del telaio. Monofacciale: apparecchiature su un lato; bifacciale: su due lati; a parete: fissato al muro, senza zavorra.</p>
+        <div id="${u}-telaiQui"></div>
         <div class="row">
           <label class="f" for="${u}-frame">Telaio
             <select id="${u}-frame">
@@ -104,6 +106,11 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           </div>
         </div>
         <div class="fit" id="${u}-fit" role="status" hidden></div>
+      </section>
+
+      <section class="panel z-carta c1" data-nome="Vento">
+        <p class="z-n">Passo 2</p><h2>Che vento c'è sul posto?</h2>
+        <p class="z-aiuto">Cerca il comune o l'indirizzo: l'app calcola la raffica di picco del sito. Se il progettista ti ha dato la velocità, scrivila direttamente.</p>
         <label class="f" for="${u}-wind">Velocità del vento di progetto: raffica di picco (km/h)
           <input type="number" id="${u}-wind" min="0" max="250" step="1" style="max-width:200px">
         </label>
@@ -158,8 +165,8 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         </details>
       </section>
 
-      <section class="panel">
-        <h2>2 · Cosa monti sul telaio</h2>
+      <section class="panel z-carta c2" data-nome="Apparecchiature">
+        <p class="z-n">Passo 3</p><h2>Che cosa monti sul telaio?</h2>
         <div class="dev-table">
           <table>
             <thead><tr>
@@ -173,18 +180,14 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           <button type="button" class="btn" id="${u}-addDev">+ Altra apparecchiatura</button>
         </div>
         <p class="hint">Per ogni apparecchiatura bastano larghezza, altezza e peso dalla scheda tecnica; la descrizione è facoltativa. Inserisci tutto ciò che viene fissato al telaio (inverter, quadri di stringa, quadri AC). Per più apparecchi sullo stesso lato le aree si sommano.</p>
-      </section>
-
-      <section class="panel">
-        <h2>Da verificare a parte (non entra nel calcolo)</h2>
+        <details class="adv"><summary>Da verificare a parte (non entra nel calcolo)</summary><div class="adv-body">
         <p class="hint">Solo un promemoria: queste voci non entrano nel calcolo. Le tabelle OBO considerano solo vento, area frontale e peso.</p>
         <ul class="check">${CHECKS.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+        </div></details>
       </section>
-    </div>
 
-    <div class="col">
-      <section class="panel" aria-live="polite">
-        <h2>3 · Quanta zavorra serve</h2>
+      <section class="panel z-carta c3" data-nome="Risultato" aria-live="polite">
+        <p class="z-n">Passo 4</p><h2>Quanta zavorra serve</h2>
         <div class="banner" id="${u}-banner" hidden></div>
         <div class="result" id="${u}-resBox">
           <span class="lbl" id="${u}-resLbl">Zavorra totale</span>
@@ -194,10 +197,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         <div class="disegno" id="${u}-disegno" hidden></div>
         <dl class="steps" id="${u}-steps"></dl>
         <ul class="alerts" id="${u}-alerts"></ul>
-      </section>
-
-      <section class="panel">
-        <h2>4 · Zavorra per le altre velocità del vento</h2>
+        <h3 class="z-sotto">Zavorra per le altre velocità del vento</h3>
         <p class="callout" id="${u}-windHint"></p>
         <div class="wind-table">
           <table>
@@ -212,8 +212,8 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
         <textarea class="copy" id="${u}-copyFallback" hidden></textarea>
       </section>
 
-      <section class="panel">
-        <h2>Relazione per il cliente</h2>
+      <section class="panel z-carta c4" data-nome="Relazione">
+        <p class="z-n">Passo 5</p><h2>Relazione per il cliente</h2>
         <p class="hint">Documento OBO con dati, metodo, risultato, tabella per tutte le velocità e verifiche a cura del progettista: da stampare, salvare in PDF o scaricare in Word da mandare al cliente.</p>
         <div class="row">
           <label class="f" for="${u}-rCliente">Cliente<input id="${u}-rCliente" maxlength="120" placeholder="Ragione sociale"></label>
@@ -230,10 +230,9 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           <span class="hint" id="${u}-rMsg" role="status"></span>
         </div>
       </section>
-
       ${storage ? `
-      <section class="panel" id="${u}-progettoBox">
-        <h2>5 · Salva nel progetto</h2>
+      <section class="panel z-carta c5" data-nome="Progetto" id="${u}-progettoBox">
+        <p class="z-n">Passo 6</p><h2>Salva nel progetto</h2>
         <div id="${u}-login" hidden>
           <p class="hint" style="margin-bottom:8px">Entra in OBO Hub con il tuo account per salvare i calcoli nei progetti e ritrovarli su qualsiasi dispositivo.</p>
           <p><a class="btn primary" href="../">Vai a OBO Hub</a></p>
@@ -262,10 +261,50 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
           </div>
         </div>
       </section>` : ''}
-    </div>
   </div>
+  <div class="z-piede"><div class="z-piede-riga">
+    <button type="button" class="btn" id="${u}-zIndietro">← Indietro</button>
+    <span class="z-esito" id="${u}-zEsito" aria-live="polite"></span>
+    <button type="button" class="btn primary" id="${u}-zAvanti">Avanti →</button>
+  </div></div>
   <p class="foot">Fonte: <a href="${SOURCE_URL}" target="_blank" rel="noopener">OBO Magic PV Mount, istruzioni di montaggio telaio inverter (EN, 28/07/2026)</a>, cap. 11, tab. 5–8. Formula: zavorra = valore tabella − peso totale apparecchiature; telaio bifacciale: diviso 2 per lato. I valori tra parentesi nelle tabelle OBO non sono spiegati dal manuale: qui sono segnalati con * come da verificare con calcolo strutturale specifico. Strumento di supporto alla prevendita: non sostituisce la progettazione con OBO Construct o di un tecnico abilitato.</p>
 </div>`;
+
+  // ---------- schede che scorrono di lato (come la guida di Torrette) ----------
+  const nastro = q('nastro'), carte = Array.from(nastro.children), passi = q('passi');
+  let passo = 0, daNastro = false, fermoT = 0;
+  passi.innerHTML = carte.map((c, i) => `<li><button type="button" data-i="${i}"><span>${i + 1}</span><em>${esc(c.dataset.nome)}</em></button></li>`).join('');
+  const vai = (i, scorri = true) => {
+    passo = Math.max(0, Math.min(carte.length - 1, i));
+    carte.forEach((c, k) => c.classList.toggle('ora', k === passo));
+    passi.querySelectorAll('li').forEach((l, k) => { l.className = k === passo ? 'ora' : k < passo ? 'fatto' : ''; });
+    q('zIndietro').disabled = passo === 0;
+    q('zAvanti').innerHTML = passo === carte.length - 1 ? 'Torna all\'inizio' : `Avanti<span class="z-dove">: ${esc(carte[passo + 1].dataset.nome)}</span> →`;
+    if (scorri) {
+      const c = carte[passo], ridotto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      nastro.scrollTo({ left: c.offsetLeft - (nastro.clientWidth - c.offsetWidth) / 2, behavior: ridotto ? 'auto' : 'smooth' });
+      const sopra = passi.getBoundingClientRect().top; if (sopra < 0 || sopra > innerHeight) passi.scrollIntoView({ block: 'start', behavior: ridotto ? 'auto' : 'smooth' });
+    }
+  };
+  nastro.addEventListener('scroll', () => {
+    clearTimeout(fermoT);
+    fermoT = setTimeout(() => {
+      const centro = nastro.scrollLeft + nastro.clientWidth / 2; let meglio = 0, d = Infinity;
+      carte.forEach((c, k) => { const x = Math.abs(c.offsetLeft + c.offsetWidth / 2 - centro); if (x < d) { d = x; meglio = k; } });
+      if (meglio !== passo) vai(meglio, false);
+    }, 90);
+  });
+  carte.forEach((c, k) => c.addEventListener('click', () => { if (k !== passo) vai(k); }));
+  passi.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) vai(Number(b.dataset.i)); });
+  q('zIndietro').onclick = () => vai(passo - 1);
+  q('zAvanti').onclick = () => vai(passo === carte.length - 1 ? 0 : passo + 1);
+  // in basso, sempre visibile: la zavorra che risulta adesso
+  const esito = () => { const b = q('resBig'); q('zEsito').innerHTML = `<small>Zavorra</small> <b>${b ? b.innerHTML.replace(/<small>[^<]*<\/small>/, '').trim() : '–'}</b> ${b && /kg/.test(b.textContent) ? '<small>kg</small>' : ''}`; };
+  new MutationObserver(esito).observe(q('resBig'), { childList: true, characterData: true, subtree: true });
+  // la scelta del telaio (schede con le foto, disegnate dalla pagina) va nel passo 1
+  const metti = () => { const t = document.getElementById('telai'), qui = q('telaiQui'); if (t && qui && t.parentNode !== qui) { qui.appendChild(t); document.querySelector('.titolo-telai')?.remove(); } };
+  metti(); setTimeout(metti, 0);
+  setTimeout(() => { vai(0, false); esito(); }, 0);
 
   // ---------- apparecchiature ----------
   function renderDevs() {

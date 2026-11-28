@@ -14,6 +14,8 @@
   var app = ds.app || "OBO Hub", chiave = "obo-benvenuto-" + app.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   var prova = /[?&]provabenvenuto\b/.test(location.search);
   if (!prova && (/[?&]nobenvenuto\b/.test(location.search) || navigator.webdriver)) return; // controlli automatici: niente animazione
+  // Amministrazione: niente animazione (Marco, 28/11/2026), anche dal rimando ?p=%2Fadmin di GitHub Pages
+  if (!prova && (/\/admin\/?$|manutenzione-admin/.test(location.pathname) || /[?&]p=(%2F|\/)admin\b/i.test(location.search))) return;
   // inattività: si mostra solo se dall'ultima attività in una qualsiasi app di OBO Hub sono passati almeno 30 minuti
   var SOGLIA = 30 * 60 * 1000, CHIAVE_ATT = "obo-attivita", ultimoSegno = 0;
   function ultima() { try { return Number(localStorage.getItem(CHIAVE_ATT)) || 0; } catch (e) { return 0; } }
