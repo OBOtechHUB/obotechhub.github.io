@@ -167,3 +167,12 @@ main.contenitore { padding-top: 8px; padding-bottom: 48px; overflow-x: clip; }
   .zwrr .z-carta .telaio { flex-direction: column; align-items: flex-start; padding: 8px; }
   .zwrr .z-carta .telaio img { width: 100%; height: 72px; }
 }
+
+/* vento: una sola fonte (comune oppure progettista), l'altra resta grigia e non si compila */
+.zwrr .z-vd { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.zwrr .z-opz { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 2px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, .7); cursor: pointer; }
+.zwrr .z-opz:has(input:checked) { border-color: #282a31; background: #fff; }
+.zwrr .z-opz input { margin-top: 3px; width: 18px; height: 18px; accent-color: #282a31; flex: none; }
+.zwrr .z-opz b { display: block; } .zwrr .z-opz small { display: block; color: var(--muted); font-size: calc(13px * var(--zoom, 1)); }
+.zwrr fieldset.z-blocco { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 12px; transition: opacity .2s; }
+.zwrr fieldset.z-blocco.spento { opacity: .35; filter: grayscale(1); pointer-events: none; user-select: none; }

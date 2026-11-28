@@ -71,10 +71,11 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
   const storage = createStorage(supabase);
   const cleanups = [];
 
-  let state = defaultState();
+  // calcolo nuovo: il vento si prende dal comune; i calcoli salvati prima del 28/11 senza comune restano con la velocità del progettista
+  let state = { ...defaultState(), ventoDa: 'luogo' };
   try {
     const s = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
-    if (s && Array.isArray(s.devs)) state = { ...state, ...s };
+    if (s && Array.isArray(s.devs)) { state = { ...state, ...s }; if (!s.ventoDa) delete state.ventoDa; }
   } catch { /* storage non disponibile */ }
   const save = () => { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch { /* ignora */ } };
 
@@ -110,14 +111,18 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
 
       <section class="panel z-carta c1" data-nome="Vento">
         <p class="z-n">Passo 2</p><h2>Che vento c'è sul posto?</h2>
-        <p class="z-aiuto">Cerca il comune o l'indirizzo: l'app calcola la raffica di picco del sito. Se il progettista ti ha dato la velocità, scrivila direttamente.</p>
-        <label class="f" for="${u}-wind">Velocità del vento di progetto: raffica di picco (km/h)
-          <input type="number" id="${u}-wind" min="0" max="250" step="1" style="max-width:200px">
-        </label>
-        <p class="hint">Se il progettista dell'impianto ti ha dato la velocità, scrivila qui. Le tabelle OBO coprono 80–170 km/h.</p>
-        <details class="adv" id="${u}-sito" open>
-          <summary>Luogo dell'impianto e vento del sito <span class="hint">· NTC 2018, come l'Eurocodice 1</span></summary>
-          <div class="adv-body">
+        <p class="z-aiuto">Scegli da dove prendere il vento: dal comune dell'impianto oppure dalla velocità che ti ha dato il progettista. Vale solo quella scelta.</p>
+        <div class="z-vd" role="radiogroup" aria-label="Da dove prendere il vento">
+          <label class="z-opz"><input type="radio" name="${u}-vd" id="${u}-vdLuogo" value="luogo"><span><b>Dal comune dell'impianto</b><small>l'app calcola la raffica di picco del sito (NTC 2018, come l'Eurocodice 1)</small></span></label>
+          <label class="z-opz"><input type="radio" name="${u}-vd" id="${u}-vdProg" value="progettista"><span><b>Velocità data dal progettista</b><small>scrivi la raffica di picco che ti ha indicato</small></span></label>
+        </div>
+        <fieldset class="z-blocco" id="${u}-vProg">
+          <label class="f" for="${u}-wind">Raffica di picco indicata dal progettista (km/h)
+            <input type="number" id="${u}-wind" min="0" max="250" step="1" style="max-width:200px">
+          </label>
+          <p class="hint">Le tabelle OBO coprono 80–170 km/h.</p>
+        </fieldset>
+        <fieldset class="z-blocco" id="${u}-vLuogo">
             <label class="f" for="${u}-sCerca">Cerca il comune o l'indirizzo dell'impianto
               <input type="search" id="${u}-sCerca" autocomplete="off" placeholder="Es. Via Roma 10, Bergamo" aria-controls="${u}-sLista">
             </label>
@@ -140,10 +145,8 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
             </label>
             <p class="hint">Per l'altezza conta il punto più alto del telaio: a terra circa 1,5 m, su un tetto l'altezza del tetto più 1,5 m.</p>
             <div class="fit" id="${u}-sEsito" role="status"></div>
-            <div class="tools"><button type="button" class="btn" id="${u}-sUsa"></button></div>
             <p class="hint">Calcolo semplificato: velocità di riferimento della zona corretta per l'altitudine, coefficiente di esposizione della categoria, senza effetti del rilievo (colline, crinali) né coefficienti di forma. In casi particolari vale il calcolo del progettista.</p>
-          </div>
-        </details>
+        </fieldset>
         <p class="hint"><strong>Da dove vengono i numeri.</strong> La zavorra viene dalle tabelle OBO delle istruzioni di montaggio (cap. 11, tabelle 5–8): per ogni velocità del vento e area delle apparecchiature danno i chili. L'app non rifà un calcolo strutturale secondo l'Eurocodice: la pressione mostrata è solo q = ½ · 1,25 · v².</p>
         <details class="adv">
           <summary>Opzioni di calcolo <span class="hint">· facoltative, il default segue il manuale OBO</span></summary>
@@ -464,9 +467,18 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     if (document.activeElement !== q('sAlt')) q('sAlt').value = S.alt;
     if (document.activeElement !== q('sZ')) q('sZ').value = S.z;
     q('sEsito').innerHTML = `<p><strong>Raffica di picco: ${fmt(v)} km/h</strong> (pressione ${fmt(r.qp / 1000, 2)} kN/m²)</p><p>Velocità di riferimento ${fmt(r.vb, 1)} m/s${r.ca > 1 ? `, già aumentata per l'altitudine (× ${fmt(r.ca, 2)})` : ''}; coefficiente di esposizione ${fmt(r.ce, 2)}.</p>${v > 170 ? '<p><strong>Oltre le tabelle OBO (170 km/h):</strong> serve un calcolo specifico.</p>' : ''}`;
-    q('sUsa').textContent = `Usa ${fmt(v)} km/h come vento di progetto`;
-    q('sUsa').onclick = () => { state.wind = v; q('wind').value = v; update(); };
+    if (ventoDa() === 'luogo') { state.wind = v; if (document.activeElement !== q('wind')) q('wind').value = v; }
+    vincoloVento();
   }
+  // il vento viene da UNA sola fonte: dal comune (calcolo del sito) oppure dal progettista; l'altra parte è spenta
+  function ventoDa() { if (!state.ventoDa) state.ventoDa = state.sito && state.sito.luogo ? 'luogo' : (state.wind && state.wind !== 120 ? 'progettista' : 'luogo'); return state.ventoDa; }
+  function vincoloVento() {
+    const da = ventoDa();
+    q('vdLuogo').checked = da === 'luogo'; q('vdProg').checked = da === 'progettista';
+    q('vLuogo').disabled = da !== 'luogo'; q('vProg').disabled = da !== 'progettista';
+    q('vLuogo').classList.toggle('spento', da !== 'luogo'); q('vProg').classList.toggle('spento', da !== 'progettista');
+  }
+  [q('vdLuogo'), q('vdProg')].forEach((r) => (r.onchange = () => { state.ventoDa = r.value; if (r.value === 'progettista') { q('wind').value = state.wind; setTimeout(() => q('wind').focus(), 0); } renderSito(); update(); }));
   // ricerca del luogo: zona e altitudine in automatico, comune e stemma per la relazione
   let stemma = null, stemmaDi = '', cercaT = 0, cercaCtl = null;
   const chiaveStemma = (L) => (L && L.comune ? `${L.comune}|${L.provincia || ''}` : '');
@@ -538,7 +550,7 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
     const rel = state.rel || {}, val = (id) => (q(id) ? q(id).value.trim() : '');
     return { state, cliente: rel.cliente || val('cliente'), riferimento: rel.riferimento || '', progetto: val('progetto'), luogo: rel.luogo || '', codice: rel.codice || val('codice'),
       note: rel.note || '', autore: (q('who') && q('who').textContent) || '', data: new Date(),
-      sito: state.sito && state.sito.luogo ? { ...state.sito, vento: ventoSito(state.sito.zona, state.sito.alt, state.sito.cat, state.sito.z), Z: ZONE_VENTO.find((x) => x.zona === Number(state.sito.zona)), C: CATEGORIE_VENTO.find((x) => x.cat === state.sito.cat) } : null,
+      sito: state.sito && state.sito.luogo && ventoDa() === 'luogo' ? { ...state.sito, vento: ventoSito(state.sito.zona, state.sito.alt, state.sito.cat, state.sito.z), Z: ZONE_VENTO.find((x) => x.zona === Number(state.sito.zona)), C: CATEGORIE_VENTO.find((x) => x.cat === state.sito.cat) } : null,
       stemma: stemma && stemmaDi === chiaveStemma(state.sito && state.sito.luogo) ? stemma : null };
   };
   const nomeFile = (est) => `Relazione_zavorra_${FRAMES[state.frame].name.replace(/\s+/g, '')}_${(datiRelazione().codice || datiRelazione().cliente || 'OBO').replace(/[^\w-]+/g, '_').slice(0, 40)}_${new Date().toISOString().slice(0, 10)}.${est}`;
