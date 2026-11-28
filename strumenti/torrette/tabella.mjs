@@ -22,7 +22,7 @@ export const VARIANTI = [['ID', null], ['Sistema', null], ['Gruppo', null], ['De
   ['Uscita cavi', 'uscita'], ['Recesso coperchio mm', 'riv'], ['Recesso max mm', 'riv_max'], ['Dimensione', 'dim'], ['Codice (sistemi a gruppi)', 'codice'],
   ['Significato delle colonne codice', null], ['Codice 1', 'codici.0'], ['Codice 2', 'codici.1'], ['Codice 3', 'codici.2'], ['Codice 4', 'codici.3'], ['Nota 1', 'note_righe.0'], ['Nota 2', 'note_righe.1'], ['Nota 3', 'note_righe.2'], ['Nota 4', 'note_righe.3']];
 export const COMPONENTI = [['ID', null], ['Sistema', null], ['Gruppo', null], ['Ruolo', null], ['Codice', 'codice'], ['Tipo', 'tipo'], ['Descrizione', 'desc'], ['Altezza min mm', 'MIN'], ['Altezza max mm', 'MAX'],
-  ['Pavimenti ammessi', 'pavimenti_ok'], ['Quantità', 'qty'], ['Dimensione', 'dim'], ['Nota', 'nota']];
+  ['Pavimenti ammessi', 'pavimenti_ok'], ['Quantità', 'qty'], ['Dimensione', 'dim'], ['Nota', 'nota'], ['Da non proporre (sì)', 'escluso']];
 const NUMERI = new Set(['riv', 'riv_max', 'qty', 'MIN', 'MAX']);
 const CHIAVI_MIN = ['altezza_min', 'h_min', 'hMin'], CHIAVI_MAX = ['h_max', 'hMax'];
 const RUOLI = { box: 'Box portafrutti da premontare', box_fisso: 'Box fisso (già compreso)', scatola_massetto: 'Scatola da massetto', scatole_massetto: 'Scatola da massetto', piedini: 'Piedini',

@@ -1868,7 +1868,8 @@
     "pavimenti_ok": [
      "massetto",
      "flottante"
-    ]
+    ],
+    "escluso": "sì – il box MT45 V0 è solo per GES 9 System55"
    }
   ],
   "accessorio_obbligatorio_per_box": {

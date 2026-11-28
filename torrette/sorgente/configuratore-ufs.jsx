@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 import { createPortal } from "react-dom";
 // Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
 import DATI_TABELLA from "./dati-sistemi.json";
@@ -1251,6 +1251,30 @@ const DB = {
   },
 };
 Object.keys(DATI_TABELLA).forEach(k => { DB[k] = DATI_TABELLA[k]; });
+// righe della tabella segnate «Da non proporre»: restano nei dati (non si cancella nulla) ma l'app non le mostra
+const escluso = (x) => x && /^s[iì]/i.test(String(x.escluso || "").trim());
+Object.values(DB).forEach(s => { [s, ...(s.gruppi || [])].forEach(o => { if (Array.isArray(o.box)) o.box = o.box.filter(b => !escluso(b)); }); });
+
+// Frutti: Modul45 oppure standard Italia. Una volta scelto (nella guida o nel passo 3) si vedono solo i box di quel tipo.
+const FruttiCtx = createContext(["", () => {}]);
+function tipoFrutti(b) {
+  const t = `${b?.tipo || ""} ${b?.desc || ""}`;
+  if (/modul ?45/i.test(t)) return "modul45";
+  if (BOX_ITA.has(b?.tipo) || /ital/i.test(t)) return "ita";
+  return "";
+}
+const okFrutti = (b, f) => !f || !tipoFrutti(b) || tipoFrutti(b) === f;
+function SceltaFrutti({ box }) {
+  const [f, setF] = useContext(FruttiCtx);
+  const tipi = new Set((box || []).map(tipoFrutti).filter(Boolean));
+  if (tipi.size < 2) return null;
+  return (
+    <div className="ufs-frutti" role="group" aria-label="Sistema dei frutti">
+      <span>Frutti:</span>
+      {[["modul45", "Modul45®"], ["ita", "Standard Italia"], ["", "Tutti"]].map(([k, t]) => <button type="button" key={k || "tutti"} aria-pressed={f === k} onClick={() => setF(k)}>{t}</button>)}
+    </div>
+  );
+}
 
 
 // ─────────────────────────────────────────────────────────────────
@@ -2498,6 +2522,8 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
   const handleRiga    = (i) => { setSelRiga(i);   setSelPav(null);    setSelBox(null);  setSelScatola(null); setAccH(false); setAccInterni([]); };
   const handlePav     = (p) => { setSelPav(p);    setSelBox(null);    setSelScatola(null); };
   const handleBox     = (c) => { setSelBox(c);    setSelScatola(null); };
+  const [frutti] = useContext(FruttiCtx);
+  useEffect(() => { const b = gruppo?.box?.find(x => x.codice === selBox); if (b && !okFrutti(b, frutti)) handleBox(null); }, [frutti]);
 
   // hasBoxLibero = gruppo con box a scelta (id VUOTA oppure qualsiasi gruppo con .box e senza .box_fisso)
   const hasBoxLibero    = !!(gruppo?.box && !gruppo?.box_fisso);
@@ -2730,8 +2756,9 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
           <div className="ufs-passo" style={{ fontSize:12, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>
             Scegli il box portafrutti
           </div>
+          <SceltaFrutti box={gruppo.box} />
           <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-            {gruppo.box.map(b => (
+            {gruppo.box.filter(b => okFrutti(b, frutti)).map(b => (
               <button key={b.codice} onClick={() => handleBox(b.codice)}
                 style={{ background:selBox===b.codice?`${colore}12`:"white", border:`2px solid ${selBox===b.codice?colore:"#c5d9de"}`, padding:"12px 16px", textAlign:"left", cursor:"pointer", transition:"all 0.12s", borderRadius:2, display:"flex", alignItems:"center", gap:12 }}>
                 <div style={{ width:16, height:16, borderRadius:"50%", border:`2px solid ${selBox===b.codice?colore:"#c5d9de"}`, background:selBox===b.codice?colore:"white", flexShrink:0 }} />
@@ -2923,7 +2950,9 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
     }
   };
 
-  const boxDisponibili = s.box ? s.box.filter(b => !selectedPav || b.pavimenti_ok.includes(selectedPav)) : [];
+  const [frutti] = useContext(FruttiCtx);
+  const boxDisponibili = s.box ? s.box.filter(b => (!selectedPav || b.pavimenti_ok.includes(selectedPav)) && okFrutti(b, frutti)) : [];
+  useEffect(() => { const b = s.box?.find(x => x.codice === selectedBox); if (b && !okFrutti(b, frutti)) setSelectedBox(null); }, [frutti]);
   const hasBoxStep     = s.box && s.box.length > 0;
   const hasAccInterni  = s.accessori_interni && s.accessori_interni.length > 0;
   const hasAccH        = !!s.accessorio_h;
@@ -3149,6 +3178,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
       {hasBoxStep && selectedPav !== null && !avviso && (
         <div style={{ marginBottom:16 }}>
           <div className="ufs-passo" style={{ fontSize:11, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Box portafrutti</div>
+          <SceltaFrutti box={s.box} />
           {boxDisponibili.length === 0
             ? <div style={{ background:"#FFEBEE", border:"1px solid #EF9A9A", padding:"10px 12px", fontSize:12, color:"#8B0000", borderRadius:2 }}>Nessun box disponibile per questa combinazione.</div>
             : <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
@@ -3241,265 +3271,113 @@ function QuantitaStanza({ v, onModifica }) {
   );
 }
 
-function Carrello({ voci, onRimuovi, onModifica, onSvuota, onChiudi }) {
-  const [copiato, setCopiato] = useState(false);
-  const [showDs, setShowDs] = useState(false);
-  const [copiatoDs, setCopiatoDs] = useState(false);
-  const [showCopiaMenu, setShowCopiaMenu] = useState(false);
-  const { isMobile } = useM();
+// Carrello: pannello a parte che si apre dall'icona in alto (non più la barra scura in fondo)
+function Carrello({ voci, onRimuovi, onModifica, onSvuota, onChiudi, onSalva, onTrova }) {
+  const [copiato, setCopiato] = useState("");
+  const [aperta, setAperta] = useState(null);
+  const [vista, setVista] = useState("config");
+  useEffect(() => {
+    const t = e => e.key === "Escape" && onChiudi();
+    document.addEventListener("keydown", t); document.body.classList.add("carrello-aperto");
+    return () => { document.removeEventListener("keydown", t); document.body.classList.remove("carrello-aperto"); };
+  }, []);
 
-  // Raggruppa tutti gli articoli per codice e somma le quantità
   const distinta = {};
-  voci.forEach(voce => {
-    voce.righe.forEach(r => {
-      const cod = cleanCode(r.codice);
-      if (!cod || cod === "—" || cod === "N/D") return;
-      if (!distinta[cod]) distinta[cod] = { codice: r.codice, label: r.label, nota: r.nota, qty: 0, voci: [] };
-      distinta[cod].qty += pezzi(voce);
-      if (!distinta[cod].voci.includes(voce.label)) distinta[cod].voci.push(voce.label);
-    });
-  });
+  voci.forEach(voce => voce.righe.forEach(r => {
+    const cod = cleanCode(r.codice);
+    if (!cod || cod === "—" || cod === "N/D") return;
+    if (!distinta[cod]) distinta[cod] = { codice: r.codice, label: r.label, nota: r.nota, qty: 0 };
+    distinta[cod].qty += pezzi(voce);
+  }));
   const righe = Object.values(distinta);
-
-  // Colonna codici per configurazione (una riga per codice, separatore vuoto tra config)
-  const testoCodiciPerConfig = () => {
-    return voci.map((v, i) => {
-      const codici = v.righe
-        .map(r => cleanCode(r.codice))
-        .filter(c => c && c !== "—" && c !== "N/D");
-      return (voci.length > 1 ? `// ${i+1}. ${v.label}${pezzi(v) > 1 ? " × " + pezzi(v) : ""}${v.stanza ? " – " + v.stanza : ""}\n` : "") + codici.join("\n");
-    }).join("\n\n");
-  };
-
-  // Colonna quantità riepilogativa (una riga per codice: codice + riga vuota per qty)
-  const testoQuantita = () => {
-    return righe.map(r => `${cleanCode(r.codice)}\t${r.qty}`).join("\n");
-  };
+  const totPezzi = voci.reduce((a, v) => a + pezzi(v), 0);
+  const codiciDi = v => v.righe.filter(r => { const c = cleanCode(r.codice); return c && c !== "—" && c !== "N/D"; });
 
   const testoDistinta = () => {
-    const lines = ["DISTINTA MATERIALI — OBO Bettermann", "=".repeat(44), ""];
+    const l = ["DISTINTA MATERIALI — OBO Bettermann", "=".repeat(44), ""];
     voci.forEach((v, i) => {
-      lines.push(`[${i+1}] ${v.label}${v.altezza ? "  |  " + v.altezza : ""}  |  ${pezzi(v)} pz${v.stanza ? "  |  " + v.stanza : ""}`);
-      v.righe.forEach(r => {
-        const cod = cleanCode(r.codice);
-        if (cod && cod !== "—" && cod !== "N/D")
-          lines.push(`    ${cod.padEnd(10)}  ${r.label}`);
-      });
-      lines.push("");
+      l.push(`[${i + 1}] ${v.label}${v.altezza ? "  |  " + v.altezza : ""}  |  ${pezzi(v)} pz${v.stanza ? "  |  " + v.stanza : ""}`);
+      codiciDi(v).forEach(r => l.push(`    ${cleanCode(r.codice).padEnd(10)}  ${r.label}`));
+      l.push("");
     });
-    lines.push("RIEPILOGO PER CODICE", "-".repeat(44));
-    righe.forEach(r => lines.push(`  ${cleanCode(r.codice).padEnd(10)}  x${r.qty}  ${r.label}`));
-    // Datasheet
-    const dsLinks = righe
-      .map(r => ({ cod: cleanCode(r.codice), url: DATASHEET[cleanCode(r.codice)] }))
-      .filter(x => x.url);
-    if (dsLinks.length > 0) {
-      lines.push("", "DATASHEET", "-".repeat(44));
-      dsLinks.forEach(x => lines.push(`  ${x.cod.padEnd(10)}  ${x.url}`));
-    }
-    return lines.join("\n");
+    l.push("RIEPILOGO PER CODICE", "-".repeat(44));
+    righe.forEach(r => l.push(`  ${cleanCode(r.codice).padEnd(10)}  x${r.qty}  ${r.label}`));
+    return l.join("\n");
   };
-
-  const copiaStringa = (testo, setter) => {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(testo).then(() => { setter(true); setTimeout(() => setter(false), 2000); }).catch(() => copiaFallback(testo, setter));
-    } else {
-      copiaFallback(testo, setter);
-    }
+  const testoQuantita = () => righe.map(r => `${cleanCode(r.codice)}\t${r.qty}`).join("\n");
+  const copia = (chi, testo) => {
+    const fatto = () => { setCopiato(chi); setTimeout(() => setCopiato(""), 2000); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(testo).then(fatto).catch(() => {});
+    else { const ta = document.createElement("textarea"); ta.value = testo; ta.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); fatto(); } catch (e) { /* niente */ } ta.remove(); }
   };
+  const ds = righe.map(r => ({ cod: cleanCode(r.codice), label: r.label, url: DATASHEET[cleanCode(r.codice)] })).filter(x => x.url);
+  const excel = () => { const b = document.getElementById("csv"); if (b) b.click(); };
+  const cambiaPezzi = (v, d) => onModifica(v.id, { qta: Math.min(999, Math.max(1, pezzi(v) + d)) });
 
-  const copia = () => copiaStringa(testoDistinta(), setCopiato);
+  return createPortal(
+    <div className="cr-sfondo" onClick={onChiudi}>
+      <aside className="cr-pannello" role="dialog" aria-modal="true" aria-label="Carrello" onClick={e => e.stopPropagation()}>
+        <header className="cr-testa">
+          <div><h2>Carrello</h2><small>{voci.length ? `${voci.length} ${voci.length === 1 ? "configurazione" : "configurazioni"} · ${totPezzi} ${totPezzi === 1 ? "pezzo" : "pezzi"} · ${righe.length} codici` : "Ancora vuoto"}</small></div>
+          <button type="button" className="cr-x" aria-label="Chiudi il carrello" onClick={onChiudi}>✕</button>
+        </header>
 
-  const copiaFallback = (testo, setter) => {
-    const ta = document.createElement("textarea");
-    ta.value = testo;
-    ta.style.cssText = "position:fixed;top:-9999px;left:-9999px;opacity:0;";
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    try {
-      document.execCommand("copy");
-      setter(true); setTimeout(() => setter(false), 2000);
-    } catch(e) {
-      const w = window.open("", "_blank");
-      if (w) { w.document.write("<pre>" + testo + "</pre>"); w.document.close(); }
-    }
-    document.body.removeChild(ta);
-  };
-
-  const scaricaDatasheet = () => setShowDs(ds => !ds);
-
-  const dsLinks = righe
-    .map(r => ({ cod: cleanCode(r.codice), label: r.label, url: DATASHEET[cleanCode(r.codice)] }))
-    .filter(x => x.url);
-
-  const dsCount = dsLinks.length;
-
-  const copiaDs = () => {
-    const testo = dsLinks.map(x => `${x.cod}  ${x.label}\n${x.url}`).join("\n\n");
-    navigator.clipboard.writeText(testo).then(() => {
-      setCopiatoDs(true);
-      setTimeout(() => setCopiatoDs(false), 2000);
-    });
-  };
-
-  return (
-    <div style={{ position:"fixed", bottom:0, left:0, right:0, zIndex:1000, boxShadow:"0 -4px 24px rgba(0,0,0,0.18)" }}>
-
-      {/* MODAL DATASHEET */}
-      {showDs && dsLinks.length > 0 && (
-        <div style={{ position:"absolute", bottom:"100%", right:0, width: isMobile ? "100vw" : 520, background:"white", border:"1px solid #c5d9de", borderRadius: isMobile ? 0 : "4px 4px 0 0", boxShadow:"0 -4px 20px rgba(0,0,0,0.15)", zIndex:10 }}>
-          <div style={{ background:"#1B3A2D", color:"white", padding:"10px 14px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-            <span style={{ fontSize:11, fontWeight:700, letterSpacing:1, textTransform:"uppercase" }}>📄 Datasheet ({dsLinks.length})</span>
-            <div style={{ display:"flex", gap:6 }}>
-              <button onClick={copiaDs} style={{ background:"#2E7D32", color:"white", border:"none", padding:"5px 10px", cursor:"pointer", fontSize:10, fontWeight:700, borderRadius:2 }}>
-                {copiatoDs ? "✓ Copiato!" : "📋 Copia link"}
-              </button>
-              <button onClick={() => setShowDs(false)} style={{ background:"transparent", color:"#aaa", border:"1px solid #555", padding:"5px 8px", cursor:"pointer", fontSize:11, fontWeight:700, borderRadius:2 }}>✕</button>
-            </div>
+        {!voci.length ? (
+          <div className="cr-vuoto">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#c5d9de" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.2a2 2 0 002 1.6h8.2a2 2 0 002-1.5L21.5 8H6"/></svg>
+            <b>Nessuna configurazione</b>
+            <p>Scegli un sistema, completa la configurazione e premi «Aggiungi al carrello».</p>
+            <button type="button" className="cr-btn primario" onClick={() => { onChiudi(); onTrova(); }}>Trova la torretta giusta</button>
           </div>
-          <div style={{ maxHeight: isMobile ? "50vh" : 280, overflowY:"auto", padding:"4px 0" }}>
-            {dsLinks.map((x, i) => (
-              <div key={i} style={{ padding:"9px 14px", borderBottom:"1px solid #f0f0f0", display:"flex", alignItems:"center", gap:10 }}>
-                <span style={{ fontFamily:"'Courier New',monospace", fontSize:10, fontWeight:700, background:"#F0F7E6", border:"1px solid #A5D6A7", borderRadius:2, padding:"1px 6px", whiteSpace:"nowrap" }}>{x.cod}</span>
-                <span style={{ fontSize:11, color:"#333", flex:1, minWidth:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{x.label}</span>
-                <a href={x.url} target="_blank" rel="noreferrer" style={{ fontSize:11, color:"#1565C0", fontWeight:700, textDecoration:"none", whiteSpace:"nowrap" }}>PDF ↗</a>
-              </div>
-            ))}
+        ) : (<>
+          <div className="cr-schede" role="tablist">
+            <button type="button" role="tab" aria-selected={vista === "config"} onClick={() => setVista("config")}>Configurazioni</button>
+            <button type="button" role="tab" aria-selected={vista === "codici"} onClick={() => setVista("codici")}>Distinta per codice</button>
           </div>
-        </div>
-      )}
-
-      {/* HEADER */}
-      <div style={{ background:"#1B3A2D", color:"white", padding: isMobile ? "10px 12px" : "12px 28px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-          <span style={{ fontSize: isMobile ? 12 : 14, fontWeight:800, letterSpacing:1, textTransform:"uppercase" }}>🛒</span>
-          {!isMobile && <span style={{ fontSize:14, fontWeight:800, letterSpacing:2, textTransform:"uppercase" }}>Carrello</span>}
-          <span style={{ background:"#F39B00", color:"white", borderRadius:12, padding:"2px 8px", fontSize:11, fontWeight:700 }}>{voci.length}</span>
-        </div>
-        <div style={{ display:"flex", gap: isMobile ? 5 : 8 }}>
-          {voci.length > 0 && (<>
-            {/* COPIA — pulsante split con dropdown */}
-            <div style={{ position:"relative", display:"flex" }}>
-              <button onClick={copia}
-                style={{ background:"#2E7D32", color:"white", border:"none", borderRight:"1px solid #1B5E20", padding: isMobile ? "6px 10px" : "7px 14px", cursor:"pointer", fontSize: isMobile ? 10 : 11, fontWeight:700, borderRadius:"2px 0 0 2px" }}>
-                {copiato ? "✓" : (isMobile ? "📋" : "📋 Copia distinta")}
-              </button>
-              <button onClick={() => setShowCopiaMenu(v => !v)}
-                style={{ background:"#2E7D32", color:"white", border:"none", padding:"7px 8px", cursor:"pointer", fontSize:10, fontWeight:700, borderRadius:"0 2px 2px 0" }}
-                title="Altre opzioni di copia">
-                ▾
-              </button>
-              {showCopiaMenu && (
-                <div style={{ position:"absolute", top:"100%", left:0, zIndex:200, background:"white", border:"1px solid #ddd", borderRadius:3, boxShadow:"0 4px 16px rgba(0,0,0,0.15)", minWidth:220, marginTop:2 }}
-                  onMouseLeave={() => setShowCopiaMenu(false)}>
-                  <div style={{ padding:"6px 12px", fontSize:9, fontWeight:700, color:"#888", letterSpacing:1.5, textTransform:"uppercase", borderBottom:"1px solid #f0f0f0" }}>
-                    Opzioni di copia
+          <div className="cr-corpo">
+            {vista === "config" ? voci.map((v, i) => {
+              const cod = codiciDi(v), ap = aperta === v.id;
+              return (
+                <article key={v.id} className="cr-voce">
+                  <div className="cr-voce-t">
+                    <span className="cr-num">{i + 1}</span>
+                    <div className="cr-voce-n"><b>{v.label}</b>{v.altezza && <small>Altezza {v.altezza}</small>}</div>
+                    <button type="button" className="cr-togli" onClick={() => onRimuovi(v.id)} aria-label={"Togli " + v.label}>Togli</button>
                   </div>
-                  {[
-                    { label: "📋 Distinta completa",         fn: () => copiaStringa(testoDistinta(),         setCopiato),  desc: "Tutto: codici, qty, note" },
-                    { label: "🔢 Solo codici (per config.)", fn: () => copiaStringa(testoCodiciPerConfig(), setCopiato),  desc: "Un codice per riga — incolla su colonna Excel" },
-                    { label: "📊 Codici + quantità",         fn: () => copiaStringa(testoQuantita(),         setCopiato),  desc: "Codice TAB qty — una riga per codice univoco" },
-                  ].map((item, i) => (
-                    <button key={i} onClick={() => { item.fn(); setShowCopiaMenu(false); }}
-                      style={{ display:"block", width:"100%", padding:"10px 14px", background:"none", border:"none", borderBottom: i<2?"1px solid #f5f5f5":"none", cursor:"pointer", textAlign:"left" }}
-                      onMouseEnter={e => e.currentTarget.style.background="#f5f5f5"}
-                      onMouseLeave={e => e.currentTarget.style.background="none"}>
-                      <div style={{ fontSize:12, fontWeight:600, color:"#282a31" }}>{item.label}</div>
-                      <div style={{ fontSize:10, color:"#888", marginTop:1 }}>{item.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            {dsCount > 0 && (
-              <button onClick={scaricaDatasheet} style={{ background:"#1565C0", color:"white", border:"none", padding: isMobile ? "6px 10px" : "7px 16px", cursor:"pointer", fontSize: isMobile ? 10 : 11, fontWeight:700, borderRadius:2 }}>
-                {isMobile ? `📄 ${dsCount}` : `📄 Datasheet (${dsCount})`}
-              </button>
-            )}
-            <button onClick={onSvuota} style={{ background:"transparent", color:"#ef9a9a", border:"1px solid #555", padding: isMobile ? "6px 8px" : "7px 12px", cursor:"pointer", fontSize: isMobile ? 10 : 11, fontWeight:700, borderRadius:2 }}>
-              {isMobile ? "🗑" : "Svuota"}
-            </button>
-          </>)}
-          <button onClick={onChiudi} style={{ background:"transparent", color:"#aaa", border:"1px solid #444", padding: isMobile ? "6px 8px" : "7px 12px", cursor:"pointer", fontSize: isMobile ? 10 : 11, fontWeight:700, borderRadius:2 }}>
-            {voci.length === 0 ? "✕" : "▾"}
-          </button>
-        </div>
-      </div>
-
-      {/* CORPO */}
-      <div style={{ background:"#F9F9F7", maxHeight: isMobile ? "60vh" : "50vh", overflowY:"auto", padding: voci.length ? (isMobile ? "12px" : "20px 28px") : (isMobile ? "12px" : "16px 28px") }}>
-        {voci.length === 0 ? (
-          <div style={{ color:"#666", fontSize:12, textAlign:"center", padding:"8px 0" }}>Nessuna configurazione. Completa una config e premi "+ Aggiungi al carrello".</div>
-        ) : isMobile ? (
-          /* MOBILE: stack verticale */
-          <div>
-            <div style={{ fontSize:10, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Configurazioni ({voci.length})</div>
-            {voci.map((v, i) => (
-              <div key={v.id} style={{ background:"white", border:"1px solid #e0e0e0", borderLeft:"3px solid #1B5E20", padding:"10px 12px", marginBottom:8, borderRadius:2 }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
-                  <div style={{ fontSize:12, fontWeight:700, color:"#282a31" }}>{i+1}. {v.label}{pezzi(v) > 1 ? ` × ${pezzi(v)}` : ""}</div>
-                  <button onClick={() => onRimuovi(v.id)} style={{ background:"none", border:"none", color:"#bbb", cursor:"pointer", fontSize:15, padding:"0 0 0 8px" }}>✕</button>
-                </div>
-                {v.altezza && <div style={{ fontSize:10, color:"#666", marginBottom:6 }}>📐 {v.altezza}</div>}
-                <QuantitaStanza v={v} onModifica={onModifica} />
-                <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
-                  {v.righe.map((r, j) => { const cod=cleanCode(r.codice); if(!cod||cod==="—"||cod==="N/D") return null; return <CodicePill key={j} codice={r.codice} />; })}
-                </div>
-              </div>
-            ))}
-            <div style={{ fontSize:10, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", margin:"14px 0 8px" }}>Distinta riepilogativa</div>
-            <div style={{ background:"white", border:"1px solid #e0e0e0", borderRadius:2, overflow:"hidden" }}>
-              {righe.map((r, i) => (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px", borderTop: i>0?"1px solid #f0f0f0":"none", background: i%2===0?"white":"#f8f8f8" }}>
-                  <CodicePill codice={r.codice} />
-                  <span style={{ fontSize:11, fontWeight:700, color:"#282a31" }}>×{r.qty}</span>
-                  <span style={{ fontSize:11, color:"#555", flex:1 }}>{r.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          /* DESKTOP: 2 colonne */
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:20 }}>
-            <div>
-              <div style={{ fontSize:10, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Configurazioni ({voci.length})</div>
-              {voci.map((v, i) => (
-                <div key={v.id} style={{ background:"white", border:"1px solid #e0e0e0", borderLeft:"4px solid #1B5E20", padding:"10px 14px", marginBottom:8, borderRadius:2 }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
-                    <div>
-                      <div style={{ fontSize:13, fontWeight:700, color:"#282a31" }}>{i+1}. {v.label}{pezzi(v) > 1 ? ` × ${pezzi(v)}` : ""}</div>
-                      {v.altezza && <div style={{ fontSize:11, color:"#666", marginTop:2 }}>📐 {v.altezza}</div>}
-                      <QuantitaStanza v={v} onModifica={onModifica} />
-                      <div style={{ marginTop:6, display:"flex", flexWrap:"wrap", gap:4 }}>
-                        {v.righe.map((r, j) => { const cod=cleanCode(r.codice); if(!cod||cod==="—"||cod==="N/D") return null; return <CodicePill key={j} codice={r.codice} />; })}
-                      </div>
+                  <div className="cr-voce-c">
+                    <div className="cr-pezzi" aria-label="Pezzi">
+                      <button type="button" onClick={() => cambiaPezzi(v, -1)} aria-label="Un pezzo in meno">−</button>
+                      <input type="number" min="1" max="999" inputMode="numeric" value={v.qta ?? 1} onChange={e => onModifica(v.id, { qta: e.target.value })} onBlur={e => onModifica(v.id, { qta: pezzi({ qta: e.target.value }) })} aria-label="Numero di pezzi" />
+                      <button type="button" onClick={() => cambiaPezzi(v, 1)} aria-label="Un pezzo in più">+</button>
+                      <span>pz</span>
                     </div>
-                    <button onClick={() => onRimuovi(v.id)} style={{ background:"none", border:"none", color:"#aaa", cursor:"pointer", fontSize:16, padding:"0 4px" }}>✕</button>
+                    <input className="cr-stanza" type="text" maxLength="60" placeholder="Stanza (es. Ufficio 1)" value={v.stanza || ""} onChange={e => onModifica(v.id, { stanza: e.target.value })} aria-label="Stanza" />
                   </div>
-                </div>
-              ))}
-            </div>
-            <div>
-              <div style={{ fontSize:10, fontWeight:700, color:"#555", letterSpacing:2, textTransform:"uppercase", marginBottom:10 }}>Distinta riepilogativa</div>
-              <div style={{ background:"white", border:"1px solid #e0e0e0", borderRadius:2, overflow:"hidden" }}>
-                <div style={{ display:"grid", gridTemplateColumns:"120px 40px 1fr", padding:"7px 14px", background:"#f5f5f5", fontSize:10, fontWeight:700, color:"#888", letterSpacing:1, textTransform:"uppercase" }}>
-                  <span>Codice</span><span style={{textAlign:"center"}}>Qty</span><span>Descrizione</span>
-                </div>
-                {righe.map((r, i) => (
-                  <div key={i} style={{ display:"grid", gridTemplateColumns:"120px 40px 1fr", padding:"8px 14px", borderTop:"1px solid #f0f0f0", background: i%2===0?"white":"#f0f5f6" }}>
-                    <span><CodicePill codice={r.codice} /></span>
-                    <span style={{ textAlign:"center", fontSize:13, fontWeight:700 }}>×{r.qty}</span>
-                    <span style={{ fontSize:12, color:"#555" }}>{r.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+                  <button type="button" className="cr-apri" aria-expanded={ap} onClick={() => setAperta(ap ? null : v.id)}>{ap ? "Nascondi i codici" : `Vedi i ${cod.length} codici`}</button>
+                  {ap && <ul className="cr-codici">{cod.map((r, j) => <li key={j}><CodicePill codice={r.codice} /><span>{r.label}{r.nota ? <small>{r.nota}</small> : null}</span></li>)}</ul>}
+                </article>
+              );
+            }) : (
+              <table className="cr-tab"><thead><tr><th>Codice</th><th>Articolo</th><th>Q.tà</th></tr></thead>
+                <tbody>{righe.map(r => <tr key={cleanCode(r.codice)}><td><CodicePill codice={r.codice} /></td><td>{r.label}{r.nota ? <small style={{ display: "block", color: "#7694a4" }}>{r.nota}</small> : null}</td><td className="q">{r.qty}</td></tr>)}</tbody></table>
+            )}
+            {ds.length > 0 && vista === "codici" && (
+              <details className="cr-ds"><summary>Schede tecniche ({ds.length})</summary>
+                <ul>{ds.map(x => <li key={x.cod}><a href={x.url} target="_blank" rel="noopener">{x.cod} · {x.label}</a></li>)}</ul></details>
+            )}
           </div>
-        )}
-      </div>
-    </div>
-
-  );
+          <footer className="cr-piede">
+            <button type="button" className="cr-btn primario" onClick={excel}>Scarica distinta Excel</button>
+            <button type="button" className="cr-btn" onClick={() => { onChiudi(); onSalva(); }}>Salva nel progetto</button>
+            <div className="cr-piede-r">
+              <button type="button" className="cr-link" onClick={() => copia("d", testoDistinta())}>{copiato === "d" ? "✓ Copiata" : "Copia distinta"}</button>
+              <button type="button" className="cr-link" onClick={() => copia("q", testoQuantita())}>{copiato === "q" ? "✓ Copiati" : "Copia codici e quantità"}</button>
+              <button type="button" className="cr-link rosso" onClick={() => { if (confirm("Svuotare il carrello? Le configurazioni salvate nel progetto restano nello storico.")) onSvuota(); }}>Svuota</button>
+            </div>
+          </footer>
+        </>)}
+      </aside>
+    </div>, document.body);
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -3909,6 +3787,8 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
     return { altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", moduli: "", tipoPrese: "",
       ...Object.fromEntries(Object.entries(da).filter(([k]) => ["altezza", "pavimento", "rivestimento"].includes(k)).map(([k, v]) => [k, String(v ?? "")])) };
   });
+  const [frutti, setFrutti] = useState(filtri.tipoPrese || "");
+  useEffect(() => { setFrutti(filtri.tipoPrese || ""); }, [filtri.tipoPrese]);
   const [risultatiTrova, setRisultatiTrova] = useState(null);
   const [mostraRinunceTrova, setMostraRinunceTrova] = useState(false);
 
@@ -3934,6 +3814,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
   const famAttiva = FAMIGLIE.find(f => f.sistemi.includes(sistema));
 
   return (
+    <FruttiCtx.Provider value={[frutti, setFrutti]}>
     <div className="ufs-radice" style={{ fontFamily: "var(--font, Helvetica, Arial, sans-serif)", background: "var(--sfondo, #fff)" }}>
 
       {/* BARRA (stile OBO Hub: schede chiare con pillole arancio; il titolo è nella fascia della pagina) */}
@@ -3954,9 +3835,10 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
           {modalita === "wizard" && step > 1 && (
             <button onClick={reset} title="Ricomincia" style={{ padding: "7px 12px", borderRadius: 999, border: "1px solid var(--bordo, #dee2e6)", background: "var(--carta, #fff)", color: "var(--testo, #212529)", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>↺ Ricomincia</button>
           )}
-          <button onClick={() => setCarrelloAperto(v => !v)}
+          <button onClick={() => setCarrelloAperto(v => !v)} aria-label={`Carrello: ${carrello.length} configurazioni`} title="Carrello"
             style={{ padding: "7px 14px", borderRadius: 999, border: "1px solid #F39B00", background: carrello.length > 0 ? "#F39B00" : "var(--carta, #fff)", color: carrello.length > 0 ? "#fff" : "#d98a00", cursor: "pointer", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
-            Carrello{carrello.length > 0 && <span style={{ background: "#fff", color: "#d98a00", borderRadius: 999, padding: "0 7px", fontSize: 12 }}>{carrello.length}</span>}
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.2a2 2 0 002 1.6h8.2a2 2 0 002-1.5L21.5 8H6"/></svg>
+            {!isMobile && "Carrello"}{carrello.length > 0 && <span style={{ background: "#fff", color: "#d98a00", borderRadius: 999, padding: "0 7px", fontSize: 12 }}>{carrello.reduce((a, v) => a + pezzi(v), 0)}</span>}
           </button>
         </div>
         {modalita === "wizard" && (
@@ -3991,7 +3873,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
 
       {schedaGuida && <SchedaArchitetto sistemaKey={schedaGuida} onChiudi={() => setSchedaGuida(null)} />}
       {fotoGuida.key && <Lightbox foto={fotoSistema(fotoGuida.key, fotoGuida.fam)} indice={fotoGuida.i} setIndice={v => setFotoGuida(g => ({ ...g, i: typeof v === "function" ? v(g.i) : v }))} nome={fotoGuida.nome} />}
-      {/* CARRELLO — pannello fisso in fondo */}
+      {/* CARRELLO — pannello a parte, si apre dall'icona in alto */}
       {carrelloAperto && (
         <Carrello
           voci={carrello}
@@ -3999,8 +3881,11 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
           onModifica={modificaVoce}
           onSvuota={() => setCarrello([])}
           onChiudi={() => setCarrelloAperto(false)}
+          onTrova={() => setModalita("trova")}
+          onSalva={() => { setModalita("wizard"); setTimeout(() => document.getElementById("boxProgetto")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80); }}
         />
       )}
     </div>
+    </FruttiCtx.Provider>
   );
 }
