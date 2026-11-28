@@ -222,6 +222,12 @@
   .guida .g-conta button { width:48px; height:48px; border:2px solid var(--bordo); background:var(--carta); color:var(--testo); font-size:24px; cursor:pointer; }
   .guida .g-conta output { min-width:56px; text-align:center; font-size:34px; font-weight:800; font-variant-numeric:tabular-nums; }
   .guida .g-riassunto { margin-bottom:18px; }
+  .guida .g-alternative { border-left:4px solid var(--arancio); background:var(--carta); padding:10px 14px; margin:0 0 16px; }
+  .guida .g-alternative > b { display:block; margin-bottom:8px; }
+  .g-vista { display:flex; flex-wrap:wrap; gap:12px; align-items:center; border:1px solid var(--bordo); background:var(--carta); padding:12px 14px; margin-bottom:16px; }
+  .g-vista-fig { flex:1 1 220px; max-width:320px; min-width:0; }
+  .g-vista-fig svg { width:100%; height:auto; display:block; }
+  .g-vista p { flex:1 1 100%; margin:0; font-size:calc(14px * var(--zoom,1)); }
   .guida .g-elenco { display:grid; gap:12px; }
   .guida .g-elenco h4 { margin:10px 0 0; font-size:calc(16px * var(--zoom,1)); }
   .guida .g-elenco details { border-top:1px solid var(--bordo); padding-top:12px; display:grid; gap:12px; }
@@ -291,10 +297,8 @@
     <section class="progetto noprint" aria-label="Stato del salvataggio">
       <span id="chipSalvato" class="chip"></span>
       <a class="pill pill-arancio" href="#boxProgetto" id="vaiSalva" data-t="Salva nel progetto ↓|Save to project ↓"></a>
-      <a class="pill" href="../progetti.html" data-t="Tutti i progetti|All projects"></a>
       <button type="button" class="pill" id="nuovaConf" data-t="Nuova configurazione|New configuration"></button>
-      <button type="button" class="pill" id="csv" data-t="Scarica distinta (CSV)|Download parts list (CSV)"></button>
-      <a class="pill" href="precedente.html" data-t="Versione precedente|Previous version"></a>
+      <button type="button" class="pill" id="csv" data-t="Scarica distinta (Excel)|Download parts list (Excel)"></button>
     </section>
   </main>
   <div id="ufs"></div>
@@ -313,17 +317,20 @@
       </div>
       <div class="strumenti">
         <button type="button" class="btn btn-primario" id="salvaProg" data-t="Salva nel progetto|Save to project"></button>
+        <button type="button" class="pill" id="copiaLink" data-t="Copia link|Copy link"></button>
+        <button type="button" class="pill" id="mandaEmail" data-t="Invia per email|Send by email"></button>
         <a class="pill" href="../progetti.html" data-t="Tutti i progetti|All projects"></a>
         <span id="statoCloud" class="nota" role="status"></span>
       </div>
+      <p class="nota"><a href="precedente.html" data-t="Apri la versione precedente del configuratore|Open the previous version of the configurator"></a></p>
     </section>
   </div>
 </div>
 
 <script src="../manutenzione.js" data-sezione="app:torrette"></script>
 <script src="../aggiorna.js" data-versione="../version.json" data-app="torrette"></script>
-<script src="./ufs.js?v=d1c006dfea"></script>
-<script type="module" src="./ufs-app.js?v=7678ed4c10"></script>
+<script src="./ufs.js?v=53ddc0ceed"></script>
+<script type="module" src="./ufs-app.js?v=4e621a3a37"></script>
 <script src="../avviso-uscita.js"></script>
 <script src="../piede.js"></script>
 </body>

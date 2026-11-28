@@ -15,6 +15,7 @@ cp torrette/sorgente/*.jsx torrette/sorgente/*.json "$tmp/"
 { echo "/* Configuratore UFS OBO Hub – file generato da strumenti/torrette/compila.sh dai sorgenti in torrette/sorgente (non modificare a mano). React (licenza MIT) incluso. */"; cat "$tmp/ufs.js"; } > torrette/ufs.js
 rm -rf "$tmp"
 echo "torrette/ufs.js: $(wc -c < torrette/ufs.js) byte"
+node strumenti/torrette/codici-obo.mjs   # pagine obo.it dei codici, per la distinta in Excel
 # impronta dei file nell'indirizzo, così il browser non tiene in memoria la versione vecchia dopo una pubblicazione
 v1=$(md5sum torrette/ufs.js | cut -c1-10); v2=$(md5sum torrette/ufs-app.js | cut -c1-10)
 sed -i -E "s|src=\"\./ufs\.js(\?v=[a-z0-9]+)?\"|src=\"./ufs.js?v=$v1\"|; s|src=\"\./ufs-app\.js(\?v=[a-z0-9]+)?\"|src=\"./ufs-app.js?v=$v2\"|" torrette/index.html

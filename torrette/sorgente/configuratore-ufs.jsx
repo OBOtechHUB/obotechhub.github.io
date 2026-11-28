@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 // Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
 import DATI_TABELLA from "./dati-sistemi.json";
-import Guida from "./guida.jsx";
+import Guida, { VistaComposta } from "./guida.jsx";
 
 // ─────────────────────────────────────────────────────────────────
 // RESPONSIVE — hook e helpers
@@ -2463,6 +2463,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
 
   return (
     <div>
+      <VistaComposta pavimento={pavEffettivo} box={boxScelto || gruppo?.box_fisso || s.box_fisso_globale || null} sistema={s.label} />
       {/* SCHEDA TECNICA */}
       <div style={{ background:"white", border:"1px solid #e0e0e0", padding:"16px 20px", marginBottom:20, display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(155px,1fr))", gap:12, borderRadius:3 }}>
         {[ {l:"Forma",v:s.forma},{l:"Dimensioni",v:s.dimensione},{l:"IP chiuso",v:s.ip_chiuso},{l:"Carico",v:s.carico},{l:"Riv. max",v:s.rivestimento_max} ].map((it,i)=>(
@@ -2871,6 +2872,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
         </div>
       </div>
 
+      <VistaComposta pavimento={selectedPav ?? (s.pavimenti && s.pavimenti.length === 1 ? s.pavimenti[0] : null)} box={boxScelto || s.box_fisso || null} sistema={s.label} />
       {/* SCHEDA TECNICA */}
       <div style={{ background:"white", border:"1px solid #e0e0e0", padding: isMobile ? "12px" : "16px 20px", marginBottom: s.note ? 0 : 16, display:"grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(auto-fill,minmax(140px,1fr))", gap: isMobile ? 10 : 12, borderRadius: s.note ? "3px 3px 0 0" : 3 }}>
         {(() => {

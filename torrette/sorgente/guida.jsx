@@ -148,6 +148,14 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
     return { ok: r.filter((x) => !x.problemi.length && !x.rinunce.length), parziali: r.filter((x) => !x.problemi.length && x.rinunce.length), ko: r.filter((x) => x.problemi.length) };
   }, [filtri]);
   const adatti = ris.ok.length + ris.parziali.length, fine = passo >= PASSI.length, P = PASSI[passo];
+  // alternative (come i configuratori che non bloccano: dicono cosa cambiare): per ogni risposta data, quanti sistemi in più senza di lei
+  const TOGLI = { prese: { moduli: "", tipoPrese: "" }, forma: { forma: "" }, pavimento: { pavimento: "" }, altezza: { altezza: "" }, rivestimento: { rivestimento: "" }, uso: { carico: "", lavaggio: "" } };
+  const conta = (f) => sistemi.map(({ key, ...x }) => punteggio(key, x, f)).filter((x) => !x.problemi.length).length;
+  const alternative = useMemo(() => Object.entries(TOGLI).map(([id, via]) => {
+    const f = { ...filtri, ...via };
+    if (Object.keys(via).every((k) => (filtri[k] ?? "") === "")) return null;
+    const n = conta(f); return n > adatti ? { id, via, n } : null;
+  }).filter(Boolean).sort((a, b) => b.n - a.n), [filtri, adatti]);
   const azzera = () => { setFiltri({ altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", moduli: "", tipoPrese: "" }); setPasso(0); };
   const riassunto = [
     ["prese", (filtri.moduli || filtri.tipoPrese) && (filtri.tipoPrese === "ita" ? (filtri.moduli === "4" ? "Standard Italia · 1 × 504" : filtri.moduli ? "Standard Italia · 506 per lato" : "Standard Italia") : filtri.tipoPrese === "modul45" ? `${filtri.moduli ? filtri.moduli + " moduli " : ""}Modul45` : `${filtri.moduli} dispositivi`)],
@@ -304,6 +312,15 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
               {!riassunto.some((x) => x[1]) && <span className="g-suggerimento">Non hai dato nessuna risposta: vedi tutti i sistemi.</span>}
               <button type="button" className="g-pill" onClick={azzera}>Ricomincia da capo</button>
             </div>
+            {alternative.length > 0 && adatti <= 3 && (
+              <div className="g-alternative" role="note">
+                <b>{adatti ? "Vuoi più scelta?" : "Per trovare un sistema cambia una risposta:"}</b>
+                <div className="g-rapide">{alternative.slice(0, 4).map((a) => {
+                  const t = (riassunto.find((x) => x[0] === a.id) || [])[1] || PASSI.find((x) => x.id === a.id).titolo;
+                  return <button type="button" key={a.id} className="g-pill" onClick={() => setFiltri((p) => ({ ...p, ...a.via }))}>senza «{t}»: <b>{a.n} {a.n === 1 ? "sistema" : "sistemi"}</b></button>;
+                })}</div>
+              </div>
+            )}
             <div className="g-elenco">
               {ris.ok.map((r) => <Scheda key={r.key} r={r} tipo="ok" />)}
               {ris.parziali.length > 0 && <h4>Adatti con una rinuncia</h4>}
@@ -317,12 +334,28 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
       <div className="g-piede">
         <div className="g-dentro g-piede-riga">
           <button type="button" className="g-btn" disabled={passo === 0} onClick={() => setPasso(Math.max(0, passo - 1))}>← Indietro</button>
-          <span className={"g-conteggio" + (adatti ? "" : " zero")} aria-live="polite"><b>{adatti}</b> {adatti === 1 ? "sistema adatto" : "sistemi adatti"}{!fine && <small> finora</small>}</span>
+          <span className={"g-conteggio" + (adatti ? "" : " zero")} aria-live="polite"><b>{adatti}</b> {adatti === 1 ? "sistema adatto" : "sistemi adatti"}{!fine && <small> finora</small>}{!adatti && alternative[0] && <small className="g-alt-piede"> · senza «{(riassunto.find((x) => x[0] === alternative[0].id) || [])[1]}» {alternative[0].n}</small>}</span>
           {!fine
             ? <button type="button" className="g-btn primario" onClick={() => setPasso(passo + 1)}>{passo === PASSI.length - 1 ? "Vedi il risultato" : riassunto[passo][1] ? "Avanti →" : "Non lo so, avanti →"}</button>
             : <button type="button" className="g-btn" onClick={onCatalogo}>Sfoglia tutto il catalogo</button>}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Come risulta la torretta scelta: sezione del pavimento e frutti del box. */
+export function VistaComposta({ pavimento, box, sistema }) {
+  const d = box ? `${box.desc || ""} ${box.tipo || ""}` : "";
+  const ita = /standard ital|\bita\b|\bGT ?I|Box I\d/i.test(d);
+  const mI = d.match(/(\d+)\s*dispositiv/i), mM = d.match(/(\d+)\s*(?:modul|Modul45)/i), mT = d.match(/(\d+)\s*totali/i);
+  const n = ita ? (mI && Number(mI[1]) > 4 ? 12 : 4) : Number((mT || mM || [0, 0])[1]) || 0;
+  const pav = pavimento === "flottante" ? "flottante" : "massetto";
+  return (
+    <div className="g-vista" aria-label="Come risulta la torretta">
+      <div className="g-vista-fig"><DisegnoPavimento tipo={pav} compatto /></div>
+      {box && <div className="g-vista-fig"><DisegnoPrese n={n} tipo={ita ? "ita" : "modul45"} /></div>}
+      <p><b>Come risulta:</b> {sistema}{pavimento ? ` su ${pavimento === "flottante" ? "pavimento flottante" : "massetto"}` : " (scegli il pavimento)"}{box ? ` · ${box.tipo ? box.tipo + " – " : ""}${box.desc || ""}` : ""}.</p>
     </div>
   );
 }

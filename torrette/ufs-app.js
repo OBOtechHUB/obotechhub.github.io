@@ -3,10 +3,12 @@
  * Il configuratore vero è torrette/ufs.js (compilato da torrette/sorgente con strumenti/torrette/compila.sh);
  * questa pagina fa l'accesso con la sessione di OBO Hub, sceglie il progetto, salva il carrello come "soluzione"
  * del progetto unico (tabella progetti_soluzioni, app "torrette", dati.versione = "ufs") e nel browser,
- * e scarica la distinta in CSV. Le configurazioni salvate con la versione precedente si aprono in precedente.html.
+ * e scarica la distinta in Excel (con la pagina obo.it di ogni codice). Le configurazioni salvate con la versione precedente si aprono in precedente.html.
  */
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 import { CONFIG } from "../config.js";
+import { scriviXlsx } from "../prodotti/xlsx.js";
+import { CODICI_OBO } from "./codici-obo.js";
 
 const $ = (id) => document.getElementById(id);
 const leggi = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -192,22 +194,42 @@ async function scriviCloud() {
   } finally { C.inSalvataggio = false; mostraSalvataggio(); }
 }
 
-// ---------- distinta in CSV (Excel italiano: separatore ";" e BOM) ----------
+// ---------- distinta in Excel con lo stile OBO (come Prodotti) e la pagina obo.it di ogni codice ----------
 const pulito = (c) => String(c ?? "").replace(/^⚠/, "").trim();
+const paginaObo = (cod) => (CODICI_OBO[cod] ? "https://www.obo.it" + CODICI_OBO[cod] : "");
+const scarica = (blob, nome) => {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nome;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+};
 $("csv").onclick = () => {
   if (!S.carrello.length) { stato(T("Il carrello è vuoto: aggiungi almeno una configurazione.", "The cart is empty: add at least one configuration.")); return; }
-  const cella = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const righe = [[T("Configurazione", "Configuration"), T("Altezza", "Height"), T("Codice", "Code"), T("Descrizione", "Description"), T("Nota", "Note"), T("Da verificare", "To check")]];
-  const somma = new Map();
+  const righe = [], somma = new Map();
   S.carrello.forEach((v, i) => (v.righe || []).forEach((r) => {
     const cod = pulito(r.codice); if (!cod || cod === "—" || cod === "N/D") return;
-    righe.push([`${i + 1}. ${v.label ?? ""}`, v.altezza ?? "", cod, r.label ?? "", r.nota ?? "", String(r.codice ?? "").startsWith("⚠") ? T("sì", "yes") : ""]);
+    righe.push([`${i + 1}. ${v.label ?? ""}`, v.altezza ?? "", cod, r.label ?? "", r.nota ?? "", String(r.codice ?? "").startsWith("⚠") ? T("sì", "yes") : "", paginaObo(cod)]);
     const x = somma.get(cod) || { cod, label: r.label ?? "", n: 0 }; x.n++; somma.set(cod, x);
   }));
-  righe.push([], [T("Riepilogo per codice", "Summary by code")], [T("Codice", "Code"), T("Descrizione", "Description"), T("Quantità", "Quantity")]);
-  for (const x of somma.values()) righe.push([x.cod, x.label, x.n]);
-  const testo = "﻿" + righe.map((r) => r.map(cella).join(";")).join("\r\n");
-  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([testo], { type: "text/csv;charset=utf-8" }));
-  a.download = `distinta-torrette-${new Date().toISOString().slice(0, 10)}.csv`; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  const riep = [...somma.values()].map((x) => [x.cod, x.label, x.n, paginaObo(x.cod)]);
+  const blob = scriviXlsx([
+    { nome: T("Riepilogo", "Summary"), intestazione: [T("Codice", "Code"), T("Descrizione", "Description"), T("Quantità", "Quantity"), T("Pagina obo.it", "obo.it page")], righe: riep, larghezze: [12, 60, 10, 40], link: [3] },
+    { nome: T("Configurazioni", "Configurations"), intestazione: [T("Configurazione", "Configuration"), T("Altezza", "Height"), T("Codice", "Code"), T("Descrizione", "Description"), T("Nota", "Note"), T("Da verificare", "To check"), T("Pagina obo.it", "obo.it page")], righe, larghezze: [30, 10, 12, 55, 30, 12, 40], link: [6] },
+  ]);
+  const nome = ($("nomeConf").value || "").trim().replace(/[^\w\- àèéìòù]+/gi, "").replace(/\s+/g, "-").slice(0, 60) || "torrette";
+  scarica(blob, `distinta-${nome}-${new Date().toISOString().slice(0, 10)}.xlsx`);
+};
+
+// ---------- condividi: link della configurazione salvata e email con un commento ----------
+const linkSoluzione = () => (S.sol ? `${location.origin}${location.pathname}?soluzione=${encodeURIComponent(S.sol)}` : "");
+const serveSalvare = () => { if (S.sol) return false; stato(T("Prima salva nel progetto: il link apre la configurazione salvata.", "Save to the project first: the link opens the saved configuration.")); $("boxProgetto").scrollIntoView({ block: "center" }); return true; };
+$("copiaLink").onclick = async () => {
+  if (serveSalvare()) return;
+  try { await navigator.clipboard.writeText(linkSoluzione()); stato(T("Link copiato: lo apre chi ha accesso al progetto.", "Link copied: it opens for whoever can access the project.")); }
+  catch { stato(T("Copia questo link: ", "Copy this link: ") + linkSoluzione()); }
+};
+$("mandaEmail").onclick = () => {
+  if (serveSalvare()) return;
+  const nome = $("nomeConf").value || T("Configurazione torrette", "Service outlets configuration");
+  const elenco = S.carrello.map((v, i) => `${i + 1}. ${v.label ?? ""}${v.altezza ? " – H " + v.altezza : ""}`).join("\n");
+  const corpo = T(`Ciao,\nti mando la configurazione «${nome}» (torrette OBO).\n\n${elenco}\n\nApri: ${linkSoluzione()}\n\nCommento: `, `Hi,\nhere is the configuration «${nome}» (OBO service outlets).\n\n${elenco}\n\nOpen: ${linkSoluzione()}\n\nComment: `);
+  location.href = `mailto:?subject=${encodeURIComponent(nome)}&body=${encodeURIComponent(corpo)}`;
 };
