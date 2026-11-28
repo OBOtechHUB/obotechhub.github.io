@@ -203,16 +203,22 @@ const scarica = (blob, nome) => {
 };
 $("csv").onclick = () => {
   if (!S.carrello.length) { stato(T("Il carrello è vuoto: aggiungi almeno una configurazione.", "The cart is empty: add at least one configuration.")); return; }
-  const righe = [], somma = new Map();
-  S.carrello.forEach((v, i) => (v.righe || []).forEach((r) => {
-    const cod = pulito(r.codice); if (!cod || cod === "—" || cod === "N/D") return;
-    righe.push([`${i + 1}. ${v.label ?? ""}`, v.altezza ?? "", cod, r.label ?? "", r.nota ?? "", String(r.codice ?? "").startsWith("⚠") ? T("sì", "yes") : "", paginaObo(cod)]);
-    const x = somma.get(cod) || { cod, label: r.label ?? "", n: 0 }; x.n++; somma.set(cod, x);
-  }));
+  const righe = [], somma = new Map(), stanze = [];
+  const pz = (v) => Math.max(1, parseInt(v.qta, 10) || 1);
+  S.carrello.forEach((v, i) => {
+    stanze.push([v.stanza || T("(non indicata)", "(not given)"), `${i + 1}. ${v.label ?? ""}`, v.altezza ?? "", pz(v)]);
+    (v.righe || []).forEach((r) => {
+      const cod = pulito(r.codice); if (!cod || cod === "—" || cod === "N/D") return;
+      righe.push([`${i + 1}. ${v.label ?? ""}`, v.stanza || "", pz(v), v.altezza ?? "", cod, r.label ?? "", r.nota ?? "", String(r.codice ?? "").startsWith("⚠") ? T("sì", "yes") : "", paginaObo(cod)]);
+      const x = somma.get(cod) || { cod, label: r.label ?? "", n: 0 }; x.n += pz(v); somma.set(cod, x);
+    });
+  });
+  stanze.sort((a, b) => String(a[0]).localeCompare(String(b[0]), "it"));
   const riep = [...somma.values()].map((x) => [x.cod, x.label, x.n, paginaObo(x.cod)]);
   const blob = scriviXlsx([
     { nome: T("Riepilogo", "Summary"), intestazione: [T("Codice", "Code"), T("Descrizione", "Description"), T("Quantità", "Quantity"), T("Pagina obo.it", "obo.it page")], righe: riep, larghezze: [12, 60, 10, 40], link: [3] },
-    { nome: T("Configurazioni", "Configurations"), intestazione: [T("Configurazione", "Configuration"), T("Altezza", "Height"), T("Codice", "Code"), T("Descrizione", "Description"), T("Nota", "Note"), T("Da verificare", "To check"), T("Pagina obo.it", "obo.it page")], righe, larghezze: [30, 10, 12, 55, 30, 12, 40], link: [6] },
+    { nome: T("Configurazioni", "Configurations"), intestazione: [T("Configurazione", "Configuration"), T("Stanza", "Room"), T("Pezzi", "Pieces"), T("Altezza", "Height"), T("Codice", "Code"), T("Descrizione", "Description"), T("Nota", "Note"), T("Da verificare", "To check"), T("Pagina obo.it", "obo.it page")], righe, larghezze: [30, 18, 8, 10, 12, 55, 30, 12, 40], link: [8] },
+    { nome: T("Per stanza", "By room"), intestazione: [T("Stanza", "Room"), T("Configurazione", "Configuration"), T("Altezza", "Height"), T("Pezzi", "Pieces")], righe: stanze, larghezze: [24, 40, 14, 8] },
   ]);
   const nome = ($("nomeConf").value || "").trim().replace(/[^\w\- àèéìòù]+/gi, "").replace(/\s+/g, "-").slice(0, 60) || "torrette";
   scarica(blob, `distinta-${nome}-${new Date().toISOString().slice(0, 10)}.xlsx`);
@@ -229,7 +235,7 @@ $("copiaLink").onclick = async () => {
 $("mandaEmail").onclick = () => {
   if (serveSalvare()) return;
   const nome = $("nomeConf").value || T("Configurazione torrette", "Service outlets configuration");
-  const elenco = S.carrello.map((v, i) => `${i + 1}. ${v.label ?? ""}${v.altezza ? " – H " + v.altezza : ""}`).join("\n");
+  const elenco = S.carrello.map((v, i) => `${i + 1}. ${v.label ?? ""}${v.altezza ? " – H " + v.altezza : ""} – ${Math.max(1, parseInt(v.qta, 10) || 1)} pz${v.stanza ? " – " + v.stanza : ""}`).join("\n");
   const corpo = T(`Ciao,\nti mando la configurazione «${nome}» (torrette OBO).\n\n${elenco}\n\nApri: ${linkSoluzione()}\n\nCommento: `, `Hi,\nhere is the configuration «${nome}» (OBO service outlets).\n\n${elenco}\n\nOpen: ${linkSoluzione()}\n\nComment: `);
   location.href = `mailto:?subject=${encodeURIComponent(nome)}&body=${encodeURIComponent(corpo)}`;
 };

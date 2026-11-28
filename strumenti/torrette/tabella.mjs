@@ -16,7 +16,7 @@ const num = (v) => { const n = Number(String(v).replace(',', '.')); return Numbe
 
 export const SISTEMI = [['Chiave', null], ['Nome', 'label'], ['Famiglia', 'famiglia'], ['Forma', 'forma'], ['Dimensione coperchio', 'dimensione'], ['IP chiuso', 'ip_chiuso'], ['IP aperto', 'ip_aperto'],
   ['IP uscita laterale', 'ip_laterale'], ['IP tubo telescopico', 'ip_tubo'], ['IP coperchio cieco', 'ip_cieco'], ['Carico', 'carico'], ['Recesso coperchio / rivestimento max', 'rivestimento_max'],
-  ['Pavimenti (massetto, flottante)', 'pavimenti'], ['Altezza sistema su flottante', 'altezze.flottante'], ['Altezza sistema su massetto', 'altezze.massetto'], ['Note', 'note'], ['Nota sui box', 'box_note']];
+  ['Pavimenti (massetto, flottante)', 'pavimenti'], ['Altezza sistema su flottante', 'altezze.flottante'], ['Altezza sistema su massetto', 'altezze.massetto'], ['Note', 'note'], ['Nota sui box', 'box_note'], ['Isolamento acustico (sì = testata)', 'acustica']];
 export const GRUPPI = [['ID', null], ['Sistema', null], ['Sigla gruppo', 'id'], ['Nome gruppo', 'label'], ['Sottotitolo', 'sottotitolo'], ['Altezza sistema su flottante', 'altezze.flottante'], ['Altezza sistema su massetto', 'altezze.massetto']];
 export const VARIANTI = [['ID', null], ['Sistema', null], ['Gruppo', null], ['Descrizione variante', 'label'], ['Forma', 'forma'], ['Finitura', 'finitura'], ['Colore RAL', 'colore_ral'], ['Materiale', 'materiale'],
   ['Uscita cavi', 'uscita'], ['Recesso coperchio mm', 'riv'], ['Recesso max mm', 'riv_max'], ['Dimensione', 'dim'], ['Codice (sistemi a gruppi)', 'codice'],

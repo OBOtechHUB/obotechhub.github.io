@@ -1540,7 +1540,7 @@ const SISTEMA_DESC = {
     "In plastica (carico 2 kN) o metallo (carico 3 kN). Rivestimento fino a 10 mm. Adatta a lavaggio a secco.",
   GRAF9:
     "Torretta rotonda Ø 325 mm in alluminio pressofuso, ideale per showroom auto e aree commerciali ad alto traffico. " +
-    "Solo massetto. Carico 5 kN. Versione con coperchio rivestibile (BA3) idonea al lavaggio bagnato meccanizzato (IP65): " +
+    "Solo massetto. Carico 5 kN. Versione con coperchio rivestibile (BA3) idonea alla pulizia a umido, anche a macchina (IP65): " +
     "il tubo telescopico sporge di 10 mm garantendo tenuta ai liquidi anche con spina inserita. " +
     "Stesso equipaggiamento dispositivi della GES9.",
   UDHOME_ONE:
@@ -1550,7 +1550,7 @@ const SISTEMA_DESC = {
     "Carico fino a 15 kN. Lavaggio a secco. Adatta a residenziale, hotel e uffici di rappresentanza.",
   UDHOME2:
     "Torretta all-in-one 140×140 mm con 2 Modul45® preinstallati e separatore linee incluso. Altezza min. 95 mm. " +
-    "Coperchio prefinito in inox satinato o ottone. Versione con tubo telescopico idonea al lavaggio bagnato (IP65). " +
+    "Coperchio prefinito in inox satinato o ottone. Versione con tubo telescopico idonea alla pulizia a umido (IP65). " +
     "Telaio dati opzionale installabile frontalmente per aggiungere 2 prese keystone. " +
     "Carico fino a 15 kN. Adatta a uffici, hotel e ambienti con esigenze di tenuta ai liquidi.",
   UDHOME4:
@@ -1595,7 +1595,7 @@ const SISTEMA_DESC = {
     "Torretta rotonda compatta Ø 140 mm: la soluzione ideale dove servono aspetto discreto, elevata capacità di carico e versatilità. " +
     "Versione metallo: IP66 a coperchio chiuso, carico fino a 20 kN (2.000 kg), 6 finiture pregiate (cromo, nichel, ottone, rame, nero, nichel ossidato). " +
     "Versione plastica: IP40, carico 500 N, finitura grigio ferro o nero grafite. " +
-    "Box pre-montato MT R2 1-1 per 2 Modul45®. Altezza min. 85 mm. Idonea al lavaggio bagnato meccanizzato. " +
+    "Box pre-montato MT R2 1-1 per 2 Modul45®. Altezza min. 85 mm. Idonea alla pulizia a umido, anche a macchina. " +
     "Ideale per showroom auto, aree commerciali, supermercati e spazi comuni ad alta frequentazione.",
   CASS_TEL:
     "Cassetta a telaio inox per pavimento massetto: coperchio quadrato 288×288mm rivestibile con marmo, ceramica, parquet o qualsiasi finitura fino a 28mm. " +
@@ -1665,7 +1665,19 @@ const ICONE_CAR = {
   carico: <><path d="M7 9h10l3 11H4z"/><path d="M9.500 9a2.500 2.500 0 115 0"/></>,
   pavimento: <><path d="M3 8l9-4 9 4-9 4z"/><path d="M3 12.500l9 4 9-4"/><path d="M3 17l9 4 9-4"/></>,
   rivestimento: <><rect x="3" y="13" width="18" height="7" rx="1"/><path d="M3 9h18M7 5v4M12 5v4M17 5v4"/></>,
+  altezza: <><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/><path d="M3 21h18"/></>,
+  acustica: <><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.500 8.500a5 5 0 010 7M19 6a8.500 8.500 0 010 12"/></>,
 };
+// altezza minima e regolazione lette dai testi delle altezze (sistema e gruppi): «75–105 mm», «min. 110 mm»
+function altezzeDa(s) {
+  const testi = [s.altezze, ...(s.gruppi || []).map(g => g.altezze)].filter(Boolean).flatMap(a => Object.values(a)).map(String);
+  const minimi = [], reg = [];
+  testi.forEach(t => {
+    (t.match(/(\d{2,3})\s*[–-]\s*(\d{2,3})\s*mm/g) || []).forEach(m => { const [a, b] = m.match(/\d+/g).map(Number); if (b > a) { minimi.push(a); reg.push(b - a); } });
+    (t.match(/min\.?\s*(\d{2,3})/gi) || []).forEach(m => minimi.push(Number(m.match(/\d+/)[0])));
+  });
+  return minimi.length ? { min: Math.min(...minimi), reg: reg.length ? Math.max(...reg) : 0 } : null;
+}
 function caratteristiche(chiavi) {
   const sis = chiavi.map(k => DB[k]).filter(Boolean);
   if (!sis.length) return [];
@@ -1675,7 +1687,8 @@ function caratteristiche(chiavi) {
   if (q || r) out.push({ k: q && r ? "forma" : q ? "quadrata" : "rotonda", t: q && r ? "Quadrata o rotonda" : q ? "Quadrata" : "Rotonda", d: "Forma del coperchio" });
   const ip = [];
   sis.forEach(x => [x.ip_chiuso, x.ip_laterale, x.ip_tubo, x.ip_cieco].forEach(v => (String(v || "").match(/IP\s?(\d{2})/g) || []).forEach(m => ip.push(parseInt(m.replace(/\D/g, ""), 10)))));
-  if (ip.length) { const a = Math.min(...ip), b = Math.max(...ip); out.push({ k: "ip", t: a === b ? `IP${a}` : `IP${a}–IP${b}`, d: "Grado di protezione a coperchio chiuso (dal minimo al massimo secondo la variante)" }); }
+  const ipUso = []; sis.forEach(x => (String(x.ip_aperto || "").match(/IP\s?(\d{2})/g) || []).forEach(m => ipUso.push(parseInt(m.replace(/\D/g, ""), 10))));
+  if (ip.length) { const a = Math.min(...ip), b = Math.max(...ip), u = ipUso.length ? Math.min(...ipUso) : null; out.push({ k: "ip", t: (a === b ? `IP${a}` : `IP${a}–IP${b}`) + (u ? ` · in uso IP${u}` : ""), d: "Grado di protezione a coperchio chiuso (dal minimo al massimo secondo la variante)" + (u ? ` e in uso, con i cavi collegati (IP${u})` : "") + ". Pulizia a umido: serve IP65/IP66 a coperchio chiuso." }); }
   const kn = [];
   sis.forEach(x => { const c = String(x.carico || ""); (c.match(/(\d+(?:[.,]\d+)?)\s*kN/gi) || []).forEach(m => kn.push(parseFloat(m.replace(",", ".")))); (c.match(/(\d+)\s*N\b/g) || []).forEach(m => kn.push(parseFloat(m) / 1000)); });
   if (kn.length) { const a = Math.min(...kn), b = Math.max(...kn), f = v => String(v).replace(".", ","); out.push({ k: "carico", t: a === b ? `${f(b)} kN` : `fino a ${f(b)} kN`, d: "Carico ammesso sul coperchio (valore massimo tra le varianti)" }); }
@@ -1685,6 +1698,9 @@ function caratteristiche(chiavi) {
   sis.forEach(x => (String(x.rivestimento_max || "").match(/(\d+)\s*mm/g) || []).forEach(m => mm.push(parseInt(m, 10))));
   if (mm.length) out.push({ k: "rivestimento", t: `Rivestibile fino a ${Math.max(...mm)} mm`, d: "Spessore massimo del rivestimento nel coperchio" });
   else if (sis.some(x => /non rivest/i.test(x.rivestimento_max || ""))) out.push({ k: "rivestimento", t: "Non rivestibile", d: "Il coperchio non prende il rivestimento del pavimento" });
+  const hh = sis.map(altezzeDa).filter(Boolean);
+  if (hh.length) { const m = Math.min(...hh.map(h => h.min)), r = Math.max(...hh.map(h => h.reg)); out.push({ k: "altezza", t: `Da ${m} mm` + (r ? ` · regolabile ${r} mm` : ""), d: "Altezza minima del pavimento (dal solaio al pavimento finito) e campo di regolazione senza prolunghe" }); }
+  if (sis.some(x => /^s[iì]/i.test(String(x.acustica || "").trim()))) out.push({ k: "acustica", t: "Testata acustica", d: "Provata per non peggiorare l'isolamento acustico del solaio (rumore da calpestio)" });
   return out;
 }
 function Caratteristiche({ chiavi, stile }) {
@@ -3052,7 +3068,21 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
 
 
 // ── Carrello virtuale ─────────────────────────────────────────────
-function Carrello({ voci, onRimuovi, onSvuota, onChiudi }) {
+// quante torrette uguali e dove (come i programmi di progetto: tipo di torretta × stanza)
+const pezzi = (v) => Math.max(1, parseInt(v.qta, 10) || 1);
+function QuantitaStanza({ v, onModifica }) {
+  const st = { padding: "5px 8px", border: "1px solid #c5d9de", borderRadius: 8, fontSize: 14, background: "#fff", color: "#282a31" };
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", margin: "6px 0" }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#41525d" }}>Pezzi
+        <input type="number" min="1" max="999" inputMode="numeric" value={v.qta ?? 1} onChange={e => onModifica(v.id, { qta: e.target.value })} onBlur={e => onModifica(v.id, { qta: pezzi({ qta: e.target.value }) })} style={{ ...st, width: 64 }} /></label>
+      <label style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#41525d", flex: "1 1 160px", minWidth: 0 }}>Stanza
+        <input type="text" maxLength="60" placeholder="es. Ufficio 1, Sala riunioni" value={v.stanza || ""} onChange={e => onModifica(v.id, { stanza: e.target.value })} style={{ ...st, flex: 1, minWidth: 0 }} /></label>
+    </div>
+  );
+}
+
+function Carrello({ voci, onRimuovi, onModifica, onSvuota, onChiudi }) {
   const [copiato, setCopiato] = useState(false);
   const [showDs, setShowDs] = useState(false);
   const [copiatoDs, setCopiatoDs] = useState(false);
@@ -3066,7 +3096,7 @@ function Carrello({ voci, onRimuovi, onSvuota, onChiudi }) {
       const cod = cleanCode(r.codice);
       if (!cod || cod === "—" || cod === "N/D") return;
       if (!distinta[cod]) distinta[cod] = { codice: r.codice, label: r.label, nota: r.nota, qty: 0, voci: [] };
-      distinta[cod].qty += 1;
+      distinta[cod].qty += pezzi(voce);
       if (!distinta[cod].voci.includes(voce.label)) distinta[cod].voci.push(voce.label);
     });
   });
@@ -3078,7 +3108,7 @@ function Carrello({ voci, onRimuovi, onSvuota, onChiudi }) {
       const codici = v.righe
         .map(r => cleanCode(r.codice))
         .filter(c => c && c !== "—" && c !== "N/D");
-      return (voci.length > 1 ? `// ${i+1}. ${v.label}\n` : "") + codici.join("\n");
+      return (voci.length > 1 ? `// ${i+1}. ${v.label}${pezzi(v) > 1 ? " × " + pezzi(v) : ""}${v.stanza ? " – " + v.stanza : ""}\n` : "") + codici.join("\n");
     }).join("\n\n");
   };
 
@@ -3090,7 +3120,7 @@ function Carrello({ voci, onRimuovi, onSvuota, onChiudi }) {
   const testoDistinta = () => {
     const lines = ["DISTINTA MATERIALI — OBO Bettermann", "=".repeat(44), ""];
     voci.forEach((v, i) => {
-      lines.push(`[${i+1}] ${v.label}${v.altezza ? "  |  " + v.altezza : ""}`);
+      lines.push(`[${i+1}] ${v.label}${v.altezza ? "  |  " + v.altezza : ""}  |  ${pezzi(v)} pz${v.stanza ? "  |  " + v.stanza : ""}`);
       v.righe.forEach(r => {
         const cod = cleanCode(r.codice);
         if (cod && cod !== "—" && cod !== "N/D")
@@ -3248,10 +3278,11 @@ function Carrello({ voci, onRimuovi, onSvuota, onChiudi }) {
             {voci.map((v, i) => (
               <div key={v.id} style={{ background:"white", border:"1px solid #e0e0e0", borderLeft:"3px solid #1B5E20", padding:"10px 12px", marginBottom:8, borderRadius:2 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
-                  <div style={{ fontSize:12, fontWeight:700, color:"#282a31" }}>{i+1}. {v.label}</div>
+                  <div style={{ fontSize:12, fontWeight:700, color:"#282a31" }}>{i+1}. {v.label}{pezzi(v) > 1 ? ` × ${pezzi(v)}` : ""}</div>
                   <button onClick={() => onRimuovi(v.id)} style={{ background:"none", border:"none", color:"#bbb", cursor:"pointer", fontSize:15, padding:"0 0 0 8px" }}>✕</button>
                 </div>
                 {v.altezza && <div style={{ fontSize:10, color:"#666", marginBottom:6 }}>📐 {v.altezza}</div>}
+                <QuantitaStanza v={v} onModifica={onModifica} />
                 <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
                   {v.righe.map((r, j) => { const cod=cleanCode(r.codice); if(!cod||cod==="—"||cod==="N/D") return null; return <CodicePill key={j} codice={r.codice} />; })}
                 </div>
@@ -3277,8 +3308,9 @@ function Carrello({ voci, onRimuovi, onSvuota, onChiudi }) {
                 <div key={v.id} style={{ background:"white", border:"1px solid #e0e0e0", borderLeft:"4px solid #1B5E20", padding:"10px 14px", marginBottom:8, borderRadius:2 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
                     <div>
-                      <div style={{ fontSize:13, fontWeight:700, color:"#282a31" }}>{i+1}. {v.label}</div>
+                      <div style={{ fontSize:13, fontWeight:700, color:"#282a31" }}>{i+1}. {v.label}{pezzi(v) > 1 ? ` × ${pezzi(v)}` : ""}</div>
                       {v.altezza && <div style={{ fontSize:11, color:"#666", marginTop:2 }}>📐 {v.altezza}</div>}
+                      <QuantitaStanza v={v} onModifica={onModifica} />
                       <div style={{ marginTop:6, display:"flex", flexWrap:"wrap", gap:4 }}>
                         {v.righe.map((r, j) => { const cod=cleanCode(r.codice); if(!cod||cod==="—"||cod==="N/D") return null; return <CodicePill key={j} codice={r.codice} />; })}
                       </div>
@@ -3372,8 +3404,12 @@ function punteggio(key, s, filtri) {
   if (filtri.lavaggio === "umido") {
     const ip = s.ip_chiuso ?? "";
     const ok = ip.includes("IP65") || ip.includes("IP66");
-    if (!ok) rinunce.push({ campo: "Lavaggio", motivo: "Non idoneo a lavaggio umido/meccanizzato (IP < 65)" });
+    if (!ok) rinunce.push({ campo: "Lavaggio", motivo: "Non idoneo alla pulizia a umido, anche a macchina (serve IP65/IP66 a coperchio chiuso)" });
   }
+
+  // Requisito acustico: valgono i sistemi segnati «sì» nella colonna «Isolamento acustico» della tabella
+  if (filtri.acustica === "si" && !/^s[iì]/i.test(String(s.acustica || "").trim()))
+    rinunce.push({ campo: "Acustica", motivo: s.acustica ? `Isolamento acustico: ${s.acustica}` : "Prova acustica non dichiarata per questo sistema" });
 
   // Carico minimo — converte in kN se inserito in kg
   if (filtri.carico) {
@@ -3567,7 +3603,7 @@ function FiltraSistema({ onSeleziona, filtri, setFiltri, risultati, setRisultati
               style={{ width: "100%", padding: "9px 12px", border: `2px solid ${filtri.lavaggio ? "#F39B00" : "#c5d9de"}`, borderRadius: 2, fontSize: 13, outline: "none", background: "white" }}>
               <option value="">Indifferente</option>
               <option value="secco">Secco</option>
-              <option value="umido">Umido / meccanizzato (IP65+)</option>
+              <option value="umido">A umido, anche a macchina (IP65+)</option>
             </select>
           </div>
 
@@ -3725,11 +3761,12 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
 
   const addToCart = (righe, label, altezza) => {
     const id = Date.now();
-    setCarrello(prev => [...prev, { id, label, righe, altezza }]);
+    setCarrello(prev => [...prev, { id, label, righe, altezza, qta: 1, stanza: "" }]);
     setCarrelloAperto(true);
   };
 
   const removeFromCart = (id) => setCarrello(prev => prev.filter(v => v.id !== id));
+  const modificaVoce = (id, patch) => setCarrello(prev => prev.map(v => v.id === id ? { ...v, ...patch } : v));
   const famAttiva = FAMIGLIE.find(f => f.sistemi.includes(sistema));
 
   return (
@@ -3793,6 +3830,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
         <Carrello
           voci={carrello}
           onRimuovi={removeFromCart}
+          onModifica={modificaVoce}
           onSvuota={() => setCarrello([])}
           onChiudi={() => setCarrelloAperto(false)}
         />

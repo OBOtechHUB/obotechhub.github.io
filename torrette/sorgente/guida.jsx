@@ -130,6 +130,15 @@ const PASSI = [
 ];
 const RIVESTIMENTI = [["0", "Nessuno", "coperchio a vista"], ["5", "Fino a 5 mm", "moquette, PVC, linoleum"], ["10", "10 mm", "gres, parquet sottile"], ["15", "15 mm", "parquet, gres spesso"], ["20", "20 mm", "pietra, marmo"], ["25", "25 mm", "pietra spessa"]];
 const ALTEZZE = [60, 80, 100, 120, 150, 200];
+// tipo di rivestimento: spessore tipico (colla compresa) e consiglio; serve solo ad aiutare, filtra lo spessore
+const TIPI_RIV = [
+  ["piastrelle", "Gres e piastrelle", "10", "di solito 10–15 mm con la colla", "Se il pavimento si pulisce a umido scegli il coperchio con tubo telescopico: i cavi escono più in alto del pavimento."],
+  ["pietra", "Pietra e marmo", "20", "di solito 20–25 mm", "Con lastre grandi la forma rotonda si taglia meglio con la fresa a tazza; le cassette livellabili hanno finiture per pietra."],
+  ["parquet", "Parquet e legno", "15", "di solito 10–15 mm", "Il legno nel coperchio va incollato come nel resto del pavimento; meglio la pulizia a secco."],
+  ["moquette", "Moquette", "5", "di solito 5–10 mm", "La moquette si inserisce direttamente nel recesso del coperchio."],
+  ["resiliente", "PVC, linoleum, resina", "5", "di solito 2–5 mm", "Spessori piccoli: scegli un coperchio con recesso basso, oppure a vista."],
+  ["nessuno", "Nessun rivestimento", "0", "coperchio a vista", "Il coperchio resta in vista (plastica, inox o ottone secondo il modello)."],
+];
 
 function Scelta({ attiva, onClick, titolo, testo, children, larga }) {
   return (
@@ -149,21 +158,21 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
   }, [filtri]);
   const adatti = ris.ok.length + ris.parziali.length, fine = passo >= PASSI.length, P = PASSI[passo];
   // alternative (come i configuratori che non bloccano: dicono cosa cambiare): per ogni risposta data, quanti sistemi in più senza di lei
-  const TOGLI = { prese: { moduli: "", tipoPrese: "" }, forma: { forma: "" }, pavimento: { pavimento: "" }, altezza: { altezza: "" }, rivestimento: { rivestimento: "" }, uso: { carico: "", lavaggio: "" } };
+  const TOGLI = { prese: { moduli: "", tipoPrese: "" }, forma: { forma: "" }, pavimento: { pavimento: "" }, altezza: { altezza: "" }, rivestimento: { rivestimento: "", tipoRiv: "" }, uso: { carico: "", lavaggio: "", acustica: "" } };
   const conta = (f) => sistemi.map(({ key, ...x }) => punteggio(key, x, f)).filter((x) => !x.problemi.length).length;
   const alternative = useMemo(() => Object.entries(TOGLI).map(([id, via]) => {
     const f = { ...filtri, ...via };
     if (Object.keys(via).every((k) => (filtri[k] ?? "") === "")) return null;
     const n = conta(f); return n > adatti ? { id, via, n } : null;
   }).filter(Boolean).sort((a, b) => b.n - a.n), [filtri, adatti]);
-  const azzera = () => { setFiltri({ altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", moduli: "", tipoPrese: "" }); setPasso(0); };
+  const azzera = () => { setFiltri({ altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", tipoRiv: "", acustica: "", moduli: "", tipoPrese: "" }); setPasso(0); };
   const riassunto = [
     ["prese", (filtri.moduli || filtri.tipoPrese) && (filtri.tipoPrese === "ita" ? (filtri.moduli === "4" ? "Standard Italia · 1 × 504" : filtri.moduli ? "Standard Italia · 506 per lato" : "Standard Italia") : filtri.tipoPrese === "modul45" ? `${filtri.moduli ? filtri.moduli + " moduli " : ""}Modul45` : `${filtri.moduli} dispositivi`)],
     ["forma", filtri.forma && filtri.forma !== "indifferente" && (filtri.forma === "quadrata" ? "Quadrata" : "Rotonda")],
     ["pavimento", filtri.pavimento && { massetto: "Massetto", flottante: "Flottante", seminato: "Seminato" }[filtri.pavimento]],
     ["altezza", filtri.altezza && `H ${filtri.altezza} mm`],
-    ["rivestimento", filtri.rivestimento !== "" && (filtri.rivestimento === "0" ? "Senza rivestimento" : `Rivestimento ${filtri.rivestimento} mm`)],
-    ["uso", (filtri.carico || filtri.lavaggio) && [filtri.carico && `${filtri.carico} kN`, filtri.lavaggio === "umido" && "lavaggio con acqua"].filter(Boolean).join(", ")],
+    ["rivestimento", filtri.rivestimento !== "" && (filtri.rivestimento === "0" ? "Senza rivestimento" : `${(TIPI_RIV.find((t) => t[0] === filtri.tipoRiv) || [0, "Rivestimento"])[1]} ${filtri.rivestimento} mm`)],
+    ["uso", (filtri.carico || filtri.lavaggio || filtri.acustica) && [filtri.carico && `${filtri.carico} kN`, filtri.lavaggio === "umido" && "pulizia a umido", filtri.acustica && "requisito acustico"].filter(Boolean).join(", ")],
   ];
   const nPrese = Number(filtri.moduli) || 0;
   // a ogni domanda si torna in cima alla guida; la sezione «Progetto» della pagina si nasconde finché si risponde
@@ -211,7 +220,11 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
               <div className="g-due">
                 <div className="g-tavola"><DisegnoRivestimento mm={filtri.rivestimento} /></div>
                 <div className="g-campi">
-                  <div className="g-griglia due">{RIVESTIMENTI.map(([v, t, d]) => <Scelta key={v} larga attiva={filtri.rivestimento === v} onClick={() => set("rivestimento", v)} titolo={t} testo={d} />)}</div>
+                  <label>Che pavimento è</label>
+                  <div className="g-griglia due">{TIPI_RIV.map(([v, t, mm, d]) => <Scelta key={v} larga attiva={filtri.tipoRiv === v} onClick={() => setFiltri((p) => p.tipoRiv === v ? { ...p, tipoRiv: "" } : { ...p, tipoRiv: v, rivestimento: p.rivestimento === "" || p.tipoRiv ? mm : p.rivestimento })} titolo={t} testo={d} />)}</div>
+                  {filtri.tipoRiv && <p className="g-suggerimento">💡 {TIPI_RIV.find((t) => t[0] === filtri.tipoRiv)[4]}</p>}
+                  <label>Spessore del rivestimento</label>
+                  <div className="g-rapide">{RIVESTIMENTI.map(([v, t]) => <button type="button" key={v} className={"g-pill" + (filtri.rivestimento === v ? " attiva" : "")} onClick={() => set("rivestimento", v)}>{t}</button>)}</div>
                   <label htmlFor="g-riv">Oppure scrivi lo spessore</label>
                   <div className="g-num"><input className="g" id="g-riv" type="number" inputMode="numeric" min="0" max="60" placeholder="es. 12" value={filtri.rivestimento} onChange={(e) => metti("rivestimento", e.target.value)} /><span>mm</span></div>
                 </div>
@@ -255,8 +268,14 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
                 </div>
                 <label>Come si pulisce il pavimento</label>
                 <div className="g-griglia due">
-                  <Scelta attiva={filtri.lavaggio === ""} onClick={() => metti("lavaggio", "")} titolo="A secco o con panno umido" testo="aspirapolvere, scopa, panno strizzato"><Icona d={ICONE.secco} /></Scelta>
-                  <Scelta attiva={filtri.lavaggio === "umido"} onClick={() => metti("lavaggio", "umido")} titolo="Con acqua" testo="lavapavimenti, secchio e straccio bagnato"><Icona d={ICONE.umido} /></Scelta>
+                  <Scelta attiva={filtri.lavaggio === ""} onClick={() => metti("lavaggio", "")} titolo="A secco" testo="aspirapolvere, scopa, panno senza acqua sul pavimento"><Icona d={ICONE.secco} /></Scelta>
+                  <Scelta attiva={filtri.lavaggio === "umido"} onClick={() => metti("lavaggio", "umido")} titolo="A umido" testo="con acqua: straccio, lavapavimenti o lavasciuga a macchina"><Icona d={ICONE.umido} /></Scelta>
+                </div>
+                <p className="g-suggerimento">La norma distingue solo pulizia a secco e a umido: la pulizia a macchina è a umido. A umido serve un coperchio IP65/IP66 a torretta chiusa (in genere quello con tubo telescopico).</p>
+                <label>Il solaio ha un requisito acustico (rumore da calpestio)?</label>
+                <div className="g-griglia due">
+                  <Scelta attiva={!filtri.acustica} onClick={() => metti("acustica", "")} titolo="No o non lo so" testo="nessun limite da rispettare" />
+                  <Scelta attiva={filtri.acustica === "si"} onClick={() => metti("acustica", "si")} titolo="Sì" testo="preferisci i sistemi testati per non peggiorare l'isolamento del solaio" />
                 </div>
               </div>
     );

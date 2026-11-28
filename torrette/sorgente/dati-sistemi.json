@@ -113,7 +113,8 @@
   "altezze": {
    "flottante": "min. 110 mm",
    "massetto": "95–100 mm (solo con MT4 6I)"
-  }
+  },
+  "acustica": "sì (testata)"
  },
  "GES9": {
   "label": "GES 9",
@@ -1435,7 +1436,8 @@
   "altezze": {
    "flottante": "riv. 20mm: 105–150mm  |  riv. 25mm: 110–155mm",
    "massetto": "riv. 20mm: 105–150mm  |  riv. 25mm: 110–155mm"
-  }
+  },
+  "acustica": "sì (testata)"
  },
  "CASS_LIV_9": {
   "label": "Cassetta livellabile 9 / R9",
