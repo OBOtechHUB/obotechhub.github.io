@@ -29,6 +29,7 @@ export const PERCORSI = {
   ricomincia: <><path d="M4 12a8 8 0 108-8 8.5 8.5 0 00-6 2.5L4 8" /><path d="M4 4v4h4" /></>,
   avviso: <><path d="M12 4l9 16H3z" /><path d="M12 10v4M12 17h.01" /></>,
   ok: <path d="M5 12.5l4.5 4.5L19 7.5" />,
+  copia: <><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5.5A1.5 1.5 0 0014.5 4h-9A1.5 1.5 0 004 5.5v9A1.5 1.5 0 005.5 16H8" /></>,
   chiudi: <path d="M6 6l12 12M18 6L6 18" />,
   energia: <path d="M13 3L5 14h6l-1 7 8-11h-6z" />,
   presa: <><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="9" cy="12" r="1.2" /><circle cx="15" cy="12" r="1.2" /><path d="M12 7.5v2M12 14.5v2" /></>,

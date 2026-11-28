@@ -1462,35 +1462,25 @@ function Badge({ children, variant = "ok" }) {
   );
 }
 
+// codice articolo: etichetta moderna «Art. 7408847»; tocca per copiarlo, icona per la scheda tecnica
 function CodicePill({ codice }) {
-  if (!codice || codice === "—") return <span style={{ color: "#999", fontSize: 12 }}>—</span>;
-  const isWarn = isBadge(codice);
-  const clean = cleanCode(codice);
-  const isNA = clean === "N/D";
-  const dsUrl = DATASHEET[clean];
+  const [copiato, setCopiato] = useState(false);
+  if (!codice || codice === "—") return <span className="cod-vuoto">—</span>;
+  const isWarn = isBadge(codice), clean = cleanCode(codice), isNA = clean === "N/D", dsUrl = DATASHEET[clean];
+  const copia = (e) => {
+    e.stopPropagation(); if (isNA) return;
+    const fatto = () => { setCopiato(true); setTimeout(() => setCopiato(false), 1400); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(clean).then(fatto).catch(() => {});
+  };
   return (
-    <span title={isWarn ? "⚠ Codice da verificare sul listino OBO prima di ordinare" : undefined} style={{ display:"inline-flex", alignItems:"center", gap:4 }}>
-      <span style={{
-        fontFamily: "'Courier New', monospace",
-        fontSize: 12, fontWeight: 700,
-        color: isNA ? "#c0392b" : isWarn ? "#7A4F00" : "#282a31",
-        background: isNA ? "#FFEBEE" : isWarn ? "#FFF3CD" : "#F0F7E6",
-        border: `1px solid ${isNA ? "#EF9A9A" : isWarn ? "#FFCA28" : "#A5D6A7"}`,
-        borderRadius: 3, padding: "1px 6px",
-        display: "inline-flex", alignItems: "center", gap: 3
-      }}>
-        {isWarn && <span style={{ fontSize: 10 }}>⚠</span>}
-        {clean}
+    <span className="cod">
+      <span role="button" tabIndex={0} className={"cod-chip" + (isNA ? " na" : isWarn ? " warn" : "")} onClick={copia} onKeyDown={e => (e.key === "Enter" || e.key === " ") && copia(e)}
+        title={isNA ? "Codice non disponibile" : (isWarn ? "Da verificare sul listino OBO prima di ordinare · " : "") + "Tocca per copiare il codice"}>
+        {isWarn && <Icona nome="avviso" size={12} />}
+        <small>Art.</small><b>{copiato ? "Copiato" : clean}</b>
+        {!isNA && <Icona nome={copiato ? "ok" : "copia"} size={12} />}
       </span>
-      {dsUrl && (
-        <a href={dsUrl} target="_blank" rel="noreferrer"
-          title="Scarica datasheet PDF"
-          onClick={e => e.stopPropagation()}
-          style={{ fontSize:13, lineHeight:1, textDecoration:"none", opacity:0.7, transition:"opacity 0.15s" }}
-          onMouseEnter={e => e.currentTarget.style.opacity=1}
-          onMouseLeave={e => e.currentTarget.style.opacity=0.7}
-        ><Icona nome="documento" size={13} /></a>
-      )}
+      {dsUrl && <a className="cod-ds" href={dsUrl} target="_blank" rel="noreferrer" title="Scheda tecnica (PDF)" onClick={e => e.stopPropagation()}><Icona nome="documento" size={14} /></a>}
     </span>
   );
 }
