@@ -151,7 +151,8 @@ function disegna() {
   if (!S.progetto) {
     m.innerHTML = `<h1>${esc(T("Sopralluogo torrette", "Outlets site survey"))}</h1>
       <p>${esc(T("Scegli il progetto a cui collegare il sopralluogo: foto, misure, note e vocali si salvano in quel progetto.", "Choose the project for the survey: photos, measures, notes and voice messages are saved in it."))}</p>
-      ${PROGETTI.length ? `<ul class="progetti">${PROGETTI.map((p) => `<li><span><b>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || T("Progetto senza nome", "Untitled project"))}</b><small>${p.condiviso ? esc(T("Condiviso", "Shared") + (p.condiviso !== true ? " da " + p.condiviso : "")) + " · " : ""}${esc(p.comune || T("Comune non indicato", "Town not given"))}</small></span><button type="button" class="btn btn-primario" data-apri="${esc(p.id)}">${esc(T("Collega il sopralluogo", "Link the survey"))}</button></li>`).join("")}</ul>`
+      ${PROGETTI.length > 5 ? `<input type="search" id="cercaProg" autocomplete="off" placeholder="${esc(T("Cerca il progetto: numero CRM, nome o comune", "Find the project: CRM number, name or town"))}" aria-label="${esc(T("Cerca il progetto", "Find the project"))}">` : ""}
+      ${PROGETTI.length ? `<ul class="progetti">${PROGETTI.map((p) => `<li data-cerca="${esc([p.codice, p.nome, p.comune, p.condiviso !== true ? p.condiviso : ""].filter(Boolean).join(" ").toLowerCase())}"><span><b>${esc([p.codice, p.nome].filter(Boolean).join(" · ") || T("Progetto senza nome", "Untitled project"))}</b><small>${p.condiviso ? esc(T("Condiviso", "Shared") + (p.condiviso !== true ? " da " + p.condiviso : "")) + " · " : ""}${esc(p.comune || T("Comune non indicato", "Town not given"))}</small></span><button type="button" class="btn btn-primario" data-apri="${esc(p.id)}">${esc(T("Collega il sopralluogo", "Link the survey"))}</button></li>`).join("")}</ul>`
         : `<p>${esc(T("Non hai ancora progetti: creane uno nel configuratore (riquadro Progetto) o in Progetti di OBO Hub.", "You have no projects yet: create one in the configurator or in OBO Hub Projects."))}</p>`}
       <p><a href="../progetti.html">${esc(T("Tutti i progetti", "All projects"))}</a> · <a href="./">${esc(T("Configuratore torrette", "Outlet configurator"))}</a></p>`;
     return;
@@ -273,6 +274,7 @@ async function aggiungiFoto(files) {
 const NUM = new Set(["h", "rivestimento"]);
 $("sop").addEventListener("input", (e) => {
   const el = e.target, li = el.closest("[data-id]");
+  if (el.id === "cercaProg") { const q = el.value.trim().toLowerCase(); document.querySelectorAll(".progetti li").forEach((x) => { x.hidden = !!q && !x.dataset.cerca.includes(q); }); return; }
   if (el.id === "appunti") return cambia({ appunti: el.value });
   if (el.dataset.vocTesto) return cambia({ vocali: S.dati.vocali.map((v) => (v.id === el.dataset.vocTesto ? { ...v, testo: el.value } : v)) });
   if (li && el.dataset.campo && el.tagName !== "SELECT") cambiaFoto(li.dataset.id, { [el.dataset.campo]: NUM.has(el.dataset.campo) ? el.value.replace(/[^\d]/g, "") : el.value });

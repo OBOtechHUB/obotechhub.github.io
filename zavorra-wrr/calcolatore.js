@@ -651,7 +651,8 @@ export function mountZavorra(root, { supabase = null, title = 'Zavorra telai inv
       if (!user) return;
       q('who').textContent = (window.oboNome ? window.oboNome(user.user_metadata?.nome_visualizzato || '', user.email) : '') || user.email;
       try { lps = await storage.progettiLps(); } catch { lps = []; }
-      q('lps').innerHTML = '<option value="">— nessuno —</option>' + lps.map((p) => `<option value="${esc(p.id)}">${esc([p.codice, p.nome].filter(Boolean).join(' · ') || 'senza nome')}${p.condiviso ? ' (condiviso)' : ''}</option>`).join('');
+      q('lps').innerHTML = '<option value="">— nessuno —</option>' + lps.map((p) => `<option value="${esc(p.id)}" data-cerca="${esc(p.comune || '')}">${esc([p.codice, p.nome].filter(Boolean).join(' · ') || 'senza nome')}${p.condiviso ? ' (condiviso)' : ''}</option>`).join('');
+      if (window.oboCercaProgetto) window.oboCercaProgetto(q('lps'), { segnaposto: 'Cerca il progetto: numero CRM, nome o comune', svuotaAzzera: true });
       await elenca();
       // apertura: ?calcolo=<id>, ?progetto=<id progetto LPS>, altrimenti l'ultimo calcolo aperto su questo dispositivo
       const par = new URLSearchParams(location.search), daUrl = par.get('calcolo'), daLps = par.get('progetto'), nuovo = par.has('nuovo');

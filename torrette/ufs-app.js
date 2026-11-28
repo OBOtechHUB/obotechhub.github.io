@@ -131,10 +131,11 @@ function disegnaProgetti() {
   const sel = $("selProgetto"); if (!sel) return;
   const prima = sel.value;
   sel.innerHTML = `<option value="">${esc(T("— scegli il progetto —", "— choose the project —"))}</option>` +
-    C.progetti.map((p) => `<option value="${esc(p.id)}">${esc([p.codice, p.nome].filter(Boolean).join(" · ") || T("Progetto senza nome", "Untitled project"))}${p.condiviso ? esc(T(" (condiviso)", " (shared)")) : ""}</option>`).join("") +
+    C.progetti.map((p) => `<option value="${esc(p.id)}" data-cerca="${esc([p.comune, p.condiviso && p.condiviso !== true ? p.condiviso : ""].filter(Boolean).join(" · "))}">${esc([p.codice, p.nome].filter(Boolean).join(" · ") || T("Progetto senza nome", "Untitled project"))}${p.condiviso ? esc(T(" (condiviso)", " (shared)")) : ""}</option>`).join("") +
     `<option value="${NUOVO}">${esc(T("+ Nuovo progetto…", "+ New project…"))}</option>`;
   sel.value = S.progettoId && C.progetti.some((p) => p.id === S.progettoId) ? S.progettoId : prima === NUOVO ? NUOVO : "";
   $("nuovoProg").hidden = sel.value !== NUOVO;
+  window.oboCercaProgetto?.(sel, { segnaposto: T("Cerca il progetto: numero CRM, nome o comune", "Find the project: CRM number, name or town") });
   $("nomeConf").value = S.nome || ""; $("nomeConf").placeholder = nomeSoluzione();
   mostraSalvataggio();
 }

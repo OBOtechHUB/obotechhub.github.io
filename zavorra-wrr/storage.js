@@ -62,11 +62,11 @@ export function createStorage(supabase) {
     async progettiLps() {
       const { data: u } = await supabase.auth.getUser(); if (!u?.user) return [];
       const [miei, cond] = await Promise.all([
-        supabase.from('progetti').select('id, codice, nome').eq('utente', u.user.id).order('data_modifica', { ascending: false }).limit(300),
+        supabase.from('progetti').select('id, codice, nome, comune').eq('utente', u.user.id).order('data_modifica', { ascending: false }).limit(300),
         supabase.rpc('progetti_condivisi_con_me'),
       ]);
       const out = (miei.data || []).map((p) => ({ ...p, condiviso: false }));
-      for (const p of cond.error ? [] : cond.data || []) if (!out.some((x) => x.id === p.id)) out.push({ id: p.id, codice: p.codice, nome: p.nome, condiviso: true });
+      for (const p of cond.error ? [] : cond.data || []) if (!out.some((x) => x.id === p.id)) out.push({ id: p.id, codice: p.codice, nome: p.nome, comune: p.comune, condiviso: true });
       return out;
     },
 
