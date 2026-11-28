@@ -1745,16 +1745,35 @@ const GALLERIA = {
     G("g-udhome-spazzola.jpg", "Uscita dei cavi con spazzola: chiusa anche con la spina inserita"), G("g-udhome-one.jpg", "UDHOME-ONE con uscita laterale"), G("g-udhome9.jpg", "UDHOME 9 aperta con i frutti"), G("g-udhome-sezione.jpg", "Montaggio nel massetto, in sezione"), G("g-udhome-spazzola2.jpg", "La spazzola si gira di 180°")],
 };
 
+// foto a schermo intero (sopra tutto, anche nel tema scuro: va nel body)
+function Lightbox({ foto, indice, setIndice, nome }) {
+  useEffect(() => {
+    if (indice < 0) return;
+    const tasto = e => { if (e.key === "Escape") setIndice(-1); if (e.key === "ArrowRight") setIndice(i => (i + 1) % foto.length); if (e.key === "ArrowLeft") setIndice(i => (i - 1 + foto.length) % foto.length); };
+    document.addEventListener("keydown", tasto); return () => document.removeEventListener("keydown", tasto);
+  }, [indice, foto.length]);
+  const f = foto[indice];
+  if (!f) return null;
+  return createPortal(
+    <div className="ufs-gal-lb" role="dialog" aria-modal="true" aria-label={f.testo} onClick={() => setIndice(-1)}>
+      <figure onClick={e => e.stopPropagation()}>
+        <img src={f.src} alt={f.testo} />
+        <figcaption><span className={"ufs-gal-tipo" + (f.tipo === "Installato" ? " inst" : "")}>{f.tipo}</span> {f.testo} <small>· {nome} · foto OBO Bettermann · {indice + 1}/{foto.length}</small></figcaption>
+      </figure>
+      <button type="button" className="ufs-gal-x" aria-label="Chiudi" onClick={() => setIndice(-1)}>✕</button>
+      {foto.length > 1 && <>
+        <button type="button" className="ufs-gal-fr sx" aria-label="Foto precedente" onClick={e => { e.stopPropagation(); setIndice((indice - 1 + foto.length) % foto.length); }}>‹</button>
+        <button type="button" className="ufs-gal-fr dx" aria-label="Foto successiva" onClick={e => { e.stopPropagation(); setIndice((indice + 1) % foto.length); }}>›</button>
+      </>}
+    </div>, document.body);
+}
+// prima le installazioni, poi le viste del sistema
+const fotoInstallazioni = (famigliaId) => { const g = GALLERIA[famigliaId] || []; return [...g.filter(x => x.tipo === "Installato"), ...g.filter(x => x.tipo !== "Installato")]; };
+
 function GalleriaSistema({ famigliaId, nome }) {
   const foto = GALLERIA[famigliaId] || [];
   const [aperta, setAperta] = useState(-1);
-  useEffect(() => {
-    if (aperta < 0) return;
-    const tasto = e => { if (e.key === "Escape") setAperta(-1); if (e.key === "ArrowRight") setAperta(i => (i + 1) % foto.length); if (e.key === "ArrowLeft") setAperta(i => (i - 1 + foto.length) % foto.length); };
-    document.addEventListener("keydown", tasto); return () => document.removeEventListener("keydown", tasto);
-  }, [aperta]);
   if (!foto.length) return null;
-  const f = foto[aperta];
   return (
     <section className="ufs-galleria" aria-label={"Foto di " + nome}>
       <div className="ufs-gal-testa"><b>Com'è e dove si installa</b><small>Tocca una foto per ingrandirla e mostrarla al cliente</small></div>
@@ -1767,19 +1786,7 @@ function GalleriaSistema({ famigliaId, nome }) {
           </button>
         ))}
       </div>
-      {f && createPortal(
-        <div className="ufs-gal-lb" role="dialog" aria-modal="true" aria-label={f.testo} onClick={() => setAperta(-1)}>
-          <figure onClick={e => e.stopPropagation()}>
-            <img src={f.src} alt={f.testo} />
-            <figcaption><span className={"ufs-gal-tipo" + (f.tipo === "Installato" ? " inst" : "")}>{f.tipo}</span> {f.testo} <small>· {nome} · foto OBO Bettermann · {aperta + 1}/{foto.length}</small></figcaption>
-          </figure>
-          <button type="button" className="ufs-gal-x" aria-label="Chiudi" onClick={() => setAperta(-1)}>✕</button>
-          {foto.length > 1 && <>
-            <button type="button" className="ufs-gal-fr sx" aria-label="Foto precedente" onClick={e => { e.stopPropagation(); setAperta((aperta - 1 + foto.length) % foto.length); }}>‹</button>
-            <button type="button" className="ufs-gal-fr dx" aria-label="Foto successiva" onClick={e => { e.stopPropagation(); setAperta((aperta + 1) % foto.length); }}>›</button>
-          </>}
-        </div>, document.body
-      )}
+      <Lightbox foto={foto} indice={aperta} setIndice={setAperta} nome={nome} />
     </section>
   );
 }
@@ -3796,13 +3803,17 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
   const [carrello, setCarrello] = useState(carrelloIniziale);
   useEffect(() => { if (onCarrello) onCarrello(carrello); }, [carrello]);
   const [carrelloAperto, setCarrelloAperto] = useState(false);
+  const [fotoGuida, setFotoGuida] = useState({ fam: null, nome: "", i: -1 });
   const [modalita, setModalita] = useState("trova");
   const [passoGuida, setPassoGuida] = useState(0);
   const { isMobile, isTablet } = useM();
 
-  const [filtri, setFiltri] = useState({
-    altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN",
-    forma: "", rivestimento: "", moduli: "", tipoPrese: ""
+  // dal Sopralluogo («Trova la torretta per questo punto»): altezza, pavimento e rivestimento già compilati
+  const [filtri, setFiltri] = useState(() => {
+    let da = {};
+    try { da = JSON.parse(sessionStorage.getItem("obo-torrette-filtri") || "null") || {}; sessionStorage.removeItem("obo-torrette-filtri"); } catch { da = {}; }
+    return { altezza: "", pavimento: "", lavaggio: "", carico: "", unitaCarico: "kN", forma: "", rivestimento: "", moduli: "", tipoPrese: "",
+      ...Object.fromEntries(Object.entries(da).filter(([k]) => ["altezza", "pavimento", "rivestimento"].includes(k)).map(([k, v]) => [k, String(v ?? "")])) };
   });
   const [risultatiTrova, setRisultatiTrova] = useState(null);
   const [mostraRinunceTrova, setMostraRinunceTrova] = useState(false);
@@ -3875,7 +3886,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
 
       {/* CONTENUTO */}
       {modalita === "trova" ? (
-        <Guida sistemi={TUTTI_SISTEMI} punteggio={punteggio} famiglie={FAMIGLIE} foto={FAMIGLIA_FOTO} Caratteristiche={Caratteristiche} filtri={filtri} setFiltri={setFiltri} passo={passoGuida} setPasso={setPassoGuida} onSeleziona={vaiASistema} onCatalogo={() => { setModalita("wizard"); reset(); }} />
+        <Guida sistemi={TUTTI_SISTEMI} punteggio={punteggio} famiglie={FAMIGLIE} foto={FAMIGLIA_FOTO} Caratteristiche={Caratteristiche} filtri={filtri} setFiltri={setFiltri} passo={passoGuida} setPasso={setPassoGuida} onSeleziona={vaiASistema} onCatalogo={() => { setModalita("wizard"); reset(); }} onFoto={(fam, nome) => setFotoGuida({ fam, nome, i: 0 })} haFoto={fam => !!(GALLERIA[fam] || []).length} />
       ) : (
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "16px 12px 140px" : isTablet ? "24px 20px 130px" : "32px 28px 120px" }}>
         {step === 1 && <StepFamiglia onSelect={f => { setFamiglia(f); setStep(2); }} />}
@@ -3884,6 +3895,7 @@ export default function Configuratore({ carrelloIniziale = [], onCarrello } = {}
       </div>
       )}
 
+      {fotoGuida.fam && <Lightbox foto={fotoInstallazioni(fotoGuida.fam)} indice={fotoGuida.i} setIndice={v => setFotoGuida(g => ({ ...g, i: typeof v === "function" ? v(g.i) : v }))} nome={fotoGuida.nome} />}
       {/* CARRELLO — pannello fisso in fondo */}
       {carrelloAperto && (
         <Carrello

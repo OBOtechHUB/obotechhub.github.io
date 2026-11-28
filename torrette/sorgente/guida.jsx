@@ -149,7 +149,7 @@ function Scelta({ attiva, onClick, titolo, testo, children, larga }) {
   );
 }
 
-export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristiche, filtri, setFiltri, passo, setPasso, onSeleziona, onCatalogo }) {
+export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristiche, filtri, setFiltri, passo, setPasso, onSeleziona, onCatalogo, onFoto, haFoto }) {
   const set = (k, v) => setFiltri((p) => ({ ...p, [k]: p[k] === v ? "" : v }));
   const metti = (k, v) => setFiltri((p) => ({ ...p, [k]: v }));
   const ris = useMemo(() => {
@@ -293,7 +293,9 @@ export default function Guida({ sistemi, punteggio, famiglie, foto, Caratteristi
     const fam = famiglie.find((f) => f.sistemi.includes(r.key)), ft = fam && foto[fam.id];
     return (
       <article className={"g-ris " + tipo}>
-        {ft && <img src={ft.scheda} alt="" loading="lazy" />}
+        {ft && (haFoto && haFoto(fam.id)
+          ? <button type="button" className="g-ris-foto" onClick={() => onFoto(fam.id, r.label)} aria-label={"Foto di installazioni reali: " + r.label}><img src={ft.scheda} alt="" loading="lazy" /><span>📷 Installazioni reali</span></button>
+          : <img src={ft.scheda} alt="" loading="lazy" />)}
         <div className="g-ris-c">
           <div className="g-ris-t"><h3>{r.label}</h3>{fam && <span className="g-fam">{fam.label}</span>}</div>
           <Caratteristiche chiavi={[r.key]} />

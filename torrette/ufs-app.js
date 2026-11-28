@@ -69,6 +69,7 @@ function mostraSalvataggio() {
     : ok ? T("✓ Salvato nel progetto ", "✓ Saved to project ") + nomeP
     : S.sol ? T("Salvataggio in corso…", "Saving…") : T("⚠ Non salvato nel progetto", "⚠ Not saved to the project");
   $("vaiSalva").hidden = ok;
+  $("vaiSopralluogo").href = "sopralluogo.html" + (S.progettoId ? "?progetto=" + encodeURIComponent(S.progettoId) : "");
   ap.innerHTML = S.sol
     ? `<strong>${esc(T("Configurazione aperta:", "Open configuration:"))}</strong> ${esc(S.nome || nomeSoluzione())}${nomeP ? " · " + esc(nomeP) : ""}. ${esc(T("Le modifiche si salvano da sole.", "Changes are saved automatically."))}`
     : `<strong>${esc(T("Configurazione nuova, non ancora salvata.", "New configuration, not saved yet."))}</strong> ${esc(T("Scegli il progetto (o creane uno nuovo) e premi «Salva nel progetto»: da lì in poi si salva da sola. Se esci senza salvare perderai i dati.", "Choose the project (or create a new one) and press «Save to project»: from then on it saves automatically. If you leave without saving you will lose your data."))}`;

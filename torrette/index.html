@@ -262,6 +262,10 @@
   .guida .g-ris.parziale { border-left-color:var(--arancio); }
   .guida .g-ris.ko { border-left-color:var(--tenue); opacity:.8; margin-bottom:10px; }
   .guida .g-ris img { width:170px; object-fit:cover; flex:none; }
+  .guida .g-ris-foto { position:relative; flex:none; display:flex; padding:0; border:0; background:none; cursor:zoom-in; }
+  .guida .g-ris-foto img { height:100%; }
+  .guida .g-ris-foto span { position:absolute; left:8px; bottom:8px; background:rgba(40,42,49,.78); color:#fff; font-size:12px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .guida .g-ris-foto:hover span, .guida .g-ris-foto:focus-visible span { background:var(--arancio); }
   .guida .g-ris-c { flex:1; min-width:0; padding:14px 16px; display:grid; gap:8px; align-content:start; }
   .guida .g-ris-t { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; }
   .guida .g-ris h3 { margin:0; font-size:calc(18px * var(--zoom,1)); }
@@ -293,6 +297,7 @@
     .guida .g-scelta:not(.larga) .g-fig { width:118px; flex:none; min-height:0; padding:8px; }
     .guida .g-ris { flex-direction:column; }
     .guida .g-ris img { width:100%; height:130px; }
+    .guida .g-ris-foto { width:100%; }
     .guida .g-vai { align-self:stretch; margin:0 14px 14px; }
     .guida .g-conteggio small { display:none; }
     .guida .g-btn { padding:11px 12px; }
@@ -311,6 +316,7 @@
     <a class="marchio" href="../" title="OBO Hub"><img src="../icona-192.png" alt=""><span><b data-t="Configuratore torrette|Service outlets"></b><small data-t="← OBO Hub|← OBO Hub"></small></span></a>
     <div class="azioni">
       <a class="ib hubtorna" href="../" title="Torna a OBO Hub" aria-label="Torna alla pagina iniziale di OBO Hub"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><small>OBO Hub</small></a>
+      <a class="ib" id="vaiSopralluogo" href="sopralluogo.html" title="Sopralluogo: foto, misure e note dal cantiere"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><small data-t="Sopralluogo|Survey"></small></a>
       <a class="ib" href="../novita.html?app=torrette" title="Novità delle app"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg><small data-t="Novità|News"></small></a>
       <div class="impost"><button class="ib" id="aspetto" aria-haspopup="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19 9 5l5 14M5.8 14h6.4M15 19l3-8 3 8M15.9 16.5h4.2"/></svg><small data-t="Aspetto|Display"></small></button><div class="pannello-impost" id="pannelloAspetto" role="dialog" hidden></div></div>
     </div>
@@ -355,8 +361,8 @@
 
 <script src="../manutenzione.js" data-sezione="app:torrette"></script>
 <script src="../aggiorna.js" data-versione="../version.json" data-app="torrette"></script>
-<script src="./ufs.js?v=4a703c1b4f"></script>
-<script type="module" src="./ufs-app.js?v=eb0bec8f15"></script>
+<script src="./ufs.js?v=decd0f7c2c"></script>
+<script type="module" src="./ufs-app.js?v=378e944886"></script>
 <script src="../avviso-uscita.js"></script>
 <script src="../piede.js"></script>
 </body>
