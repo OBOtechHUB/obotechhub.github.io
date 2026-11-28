@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 // Dati dei sistemi corretti dai colleghi nella tabella condivisa (strumenti/torrette/tabella.mjs): sostituiscono quelli scritti qui sotto.
 import DATI_TABELLA from "./dati-sistemi.json";
 import Guida, { VistaComposta } from "./guida.jsx";
@@ -1727,6 +1728,62 @@ const FAMIGLIA_FOTO = {
   "GES R2": { scheda: "img/gesr2-scheda.jpg", ambiente: "img/gesr2-ambiente.jpg", dettaglio: "img/gesr2-sezione.jpg", testo: "Torretta rotonda in metallo per carichi pesanti: a filo pavimento, ci si passa sopra anche con i veicoli." },
 };
 
+// Galleria del passo 3: com'è il sistema (particolari) e installazioni (ambienti), dalla stessa brochure OBO.
+// i: installato · s: il sistema. Le doppie pagine sono unite in una foto larga.
+const G = (src, testo, i) => ({ src: "img/" + src, testo, tipo: i ? "Installato" : "Il sistema" });
+const GALLERIA = {
+  "GES": [G("g-ges-palestra.jpg", "Palestra: torretta GES chiusa nel pavimento in gomma, con i cavi in uso", 1), G("g-ges-moquette.jpg", "Ufficio con moquette: il coperchio prende lo stesso rivestimento", 1),
+    G("g-ges-flottante.jpg", "GES su pavimento flottante, coperchio aperto con i frutti"), G("g-ges-massetto.jpg", "GES su massetto, vista in sezione"), G("g-ges-rotonda.jpg", "Coperchio rotondo rivestito di moquette"), G("g-graf9.jpg", "GRAF 9 rotonda con uscita dei cavi a tubo")],
+  "Cassette livellabili": [G("g-cassette-ufficio.jpg", "Loft con pavimento in resina: a coperchio chiuso resta solo la cornice", 1), G("g-cass-piastrelle.jpg", "Cassetta rotonda nel gres: ci si cammina sopra", 1), G("g-cass-marmo.jpg", "Due cassette quadrate nel marmo, una con il coperchio rivestito", 1),
+    G("g-cass-piedini.jpg", "Cassetta con piedini di regolazione nel massetto, coperchio aperto"), G("g-cass-rotonda.jpg", "Cassetta rotonda nella piastrella"), G("g-cass-tubo.jpg", "Uscita dei cavi a tubo telescopico (adatta alla pulizia a umido)")],
+  "Cassette disaccoppiate": [G("g-cassette-ufficio.jpg", "Coperchio a filo nel pavimento finito", 1), G("g-cass-marmo.jpg", "Coperchi quadrati nel marmo", 1), G("g-disacc.jpg", "Cassetta senza piedini, coperchio aperto con i frutti"), G("g-cass-tubo.jpg", "Uscita dei cavi a tubo telescopico")],
+  "Cassette telaio": [G("g-cass-marmo.jpg", "Coperchi quadrati con il rivestimento del pavimento", 1), G("g-cassette-ufficio.jpg", "A coperchio chiuso resta solo la cornice", 1), G("g-cass-piastrelle.jpg", "Coperchio calpestabile nel gres", 1)],
+  "Seminato": [G("g-cass-piastrelle.jpg", "Coperchio a filo del pavimento (esempio su gres)", 1), G("g-cass-rotonda.jpg", "Versione rotonda"), G("g-cass-tubo.jpg", "Uscita dei cavi a tubo telescopico")],
+  "GES R2": [G("g-gesr2-showroom.jpg", "Showroom auto: torretta rotonda a filo del pavimento", 1), G("g-gesr2-auto.jpg", "Versione in metallo da 20 kN: ci passano sopra i veicoli", 1), G("g-gesr2-lavaggio.jpg", "Pulizia a umido con la macchina: versione metallo IP66", 1),
+    G("g-gesr2.jpg", "Coperchio aperto con uscita dei cavi laterale"), G("g-gesr2-flottante.jpg", "Su pavimento flottante, in sezione"), G("g-gesr2-massetto.jpg", "Su massetto con la scatola, in sezione")],
+  "UDHOME": [G("g-udhome-hall.jpg", "Hall d'albergo: la torretta alimenta la lampada da terra", 1), G("g-udhome-parquet.jpg", "Nel parquet con i cavi delle scrivanie", 1), G("g-udhome-corridoio.jpg", "A coperchio chiuso nel corridoio", 1),
+    G("g-udhome-spazzola.jpg", "Uscita dei cavi con spazzola: chiusa anche con la spina inserita"), G("g-udhome-one.jpg", "UDHOME-ONE con uscita laterale"), G("g-udhome9.jpg", "UDHOME 9 aperta con i frutti"), G("g-udhome-sezione.jpg", "Montaggio nel massetto, in sezione"), G("g-udhome-spazzola2.jpg", "La spazzola si gira di 180°")],
+};
+
+function GalleriaSistema({ famigliaId, nome }) {
+  const foto = GALLERIA[famigliaId] || [];
+  const [aperta, setAperta] = useState(-1);
+  useEffect(() => {
+    if (aperta < 0) return;
+    const tasto = e => { if (e.key === "Escape") setAperta(-1); if (e.key === "ArrowRight") setAperta(i => (i + 1) % foto.length); if (e.key === "ArrowLeft") setAperta(i => (i - 1 + foto.length) % foto.length); };
+    document.addEventListener("keydown", tasto); return () => document.removeEventListener("keydown", tasto);
+  }, [aperta]);
+  if (!foto.length) return null;
+  const f = foto[aperta];
+  return (
+    <section className="ufs-galleria" aria-label={"Foto di " + nome}>
+      <div className="ufs-gal-testa"><b>Com'è e dove si installa</b><small>Tocca una foto per ingrandirla e mostrarla al cliente</small></div>
+      <div className="ufs-gal-nastro">
+        {foto.map((x, i) => (
+          <button type="button" key={x.src + i} className={"ufs-gal-foto" + (i === 0 ? " larga" : "")} onClick={() => setAperta(i)}>
+            <img src={x.src} alt={x.testo} loading="lazy" />
+            <span className={"ufs-gal-tipo" + (x.tipo === "Installato" ? " inst" : "")}>{x.tipo}</span>
+            <span className="ufs-gal-did">{x.testo}</span>
+          </button>
+        ))}
+      </div>
+      {f && createPortal(
+        <div className="ufs-gal-lb" role="dialog" aria-modal="true" aria-label={f.testo} onClick={() => setAperta(-1)}>
+          <figure onClick={e => e.stopPropagation()}>
+            <img src={f.src} alt={f.testo} />
+            <figcaption><span className={"ufs-gal-tipo" + (f.tipo === "Installato" ? " inst" : "")}>{f.tipo}</span> {f.testo} <small>· {nome} · foto OBO Bettermann · {aperta + 1}/{foto.length}</small></figcaption>
+          </figure>
+          <button type="button" className="ufs-gal-x" aria-label="Chiudi" onClick={() => setAperta(-1)}>✕</button>
+          {foto.length > 1 && <>
+            <button type="button" className="ufs-gal-fr sx" aria-label="Foto precedente" onClick={e => { e.stopPropagation(); setAperta((aperta - 1 + foto.length) % foto.length); }}>‹</button>
+            <button type="button" className="ufs-gal-fr dx" aria-label="Foto successiva" onClick={e => { e.stopPropagation(); setAperta((aperta + 1) % foto.length); }}>›</button>
+          </>}
+        </div>, document.body
+      )}
+    </section>
+  );
+}
+
 function FotoInstallata({ famigliaId, isMobile }) {
   const f = FAMIGLIA_FOTO[famigliaId];
   if (!f) return null;
@@ -2479,6 +2536,7 @@ function StepRigaGruppi({ s, colore, fam, onReset, onAddToCart, sistemaKey }) {
 
   return (
     <div>
+      <GalleriaSistema famigliaId={s.famiglia} nome={s.label} />
       <VistaComposta pavimento={pavEffettivo} box={boxScelto || gruppo?.box_fisso || s.box_fisso_globale || null} sistema={s.label} />
       {/* SCHEDA TECNICA */}
       <div style={{ background:"white", border:"1px solid #e0e0e0", padding:"16px 20px", marginBottom:20, display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(155px,1fr))", gap:12, borderRadius:3 }}>
@@ -2888,6 +2946,7 @@ function StepRiga({ sistemaKey, onBack, onReset, onAddToCart }) {
         </div>
       </div>
 
+      <GalleriaSistema famigliaId={s.famiglia} nome={s.label} />
       <VistaComposta pavimento={selectedPav ?? (s.pavimenti && s.pavimenti.length === 1 ? s.pavimenti[0] : null)} box={boxScelto || s.box_fisso || null} sistema={s.label} />
       {/* SCHEDA TECNICA */}
       <div style={{ background:"white", border:"1px solid #e0e0e0", padding: isMobile ? "12px" : "16px 20px", marginBottom: s.note ? 0 : 16, display:"grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(auto-fill,minmax(140px,1fr))", gap: isMobile ? 10 : 12, borderRadius: s.note ? "3px 3px 0 0" : 3 }}>
